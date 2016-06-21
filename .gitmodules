@@ -1,0 +1,10 @@
+[submodule "dependences/gml"]
+	path = dependences/gml
+	url = https://github.com/g-truc/glm.git
+	branch = master
+[submodule "dependences/lodepng"]
+	path = dependences/lodepng
+	url = https://github.com/lvandeve/lodepng.git
+[submodule "dependences/tinyxml2"]
+	path = dependences/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
