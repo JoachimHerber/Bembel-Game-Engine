@@ -1,0 +1,54 @@
+set( RelativeDir "src/BembelBase" )
+
+set( DirFiles
+	_SourceFiles.cmake
+
+	XML.h
+	XML.cpp
+	Image.h
+	Image.cpp
+	Factory.hpp
+	Factory.inl
+	
+	Logging/Logger.h
+	Logging/Logger.cpp
+	Logging/LogMessage.h
+	Logging/LogMessage.cpp
+	Logging/LogSink.h
+	Logging/LogSink.cpp
+	Logging/ConsoleLogSink.h
+	Logging/ConsoleLogSink.cpp
+	
+	Events/EventChannel.hpp
+	Events/EventChannel.inl
+	Events/EventManager.h
+	Events/EventManager.inl
+	Events/EventManager.cpp
+	Events/Delegate.hpp
+	Events/Delegate.inl
+	Events/Signal.hpp
+	Events/Signal.inl
+)
+
+list( APPEND ProjectSources "dependences/lodepng/lodepng.h" )
+list( APPEND ProjectSources "dependences/lodepng/lodepng.cpp" )
+list( APPEND ProjectSources "dependences/tinyxml2/tinyxml2.h" )
+list( APPEND ProjectSources "dependences/tinyxml2/tinyxml2.cpp" )
+source_group( Source\\BembleBase\\dependences FILES "dependences/lodepng/lodepng.h" )
+source_group( Source\\BembleBase\\dependences FILES "dependences/lodepng/lodepng.cpp" )
+source_group( Source\\BembleBase\\dependences FILES "dependences/tinyxml2/tinyxml2.h" )
+source_group( Source\\BembleBase\\dependences FILES "dependences/tinyxml2/tinyxml2.cpp" )
+	
+foreach( File ${DirFiles} )
+	list( APPEND ProjectSources "${RelativeDir}/${File}" )
+	
+	string( REGEX REPLACE "(.*)/(.*)\\.(.*)" "\\1" subdir ${File} )
+	if ("${subdir}" STREQUAL "${File}")
+		source_group( Source\\BembleBase FILES "${RelativeDir}/${File}" )
+	else()
+		source_group( Source\\BembleBase\\${subdir} FILES "${RelativeDir}/${File}" )
+	endif()
+endforeach()
+
+
+
