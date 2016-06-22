@@ -4,9 +4,9 @@
 
 #include "EventCallbacks.h"
 #include "Events.h"
-#include "Window.h"
-#include "DisplayManager.h"
 #include "../Kernel.h"
+#include "../Display/Window.h"
+#include "../Display/DisplayManager.h"
 
 #include <GLFW/glfw3.h>
 

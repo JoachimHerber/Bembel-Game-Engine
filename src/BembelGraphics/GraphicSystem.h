@@ -7,7 +7,7 @@
 #include <BembelConfig.h>
 
 #include <BembelKernel/Engine/System.h>
-#include <BembelKernel/Display/Events.h>
+#include <BembelKernel/Events/Events.h>
 
 #include <BembelBase/Factory.hpp>
 

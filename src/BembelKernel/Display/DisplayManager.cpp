@@ -5,8 +5,8 @@
 #include "DisplayManager.h"
 
 #include "Window.h"
-#include "Events.h"
-#include "EventCallbacks.h"
+#include "../Events/Events.h"
+#include "../Events/EventCallbacks.h"
 #include "../Kernel.h"
 
 #include <BembelBase/Logging/Logger.h>

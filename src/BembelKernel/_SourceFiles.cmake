@@ -9,6 +9,11 @@ set( DirFiles
 	Application.h
 	Application.cpp
 	
+	Events/EventCallbacks.h
+	Events/EventCallbacks.cpp
+	Events/Events.h
+	Events/Events.cpp
+	
 	Engine/Engine.h
 	Engine/Engine.cpp
 	Engine/System.h
@@ -16,10 +21,6 @@ set( DirFiles
 	
 	Display/DisplayManager.h
 	Display/DisplayManager.cpp
-	Display/EventCallbacks.h
-	Display/EventCallbacks.cpp
-	Display/Events.h
-	Display/Events.cpp
 	Display/Window.h
 	Display/Window.cpp
 	Display/DisplayMode.h

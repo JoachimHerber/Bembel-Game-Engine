@@ -13,7 +13,7 @@
 #include <BembelBase/XML.h>
 #include <BembelBase/Logging/Logger.h>
 #include <BembelKernel/Display/Window.h>
-#include <BembelKernel/Display/Events.h>
+#include <BembelKernel/Events/Events.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
