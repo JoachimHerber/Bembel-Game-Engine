@@ -14,7 +14,7 @@ set( CMAKE_CONFIGURAION_TYPES "Debug;Release" )
 
 include( "src/BembelBase/_SourceFiles.cmake" )
 include( "src/BembelDataStructures/_SourceFiles.cmake" )
-include( "src/BembelEngine/_SourceFiles.cmake" )
+include( "src/BembelKernel/_SourceFiles.cmake" )
 include( "src/BembelDisplay/_SourceFiles.cmake" )
 include( "src/BembelGraphics/_SourceFiles.cmake" )
 

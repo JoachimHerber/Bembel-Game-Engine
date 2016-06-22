@@ -1,15 +1,16 @@
-set( RelativeDir "src/BembelEngine" )
-set( SourceGroup "src\\BembelEngine" )
+set( RelativeDir "src/BembelKernel" )
+set( SourceGroup "src\\BembelKernel" )
 
 set( DirFiles
 	_SourceFiles.cmake
 	
-	System.h
-	System.cpp
-	Engine.h
-	Engine.cpp
 	Application.h
 	Application.cpp
+	
+	Engine/Engine.h
+	Engine/Engine.cpp
+	Engine/System.h
+	Engine/System.cpp
 )
 
 foreach( File ${DirFiles} )
