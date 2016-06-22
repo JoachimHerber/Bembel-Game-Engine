@@ -12,8 +12,8 @@ set( DirFiles
 	Engine/System.h
 	Engine/System.cpp
 	
-	Display/DisplaySystem.h
-	Display/DisplaySystem.cpp
+	Display/DisplayManager.h
+	Display/DisplayManager.cpp
 	Display/EventCallbacks.h
 	Display/EventCallbacks.cpp
 	Display/Events.h

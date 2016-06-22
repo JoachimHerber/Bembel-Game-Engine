@@ -5,7 +5,6 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
-#include "../Engine/System.h"
 #include <BembelBase/Factory.hpp>
 
 #include "DisplayMode.h"
@@ -29,11 +28,11 @@ class Window;
 /*============================================================================*/
 namespace bembel{
 
-class BEMBEL_API DisplaySystem : public System
+class BEMBEL_API DisplayManager
 {
 public:
-	DisplaySystem(std::shared_ptr<EventManager>);
-	~DisplaySystem();
+	DisplayManager(std::shared_ptr<EventManager>);
+	~DisplayManager();
 
 	Window* CreateWindow();
 	Window* GetWindow(unsigned id) const;
@@ -42,16 +41,18 @@ public:
 	EventManager* GetEventManager() const;
 	Factory<DisplayModeBase>& GetDisplayModeFactory();
 
-	virtual bool Init() override;
-	virtual bool Init(const xml::Element* properties) override;
-	virtual void Shutdown() override;
-	virtual void Update(double) override;
+	bool Init();
+	bool Init(const xml::Element* properties);
+	void Shutdown();
+	void Update(double);
 
 public:
 	void OnWindowOpend(Window*);
 	void OnWindowClosed(Window*);
 
 private:
+	std::shared_ptr<EventManager> _eventMgr;
+
 	std::vector<Window*> _windows;
 	std::vector<Window*> _openWindows;
 

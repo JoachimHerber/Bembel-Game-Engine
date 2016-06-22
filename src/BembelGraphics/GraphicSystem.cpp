@@ -12,8 +12,8 @@
 #include <BembelOpenGL.h>
 #include <BembelBase/XML.h>
 #include <BembelBase/Logging/Logger.h>
-#include <BembelDisplay/Window.h>
-#include <BembelDisplay/Events.h>
+#include <BembelKernel/Display/Window.h>
+#include <BembelKernel/Display/Events.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

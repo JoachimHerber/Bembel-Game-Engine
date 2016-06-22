@@ -7,7 +7,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "DisplaySystem.h"
+#include "DisplayManager.h"
 #include "Window.h"
 #include "DisplayMode.h"
 
@@ -18,7 +18,7 @@
 /*============================================================================*/
 namespace bembel{
 
-Window::Window(DisplaySystem* displaySys, unsigned id)
+Window::Window(DisplayManager* displaySys, unsigned id)
 	: _displaySys(displaySys)
 	, _windowImp(nullptr)
 	, _displayMode(std::make_shared<WindowDisplayMode>())
@@ -58,7 +58,7 @@ unsigned Window::GetWindowID() const
 	return _windowID;
 }
 
-DisplaySystem* Window::GetDisplaySystem() const
+DisplayManager* Window::GetDisplaySystem() const
 {
 	return _displaySys;
 }

@@ -2,7 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "DisplaySystem.h"
+#include "DisplayManager.h"
 
 #include "Window.h"
 #include "Events.h"
@@ -17,8 +17,8 @@
 /*============================================================================*/
 namespace bembel{
 
-DisplaySystem::DisplaySystem(std::shared_ptr<EventManager> eventMgr)
-	: System(eventMgr, "Display")
+DisplayManager::DisplayManager(std::shared_ptr<EventManager> eventMgr)
+	: _eventMgr(eventMgr)
 {
 	if (glfwInit() == GL_FALSE)
 	{
@@ -32,17 +32,17 @@ DisplaySystem::DisplaySystem(std::shared_ptr<EventManager> eventMgr)
 	_displayModeFactory.RegisterDefaultObjectGenerator<FullscreenDisplayMode>("Fullscreen");
 }
 
-DisplaySystem::~DisplaySystem()
+DisplayManager::~DisplayManager()
 {
 	glfwTerminate();
 }
 
-bool DisplaySystem::Init()
+bool DisplayManager::Init()
 {
 	return true;
 }
 
-bool DisplaySystem::Init(const xml::Element* properties)
+bool DisplayManager::Init(const xml::Element* properties)
 {
 	if (!properties)
 		return false;
@@ -62,7 +62,7 @@ bool DisplaySystem::Init(const xml::Element* properties)
 	return true;
 }
 
-void DisplaySystem::Shutdown()
+void DisplayManager::Shutdown()
 {
 	// close open windows
 	while (!_openWindows.empty())
@@ -75,7 +75,7 @@ void DisplaySystem::Shutdown()
 
 }
 
-void DisplaySystem::Update(double)
+void DisplayManager::Update(double)
 {
 	glfwPollEvents();
 
@@ -92,7 +92,7 @@ void DisplaySystem::Update(double)
 	}
 }
 
-void DisplaySystem::OnWindowOpend(Window* window)
+void DisplayManager::OnWindowOpend(Window* window)
 {
 	_openWindows.push_back(window);
 	GLFWwindow* glfw = window->GetGlfwWindow();
@@ -123,7 +123,7 @@ void DisplaySystem::OnWindowOpend(Window* window)
 	_eventMgr->Broadcast(WindowOpendEvent{window});
 }
 
-void DisplaySystem::OnWindowClosed(Window* window)
+void DisplayManager::OnWindowClosed(Window* window)
 {
 	auto it = std::find(_openWindows.begin(), _openWindows.end(), window);
 	if(it != _openWindows.end())
@@ -133,13 +133,13 @@ void DisplaySystem::OnWindowClosed(Window* window)
 	}
 }
 
-Window* DisplaySystem::CreateWindow()
+Window* DisplayManager::CreateWindow()
 {
 	_windows.push_back(new Window (this, _windows.size()));
 	return _windows.back();
 }
 
-Window* DisplaySystem::GetWindow(unsigned id) const
+Window* DisplayManager::GetWindow(unsigned id) const
 {
 	if (id < _windows.size())
 		return _windows[id];
@@ -147,17 +147,17 @@ Window* DisplaySystem::GetWindow(unsigned id) const
 	return nullptr;
 }
 
-unsigned DisplaySystem::GetNumWindows() const
+unsigned DisplayManager::GetNumWindows() const
 {
 	return _windows.size();
 }
 
-EventManager* DisplaySystem::GetEventManager() const
+EventManager* DisplayManager::GetEventManager() const
 {
 	return _eventMgr.get();
 }
 
-Factory<DisplayModeBase>& DisplaySystem::GetDisplayModeFactory()
+Factory<DisplayModeBase>& DisplayManager::GetDisplayModeFactory()
 {
 	return _displayModeFactory;
 }

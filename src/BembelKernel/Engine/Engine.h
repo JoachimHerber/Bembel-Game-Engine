@@ -17,7 +17,7 @@
 namespace bembel{
 
 class EventManager;
-class DisplaySystem;
+class DisplayManager;
 class System;
 
 } //end of namespace bembel

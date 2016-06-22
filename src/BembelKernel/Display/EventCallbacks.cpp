@@ -5,7 +5,7 @@
 #include "EventCallbacks.h"
 #include "Events.h"
 #include "Window.h"
-#include "DisplaySystem.h"
+#include "DisplayManager.h"
 
 #include <GLFW/glfw3.h>
 

@@ -23,7 +23,7 @@
 struct GLFWwindow; 
 
 namespace bembel{
-	class DisplaySystem;
+	class DisplayManager;
 	class DisplayModeBase;
 } //end of namespace bembel
 /*============================================================================*/
@@ -33,7 +33,7 @@ namespace bembel{
 
 class BEMBEL_API Window
 {
-	Window(DisplaySystem*, unsigned );
+	Window(DisplayManager*, unsigned );
 	~Window();
 public:
 
@@ -58,20 +58,20 @@ public:
 	bool GetShouldClose() const;
 	bool SetShouldClose(bool shouldClose);
 
-	DisplaySystem* GetDisplaySystem() const;
+	DisplayManager* GetDisplaySystem() const;
 	GLFWwindow*    GetGlfwWindow() const;
 
 	void MakeContextCurent();
 	void SwapBuffers();
 
 private:
-	DisplaySystem* _displaySys;
+	DisplayManager* _displaySys;
 	GLFWwindow*  _windowImp;
 	std::shared_ptr<DisplayModeBase> _displayMode;
 
 	unsigned _windowID;
 
-	friend class DisplaySystem;
+	friend class DisplayManager;
 };
 
 } //end of namespace bembel
