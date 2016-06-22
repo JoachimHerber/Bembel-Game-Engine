@@ -49,7 +49,7 @@ EntityManager::EntityID EntityManager::CreateEntity(
 bool EntityManager::LoadEntities(const std::string& fileName)
 {
 	xml::Document doc;
-	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_NO_ERROR)
+	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
 	{
 		BEMBEL_LOG_ERROR()
 			<< "Failed to lode file '" << fileName << "'\n"

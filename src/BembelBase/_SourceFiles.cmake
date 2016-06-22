@@ -1,5 +1,5 @@
 set( RelativeDir "src/BembelBase" )
-set( SourceGroup "src\\BembelDisplay" )
+set( SourceGroup "src\\BembelBase" )
 
 set( DirFiles
 	_SourceFiles.cmake

@@ -40,7 +40,7 @@ bool System::Init()
 bool System::Init(std::string& configFileName)
 {
 	xml::Document doc;
-	if (doc.LoadFile(configFileName.c_str()) != tinyxml2::XML_NO_ERROR)
+	if (doc.LoadFile(configFileName.c_str()) != tinyxml2::XML_SUCCESS)
 	{
 		BEMBEL_LOG_ERROR()
 			<< "Failed to lode file '" << configFileName << "'\n"
