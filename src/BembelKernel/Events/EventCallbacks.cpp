@@ -3,7 +3,8 @@
 /*============================================================================*/
 
 #include "EventCallbacks.h"
-#include "Events.h"
+#include "DisplayEvents.h"
+#include "InputEvents.h"
 #include "../Kernel.h"
 #include "../Display/Window.h"
 #include "../Display/DisplayManager.h"

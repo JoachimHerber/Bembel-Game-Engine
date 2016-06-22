@@ -1,5 +1,5 @@
-#ifndef BEMBEL_EVENTS_H
-#define BEMBEL_EVENTS_H
+#ifndef BEMBEL_INPUTEVENTS_H
+#define BEMBEL_INPUTEVENTS_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -21,74 +21,6 @@ class Window;
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
-
-struct BEMBEL_API WindowOpendEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-struct BEMBEL_API WindowClosedEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-struct BEMBEL_API WindowUpdateEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-
-
-struct BEMBEL_API WindowMovedEvent
-{
-	Window* const   window;
-	const glm::vec2 position;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-struct BEMBEL_API WindowResizeEvent
-{
-	Window* const   window;
-	const glm::vec2 size;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-
-struct BEMBEL_API WindowShouldCloseEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-
-
-struct BEMBEL_API WindowGainedFocusEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-struct BEMBEL_API WindowLostFocusEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-
-
-struct BEMBEL_API WindowIconifyedEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-struct BEMBEL_API WindowRestoredEvent
-{
-	Window* const   window;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
-
-
-struct BEMBEL_API FrameBufferResizeEvent
-{
-	Window* const   window;
-	const glm::vec2 size;
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
 
 
 struct BEMBEL_API KeyPressEvent

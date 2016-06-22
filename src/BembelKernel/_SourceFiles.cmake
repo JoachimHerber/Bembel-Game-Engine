@@ -11,8 +11,10 @@ set( DirFiles
 	
 	Events/EventCallbacks.h
 	Events/EventCallbacks.cpp
-	Events/Events.h
-	Events/Events.cpp
+	Events/DisplayEvents.h
+	Events/DisplayEvents.cpp
+	Events/InputEvents.h
+	Events/InputEvents.cpp
 	
 	Engine/Engine.h
 	Engine/Engine.cpp
