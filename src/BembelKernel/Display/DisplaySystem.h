@@ -5,7 +5,7 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
-#include <BembelEngine/System.h>
+#include "../Engine/System.h"
 #include <BembelBase/Factory.hpp>
 
 #include "DisplayMode.h"

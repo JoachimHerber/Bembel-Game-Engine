@@ -11,6 +11,17 @@ set( DirFiles
 	Engine/Engine.cpp
 	Engine/System.h
 	Engine/System.cpp
+	
+	Display/DisplaySystem.h
+	Display/DisplaySystem.cpp
+	Display/EventCallbacks.h
+	Display/EventCallbacks.cpp
+	Display/Events.h
+	Display/Events.cpp
+	Display/Window.h
+	Display/Window.cpp
+	Display/DisplayMode.h
+	Display/DisplayMode.cpp
 )
 
 foreach( File ${DirFiles} )
