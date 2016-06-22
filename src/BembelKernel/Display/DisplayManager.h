@@ -1,5 +1,5 @@
-#ifndef BEMBEL_INPUTSYSTEM_H
-#define BEMBEL_INPUTSYSTEM_H
+#ifndef BEMBEL_DISPLAYMANAGER_H
+#define BEMBEL_DISPLAYMANAGER_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -19,7 +19,7 @@ struct GLFWwindow;
 
 namespace bembel{
 
-class EventManager;
+class Kernel;
 class Window;
 
 }//end of namespace bembel
@@ -31,27 +31,28 @@ namespace bembel{
 class BEMBEL_API DisplayManager
 {
 public:
-	DisplayManager(std::shared_ptr<EventManager>);
+	DisplayManager(Kernel*);
 	~DisplayManager();
 
 	Window* CreateWindow();
 	Window* GetWindow(unsigned id) const;
 	unsigned GetNumWindows() const;
 
-	EventManager* GetEventManager() const;
+	Kernel* GetKernel() const;
 	Factory<DisplayModeBase>& GetDisplayModeFactory();
 
-	bool Init();
-	bool Init(const xml::Element* properties);
-	void Shutdown();
-	void Update(double);
+	bool CreateWindows(const xml::Element* properties);
+	void CloseOpenWindows();
+	void DeleteAllWindows();
+
+	void UpdateWindows();
 
 public:
 	void OnWindowOpend(Window*);
 	void OnWindowClosed(Window*);
 
 private:
-	std::shared_ptr<EventManager> _eventMgr;
+	Kernel* _kernel;
 
 	std::vector<Window*> _windows;
 	std::vector<Window*> _openWindows;

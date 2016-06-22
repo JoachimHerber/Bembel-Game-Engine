@@ -58,7 +58,7 @@ public:
 	bool GetShouldClose() const;
 	bool SetShouldClose(bool shouldClose);
 
-	DisplayManager* GetDisplaySystem() const;
+	DisplayManager* GetDisplayManager() const;
 	GLFWwindow*    GetGlfwWindow() const;
 
 	void MakeContextCurent();

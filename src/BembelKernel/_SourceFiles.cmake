@@ -4,6 +4,8 @@ set( SourceGroup "src\\BembelKernel" )
 set( DirFiles
 	_SourceFiles.cmake
 	
+	Kernel.h
+	Kernel.cpp
 	Application.h
 	Application.cpp
 	

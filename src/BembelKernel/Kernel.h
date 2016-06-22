@@ -1,5 +1,5 @@
-#ifndef BEMBEL_APPLICATION_H
-#define BEMBEL_APPLICATION_H
+#ifndef BEMBEL_KERNEL_H
+#define BEMBEL_KERNEL_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -12,7 +12,9 @@
 /*============================================================================*/
 namespace bembel{
 
-class Kernel;
+class EventManager;
+class DisplayManager;
+class Engine;
 
 } //end of namespace bembel
 /*============================================================================*/
@@ -20,28 +22,24 @@ class Kernel;
 /*============================================================================*/
 namespace bembel{
 
-class BEMBEL_API Application
+class BEMBEL_API Kernel final
 {
 public:
-	Application();
-	virtual ~Application();
+	Kernel();
+	~Kernel();
 	
-	bool Run();
-	void Quit();
-
-protected:
-	virtual void MainLoop();
-
-	virtual bool Init()    = 0;
-	virtual void Cleanup() = 0;
-
-	virtual void Update(double timeDelta) = 0;
-
-protected:
-	std::unique_ptr<Kernel> _kernel;
+	EventManager*   GetEventManager() const;
+	DisplayManager* GetDisplayManager() const;
+	Engine*         GetEngine() const;
+	
+	void PollEvents();
 
 private:
-	bool _quite;
+	std::unique_ptr<EventManager>   _eventMgr;
+	std::unique_ptr<DisplayManager> _displayMgr;
+
+	std::unique_ptr<Engine> _engine;
+
 };
 
 } //end of namespace bembel

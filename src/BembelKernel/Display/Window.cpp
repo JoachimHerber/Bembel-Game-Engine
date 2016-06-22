@@ -58,7 +58,7 @@ unsigned Window::GetWindowID() const
 	return _windowID;
 }
 
-DisplayManager* Window::GetDisplaySystem() const
+DisplayManager* Window::GetDisplayManager() const
 {
 	return _displaySys;
 }

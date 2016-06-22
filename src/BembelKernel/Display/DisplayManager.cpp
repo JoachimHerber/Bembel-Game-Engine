@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "Events.h"
 #include "EventCallbacks.h"
+#include "../Kernel.h"
 
 #include <BembelBase/Logging/Logger.h>
 
@@ -17,16 +18,10 @@
 /*============================================================================*/
 namespace bembel{
 
-DisplayManager::DisplayManager(std::shared_ptr<EventManager> eventMgr)
-	: _eventMgr(eventMgr)
+DisplayManager::DisplayManager(Kernel* kernel)
+	: _kernel(kernel)
 {
-	if (glfwInit() == GL_FALSE)
-	{
-		BEMBEL_LOG_ERROR() << "Failed to initialize GLFW" << std::endl;
-		throw std::exception();
-	}
-
-	glfwSetMonitorCallback(glfw_callbacks::MonitorCallback);
+	//glfwSetMonitorCallback(glfw_callbacks::MonitorCallback);
 
 	_displayModeFactory.RegisterDefaultObjectGenerator<WindowDisplayMode>("Windowed");
 	_displayModeFactory.RegisterDefaultObjectGenerator<FullscreenDisplayMode>("Fullscreen");
@@ -34,15 +29,10 @@ DisplayManager::DisplayManager(std::shared_ptr<EventManager> eventMgr)
 
 DisplayManager::~DisplayManager()
 {
-	glfwTerminate();
+	DeleteAllWindows();
 }
 
-bool DisplayManager::Init()
-{
-	return true;
-}
-
-bool DisplayManager::Init(const xml::Element* properties)
+bool DisplayManager::CreateWindows(const xml::Element* properties)
 {
 	if (!properties)
 		return false;
@@ -62,23 +52,26 @@ bool DisplayManager::Init(const xml::Element* properties)
 	return true;
 }
 
-void DisplayManager::Shutdown()
+void DisplayManager::CloseOpenWindows()
 {
-	// close open windows
 	while (!_openWindows.empty())
 		_openWindows.front()->Close();
 
-	for (Window* window : _windows)
+}
+
+void DisplayManager::DeleteAllWindows()
+{
+	CloseOpenWindows();
+
+	for( Window* window : _windows )
 		delete window;
 
 	_windows.clear();
-
 }
 
-void DisplayManager::Update(double)
-{
-	glfwPollEvents();
 
+void DisplayManager::UpdateWindows()
+{
 	for (Window* window : _openWindows)
 	{
 		window->MakeContextCurent();
@@ -86,7 +79,7 @@ void DisplayManager::Update(double)
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		_eventMgr->Broadcast(WindowUpdateEvent{window});
+		_kernel->GetEventManager()->Broadcast(WindowUpdateEvent{window});
 
 		window->SwapBuffers();
 	}
@@ -120,7 +113,7 @@ void DisplayManager::OnWindowOpend(Window* window)
 
 	glfwSetDropCallback(glfw, DropCallback);
 
-	_eventMgr->Broadcast(WindowOpendEvent{window});
+	_kernel->GetEventManager()->Broadcast(WindowOpendEvent{window});
 }
 
 void DisplayManager::OnWindowClosed(Window* window)
@@ -129,7 +122,7 @@ void DisplayManager::OnWindowClosed(Window* window)
 	if(it != _openWindows.end())
 	{
 		_openWindows.erase(it);
-		_eventMgr->Broadcast(WindowClosedEvent{window});
+		_kernel->GetEventManager()->Broadcast(WindowClosedEvent{window});
 	}
 }
 
@@ -152,9 +145,9 @@ unsigned DisplayManager::GetNumWindows() const
 	return _windows.size();
 }
 
-EventManager* DisplayManager::GetEventManager() const
+Kernel* DisplayManager::GetKernel() const
 {
-	return _eventMgr.get();
+	return _kernel;
 }
 
 Factory<DisplayModeBase>& DisplayManager::GetDisplayModeFactory()

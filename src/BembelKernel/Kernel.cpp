@@ -2,12 +2,14 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Application.h"
 #include "Kernel.h"
-#include "Engine/Engine.h"
 #include "Display/DisplayManager.h"
+#include "Engine/Engine.h"
 
 #include <BembelBase/Events/EventManager.h>
+#include <BembelBase/Logging/Logger.h>
+
+#include <glfw/glfw3.h>
 
 #include <chrono>
 
@@ -16,51 +18,44 @@
 /*============================================================================*/
 namespace bembel{
 
-Application::Application()
-	: _kernel(std::make_unique<Kernel>())
+Kernel::Kernel()
+	: _eventMgr(std::make_unique<EventManager>())
+	, _engine(std::make_unique<Engine>())
 {
-}
-
-Application::~Application()
-{}
-
-bool Application::Run()
-{
-	if (!Init())
-		return false;
-
-	MainLoop();
-
-	Cleanup();
-
-	return true;
-}
-
-void Application::Quit()
-{
-	_quite = true;
-}
-
-void Application::MainLoop()
-{
-	auto time = std::chrono::high_resolution_clock::now();
-
-	_quite = false;
-	while(!_quite)
+	if( glfwInit() == GL_FALSE )
 	{
-		auto now = std::chrono::high_resolution_clock::now();
-		std::chrono::milliseconds ms =
-			std::chrono::duration_cast<std::chrono::milliseconds>(now - time);
-
-		double timeSinceLastUpdate = 0.001*(ms.count());
-
-		_kernel->PollEvents();
-		Update(timeSinceLastUpdate);
-		_kernel->GetEngine()->UpdateSystems(timeSinceLastUpdate);
-		_kernel->GetDisplayManager()->UpdateWindows();
-
-		time = now;
+		BEMBEL_LOG_ERROR() << "Failed to initialize GLFW" << std::endl;
+		throw std::exception();
 	}
+
+	_displayMgr = std::make_unique<DisplayManager>(this);
+}
+
+Kernel::~Kernel()
+{
+	_displayMgr.reset();
+
+	glfwTerminate();
+}
+
+EventManager* Kernel::GetEventManager() const
+{
+	return _eventMgr.get();
+}
+
+DisplayManager* Kernel::GetDisplayManager() const
+{
+	return _displayMgr.get();
+}
+
+Engine* Kernel::GetEngine() const
+{
+	return _engine.get();
+}
+
+void Kernel::PollEvents()
+{
+	glfwPollEvents();
 }
 
 } //end of namespace JHL
