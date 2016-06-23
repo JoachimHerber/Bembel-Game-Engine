@@ -4,7 +4,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Delegate.hpp"
+#include "Slot.hpp"
 
 #include <mutex>
 #include <vector>
