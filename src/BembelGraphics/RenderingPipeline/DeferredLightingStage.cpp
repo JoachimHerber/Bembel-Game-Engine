@@ -131,8 +131,8 @@ void DeferredLightingStage::DoRendering()
 std::unique_ptr<DeferredLightingStage> DeferredLightingStage::CreateInstance(
 	const xml::Element* properties, RenderingPipeline* pipline)
 {
-	auto dirLightShader = CreateShader(properties->FirstChildElement("DirectionalLightShader"));
-	auto pointLightShader = CreateShader(properties->FirstChildElement("PointLightShader"));
+	auto dirLightShader   = CreateShader(properties->FirstChildElement("DirectionalLightProgram"));
+	auto pointLightShader = CreateShader(properties->FirstChildElement("PointLightShaderProgram"));
 
 	auto stage = std::make_unique<DeferredLightingStage>(pipline);
 	stage->SetDirLightShader(dirLightShader);
@@ -155,21 +155,27 @@ std::unique_ptr<DeferredLightingStage> DeferredLightingStage::CreateInstance(
 
 std::shared_ptr<ShaderProgram> DeferredLightingStage::CreateShader(const xml::Element* properties)
 {
-	std::string vert, frag;
-	if (!xml::GetAttribute(properties, "vert", vert) ||
-		!xml::GetAttribute(properties, "frag", frag))
-	{
+	if (!properties)
 		return nullptr;
+
+	std::string filename;
+
+	auto program = std::make_shared<ShaderProgram>();
+	for (auto shader : xml::IterateChildElements(properties, "VertexShader"))
+	{
+		if (xml::GetAttribute(shader, "file", filename))
+			program->AttachShaderFromFile(GL_VERTEX_SHADER, filename);
+	}
+	for (auto shader : xml::IterateChildElements(properties, "FragmentShader"))
+	{
+		if (xml::GetAttribute(shader, "file", filename))
+			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, filename);
 	}
 
-	auto shader = std::make_shared<ShaderProgram>();
-	if (!shader->AttachShaderFromFile(GL_VERTEX_SHADER, vert) ||
-		!shader->AttachShaderFromFile(GL_FRAGMENT_SHADER, frag) ||
-		!shader->Link())
-	{
+	if (!program->Link())
 		return nullptr;
-	}
-	return shader;
+
+	return program;
 }
 
 void DeferredLightingStage::SetTextureSamplerUniforms(ShaderProgram* shader)
@@ -242,13 +248,11 @@ void DeferredLightingStage::ApplyDirectionalLights()
 		_dirLightShader->GetUniformLocation("uInverseProjectionMatrix"),
 		1, GL_FALSE, &invProjection[0][0]);
 
-	glm::mat4 normalMatrix =
-		glm::transpose(glm::inverse(
-			_pipline->GetCamera()->GetViewMatrix()));
+	glm::mat3 normalMatrix = _pipline->GetCamera()->GetViewMatrix();
 
 	for (const auto& it : _dirLightContainer->GetComponents())
 	{
-		glm::vec4 dir(it.second.direction, 0);
+		glm::vec3 dir = it.second.direction;
 		dir = normalMatrix*dir;
 
 		glUniform3f(

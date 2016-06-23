@@ -5,6 +5,7 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
+#include <BembelBase/XML.h>
 
 #include <memory>
 #include <string>
@@ -33,7 +34,7 @@ public:
 	~Engine();
 
 	bool InitSystems();
-	bool InitSystems(const std::string& configFileName);
+	bool InitSystems(const xml::Element* );
 	void ShutdownSystems();
 
 	void UpdateSystems(double timeSinceLastUpdate);

@@ -8,6 +8,7 @@
 
 #include <BembelBase/Events/EventManager.h>
 #include <BembelBase/Logging/Logger.h>
+#include <BembelBase/XML.h>
 
 #include <glfw/glfw3.h>
 
@@ -38,14 +39,14 @@ Kernel::~Kernel()
 	glfwTerminate();
 }
 
-EventManager* Kernel::GetEventManager() const
+std::shared_ptr<EventManager> Kernel::GetEventManager() const
 {
-	return _eventMgr.get();
+	return _eventMgr;
 }
 
-DisplayManager* Kernel::GetDisplayManager() const
+std::shared_ptr<DisplayManager> Kernel::GetDisplayManager() const
 {
-	return _displayMgr.get();
+	return _displayMgr;
 }
 
 Engine* Kernel::GetEngine() const
@@ -56,6 +57,32 @@ Engine* Kernel::GetEngine() const
 void Kernel::PollEvents()
 {
 	glfwPollEvents();
+}
+
+bool Kernel::LoadSetting(const std::string& configFileName)
+{
+	xml::Document doc;
+	if (doc.LoadFile(configFileName.c_str()) != tinyxml2::XML_SUCCESS)
+	{
+		BEMBEL_LOG_ERROR()
+			<< "Failed to lode file '" << configFileName << "'\n"
+			<< doc.ErrorName() << std::endl;
+		return false;
+	}
+
+	const xml::Element* root = doc.FirstChildElement("Bembel");
+	if (!root)
+		return false;
+
+	const xml::Element* display = root->FirstChildElement("Display");
+	if (display)
+		_displayMgr->CreateWindows(display);
+
+	const xml::Element* systems = root->FirstChildElement("Systems");
+	if (systems)
+		_engine->InitSystems(systems);
+
+	return true;
 }
 
 } //end of namespace JHL

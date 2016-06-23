@@ -5,7 +5,9 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
+
 #include <memory>
+#include <string>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
@@ -28,15 +30,18 @@ public:
 	Kernel();
 	~Kernel();
 	
-	EventManager*   GetEventManager() const;
-	DisplayManager* GetDisplayManager() const;
-	Engine*         GetEngine() const;
-	
+	std::shared_ptr<EventManager>   GetEventManager() const;
+	std::shared_ptr<DisplayManager> GetDisplayManager() const;
+
+	Engine* GetEngine() const;
+
+	bool LoadSetting(const std::string& configFileName);
+
 	void PollEvents();
 
 private:
-	std::unique_ptr<EventManager>   _eventMgr;
-	std::unique_ptr<DisplayManager> _displayMgr;
+	std::shared_ptr<EventManager>   _eventMgr;
+	std::shared_ptr<DisplayManager> _displayMgr;
 
 	std::unique_ptr<Engine> _engine;
 

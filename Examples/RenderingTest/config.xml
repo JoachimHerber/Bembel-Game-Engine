@@ -1,0 +1,76 @@
+<Bembel>
+	<Display>
+		<Window title="Rendering Test">
+			<DisplayMode 
+				mode      = "Windowed" 
+				width     = "800" 
+				height    = "600"
+				resizable = "false"
+			/>
+		</Window>
+	</Display>
+	<Systems>
+		<Graphics>
+			<RenderingPipelines>
+				<RenderingPipeline horizontal_resolution="600" vertical_resolution="600">
+					<Textures>
+						<Texture name="depth"   format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+						<Texture name="color"   format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
+						<Texture name="normal"  format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
+						<Texture name="albedo"  format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
+					</Textures>
+					<RenderingStages>
+						<DeferredGeometryStage>
+							<DepthOutput texture="depth"/>
+							<ColorOutput texture="normal"  attachment="0"/>
+							<ColorOutput texture="albedo"  attachment="1"/>
+						</DeferredGeometryStage>
+						<DeferredLightingStage>
+							<DirectionalLightProgram>
+								<VertexShader file="shaders/directional_light.vert"/>
+								<FragmentShader file="shaders/directional_light.frag"/>
+								<FragmentShader file="shaders/cook_torrance.frag"/>
+							</DirectionalLightProgram>
+							<PointLightShaderProgram>
+								<VertexShader file="shaders/point_light.vert"/>
+								<FragmentShader file="shaders/point_light.frag"/>
+								<FragmentShader file="shaders/cook_torrance.frag"/>
+							</PointLightShaderProgram>
+							<Output texture="color"/>
+							<Input texture="depth" />
+							<Input texture="normal" />
+							<Input texture="albedo" />
+						</DeferredLightingStage>
+					</RenderingStages>
+					<Renderer>
+						<TestRenderer />
+					</Renderer>
+					<Views>	
+						<View texture="color"  left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="normal" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="albedo" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="depth"  left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+					</Views>
+					<Camera>
+						<Position x="0" y="0" z="0" />
+						<Projection fild_of_view="60" aspect_ration="1" near="0.1" far="100.0" />
+					</Camera>
+				</RenderingPipeline>
+			</RenderingPipelines>
+			<Viewports>
+				<Viewport x="0" y="0" width="600" height="600">
+					<PipelineResultView pipeline="0" view="0"/>
+				</Viewport>
+				<Viewport x="600" y="0" width="200" height="200">
+					<PipelineResultView pipeline="0" view="1"/>
+				</Viewport>
+				<Viewport x="600" y="200" width="200" height="200">
+					<PipelineResultView pipeline="0" view="2"/>
+				</Viewport>
+				<Viewport x="600" y="400" width="200" height="200">
+					<PipelineResultView pipeline="0" view="3"/>
+				</Viewport>
+			</Viewports>
+		</Graphics>
+	</Systems>
+</Bembel>

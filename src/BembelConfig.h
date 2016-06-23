@@ -6,7 +6,7 @@
 	#ifdef BEMBEL_STATIC
 		#define BEMBEL_API
 	#else
-		#if BEMBEL_EXPORTS
+		#if BEMBEL_EXPORT
 			#define BEMBEL_API __declspec(dllexport)
 		#else
 			#define BEMBEL_API __declspec(dllimport)

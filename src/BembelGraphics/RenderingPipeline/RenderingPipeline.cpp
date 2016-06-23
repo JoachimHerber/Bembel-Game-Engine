@@ -152,6 +152,16 @@ std::shared_ptr<Texture> RenderingPipeline::CreateTexture(
 	return texture;
 }
 
+std::shared_ptr<Texture> RenderingPipeline::CreateTexture(const xml::Element* properties)
+{
+	std::string name, format, target;
+	if (!xml::GetAttribute(properties, "name", name))
+		return nullptr;
+
+	xml::GetAttribute(properties, "format", format);
+	
+	return CreateTexture(name, StringToTextureFormat(format));
+}
 
 RenderingPipeline::ViewPtr RenderingPipeline::CreateView(
 	const std::string& textureName)
@@ -201,41 +211,7 @@ void RenderingPipeline::InitTextures(const xml::Element* properties)
 
 	for (auto textureProperties : xml::IterateChildElements(properties, "Texture"))
 	{
-		std::string name, format;
-		if (!xml::GetAttribute(textureProperties, "name", name) ||
-			!xml::GetAttribute(textureProperties, "format", format))
-			return;
-
-		if (format=="GL_DEPTH_COMPONENT32")
-			CreateTexture(name, GL_DEPTH_COMPONENT32);
-		else if (format=="GL_DEPTH_COMPONENT24")
-			CreateTexture(name, GL_DEPTH_COMPONENT24);
-		else if (format=="GL_DEPTH_COMPONENT16")
-			CreateTexture(name, GL_DEPTH_COMPONENT16);
-		else if (format=="GL_DEPTH_COMPONENT")
-			CreateTexture(name, GL_DEPTH_COMPONENT);
-
-		else if (format=="GL_RGBA")
-			CreateTexture(name, GL_RGBA);
-		else if (format=="GL_RGBA8")
-			CreateTexture(name, GL_RGBA8);
-		else if (format=="GL_RGBA16")
-			CreateTexture(name, GL_RGBA16);
-		else if (format=="GL_RGBA16F")
-			CreateTexture(name, GL_RGBA16F);
-		else if (format=="GL_RGBA32F")
-			CreateTexture(name, GL_RGBA32F);
-
-		else if (format=="GL_RGB")
-			CreateTexture(name, GL_RGB);
-		else if (format=="GL_RGB8")
-			CreateTexture(name, GL_RGB8);
-		else if (format=="GL_RGB16")
-			CreateTexture(name, GL_RGB16);
-		else if (format=="GL_RGB16F")
-			CreateTexture(name, GL_RGB16F);
-		else if (format=="GL_RGB32F")
-			CreateTexture(name, GL_RGB32F);
+		CreateTexture(textureProperties);
 	}
 }
 
@@ -308,6 +284,31 @@ void RenderingPipeline::InitCamera(const xml::Element* properties)
 	xml::GetAttribute(properties, "Projection", "far", far);
 	fov *= 3.14159265359f/180.0f;
 	_camera->SetUpProjection(fov, ar, near, far);
+}
+
+GLenum RenderingPipeline::StringToTextureFormat(const std::string& format)
+{
+	const static std::map<std::string, GLenum> mapping{
+		{"GL_DEPTH_COMPONENT32", GL_DEPTH_COMPONENT32},
+		{"GL_DEPTH_COMPONENT24", GL_DEPTH_COMPONENT24},
+		{"GL_DEPTH_COMPONENT16", GL_DEPTH_COMPONENT16},
+		{"GL_DEPTH_COMPONENT", GL_DEPTH_COMPONENT},
+		{"GL_RGBA", GL_RGBA},
+		{"GL_RGBA8", GL_RGBA8},
+		{"GL_RGBA16", GL_RGBA16},
+		{"GL_RGBA16F", GL_RGBA16F},
+		{"GL_RGBA32F", GL_RGBA32F},
+		{"GL_RGB", GL_RGB},
+		{"GL_RGB8", GL_RGB8},
+		{"GL_RGB16", GL_RGB16},
+		{"GL_RGB16F", GL_RGB16F},
+		{"GL_RGB32F", GL_RGB32F}
+	};
+	auto it = mapping.find(format);
+	if (it != mapping.end())
+		return it->second;
+
+	return GL_RGBA;
 }
 
 } //end of namespace bembel

@@ -65,6 +65,7 @@ bool EntityManager::LoadEntities(const std::string& fileName)
 	{
 		CreateEntity(entity);
 	}
+	return true;
 }
 
 const std::vector<EntityManager::ComponentMask>& EntityManager::GetEntitys() const

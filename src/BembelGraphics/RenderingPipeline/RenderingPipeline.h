@@ -65,6 +65,7 @@ public:
 	CameraPtr GetCamera() const;
 
 	TexturePtr GetTexture(const std::string& name) const;
+	TexturePtr CreateTexture(const xml::Element*);
 	TexturePtr CreateTexture(const std::string& name, GLenum format);
 
 	void AddRenderingStage(RenderingStagePtr);
@@ -83,6 +84,8 @@ private:
 	void InitRenderer(const xml::Element*);
 	void InitViews(const xml::Element*);
 	void InitCamera(const xml::Element*);
+
+	GLenum StringToTextureFormat(const std::string&);
 
 private:
 	GraphicSystem* _grapicSys;

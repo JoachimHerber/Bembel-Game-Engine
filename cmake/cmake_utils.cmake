@@ -37,6 +37,7 @@ macro( bembel_configure_application _PACKAGE_NAME _WORK_FOLDER )
 	set_target_properties( ${_PACKAGE_NAME} PROPERTIES OUTPUT_NAME_DEBUG	"${${_PACKAGE_NAME_UPPER}_OUTPUT_NAME}D" )
 	set_target_properties( ${_PACKAGE_NAME} PROPERTIES OUTPUT_NAME_RELEASE	"${${_PACKAGE_NAME_UPPER}_OUTPUT_NAME}" )
 	set_target_properties( ${_PACKAGE_NAME} PROPERTIES OUTPUT_NAME			"${${_PACKAGE_NAME_UPPER}_OUTPUT_NAME}" )
+	set_target_properties( ${_PACKAGE_NAME} PROPERTIES COMPILE_FLAGS -DTINYXML2_IMPORT )
 	
 	if( MSVC )
 		#if we're usign MSVC, we set up a *.vcproj.user file
@@ -68,4 +69,6 @@ macro( bembel_configure_application _PACKAGE_NAME _WORK_FOLDER )
 			message( WARNING "bembel_configure_application( ${_PACKAGE_NAME} ) - could not find file VisualStudio project user setting prototype \"${VISTA_VCPROJUSER_PROTO_FILE}\"" )
 		endif( VCPROJUSER_PROTO_FILE )
 	endif( MSVC )	
+	
+	
 endmacro()

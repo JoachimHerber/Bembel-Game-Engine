@@ -30,25 +30,12 @@ bool Engine::InitSystems()
 	return true;
 }
 
-bool Engine::InitSystems(const std::string& configFileName)
+bool Engine::InitSystems(const xml::Element* properties)
 {
-	xml::Document doc;
-	if (doc.LoadFile(configFileName.c_str()) != tinyxml2::XML_SUCCESS)
-	{
-		BEMBEL_LOG_ERROR()
-			<< "Failed to lode file '" << configFileName << "'\n"
-			<< doc.ErrorName() << std::endl;
-		return false;
-	}
-
-	const xml::Element* root = doc.FirstChildElement("Engine");
-	if (!root)
-		return false;
-
 	for (auto system : _systems)
 	{
 		const xml::Element* config = 
-			root->FirstChildElement(system->GetName().c_str());
+			properties->FirstChildElement(system->GetName().c_str());
 
 		if (!system->Init(config))
 			return false;

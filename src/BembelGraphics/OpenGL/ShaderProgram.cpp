@@ -108,11 +108,13 @@ bool ShaderProgram::Link()
 
 	if (status != int(GL_TRUE))
 	{
-		// @TODO add Error Message;
+		GLint maxLength = 0;
+		glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &maxLength);
 
-		char errorMessage[4096];
+		std::string errorMessage;
+		errorMessage.resize(maxLength);
 		GLsizei size;
-		glGetProgramInfoLog(_programHandle, 4096, &size, errorMessage);
+		glGetProgramInfoLog(_programHandle, maxLength, &maxLength, &errorMessage[0]);
 
 		BEMBEL_LOG_ERROR()
 			<< "Can't link ShaderProgram" << std::endl

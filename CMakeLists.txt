@@ -35,8 +35,11 @@ if( WIN32 )
 	
 	get_target_property( _BUILD_TYPE Bembel TYPE )
 	if( "${_BUILD_TYPE}" STREQUAL "SHARED_LIBRARY" OR "${_BUILD_TYPE}" STREQUAL "MODULE_LIBRARY" )
-		set_target_properties( Bembel PROPERTIES COMPILE_FLAGS -DBEMBEL_EXPORTS )
+		set_target_properties( Bembel PROPERTIES COMPILE_FLAGS "-DTINYXML2_EXPORT -DBEMBEL_EXPORT" )
 	else()
 		set_target_properties( Bembel PROPERTIES COMPILE_FLAGS -DBEMBEL_STATIC )
 	endif()
 endif( WIN32 )
+
+bembel_conditional_add_sub_project(BaseApp "Examples/BaseApp" "build base application")
+bembel_conditional_add_sub_project(RenderingTest "Examples/RenderingTest" "build rendering test")
