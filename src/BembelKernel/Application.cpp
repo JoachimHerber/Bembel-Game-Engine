@@ -5,9 +5,9 @@
 #include "Application.h"
 #include "Kernel.h"
 #include "Engine/Engine.h"
+#include "Events/EventManager.h"
 #include "Display/DisplayManager.h"
 
-#include <BembelBase/Events/EventManager.h>
 
 #include <chrono>
 

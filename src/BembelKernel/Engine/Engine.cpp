@@ -5,9 +5,10 @@
 #include "Engine.h"
 #include "System.h"
 
+#include "../Events/EventManager.h"
+
 #include <BembelBase/XML.h>
 #include <BembelBase/Logging/Logger.h>
-#include <BembelBase/Events/EventManager.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

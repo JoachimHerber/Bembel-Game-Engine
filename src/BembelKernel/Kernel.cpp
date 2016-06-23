@@ -5,8 +5,8 @@
 #include "Kernel.h"
 #include "Display/DisplayManager.h"
 #include "Engine/Engine.h"
+#include "Events/EventManager.h"
 
-#include <BembelBase/Events/EventManager.h>
 #include <BembelBase/Logging/Logger.h>
 #include <BembelBase/XML.h>
 

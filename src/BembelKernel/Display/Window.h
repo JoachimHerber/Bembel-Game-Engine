@@ -7,7 +7,6 @@
 #include <BembelConfig.h>
 
 #include <BembelBase/XML.h>
-#include <BembelBase/Events/EventManager.h>
 
 #include <glm/glm.hpp>
 

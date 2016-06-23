@@ -20,11 +20,6 @@ set( DirFiles
 	Logging/ConsoleLogSink.h
 	Logging/ConsoleLogSink.cpp
 	
-	Events/EventChannel.hpp
-	Events/EventChannel.inl
-	Events/EventManager.h
-	Events/EventManager.inl
-	Events/EventManager.cpp
 	Events/Delegate.hpp
 	Events/Delegate.inl
 	Events/Signal.hpp

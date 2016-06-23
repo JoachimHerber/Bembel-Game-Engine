@@ -5,7 +5,8 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
-#include <BembelBase/Events/EventManager.h>
+
+#include "EventManager.h"
 
 #include <glm/glm.hpp>
 

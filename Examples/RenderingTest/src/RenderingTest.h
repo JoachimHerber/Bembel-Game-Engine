@@ -3,8 +3,8 @@
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
-#include <BembelBase/Events/EventManager.h>
 #include <BembelKernel/Application.h>
+#include <BembelKernel/Events/EventManager.h>
 #include <BembelGraphics/GraphicSystem.h>
 #include <BembelGraphics/RenderingPipeline/RenderingPipeline.h>
 

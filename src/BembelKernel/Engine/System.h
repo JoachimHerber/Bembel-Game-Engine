@@ -5,8 +5,10 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
+
+#include "../Events/EventManager.h"
+
 #include <BembelBase/XML.h>
-#include <BembelBase/Events/EventManager.h>
 
 #include <memory>
 

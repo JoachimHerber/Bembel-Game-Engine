@@ -9,12 +9,18 @@ set( DirFiles
 	Application.h
 	Application.cpp
 	
+	Events/EventChannel.hpp
+	Events/EventChannel.inl
+	Events/EventManager.h
+	Events/EventManager.inl
+	Events/EventManager.cpp
 	Events/EventCallbacks.h
 	Events/EventCallbacks.cpp
 	Events/DisplayEvents.h
 	Events/DisplayEvents.cpp
 	Events/InputEvents.h
 	Events/InputEvents.cpp
+	
 	
 	Engine/Engine.h
 	Engine/Engine.cpp

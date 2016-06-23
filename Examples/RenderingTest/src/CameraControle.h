@@ -4,7 +4,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelBase/Events/EventManager.h>
+#include <BembelKernel/Events/EventManager.h>
 #include <BembelKernel/Events/InputEvents.h>
 #include <BembelGraphics/RenderingPipeline/Camera.h>
 
