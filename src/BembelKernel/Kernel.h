@@ -8,6 +8,8 @@
 
 #include <memory>
 #include <string>
+#include <vector>
+#include <unordered_map>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
@@ -16,7 +18,7 @@ namespace bembel{
 
 class EventManager;
 class DisplayManager;
-class Engine;
+class System;
 
 } //end of namespace bembel
 /*============================================================================*/
@@ -33,18 +35,24 @@ public:
 	std::shared_ptr<EventManager>   GetEventManager() const;
 	std::shared_ptr<DisplayManager> GetDisplayManager() const;
 
-	Engine* GetEngine() const;
+	bool AddSystem(std::shared_ptr<System>);
+	bool RemoveSystem(const std::string& name);
+	std::shared_ptr<System> GetSystem(const std::string& name);
+
 
 	bool LoadSetting(const std::string& configFileName);
 
-	void PollEvents();
+	bool InitSystems();
+	void UpdateSystems(double timeSinceLastUpdate);
+	void ShutdownSystems();
 
+	void PollEvents();
 private:
 	std::shared_ptr<EventManager>   _eventMgr;
 	std::shared_ptr<DisplayManager> _displayMgr;
 
-	std::unique_ptr<Engine> _engine;
-
+	std::unordered_map<std::string, unsigned> _systemMapping;
+	std::vector<std::shared_ptr<System>>      _systems;
 };
 
 } //end of namespace bembel

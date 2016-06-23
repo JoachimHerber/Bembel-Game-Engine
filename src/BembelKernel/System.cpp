@@ -30,29 +30,16 @@ EventManager* System::GetEventManager() const
 	return _eventMgr.get();
 }
 
+bool System::Configure(const xml::Element*)
+{
+	return true;
+}
+
 bool System::Init()
 {
 	_eventMgr->Broadcast(
 		SystemInitializationEvent{this});
 	return true;
-}
-
-bool System::Init(std::string& configFileName)
-{
-	xml::Document doc;
-	if (doc.LoadFile(configFileName.c_str()) != tinyxml2::XML_SUCCESS)
-	{
-		BEMBEL_LOG_ERROR()
-			<< "Failed to lode file '" << configFileName << "'\n"
-			<< doc.ErrorName() << std::endl;
-		return false;
-	}
-	return Init(doc.FirstChildElement(_name.c_str()));
-}
-
-bool System::Init(const xml::Element* properties)
-{
-	return Init();
 }
 
 void System::Shutdown()

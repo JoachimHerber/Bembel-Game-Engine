@@ -9,7 +9,6 @@
 #include <BembelOpenGL.h>
 
 #include <BembelKernel/Kernel.h>
-#include <BembelKernel/Engine/Engine.h>
 #include <BembelKernel/Display/DisplayManager.h>
 
 #include <BembelDataStructures/PositionComponent.h>
@@ -36,7 +35,7 @@ RenderingTest::RenderingTest()
 	: bembel::Application()
 {
 	_graphicSys = std::make_shared<bembel::GraphicSystem>(_kernel->GetEventManager());
-	_kernel->GetEngine()->AddSystem(_graphicSys);
+	_kernel->AddSystem(_graphicSys);
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 	_kernel->GetEventManager()->AddHandler<bembel::FrameBufferResizeEvent>(this);
 	_graphicSys->GetRendererFactory().RegisterDefaultObjectGenerator<SimpleGeometryRenderer>("TestRenderer");
@@ -59,12 +58,15 @@ bool RenderingTest::Init()
 	pipline->SetEntityManager(world);
 
 	world->LoadEntities("scene.xml");
+
+	_kernel->InitSystems();
+
 	return true;
 }
 
 void RenderingTest::Cleanup()
 {
-	_kernel->GetEngine()->ShutdownSystems();
+	_kernel->ShutdownSystems();
 	_kernel->GetDisplayManager()->CloseOpenWindows();
 }
 

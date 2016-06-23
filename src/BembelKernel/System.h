@@ -6,7 +6,7 @@
 
 #include <BembelConfig.h>
 
-#include "../Events/EventManager.h"
+#include "Events/EventManager.h"
 
 #include <BembelBase/XML.h>
 
@@ -26,9 +26,9 @@ public:
 	const std::string& GetName() const;
 	EventManager* GetEventManager() const;
 
+	virtual bool Configure(const xml::Element*);
+
 	virtual bool Init();
-	virtual bool Init(std::string& configFileName);
-	virtual bool Init(const xml::Element* properties);
 	virtual void Shutdown();
 
 	virtual void Update(double timeSinceLastUpdate) = 0;

@@ -4,7 +4,6 @@
 
 #include "Application.h"
 #include "Kernel.h"
-#include "Engine/Engine.h"
 #include "Events/EventManager.h"
 #include "Display/DisplayManager.h"
 
@@ -56,7 +55,7 @@ void Application::MainLoop()
 
 		_kernel->PollEvents();
 		Update(timeSinceLastUpdate);
-		_kernel->GetEngine()->UpdateSystems(timeSinceLastUpdate);
+		_kernel->UpdateSystems(timeSinceLastUpdate);
 		_kernel->GetDisplayManager()->UpdateWindows();
 
 		time = now;

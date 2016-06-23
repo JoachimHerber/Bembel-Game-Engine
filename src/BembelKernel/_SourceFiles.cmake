@@ -6,6 +6,8 @@ set( DirFiles
 	
 	Kernel.h
 	Kernel.cpp
+	System.h
+	System.cpp
 	Application.h
 	Application.cpp
 	
@@ -20,12 +22,6 @@ set( DirFiles
 	Events/DisplayEvents.cpp
 	Events/InputEvents.h
 	Events/InputEvents.cpp
-	
-	
-	Engine/Engine.h
-	Engine/Engine.cpp
-	Engine/System.h
-	Engine/System.cpp
 	
 	Display/DisplayManager.h
 	Display/DisplayManager.cpp

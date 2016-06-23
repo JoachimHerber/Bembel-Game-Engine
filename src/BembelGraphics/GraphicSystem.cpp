@@ -77,22 +77,22 @@ GraphicSystem::RendertingSrageFactory& GraphicSystem::GetRendertingSrageFactory(
 	return _renderingStageFactory;
 }
 
-bool GraphicSystem::Init()
-{
-	for (auto pipline : _pipelines)
-		pipline->Init();
-	_eventMgr->Broadcast(InitGraphicResourcesEvent{});
-	return true;
-}
-
-bool GraphicSystem::Init(const xml::Element* properties)
+bool GraphicSystem::Configure(const xml::Element* properties)
 {
 	if (!properties)
 		return false;
 
-	InitPipelines(properties->FirstChildElement("RenderingPipelines"));
-	InitViewports(properties->FirstChildElement("Viewports"));
+	ConfigurePipelines(properties->FirstChildElement("RenderingPipelines"));
+	ConfigureViewports(properties->FirstChildElement("Viewports"));
 
+	_eventMgr->Broadcast(InitGraphicResourcesEvent{});
+	return true;
+}
+
+bool GraphicSystem::Init()
+{
+	for (auto pipline : _pipelines)
+		pipline->Init();
 	_eventMgr->Broadcast(InitGraphicResourcesEvent{});
 	return true;
 }
@@ -135,7 +135,7 @@ void GraphicSystem::HandleEvent(const WindowUpdateEvent& event)
 	}
 }
 
-void GraphicSystem::InitPipelines(const xml::Element* properties)
+void GraphicSystem::ConfigurePipelines(const xml::Element* properties)
 {
 	if (!properties)
 		return;
@@ -143,14 +143,14 @@ void GraphicSystem::InitPipelines(const xml::Element* properties)
 	for( auto pipelineProperties : xml::IterateChildElements(properties, "RenderingPipeline"))
 	{
 		auto pipline = std::make_shared<RenderingPipeline>(this);
-		if (!pipline->Init(pipelineProperties))
+		if (!pipline->Configure(pipelineProperties))
 			pipline.reset();
 
 		_pipelines.push_back(pipline);
 	}
 }
 
-void GraphicSystem::InitViewports(const xml::Element* properties)
+void GraphicSystem::ConfigureViewports(const xml::Element* properties)
 {
 	if (!properties)
 		return;

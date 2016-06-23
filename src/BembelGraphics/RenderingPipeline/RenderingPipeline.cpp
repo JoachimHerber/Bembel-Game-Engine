@@ -74,7 +74,7 @@ void RenderingPipeline::Init()
 		view->Init();
 }
 
-bool RenderingPipeline::Init(const xml::Element* properties)
+bool RenderingPipeline::Configure(const xml::Element* properties)
 {
 	if (!properties)
 		return false;
@@ -87,8 +87,6 @@ bool RenderingPipeline::Init(const xml::Element* properties)
 	InitRenderer(properties->FirstChildElement("Renderer"));
 	InitViews(properties->FirstChildElement("Views"));
 	InitCamera(properties->FirstChildElement("Camera"));
-	
-	Init();
 	return true;
 }
 

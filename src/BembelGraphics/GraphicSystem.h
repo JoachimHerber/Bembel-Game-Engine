@@ -6,7 +6,7 @@
 
 #include <BembelConfig.h>
 
-#include <BembelKernel/Engine/System.h>
+#include <BembelKernel/System.h>
 #include <BembelKernel/Events/DisplayEvents.h>
 
 #include <BembelBase/Factory.hpp>
@@ -51,16 +51,17 @@ public:
 	RendererFactory& GetRendererFactory();
 	RendertingSrageFactory& GetRendertingSrageFactory();
 
+	virtual bool Configure(const xml::Element*) override;
+
 	virtual bool Init() override;
-	virtual bool Init(const xml::Element*) override;
 	virtual void Shutdown() override;
 	virtual void Update(double timeSinceLastUpdate) override;
 
 	void HandleEvent(const WindowUpdateEvent&);
 
 private:
-	void InitPipelines(const xml::Element*);
-	void InitViewports(const xml::Element*);
+	void ConfigurePipelines(const xml::Element*);
+	void ConfigureViewports(const xml::Element*);
 
 private:
 	std::vector<std::vector<ViewportPtr>> _viewports;

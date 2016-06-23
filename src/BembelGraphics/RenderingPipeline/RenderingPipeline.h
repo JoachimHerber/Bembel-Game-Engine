@@ -55,8 +55,9 @@ public:
 	void Disable();
 	bool IsEnabled();
 
+	bool Configure(const xml::Element*);
+
 	void Init();
-	bool Init(const xml::Element*);
 	void Cleanup();
 
 	void SetEntityManager(EntityManagerPtr);
