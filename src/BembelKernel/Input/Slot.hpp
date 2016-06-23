@@ -1,32 +1,32 @@
-#ifndef BEMBEL_DELEGATE_H
-#define BEMBEL_DELEGATE_H
+#ifndef BEMBEL_SLOT_H
+#define BEMBEL_SLOT_H
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
 template<typename ... TArgs>
-class Delegate
+class Slot
 {
 public:
-	Delegate(Delegate&&);
-	Delegate(const Delegate&);
-	Delegate(void(*)(TArgs...));
+	Slot(Slot&&);
+	Slot(const Slot&);
+	Slot(void(*)(TArgs...));
 	template <typename C>
-	Delegate(C* object);
+	Slot(C* object);
 	template <typename C>
-	Delegate(C* object, void (C::* method)(TArgs...));
+	Slot(C* object, void (C::* method)(TArgs...));
 	template <typename C>
-	Delegate(C* object, void (C::* method)(TArgs...) const);
+	Slot(C* object, void (C::* method)(TArgs...) const);
 
-	~Delegate();
+	~Slot();
 
 	void operator()(TArgs... args);
 
-	bool operator==(const Delegate<TArgs...>& oOther);
-	bool operator!=(const Delegate<TArgs...>& oOther);
+	bool operator==(const Slot<TArgs...>& oOther);
+	bool operator!=(const Slot<TArgs...>& oOther);
 
-	Delegate& operator= (const Delegate&);
+	Slot& operator= (const Slot&);
 
 private:
 	using InvokeFunctionType  = void(*)(void*, TArgs...);

@@ -4,7 +4,7 @@
 namespace bembel {
 	
 template<typename ... TArgs>
-inline Delegate<TArgs...>::Delegate(Delegate&& other)
+inline Slot<TArgs...>::Slot(Slot&& other)
 	: _target(other._target)
 	, _invoke(other._invoke)
 	, _delete(other._delete)
@@ -17,7 +17,7 @@ inline Delegate<TArgs...>::Delegate(Delegate&& other)
 }
 
 template<typename ... TArgs>
-inline Delegate<TArgs...>::Delegate(const Delegate& other)
+inline Slot<TArgs...>::Slot(const Slot& other)
 	: _target(other._clone(other._target))
 	, _invoke(other._invoke)
 	, _delete(other._delete)
@@ -26,7 +26,7 @@ inline Delegate<TArgs...>::Delegate(const Delegate& other)
 {}
 
 template<typename ... TArgs>
-inline Delegate<TArgs...>::Delegate(void(*funktion)(TArgs...))
+inline Slot<TArgs...>::Slot(void(*funktion)(TArgs...))
 	: _target(funktion)
 	, _invoke(&InvokeFunction)
 	, _delete(nullptr)
@@ -36,7 +36,7 @@ inline Delegate<TArgs...>::Delegate(void(*funktion)(TArgs...))
 
 template <typename ... TArgs>
 template <typename FunctorType>
-inline Delegate<TArgs...>::Delegate(FunctorType* functor)
+inline Slot<TArgs...>::Slot(FunctorType* functor)
 	: _target(functor)
 	, _invoke(&InvokeFunctor<FunctorType>)
 	, _delete(nullptr)
@@ -46,7 +46,7 @@ inline Delegate<TArgs...>::Delegate(FunctorType* functor)
 
 template <typename ... TArgs>
 template <typename C>
-inline Delegate<TArgs...>::Delegate(C* object, void (C::* method)(TArgs...))
+inline Slot<TArgs...>::Slot(C* object, void (C::* method)(TArgs...))
 	: _target(new ObjectMethodPair<C>(object, method))
 	, _invoke(&InvokeMethod<C>)
 	, _delete(&ObjectMethodPair<C>::Delete)
@@ -56,7 +56,7 @@ inline Delegate<TArgs...>::Delegate(C* object, void (C::* method)(TArgs...))
 
 template <typename ... TArgs>
 template <typename C>
-inline Delegate<TArgs...>::Delegate(C* object, void (C::* method)(TArgs...) const)
+inline Slot<TArgs...>::Slot(C* object, void (C::* method)(TArgs...) const)
 	: _target(new ObjectConstMethodPair<C>(object, method))
 	, _invoke(&InvokeConstMethod<C>)
 	, _delete(&ObjectConstMethodPair<C>::Delete)
@@ -65,20 +65,20 @@ inline Delegate<TArgs...>::Delegate(C* object, void (C::* method)(TArgs...) cons
 {}
 
 template <typename ... TArgs>
-inline Delegate<TArgs...>::~Delegate()
+inline Slot<TArgs...>::~Slot()
 {
 	if (_delete)
 		_delete(_target);
 }
 
 template <typename ... TArgs>
-void inline Delegate<TArgs...>::operator()(TArgs... args)
+void inline Slot<TArgs...>::operator()(TArgs... args)
 {
 	_invoke(_target, args...);
 }
 
 template <typename ... TArgs>
-bool inline Delegate<TArgs...>::operator==(const Delegate<TArgs...>& other)
+bool inline Slot<TArgs...>::operator==(const Slot<TArgs...>& other)
 {
 	if (_compare != other._compare)
 		return false;
@@ -87,13 +87,13 @@ bool inline Delegate<TArgs...>::operator==(const Delegate<TArgs...>& other)
 }
 
 template <typename ... TArgs>
-bool inline Delegate<TArgs...>::operator!=(const Delegate<TArgs...>& other)
+bool inline Slot<TArgs...>::operator!=(const Slot<TArgs...>& other)
 {
 	return !operator==(other);
 }
 
 template <typename ... TArgs>
-inline Delegate<TArgs...>& Delegate<TArgs...>::operator=(const Delegate<TArgs...>& other) 
+inline Slot<TArgs...>& Slot<TArgs...>::operator=(const Slot<TArgs...>& other) 
 {
 	if(_delete)
 		_delete(_target);
@@ -108,21 +108,21 @@ inline Delegate<TArgs...>& Delegate<TArgs...>::operator=(const Delegate<TArgs...
 }
 
 template <typename ... TArgs>
-static void Delegate<TArgs...>::InvokeFunction(void* function, TArgs... args)
+static void Slot<TArgs...>::InvokeFunction(void* function, TArgs... args)
 {
 	static_cast<void(*)(TArgs...)>(function)(args...);
 }
 
 template <typename ... TArgs>
 template <typename FunctorType>
-static void Delegate<TArgs...>::InvokeFunctor(void* functor, TArgs... args)
+static void Slot<TArgs...>::InvokeFunctor(void* functor, TArgs... args)
 {
 	(*static_cast<FunctorType*>(functor))(args...);
 }
 
 template <typename ... TArgs>
 template <typename C>
-static void Delegate<TArgs...>::InvokeMethod(void* p, TArgs... args)
+static void Slot<TArgs...>::InvokeMethod(void* p, TArgs... args)
 {
 	auto pair = static_cast<ObjectMethodPair<C>*>(p);
 	((pair->_object)->*(pair->_method))(args...);
@@ -130,7 +130,7 @@ static void Delegate<TArgs...>::InvokeMethod(void* p, TArgs... args)
 
 template <typename ... TArgs>
 template <typename C>
-static void Delegate<TArgs...>::InvokeConstMethod(void* p, TArgs... args)
+static void Slot<TArgs...>::InvokeConstMethod(void* p, TArgs... args)
 {
 	auto pair = static_cast<ObjectConstMethodPair<C>*>(p);
 	((pair->_object)->*(pair->_method))(args...);
@@ -139,14 +139,14 @@ static void Delegate<TArgs...>::InvokeConstMethod(void* p, TArgs... args)
 
 template <typename ... TArgs>
 template <typename C>
-static void Delegate<TArgs...>::ObjectMethodPair<C>::Delete(void* object)
+static void Slot<TArgs...>::ObjectMethodPair<C>::Delete(void* object)
 {
 	delete static_cast<ObjectMethodPair<C>*>(object);
 }
 
 template <typename ... TArgs>
 template <typename C>
-static bool Delegate<TArgs...>::ObjectMethodPair<C>::Compare(void* p1, void* p2)
+static bool Slot<TArgs...>::ObjectMethodPair<C>::Compare(void* p1, void* p2)
 {
 	auto pair1 = static_cast<ObjectMethodPair<C>*>(p1);
 	auto pair2 = static_cast<ObjectMethodPair<C>*>(p2);
@@ -156,7 +156,7 @@ static bool Delegate<TArgs...>::ObjectMethodPair<C>::Compare(void* p1, void* p2)
 
 template <typename ... TArgs>
 template <typename C>
-static void* Delegate<TArgs...>::ObjectMethodPair<C>::Clone(void* p)
+static void* Slot<TArgs...>::ObjectMethodPair<C>::Clone(void* p)
 {
 	auto* pair = static_cast<ObjectMethodPair<C>*>(p);
 	return new ObjectMethodPair<C>(pair->object, pair->method);
@@ -164,13 +164,13 @@ static void* Delegate<TArgs...>::ObjectMethodPair<C>::Clone(void* p)
 
 template <typename ... TArgs>
 template <typename C>
-static void Delegate<TArgs...>::ObjectConstMethodPair<C>::Delete(void* object)
+static void Slot<TArgs...>::ObjectConstMethodPair<C>::Delete(void* object)
 {
 	delete static_cast<ObjectConstMethodPair<C>*>(object);
 }
 template <typename ... TArgs>
 template <typename C>
-static bool Delegate<TArgs...>::ObjectConstMethodPair<C>::Compare(void* p1, void* p2)
+static bool Slot<TArgs...>::ObjectConstMethodPair<C>::Compare(void* p1, void* p2)
 {
 	auto pair1 = static_cast<ObjectConstMethodPair<C>*>(p1);
 	auto pair2 = static_cast<ObjectConstMethodPair<C>*>(p2);
@@ -180,20 +180,20 @@ static bool Delegate<TArgs...>::ObjectConstMethodPair<C>::Compare(void* p1, void
 
 template <typename ... TArgs>
 template <typename C>
-static void* Delegate<TArgs...>::ObjectConstMethodPair<C>::Clone(void* p)
+static void* Slot<TArgs...>::ObjectConstMethodPair<C>::Clone(void* p)
 {
 	auto* pair = static_cast<ObjectConstMethodPair<C>*>(p);
 	return new ObjectConstMethodPair<C>(pair->object, pair->method);
 }
 
 template <typename ... TArgs>
-static bool Delegate<TArgs...>::ComparePointerAddress(void* p1, void* p2)
+static bool Slot<TArgs...>::ComparePointerAddress(void* p1, void* p2)
 {
 	return p1 == p2;
 }
 
 template <typename ... TArgs>
-static void* Delegate<TArgs...>::ClonePointer(void* p)
+static void* Slot<TArgs...>::ClonePointer(void* p)
 {
 	return p;
 }

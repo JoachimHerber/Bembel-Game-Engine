@@ -30,7 +30,7 @@ public:
 	template<class C>
 	void AddSlot(C* functor);
 
-	void AddSlot(Delegate<TArgs...>&& slot);
+	void AddSlot(Slot<TArgs...>&& slot);
 
 	void RemoveSlot(void(*function)(TArgs...));
 	template<class C>
@@ -40,12 +40,12 @@ public:
 	template<class C>
 	void RemoveSlot(C* functor);
 
-	void RemoveSlot(Delegate<TArgs...>&& slot);
+	void RemoveSlot(Slot<TArgs...>&& slot);
 
 	void Emit(TArgs ... args);
 
 private:
-	using SlotVector = std::vector<Delegate<TArgs...>>;
+	using SlotVector = std::vector<Slot<TArgs...>>;
 
 	SlotVector _slots;
 

@@ -15,7 +15,7 @@ inline Signal<TArgs ...>::~Signal()
 template<typename ... TArgs>
 inline void Signal<TArgs ...>::AddSlot(void(*function)(TArgs...))
 {
-	AddSlot(Delegate<TArgs...>(function));
+	AddSlot(Slot<TArgs...>(function));
 }
 
 template<typename ... TArgs>
@@ -23,7 +23,7 @@ template<class C>
 inline void Signal<TArgs ...>::AddSlot(
 	C*  objekt, void(C::* method)(TArgs...))
 {
-	AddSlot(Delegate<TArgs...>(objekt, method));
+	AddSlot(Slot<TArgs...>(objekt, method));
 }
 
 template<typename ... TArgs>
@@ -31,21 +31,21 @@ template<class C>
 inline void Signal<TArgs ...>::AddSlot(
 	C* objekt, void(C::* method)(TArgs...) const)
 {
-	AddSlot(Delegate<TArgs...>(objekt, method));
+	AddSlot(Slot<TArgs...>(objekt, method));
 }
 
 template<typename ... TArgs>
 template<class C>
 inline void Signal<TArgs ...>::AddSlot(C* functor)
 {
-	AddSlot(Delegate<TArgs...>(functor));
+	AddSlot(Slot<TArgs...>(functor));
 }
 
 template<typename ... TArgs>
 inline void Signal<TArgs ...>::RemoveSlot(
 	void(*function)(TArgs...))
 {
-	RemoveSlot(Delegate<TArgs...>(function));
+	RemoveSlot(Slot<TArgs...>(function));
 }
 
 template<typename ... TArgs>
@@ -53,7 +53,7 @@ template<class C>
 inline void Signal<TArgs ...>::RemoveSlot(
 	C* objekt, void(C::* method)(TArgs...))
 {
-	RemoveSlot(Delegate<TArgs...>(objekt, method));
+	RemoveSlot(Slot<TArgs...>(objekt, method));
 }
 
 template<typename ... TArgs>
@@ -61,25 +61,25 @@ template<class C>
 inline void Signal<TArgs ...>::RemoveSlot(
 	C* objekt, void(C::* method)(TArgs...) const)
 {
-	RemoveSlot(Delegate<TArgs...>(objekt, method));
+	RemoveSlot(Slot<TArgs...>(objekt, method));
 }
 
 template<typename ... TArgs>
 template<class C>
 inline void Signal<TArgs ...>::RemoveSlot(C* functor)
 {
-	RemoveSlot(Delegate<TArgs...>(functor));
+	RemoveSlot(Slot<TArgs...>(functor));
 }
 
 template<typename ... TArgs>
-inline void Signal<TArgs ...>::AddSlot(Delegate<TArgs...>&& slot)
+inline void Signal<TArgs ...>::AddSlot(Slot<TArgs...>&& slot)
 {
 	std::lock_guard<std::mutex> lock(_mutex);
 	_slots.push_back(slot);
 }
 
 template<typename ... TArgs>
-inline void Signal<TArgs ...>::RemoveSlot(Delegate<TArgs...>&& slot)
+inline void Signal<TArgs ...>::RemoveSlot(Slot<TArgs...>&& slot)
 {
 	std::lock_guard<std::mutex> lock(_mutex);
 

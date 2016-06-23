@@ -30,10 +30,10 @@ set( DirFiles
 	Display/DisplayMode.h
 	Display/DisplayMode.cpp
 	
-	Input/Delegate.hpp
-	Input/Delegate.inl
 	Input/Signal.hpp
 	Input/Signal.inl
+	Input/Slot.hpp
+	Input/Slot.inl
 )
 
 foreach( File ${DirFiles} )
