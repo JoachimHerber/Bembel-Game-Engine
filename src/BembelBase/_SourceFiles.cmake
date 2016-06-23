@@ -19,11 +19,6 @@ set( DirFiles
 	Logging/LogSink.cpp
 	Logging/ConsoleLogSink.h
 	Logging/ConsoleLogSink.cpp
-	
-	Events/Delegate.hpp
-	Events/Delegate.inl
-	Events/Signal.hpp
-	Events/Signal.inl
 )
 
 list( APPEND ProjectSources "dependences/lodepng/lodepng.h" )

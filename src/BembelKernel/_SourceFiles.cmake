@@ -29,6 +29,11 @@ set( DirFiles
 	Display/Window.cpp
 	Display/DisplayMode.h
 	Display/DisplayMode.cpp
+	
+	Input/Delegate.hpp
+	Input/Delegate.inl
+	Input/Signal.hpp
+	Input/Signal.inl
 )
 
 foreach( File ${DirFiles} )
