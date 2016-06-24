@@ -31,14 +31,24 @@ public:
 	Viewport(std::shared_ptr<View>, const glm::ivec2& pos, const glm::ivec2& size);
 	~Viewport();
 
-	const glm::ivec2& GetPosition() const;
-	void SetPosition(const glm::ivec2& pos);
+	const glm::vec2& GetRelativPosition() const;
+	void SetRelativPosition(const glm::vec2& val);
+	const glm::vec2& GetRelativSize() const;
+	void SetRelativSize(const glm::vec2& val);
 
+	const glm::vec2& GetPositionOffset() const;
+	void SetPositionOffset(const glm::vec2& val);
+	const glm::vec2& GetSizeOffset() const;
+	void SetSizeOffset(const glm::vec2& val);
+
+	const glm::ivec2& GetPosition() const;
 	const glm::ivec2& GetSize() const;
-	void SetSize(const glm::ivec2& size);
 
 	void SetView(std::shared_ptr<View>);
 	std::shared_ptr<View> GetView() const;
+
+	void UpdatePosition(const glm::vec2& frameBufferSize);
+	void UpdateSize(const glm::vec2& frameBufferSize);
 
 	void Enable();
 	void Disable();
@@ -50,6 +60,11 @@ private:
 	glm::ivec2 _position;
 	glm::ivec2 _size;
 
+	glm::vec2 _relativPosition;
+	glm::vec2 _relativSize;
+
+	glm::ivec2 _positionOffset;
+	glm::ivec2 _sizeOffset;
 
 	bool _enabled = true;
 };

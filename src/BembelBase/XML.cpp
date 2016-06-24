@@ -18,6 +18,23 @@ bool GetAttribute(const Element* node, const std::string& name, bool& value)
 	return tinyxml2::XML_SUCCESS ==	node->QueryBoolAttribute(name.c_str(), &value);
 }
 
+bool GetAttribute(const Element* node, const std::string& name, glm::vec2& value)
+{
+	if (!node)
+		return false;
+
+
+	const char* attrib = node->Attribute(name.c_str());
+	if (!attrib)
+		return false;
+
+	std::stringstream sstream;
+	sstream << attrib;
+	sstream >> value.x;
+	sstream >> value.y;
+	return true;
+}
+
 bool GetAttribute(const Element* node, const std::string& name, glm::vec3& value)
 {
 	if (!node)

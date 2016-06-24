@@ -6,12 +6,18 @@
 
 #include <BembelConfig.h>
 
-#include "Events/EventManager.h"
-
 #include <BembelBase/XML.h>
 
 #include <memory>
 
+/*============================================================================*/
+/* FORWARD DECLARATIONS                                                       */
+/*============================================================================*/
+namespace bembel{
+
+class Kernel;
+
+} //end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
@@ -20,11 +26,11 @@ namespace bembel{
 class BEMBEL_API System
 {
 public:
-	System(std::shared_ptr<EventManager> eventMgr, const std::string& name);
+	System(Kernel* kernel, const std::string& name);
 	virtual ~System();
 	
 	const std::string& GetName() const;
-	EventManager* GetEventManager() const;
+	Kernel*  GetKernel() const;
 
 	virtual bool Configure(const xml::Element*);
 
@@ -34,23 +40,8 @@ public:
 	virtual void Update(double timeSinceLastUpdate) = 0;
 
 protected:
-	std::shared_ptr<EventManager> _eventMgr;
-	const std::string             _name;
-};
-
-struct BEMBEL_API SystemInitializationEvent
-{
-	System* system;
-
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-
-};
-
-struct BEMBEL_API SystemShutdownEvent
-{
-	System* system;
-
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
+	Kernel*           _kernel;
+	const std::string _systemName;
 };
 
 } //end of namespace bembel

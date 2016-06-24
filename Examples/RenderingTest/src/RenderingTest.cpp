@@ -34,10 +34,9 @@ namespace bembel{
 RenderingTest::RenderingTest()
 	: bembel::Application()
 {
-	_graphicSys = std::make_shared<bembel::GraphicSystem>(_kernel->GetEventManager());
+	_graphicSys = std::make_shared<bembel::GraphicSystem>(_kernel.get());
 	_kernel->AddSystem(_graphicSys);
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::FrameBufferResizeEvent>(this);
 	_graphicSys->GetRendererFactory().RegisterDefaultObjectGenerator<SimpleGeometryRenderer>("TestRenderer");
 }
 
@@ -78,25 +77,6 @@ void RenderingTest::Update(double time)
 void RenderingTest::HandleEvent(const bembel::WindowShouldCloseEvent& event)
 {
 	Quit();
-}
-
-void RenderingTest::HandleEvent(const bembel::FrameBufferResizeEvent& event)
-{
-	int w = event.size.x/2;
-	int h = event.size.y/2;
-
-	_graphicSys->GetViewports()[0]->SetPosition(glm::ivec2(0, 0));
-	_graphicSys->GetViewports()[1]->SetPosition(glm::ivec2(w, 0));
-	_graphicSys->GetViewports()[2]->SetPosition(glm::ivec2(0, h));
-	_graphicSys->GetViewports()[3]->SetPosition(glm::ivec2(w, h));
-	_graphicSys->GetViewports()[0]->SetSize(glm::ivec2(w, h));
-	_graphicSys->GetViewports()[1]->SetSize(glm::ivec2(w, h));
-	_graphicSys->GetViewports()[2]->SetSize(glm::ivec2(w, h));
-	_graphicSys->GetViewports()[3]->SetSize(glm::ivec2(w, h));
-
-	_graphicSys->GetRenderingPiplies()[0]->SetResulution(event.size);
-	_graphicSys->GetRenderingPiplies()[0]->GetCamera()->SetUpProjection(
-		2, float(event.size.x)/float(event.size.y), 0.01f, 100.0f);
 }
 
 } //end of namespace bembel

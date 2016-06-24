@@ -56,16 +56,16 @@
 				</RenderingPipeline>
 			</RenderingPipelines>
 			<Viewports>
-				<Viewport x="0" y="0" width="600" height="600">
+				<Viewport position="0 0" size="0.66667 1">
 					<PipelineResultView pipeline="0" view="0"/>
 				</Viewport>
-				<Viewport x="600" y="0" width="200" height="200">
+				<Viewport position="0.66667 0.00000" size="0.33333 0.33333">
 					<PipelineResultView pipeline="0" view="1"/>
 				</Viewport>
-				<Viewport x="600" y="200" width="200" height="200">
+				<Viewport position="0.66667 0.33333" size="0.33333 0.33334">
 					<PipelineResultView pipeline="0" view="2"/>
 				</Viewport>
-				<Viewport x="600" y="400" width="200" height="200">
+				<Viewport position="0.66667 0.66667" size="0.33333 0.33333">
 					<PipelineResultView pipeline="0" view="3"/>
 				</Viewport>
 			</Viewports>

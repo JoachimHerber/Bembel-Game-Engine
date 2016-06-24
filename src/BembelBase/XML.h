@@ -22,6 +22,7 @@ using Element = tinyxml2::XMLElement;
 using Document = tinyxml2::XMLDocument;
 
 BEMBEL_API bool GetAttribute(const Element* node, const std::string& name, bool& value);
+BEMBEL_API bool GetAttribute(const Element* node, const std::string& name, glm::vec2& value);
 BEMBEL_API bool GetAttribute(const Element* node, const std::string& name, glm::vec3& value);
 BEMBEL_API bool GetAttribute(const Element* node, const std::string& name, glm::vec4& value);
 

@@ -10,12 +10,9 @@
 /*============================================================================*/
 namespace bembel{
 
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(SystemInitializationEvent)
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(SystemShutdownEvent)
-
-System::System(std::shared_ptr<EventManager> eventMgr, const std::string& name)
-	: _eventMgr(eventMgr)
-	, _name(name)
+System::System(Kernel* kernel, const std::string& name)
+	: _kernel(kernel)
+	, _systemName(name)
 {}
 
 System::~System()
@@ -23,11 +20,11 @@ System::~System()
 
 const std::string& System::GetName() const
 {
-	return _name;
+	return _systemName;
 }
-EventManager* System::GetEventManager() const
+Kernel* System::GetKernel() const
 {
-	return _eventMgr.get();
+	return _kernel;
 }
 
 bool System::Configure(const xml::Element*)
@@ -37,15 +34,11 @@ bool System::Configure(const xml::Element*)
 
 bool System::Init()
 {
-	_eventMgr->Broadcast(
-		SystemInitializationEvent{this});
 	return true;
 }
 
 void System::Shutdown()
 {
-	_eventMgr->Broadcast(
-		SystemShutdownEvent{this});
 }
 
 } //end of namespace bembel

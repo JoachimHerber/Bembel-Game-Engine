@@ -12,6 +12,8 @@
 #include <BembelOpenGL.h>
 #include <BembelBase/XML.h>
 #include <BembelBase/Logging/Logger.h>
+#include <BembelKernel/Kernel.h>
+#include <BembelKernel/Display/DisplayManager.h>
 #include <BembelKernel/Display/Window.h>
 #include <BembelKernel/Events/DisplayEvents.h>
 
@@ -23,10 +25,11 @@ namespace bembel {
 BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(InitGraphicResourcesEvent);
 BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(CleanuptGraphicResourcesEvent);
 
-GraphicSystem::GraphicSystem(std::shared_ptr<EventManager> eventMgr)
-	: System(eventMgr, "Graphics")
+GraphicSystem::GraphicSystem(Kernel* kernel)
+	: System(kernel, "Graphics")
 {
-	_eventMgr->AddHandler<WindowUpdateEvent>(this);
+	_kernel->GetEventManager()->AddHandler<WindowUpdateEvent>(this);
+	_kernel->GetEventManager()->AddHandler<FrameBufferResizeEvent>(this);
 
 	_renderingStageFactory.RegisterDefaultObjectGenerator
 		<DeferredGeometryStage>("DeferredGeometryStage");
@@ -35,7 +38,8 @@ GraphicSystem::GraphicSystem(std::shared_ptr<EventManager> eventMgr)
 }
 GraphicSystem::~GraphicSystem()
 {
-	_eventMgr->RemoveHandler<WindowUpdateEvent>(this);
+	_kernel->GetEventManager()->RemoveHandler<WindowUpdateEvent>(this);
+	_kernel->GetEventManager()->RemoveHandler<FrameBufferResizeEvent>(this);
 }
 
 std::shared_ptr<Viewport> GraphicSystem::CreateViewPort(unsigned windowID /*= 0*/)
@@ -85,7 +89,7 @@ bool GraphicSystem::Configure(const xml::Element* properties)
 	ConfigurePipelines(properties->FirstChildElement("RenderingPipelines"));
 	ConfigureViewports(properties->FirstChildElement("Viewports"));
 
-	_eventMgr->Broadcast(InitGraphicResourcesEvent{});
+	_kernel->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
 	return true;
 }
 
@@ -93,14 +97,14 @@ bool GraphicSystem::Init()
 {
 	for (auto pipline : _pipelines)
 		pipline->Init();
-	_eventMgr->Broadcast(InitGraphicResourcesEvent{});
+	_kernel->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
 	return true;
 }
 
 void GraphicSystem::Shutdown()
 {
 	_pipelines.clear();
-	_eventMgr->Broadcast(CleanuptGraphicResourcesEvent{});
+	_kernel->GetEventManager()->Broadcast(CleanuptGraphicResourcesEvent{});
 }
 
 void GraphicSystem::Update(double)
@@ -135,6 +139,20 @@ void GraphicSystem::HandleEvent(const WindowUpdateEvent& event)
 	}
 }
 
+void GraphicSystem::HandleEvent(const FrameBufferResizeEvent& event)
+{
+	unsigned windowID = event.window->GetWindowID();
+	if (_viewports.size() <= windowID)
+		return;
+
+	auto& windowViewports = _viewports[windowID];
+	for (auto viewport : windowViewports)
+	{
+		viewport->UpdatePosition(event.size);
+		viewport->UpdateSize(event.size);
+	}
+}
+
 void GraphicSystem::ConfigurePipelines(const xml::Element* properties)
 {
 	if (!properties)
@@ -157,17 +175,30 @@ void GraphicSystem::ConfigureViewports(const xml::Element* properties)
 
 	for (auto viewportProperties : xml::IterateChildElements(properties, "Viewport"))
 	{
-		int window = 0;
-		xml::GetAttribute(viewportProperties, "window", window);
-		auto viewport = CreateViewPort(window);
+		int windowID = 0;
+		xml::GetAttribute(viewportProperties, "window", windowID);
+		auto viewport = CreateViewPort(windowID);
 
-		int x=0, y=0, w=1, h=1;
-		xml::GetAttribute(viewportProperties, "x", x);
-		xml::GetAttribute(viewportProperties, "y", y);
-		xml::GetAttribute(viewportProperties, "width", w);
-		xml::GetAttribute(viewportProperties, "height", h);
-		viewport->SetPosition(glm::ivec2(x, y));
-		viewport->SetSize(glm::ivec2(w, h));
+		glm::vec2 relPos(0, 0);
+		glm::vec2 relSize(1, 1);
+		glm::vec2 posOffset(0, 0);
+		glm::vec2 sizeOffset(0, 0);
+		xml::GetAttribute(viewportProperties, "position", relPos);
+		xml::GetAttribute(viewportProperties, "size", relSize);
+		xml::GetAttribute(viewportProperties, "position_offset", posOffset);
+		xml::GetAttribute(viewportProperties, "size_offset", sizeOffset);
+		viewport->SetRelativPosition(relPos);
+		viewport->SetRelativSize(relSize);
+		viewport->SetPositionOffset(posOffset);
+		viewport->SetSizeOffset(sizeOffset);
+		auto window = _kernel->GetDisplayManager()->GetWindow(windowID);
+		if (window)
+		{
+			glm::vec2 fbSize = window->GetFrameBufferSize();
+			viewport->UpdatePosition(fbSize);
+			viewport->UpdateSize(fbSize);
+		}
+
 		for (auto viewProperties : xml::IterateChildElements(viewportProperties))
 		{
 			std::string viewType = viewProperties->Value();

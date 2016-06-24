@@ -26,7 +26,6 @@ public:
 	virtual void Update(double time) override;
 
 	void HandleEvent(const WindowShouldCloseEvent&);
-	void HandleEvent(const FrameBufferResizeEvent&);
 
 private:
 	std::shared_ptr<GraphicSystem>  _graphicSys;

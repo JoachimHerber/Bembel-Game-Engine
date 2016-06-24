@@ -39,7 +39,7 @@ public:
 	using RendererFactory = Factory<Renderer>;
 	using RendertingSrageFactory = TFactory<RenderingStage, const xml::Element*, RenderingPipeline*>;
 
-	GraphicSystem(std::shared_ptr<EventManager>);
+	GraphicSystem(Kernel*);
 	~GraphicSystem();
 
 	std::shared_ptr<Viewport> CreateViewPort(unsigned windowID = 0);
@@ -58,6 +58,7 @@ public:
 	virtual void Update(double timeSinceLastUpdate) override;
 
 	void HandleEvent(const WindowUpdateEvent&);
+	void HandleEvent(const FrameBufferResizeEvent&);
 
 private:
 	void ConfigurePipelines(const xml::Element*);
