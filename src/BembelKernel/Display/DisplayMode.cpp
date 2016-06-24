@@ -47,8 +47,16 @@ GLFWwindow* WindowDisplayMode::CreatWindow(
 
 	glfwWindowHint(GLFW_RESIZABLE, _resizable);
 
-	return glfwCreateWindow(
+	GLFWwindow* window =  glfwCreateWindow(
 		_width, _height, title.c_str(), nullptr, sharedContext);
+
+	if(_limitSize)
+		glfwSetWindowSizeLimits(window, _minSize.x, _minSize.y, _maxSize.x, _maxSize.y);
+
+	if (_aspectRatioNumer!=0 && _aspectRatioDenom !=0)
+		glfwSetWindowAspectRatio(window, _aspectRatioNumer, _aspectRatioDenom);
+
+	return window;
 }
 
 std::unique_ptr<WindowDisplayMode> 
@@ -56,9 +64,18 @@ std::unique_ptr<WindowDisplayMode>
 {
 	auto mode = std::make_unique<WindowDisplayMode>();
 	
-	xml::GetAttribute(properties, "width",  mode->_width);
-	xml::GetAttribute(properties, "height", mode->_height);
+	xml::GetAttribute(properties, "Size", "width",  mode->_width);
+	xml::GetAttribute(properties, "Size", "height", mode->_height);
 	xml::GetAttribute(properties, "resizable", mode->_resizable);
+	if( xml::GetAttribute(properties, "SizeLimit", "min_width",  mode->_minSize.x) &&
+	    xml::GetAttribute(properties, "SizeLimit", "min_height", mode->_minSize.y) &&
+	    xml::GetAttribute(properties,  "SizeLimit", "max_width",  mode->_minSize.x) &&
+	    xml::GetAttribute(properties,  "SizeLimit", "max_height", mode->_minSize.y) )
+	{
+		mode->_limitSize = true;
+	}
+	xml::GetAttribute(properties, "AspectRatio", "numerator", mode->_aspectRatioNumer);
+	xml::GetAttribute(properties, "AspectRatio", "denominator", mode->_aspectRatioDenom);
 
 	return std::move(mode);
 }

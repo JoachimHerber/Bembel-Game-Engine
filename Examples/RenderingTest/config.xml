@@ -1,12 +1,10 @@
 <Bembel>
 	<Display>
 		<Window title="Rendering Test">
-			<DisplayMode 
-				mode      = "Windowed" 
-				width     = "800" 
-				height    = "600"
-				resizable = "false"
-			/>
+			<DisplayMode mode = "Windowed">
+				<Size width="800" height="600" />
+				<AspectRatio numerator="4" denominator="3" />
+			</DisplayMode>
 		</Window>
 	</Display>
 	<Systems>

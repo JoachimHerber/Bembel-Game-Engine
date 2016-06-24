@@ -34,6 +34,8 @@ set( DirFiles
 	Input/Signal.inl
 	Input/Slot.hpp
 	Input/Slot.inl
+	Input/Button.h
+	Input/Button.cpp
 )
 
 foreach( File ${DirFiles} )

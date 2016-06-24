@@ -57,7 +57,14 @@ private:
 	int _width  = 800;
 	int _height = 600;
 
-	bool _resizable = false;
+	bool _limitSize = false;
+	glm::uvec2 _minSize;
+	glm::uvec2 _maxSize;
+
+	unsigned _aspectRatioNumer = 0;
+	unsigned _aspectRatioDenom = 0;
+
+	bool _resizable = true;
 };
 
 class BEMBEL_API FullscreenDisplayMode : public DisplayModeBase
