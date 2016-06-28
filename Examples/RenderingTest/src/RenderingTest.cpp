@@ -53,7 +53,7 @@ bool RenderingTest::Init()
 	_cam = std::make_shared<CameraControle>(
 		_kernel->GetEventManager(), pipline->GetCamera());
 
-	auto world = std::make_shared<bembel::EntityManager>();
+	auto world = std::make_shared<bembel::Scene>();
 	pipline->SetEntityManager(world);
 
 	world->LoadEntities("scene.xml");

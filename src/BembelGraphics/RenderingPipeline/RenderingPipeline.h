@@ -8,7 +8,7 @@
 #include <BembelConfig.h>
 
 #include <BembelBase/XML.h>
-#include <BembelKernel/Scene/EntityManager.h>
+#include <BembelKernel/Scene/Scene.h>
 
 #include <glm/glm.hpp>
 
@@ -38,7 +38,7 @@ namespace bembel{
 class BEMBEL_API RenderingPipeline final
 {
 public:
-	using EntityManagerPtr = std::shared_ptr<EntityManager>;
+	using EntityManagerPtr = std::shared_ptr<Scene>;
 	using CameraPtr = std::shared_ptr<Camera>;
 	using TexturePtr = std::shared_ptr<Texture>;
 	using RendererPtr = std::shared_ptr<Renderer>;

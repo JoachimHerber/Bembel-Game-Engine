@@ -6,7 +6,7 @@
 
 #include <BembelConfig.h>
 
-#include "EntityManager.h"
+#include "Scene.h"
 #include "ComponentContainer.hpp"
 
 #include <memory>

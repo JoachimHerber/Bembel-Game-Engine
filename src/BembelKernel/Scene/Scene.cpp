@@ -2,7 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "EntityManager.h"
+#include "Scene.h"
 #include "ComponentContainer.hpp"
 #include "BembelBase\Logging\Logger.h"
 
@@ -11,13 +11,13 @@
 /*============================================================================*/
 namespace bembel {
 
-EntityManager::EntityManager()
+Scene::Scene()
 {}
 
-EntityManager::~EntityManager()
+Scene::~Scene()
 {}
 
-EntityManager::EntityID EntityManager::CreateEntity()
+Scene::EntityID Scene::CreateEntity()
 {
 	for (EntityID entity = 0; entity< _entities.size(); ++entity)
 	{
@@ -28,7 +28,7 @@ EntityManager::EntityID EntityManager::CreateEntity()
 	return _entities.size() - 1;
 }
 
-EntityManager::EntityID EntityManager::CreateEntity(
+Scene::EntityID Scene::CreateEntity(
 	const xml::Element* properties)
 {
 	EntityID entity = CreateEntity();
@@ -46,7 +46,7 @@ EntityManager::EntityID EntityManager::CreateEntity(
 	return entity;
 }
 
-bool EntityManager::LoadEntities(const std::string& fileName)
+bool Scene::LoadEntities(const std::string& fileName)
 {
 	xml::Document doc;
 	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
@@ -68,7 +68,7 @@ bool EntityManager::LoadEntities(const std::string& fileName)
 	return true;
 }
 
-const std::vector<EntityManager::ComponentMask>& EntityManager::GetEntitys() const
+const std::vector<Scene::ComponentMask>& Scene::GetEntitys() const
 {
 	return _entities;
 }

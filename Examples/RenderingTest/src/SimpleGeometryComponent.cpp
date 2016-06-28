@@ -42,7 +42,7 @@ bool SimpleGeometryComponent::InitComponent(
 }
 
 Entity CreateSphere(
-	EntityManager* world,
+	Scene* world,
 	const glm::vec3& positon,
 	float radius,
 	const glm::vec4& albedo,
@@ -62,8 +62,8 @@ Entity CreateSphere(
  	return entity;
 }
 
-bembel::Entity CreateXZPlain(
-	EntityManager* world,
+Entity CreateXZPlain(
+	Scene* world,
 	const glm::vec3& positon,
 	const glm::vec2& size,
 	const glm::vec4& albedo,
@@ -84,7 +84,7 @@ bembel::Entity CreateXZPlain(
 }
 
 Entity CreateBox(
-	EntityManager* world,
+	Scene* world,
 	const glm::vec3& positon,
 	const glm::vec3& size, 
 	const glm::vec4& albedo,

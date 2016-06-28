@@ -5,7 +5,7 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
-#include "EntityManager.h"
+#include "Scene.h"
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -15,7 +15,7 @@ namespace bembel {
 class BEMBEL_API Entity
 {
 public:
-	Entity(EntityManager*, EntityManager::EntityID);
+	Entity(Scene*, Scene::EntityID);
 	Entity(const Entity&);
 	Entity(Entity&&);
 
@@ -28,11 +28,11 @@ public:
 	template<class ComponentType>
 	ComponentType* GetComponent();
 
-	static Entity CreateEntity(EntityManager*);
+	static Entity CreateEntity(Scene*);
 
 private:
-	EntityManager*          _world;
-	EntityManager::EntityID _id;
+	Scene*          _world;
+	Scene::EntityID _id;
 };
 
 } //end of namespace bembel

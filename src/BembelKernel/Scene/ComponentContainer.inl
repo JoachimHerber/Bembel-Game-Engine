@@ -4,31 +4,31 @@
 namespace bembel{
 
 inline ComponentContainerBase::ComponentContainerBase(
-	EntityManager::ComponentTypeID id)
+	Scene::ComponentTypeID id)
 	: _typeID(id)
 	, _mask(1<<id)
 {}
 
-inline EntityManager::ComponentTypeID ComponentContainerBase::GetComponentTypeID()
+inline Scene::ComponentTypeID ComponentContainerBase::GetComponentTypeID()
 {
 	return _typeID;
 }
 
-inline EntityManager::ComponentTypeID ComponentContainerBase::GetComponentMask()
+inline Scene::ComponentTypeID ComponentContainerBase::GetComponentMask()
 {
 	return _mask;
 }
 
 template<class ComponentType>
 inline ComponentType* SparseComponentContainer<ComponentType>::CreateComponent(
-	EntityManager::EntityID entity)
+	Scene::EntityID entity)
 {
 	return &_components[entity];
 }
 
 template<class ComponentType>
 inline bool SparseComponentContainer<ComponentType>::CreateComponent(
-	EntityManager::EntityID entity, 
+	Scene::EntityID entity, 
 	const xml::Element* properties)
 {
 	ComponentType component;
@@ -41,7 +41,7 @@ inline bool SparseComponentContainer<ComponentType>::CreateComponent(
 }
 
 template<class ComponentType>
-inline std::map<EntityManager::EntityID, ComponentType>& 
+inline std::map<Scene::EntityID, ComponentType>& 
 	SparseComponentContainer<ComponentType>::GetComponents()
 {
 	return _components;
@@ -49,7 +49,7 @@ inline std::map<EntityManager::EntityID, ComponentType>&
 
 template<class ComponentType>
 inline ComponentType* SparseComponentContainer<ComponentType>::GetComponent(
-	EntityManager::EntityID entity)
+	Scene::EntityID entity)
 {
 	auto it = _components.find(entity);
 	if (it != _components.end())
@@ -60,7 +60,7 @@ inline ComponentType* SparseComponentContainer<ComponentType>::GetComponent(
 
 template<class ComponentType>
 inline ComponentType* DenseComponentContainer<ComponentType>::CreateComponent(
-	EntityManager::EntityID entity)
+	Scene::EntityID entity)
 {
 	if (entity >= _components.size())
 		_components.resize(entity + 1);
@@ -69,7 +69,7 @@ inline ComponentType* DenseComponentContainer<ComponentType>::CreateComponent(
 }
 template<class ComponentType>
 inline bool DenseComponentContainer<ComponentType>::CreateComponent(
-	EntityManager::EntityID entity,
+	Scene::EntityID entity,
 	const xml::Element* properties)
 {
 	ComponentType component;
@@ -93,7 +93,7 @@ inline std::vector<ComponentType>&
 
 template<class ComponentType>
 inline ComponentType* DenseComponentContainer<ComponentType>::GetComponent(
-	EntityManager::EntityID entity)
+	Scene::EntityID entity)
 {
 	if (entity >= _components.size())
 		return nullptr;

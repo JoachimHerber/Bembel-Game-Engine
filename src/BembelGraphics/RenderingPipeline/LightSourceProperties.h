@@ -5,7 +5,7 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
-#include <BembelKernel/Scene/EntityManager.h>
+#include <BembelKernel/Scene/Scene.h>
 #include <BembelKernel/Scene/Entity.h>
 #include <BembelKernel/Scene/ComponentContainer.hpp>
 

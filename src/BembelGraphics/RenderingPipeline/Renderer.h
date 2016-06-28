@@ -13,7 +13,7 @@
 /*============================================================================*/
 namespace bembel{
 
-class EntityManager;
+class Scene;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -30,7 +30,7 @@ public:
 	virtual void Init() = 0;
 	virtual void Cleanup() = 0;
 
-	using EntityManagerPtr = std::shared_ptr<EntityManager>;
+	using EntityManagerPtr = std::shared_ptr<Scene>;
 	virtual void SetEntityManager(EntityManagerPtr)
 	{}
 

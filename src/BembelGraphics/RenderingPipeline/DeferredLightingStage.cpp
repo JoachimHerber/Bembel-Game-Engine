@@ -236,7 +236,7 @@ void DeferredLightingStage::ReleaseTextures()
 
 void DeferredLightingStage::ApplyDirectionalLights()
 {
-	EntityManager::ComponentMask mask =
+	Scene::ComponentMask mask =
 		_dirLightContainer->GetComponentMask();
 
 	_dirLightShader->Use();
@@ -285,7 +285,7 @@ struct PointLight
 
 void DeferredLightingStage::ApplyPointLights()
 {
-	EntityManager::ComponentMask mask =
+	Scene::ComponentMask mask =
 		_pointLightContainer->GetComponentMask() |
 		_positionConteiner->GetComponentMask();
 

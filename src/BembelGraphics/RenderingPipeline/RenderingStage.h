@@ -14,7 +14,7 @@
 namespace bembel{
 
 class RenderingPipeline;
-class EntityManager;
+class Scene;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -31,7 +31,7 @@ public:
 	virtual ~RenderingStage()
 	{}
 
-	using EntityManagerPtr = std::shared_ptr<EntityManager>;
+	using EntityManagerPtr = std::shared_ptr<Scene>;
 	virtual void SetEntityManager(EntityManagerPtr)
 	{}
 

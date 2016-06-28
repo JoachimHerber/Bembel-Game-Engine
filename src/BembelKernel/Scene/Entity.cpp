@@ -9,7 +9,7 @@
 /*============================================================================*/
 namespace bembel {
 
-Entity::Entity(EntityManager* world, EntityManager::EntityID id)
+Entity::Entity(Scene* world, Scene::EntityID id)
 	: _world(world)
 	, _id(id)
 {}
@@ -22,7 +22,7 @@ Entity::Entity(Entity&& other)
 	, _id(other._id)
 {}
 
-Entity  Entity::CreateEntity(EntityManager* world)
+Entity  Entity::CreateEntity(Scene* world)
 {
 	return Entity(world, world->CreateEntity());
 }

@@ -6,7 +6,7 @@
 
 #include <BembelConfig.h>
 
-#include <BembelKernel/Scene/EntityManager.h>
+#include <BembelKernel/Scene/Scene.h>
 #include <BembelKernel/Scene/Entity.h>
 #include <BembelKernel/Scene/ComponentContainer.hpp>
 
@@ -42,28 +42,28 @@ struct SimpleGeometryComponent
 };
 
 Entity CreateSphere(
-	EntityManager* world,
+	Scene* world,
 	const glm::vec3& positon,
 	float radius,
 	const glm::vec4& albedo,
 	float roughness);
 
 Entity CreateXZPlain(
-	EntityManager* world,
+	Scene* world,
 	const glm::vec3& positon,
 	const glm::vec2& size,
 	const glm::vec4& albedo,
 	float roughness);
 
 Entity CreateBox(
-	EntityManager* world,
+	Scene* world,
 	const glm::vec3& positon,
 	const glm::vec3& size,
 	const glm::vec4& albedo,
 	float roughness);
 
 } //end of namespace bembel
-  /*============================================================================*/
-  /* END OF FILE                                                                */
-  /*============================================================================*/
+/*============================================================================*/
+/* END OF FILE                                                                */
+/*============================================================================*/
 #endif //include guards

@@ -116,7 +116,7 @@ void RenderingPipeline::SetEntityManager(EntityManagerPtr entityMgr)
 		stage->SetEntityManager(_entityMgr);
 }
 
-std::shared_ptr<EntityManager> RenderingPipeline::GetEntityManager() const
+std::shared_ptr<Scene> RenderingPipeline::GetEntityManager() const
 {
 	return _entityMgr;
 }

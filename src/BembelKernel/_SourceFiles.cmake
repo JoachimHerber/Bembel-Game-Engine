@@ -37,12 +37,12 @@ set( DirFiles
 	Input/Button.h
 	Input/Button.cpp
 	
-	Scene/EntityManager.h
-	Scene/EntityManager.cpp
-	Scene/ComponentContainer.hpp
-	Scene/ComponentContainer.inl
+	Scene/Scene.h
+	Scene/Scene.cpp
 	Scene/Entity.h
 	Scene/Entity.cpp
+	Scene/ComponentContainer.hpp
+	Scene/ComponentContainer.inl
 	Scene/PositionComponent.h
 	Scene/PositionComponent.cpp
 )

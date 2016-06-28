@@ -1,5 +1,5 @@
-#ifndef BEMBEL_WORLD_H
-#define BEMBEL_WORLD_H
+#ifndef BEMBEL_SCENE_H
+#define BEMBEL_SCENE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -24,15 +24,15 @@ class ComponentContainerBase;
 /*============================================================================*/
 namespace bembel {
 
-class BEMBEL_API EntityManager
+class BEMBEL_API Scene
 {
 public:
 	using EntityID        = size_t;
 	using ComponentTypeID = size_t;
 	using ComponentMask   = unsigned long long;
 
-	EntityManager();
-	~EntityManager();
+	Scene();
+	~Scene();
 
 	template<class ComponentType>
 	std::shared_ptr<typename ComponentType::ContainerType>
@@ -65,7 +65,7 @@ namespace bembel{
 
 template<class ComponentType>
 inline std::shared_ptr<typename ComponentType::ContainerType>
-	EntityManager::RequestComponentContainer()
+	Scene::RequestComponentContainer()
 {
 	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
 	if (it != _componentTypeMap.end())
@@ -84,7 +84,7 @@ inline std::shared_ptr<typename ComponentType::ContainerType>
 }
 
 template<class ComponentType>
-ComponentType* EntityManager::CreateComponent(EntityID id)
+ComponentType* Scene::CreateComponent(EntityID id)
 {
 	if (id >= _entities.size())
 		return nullptr;

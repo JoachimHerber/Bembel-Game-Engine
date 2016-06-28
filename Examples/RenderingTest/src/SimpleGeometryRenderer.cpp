@@ -7,7 +7,7 @@
 #include "SimpleGeometryRenderer.h"
 #include "SimpleGeometryComponent.h"
 
-#include <BembelKernel/Scene/EntityManager.h>
+#include <BembelKernel/Scene/Scene.h>
 #include <BembelKernel/Scene/PositionComponent.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -107,11 +107,11 @@ void SimpleGeometryRenderer::DoGeometryPass(
 	auto& positions = _positionConteiner->GetComponents();
 	auto& geometry  = _geometryContainer->GetComponents();
 
-	EntityManager::ComponentMask mask =
+	Scene::ComponentMask mask =
 		_geometryContainer->GetComponentMask() |
 		_positionConteiner->GetComponentMask();
 
-	for (EntityManager::EntityID entity = 0; entity<entities.size(); ++entity)
+	for (Scene::EntityID entity = 0; entity<entities.size(); ++entity)
 	{
 		if((entities[entity] & mask) != mask)
 			continue;

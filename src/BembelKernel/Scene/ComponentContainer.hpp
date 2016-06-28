@@ -6,7 +6,7 @@
 
 #include <BembelConfig.h>
 
-#include "EntityManager.h"
+#include "Scene.h"
 
 #include <BembelBase/XML.h>
 
@@ -22,18 +22,18 @@ class BEMBEL_API ComponentContainerBase
 {
 public:
 	ComponentContainerBase(
-		EntityManager::ComponentTypeID
+		Scene::ComponentTypeID
 	);
 	virtual ~ComponentContainerBase(){}
 
-	virtual bool CreateComponent(EntityManager::EntityID, const xml::Element*) = 0;
+	virtual bool CreateComponent(Scene::EntityID, const xml::Element*) = 0;
 
-	EntityManager::ComponentTypeID GetComponentTypeID();
-	EntityManager::ComponentMask   GetComponentMask();
+	Scene::ComponentTypeID GetComponentTypeID();
+	Scene::ComponentMask   GetComponentMask();
 
 private:
-	EntityManager::ComponentTypeID _typeID;
-	EntityManager::ComponentMask   _mask;
+	Scene::ComponentTypeID _typeID;
+	Scene::ComponentMask   _mask;
 };
 
 template<class ComponentType>
@@ -41,19 +41,19 @@ class SparseComponentContainer : public ComponentContainerBase
 {
 public:
 	SparseComponentContainer(
-		EntityManager::ComponentTypeID id)
+		Scene::ComponentTypeID id)
 		: ComponentContainerBase(id)
 	{}
 	virtual ~SparseComponentContainer() {}
 
-	ComponentType* CreateComponent(EntityManager::EntityID);
-	bool CreateComponent(EntityManager::EntityID, const xml::Element*) override;
+	ComponentType* CreateComponent(Scene::EntityID);
+	bool CreateComponent(Scene::EntityID, const xml::Element*) override;
 
-	std::map<EntityManager::EntityID, ComponentType>& GetComponents();
-	ComponentType* GetComponent(EntityManager::EntityID);
+	std::map<Scene::EntityID, ComponentType>& GetComponents();
+	ComponentType* GetComponent(Scene::EntityID);
 
 private:
-	std::map<EntityManager::EntityID, ComponentType> _components;
+	std::map<Scene::EntityID, ComponentType> _components;
 };
 
 template<class ComponentType>
@@ -61,16 +61,16 @@ class DenseComponentContainer : public ComponentContainerBase
 {
 public:
 	DenseComponentContainer(
-		EntityManager::ComponentTypeID id)
+		Scene::ComponentTypeID id)
 		: ComponentContainerBase(id)
 	{}
 	virtual ~DenseComponentContainer() {}
 
-	ComponentType* CreateComponent(EntityManager::EntityID);
-	bool CreateComponent(EntityManager::EntityID, const xml::Element*) override;
+	ComponentType* CreateComponent(Scene::EntityID);
+	bool CreateComponent(Scene::EntityID, const xml::Element*) override;
 
 	std::vector<ComponentType>& GetComponents();
-	ComponentType* GetComponent(EntityManager::EntityID);
+	ComponentType* GetComponent(Scene::EntityID);
 
 private:
 	std::vector<ComponentType> _components;
