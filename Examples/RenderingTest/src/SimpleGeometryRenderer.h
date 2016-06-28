@@ -7,7 +7,7 @@
 #include <BembelBase/XML.h>
 #include <BembelGraphics/OpenGL/ShaderProgram.h>
 #include <BembelGraphics/RenderingPipeline/Renderer.h>
-#include <BembelDataStructures/PositionComponent.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 
 #include "SimpleGeometryComponent.h"
 

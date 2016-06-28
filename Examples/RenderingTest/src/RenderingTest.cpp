@@ -11,7 +11,7 @@
 #include <BembelKernel/Kernel.h>
 #include <BembelKernel/Display/DisplayManager.h>
 
-#include <BembelDataStructures/PositionComponent.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 
 #include <BembelGraphics/Viewport.h>
 #include <BembelGraphics/TextureView.h>

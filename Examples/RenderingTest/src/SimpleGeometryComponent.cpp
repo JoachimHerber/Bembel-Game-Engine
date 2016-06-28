@@ -4,7 +4,7 @@
 
 #include "SimpleGeometryComponent.h"
 
-#include <BembelDataStructures/PositionComponent.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

@@ -8,7 +8,7 @@
 #include <BembelConfig.h>
 
 #include <BembelBase/XML.h>
-#include <BembelDataStructures/EntityManager.h>
+#include <BembelKernel/Scene/EntityManager.h>
 
 #include <glm/glm.hpp>
 

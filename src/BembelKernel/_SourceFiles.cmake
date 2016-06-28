@@ -36,6 +36,15 @@ set( DirFiles
 	Input/Slot.inl
 	Input/Button.h
 	Input/Button.cpp
+	
+	Scene/EntityManager.h
+	Scene/EntityManager.cpp
+	Scene/ComponentContainer.hpp
+	Scene/ComponentContainer.inl
+	Scene/Entity.h
+	Scene/Entity.cpp
+	Scene/PositionComponent.h
+	Scene/PositionComponent.cpp
 )
 
 foreach( File ${DirFiles} )

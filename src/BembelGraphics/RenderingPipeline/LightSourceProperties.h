@@ -5,9 +5,9 @@
 /*============================================================================*/
 
 #include <BembelConfig.h>
-#include <BembelDataStructures/EntityManager.h>
-#include <BembelDataStructures/Entity.h>
-#include <BembelDataStructures/ComponentContainer.hpp>
+#include <BembelKernel/Scene/EntityManager.h>
+#include <BembelKernel/Scene/Entity.h>
+#include <BembelKernel/Scene/ComponentContainer.hpp>
 
 #include <memory>
 #include <glm/glm.hpp>

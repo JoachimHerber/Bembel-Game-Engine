@@ -7,8 +7,8 @@
 #include "SimpleGeometryRenderer.h"
 #include "SimpleGeometryComponent.h"
 
-#include <BembelDataStructures/EntityManager.h>
-#include <BembelDataStructures/PositionComponent.h>
+#include <BembelKernel/Scene/EntityManager.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 

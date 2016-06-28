@@ -12,7 +12,7 @@
 #include "../OpenGL/FrameBufferObject.h"
 
 #include <BembelBase/Logging/Logger.h>
-#include <BembelDataStructures/PositionComponent.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

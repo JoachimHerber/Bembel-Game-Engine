@@ -13,7 +13,6 @@ bembel_find_external_dependencies()
 set( CMAKE_CONFIGURAION_TYPES "Debug;Release" )
 
 include( "src/BembelBase/_SourceFiles.cmake" )
-include( "src/BembelDataStructures/_SourceFiles.cmake" )
 include( "src/BembelKernel/_SourceFiles.cmake" )
 include( "src/BembelGraphics/_SourceFiles.cmake" )
 

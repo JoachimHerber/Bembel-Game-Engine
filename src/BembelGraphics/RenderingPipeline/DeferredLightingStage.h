@@ -12,7 +12,7 @@
 #include "RenderingStage.h"
 #include "LightSourceProperties.h"
 
-#include <BembelDataStructures/PositionComponent.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 
 #include <memory>
 #include <array>
