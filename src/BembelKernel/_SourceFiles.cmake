@@ -37,6 +37,16 @@ set( DirFiles
 	Input/Button.h
 	Input/Button.cpp
 	
+	Assets/AssetDescription.h
+	Assets/AssetDescription.cpp
+	Assets/AssetContainer.h
+	Assets/AssetContainer.cpp
+	Assets/AssetHandle.h
+	Assets/AssetLoader.h
+	Assets/AssetManager.h
+	Assets/AssetManager.cpp
+	Assets/AssetManager.inl
+	
 	Scene/Scene.h
 	Scene/Scene.cpp
 	Scene/Entity.h
