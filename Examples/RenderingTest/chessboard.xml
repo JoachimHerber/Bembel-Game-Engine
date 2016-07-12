@@ -1,0 +1,159 @@
+<Scene>
+	<Assets>
+		<Texture name="checker" file="textures/checker.png"/>
+		<Texture name="white"   file="textures/white.png"/>
+		<Texture name="black"   file="textures/black.png"/>
+		
+	</Assets>
+	<Entities>
+	
+		<Entity>
+			<DirectionalLight color="0.90 0.90 0.95" direction="5 -4 0" intensity="5"/>
+		</Entity>
+		<Entity>
+			<DirectionalLight color="0.90 0.90 0.95" direction="-3 -4 4" intensity="2"/>
+		</Entity>
+		<Entity>
+			<DirectionalLight color="0.90 0.90 0.95" direction="-3 -4 -4" intensity="1"/>
+		</Entity>
+	
+		<Entity>
+			<Position x="0" y="0" z="0"/>
+			<SimpleGeometry shape="XZ_PLAIN" size="16 16 16" albedo="checker" roughness="0.10" />
+		</Entity>
+		
+		<Entity>
+			<Position x="-7" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-5" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-3" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-1" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="1" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="3" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="5" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="7" y="0.90" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+		</Entity>
+		
+		<Entity>
+			<Position x="-7" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-5" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-3" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-1" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="1" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="3" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="5" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="7" y="0" z="-5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+		</Entity>
+		
+		
+		<Entity>
+			<Position x="-7" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-5" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-3" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-1" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="1" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="3" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="5" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="7" y="0.90" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+		</Entity>
+		
+		<Entity>
+			<Position x="-7" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-5" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-3" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="-1" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="1" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="3" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="5" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+		<Entity>
+			<Position x="7" y="0" z="5"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+		</Entity>
+	
+	</Entities>
+</Scene>

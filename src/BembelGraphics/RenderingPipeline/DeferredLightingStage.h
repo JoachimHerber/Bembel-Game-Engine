@@ -49,7 +49,7 @@ public:
 	void SetOutputTexture(const std::string&);
 	void SetInputTextures(const std::vector<std::string>&);
 
-	virtual void SetEntityManager(EntityManagerPtr) override;
+	virtual void SetScene(ScenePtr) override;
 
 	virtual void Init() override;
 	virtual void Cleanup() override;
@@ -82,7 +82,7 @@ private:
 	std::vector<TexturePtr>  _inputTextures;
 	std::vector<std::string> _inputTexturNames;
 
-	EntityManagerPtr                   _entityMgr;
+	ScenePtr                           _scene;
 	DirLightProperties::ContainerPtr   _dirLightContainer;
 	PointLightProperties::ContainerPtr _pointLightContainer;
 	PositionComponent::ContainerPtr    _positionConteiner;

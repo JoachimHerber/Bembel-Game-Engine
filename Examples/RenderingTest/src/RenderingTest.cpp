@@ -25,6 +25,8 @@
 #include <random>
 #include <iostream>
 
+#include <GLFW/glfw3.h>
+
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -37,6 +39,7 @@ RenderingTest::RenderingTest()
 	_graphicSys = std::make_shared<bembel::GraphicSystem>(_kernel.get());
 	_kernel->AddSystem(_graphicSys);
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+	_kernel->GetEventManager()->AddHandler<bembel::KeyPressEvent>(this);
 	_graphicSys->GetRendererFactory().RegisterDefaultObjectGenerator<SimpleGeometryRenderer>("TestRenderer");
 }
 
@@ -53,13 +56,9 @@ bool RenderingTest::Init()
 	_cam = std::make_shared<CameraControle>(
 		_kernel->GetEventManager(), pipline->GetCamera());
 
-	auto world = std::make_shared<bembel::Scene>();
-	pipline->SetEntityManager(world);
-
-	world->LoadEntities("scene.xml");
+	InitScene();
 
 	_kernel->InitSystems();
-
 	return true;
 }
 
@@ -74,9 +73,55 @@ void RenderingTest::Update(double time)
 	_cam->Update(time);
 }
 
-void RenderingTest::HandleEvent(const bembel::WindowShouldCloseEvent& event)
+void RenderingTest::NextScene()
+{
+	_currentScene = (_currentScene +1)%_scenes.size();
+
+	_graphicSys->GetRenderingPiplies()[0]->SetScene(_scenes[_currentScene]);
+}
+
+void RenderingTest::PrevScene()
+{
+	_currentScene = (_currentScene +_scenes.size() - 1)%_scenes.size();
+	_graphicSys->GetRenderingPiplies()[0]->SetScene(_scenes[_currentScene]);
+}
+
+void RenderingTest::HandleEvent(const WindowShouldCloseEvent& event)
 {
 	Quit();
+}
+
+void RenderingTest::HandleEvent(const KeyPressEvent& event)
+{
+	if (event.keyID == GLFW_KEY_RIGHT)
+		NextScene();
+	if (event.keyID == GLFW_KEY_LEFT)
+		NextScene();
+}
+
+void RenderingTest::InitScene()
+{
+	_assetMgr = std::make_shared<AssetManager>();
+	_assetMgr->InitAssetLoader<Texture, TextureLoader>();
+
+	_scenes.push_back(LoadScene("chessboard.xml"));
+	_scenes.push_back(LoadScene("planets.xml"));
+
+	_currentScene = 0;
+	_graphicSys->GetRenderingPiplies()[0]->SetScene(_scenes[_currentScene]);
+}
+
+std::shared_ptr<Scene> RenderingTest::LoadScene(const std::string& file)
+{
+	auto scene = std::make_shared<Scene>(_assetMgr);
+
+	scene->RegisterComponentType<PositionComponent>();
+	scene->RegisterComponentType<PointLightProperties>();
+	scene->RegisterComponentType<DirLightProperties>();
+	scene->RegisterComponentType<SimpleGeometryComponent>();
+
+	scene->LoadScene(file);
+	return scene;
 }
 
 } //end of namespace bembel

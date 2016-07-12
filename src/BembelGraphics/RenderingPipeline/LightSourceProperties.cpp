@@ -19,10 +19,15 @@ const std::string& PointLightProperties::GetComponentTypeName()
 
 bool PointLightProperties::InitComponent(
 	PointLightProperties& component, 
-	const xml::Element* properties)
+	const xml::Element* properties, 
+	AssetManager*)
 {
 	component.bulbRadius = 1;
 	xml::GetAttribute(properties, "color", component.color);
+	float intensity;
+	if (xml::GetAttribute(properties, "intensity", intensity))
+		component.color *= intensity;
+
 	xml::GetAttribute(properties, "bulbRadius",   component.bulbRadius);
 	xml::GetAttribute(properties, "cutoffRadius", component.cutoffRadius);
 
@@ -37,11 +42,16 @@ const std::string& DirLightProperties::GetComponentTypeName()
 
 bool DirLightProperties::InitComponent(
 	DirLightProperties& component,
-	const xml::Element* properties)
+	const xml::Element* properties, 
+	AssetManager*)
 {
-	xml::GetAttribute(properties, "color", component.color);
+	xml::GetAttribute(properties, "color", component.color); 
+	float intensity;
+	if (xml::GetAttribute(properties, "intensity", intensity))
+		component.color *= intensity;
 	xml::GetAttribute(properties, "direction", component.direction);
 	component.direction = glm::normalize(component.direction);
+	
 	return true;
 }
 

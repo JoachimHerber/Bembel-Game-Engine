@@ -29,10 +29,11 @@ inline ComponentType* SparseComponentContainer<ComponentType>::CreateComponent(
 template<class ComponentType>
 inline bool SparseComponentContainer<ComponentType>::CreateComponent(
 	Scene::EntityID entity, 
-	const xml::Element* properties)
+	const xml::Element* properties, 
+	AssetManager* assetMgr)
 {
 	ComponentType component;
-	if(ComponentType::InitComponent(component, properties))
+	if(ComponentType::InitComponent(component, properties, assetMgr))
 	{
 		_components[entity] = component;
 		return true;
@@ -70,10 +71,11 @@ inline ComponentType* DenseComponentContainer<ComponentType>::CreateComponent(
 template<class ComponentType>
 inline bool DenseComponentContainer<ComponentType>::CreateComponent(
 	Scene::EntityID entity,
-	const xml::Element* properties)
+	const xml::Element* properties, 
+	AssetManager* assetMgr)
 {
 	ComponentType component;
-	if(ComponentType::InitComponent(component, properties))
+	if(ComponentType::InitComponent(component, properties, assetMgr))
 	{
 		if (entity >= _components.size())
 			_components.resize(entity + 1);

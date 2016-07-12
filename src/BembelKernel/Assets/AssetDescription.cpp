@@ -12,6 +12,12 @@ namespace bembel {
 AssetDescription::AssetDescription()
 {}
 
+AssetDescription::AssetDescription(AssetDescription&& other)
+	: _name(std::move(other._name))
+	, _file(std::move(other._file))
+	, _properties(std::move(other._properties))
+{}
+
 AssetDescription::~AssetDescription()
 {}
 
@@ -47,6 +53,21 @@ bool AssetDescription::GetProperty(const std::string& name, std::string& value) 
 void AssetDescription::SetProperty(const std::string& name, const std::string& value)
 {
 	_properties[name] = value;
+}
+
+AssetDescription AssetDescription::Parse(const xml::Element* properties)
+{
+	AssetDescription asset;
+	xml::GetAttribute(properties, "name", asset._name);
+	xml::GetAttribute(properties, "file", asset._file);
+	for (auto it : xml::IterateChildElements(properties, "property"))
+	{
+		const char* name  = it->Attribute("name");
+		const char* value = it->Attribute("value");
+		if (name != nullptr && value != nullptr)
+			asset._properties[name] = value;
+	}
+	return asset;
 }
 
 } //end of namespace bembel

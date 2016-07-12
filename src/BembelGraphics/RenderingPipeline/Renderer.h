@@ -14,6 +14,7 @@
 namespace bembel{
 
 class Scene;
+class AssetManager;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -30,8 +31,8 @@ public:
 	virtual void Init() = 0;
 	virtual void Cleanup() = 0;
 
-	using EntityManagerPtr = std::shared_ptr<Scene>;
-	virtual void SetEntityManager(EntityManagerPtr)
+	using ScenePtr = std::shared_ptr<Scene>;
+	virtual void SetScene(ScenePtr)
 	{}
 
 	using ViewFrustum = std::array<glm::vec4,6>;

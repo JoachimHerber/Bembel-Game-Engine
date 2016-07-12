@@ -17,7 +17,8 @@ const std::string& PositionComponent::GetComponentTypeName()
 
 bool PositionComponent::InitComponent(
 	PositionComponent& component, 
-	const xml::Element* properties)
+	const xml::Element* properties, 
+	AssetManager*)
 {
 	xml::GetAttribute(properties, "x", component.position.x);
 	xml::GetAttribute(properties, "y", component.position.y);

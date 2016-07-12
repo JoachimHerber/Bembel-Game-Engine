@@ -8,6 +8,8 @@
 #include <BembelGraphics/OpenGL/ShaderProgram.h>
 #include <BembelGraphics/RenderingPipeline/Renderer.h>
 #include <BembelKernel/Scene/PositionComponent.h>
+#include <BembelKernel/Assets/AssetManager.h>
+#include <BembelGraphics/OpenGL/Texture.h>
 
 #include "SimpleGeometryComponent.h"
 
@@ -27,7 +29,7 @@ public:
 	void Init() override;
 	void Cleanup() override;
 
-	virtual void SetEntityManager(EntityManagerPtr) override;
+	virtual void SetScene(ScenePtr) override;
 
 	void DoGeometryPass(
 		const glm::mat4& view,
@@ -47,8 +49,9 @@ private:
 
 	struct VertexData
 	{
-		glm::vec4 pos;
-		glm::vec4 normal;
+		glm::vec3 pos;
+		glm::vec3 normal;
+		glm::vec2 texCoord;
 	};
 
 	void InitSpereGeometry(std::vector<VertexData>&, std::vector<unsigned>&);
@@ -61,9 +64,10 @@ private:
 private:
 	std::unique_ptr<ShaderProgram> _shader;
 
-	EntityManagerPtr                      _entityMgr;
+	ScenePtr                              _scene;
 	SimpleGeometryComponent::ContainerPtr _geometryContainer;
 	PositionComponent::ContainerPtr       _positionConteiner;
+	TextureContainerPtr                   _textureConteiner;
 
 	GLuint _vbo;
 	GLuint _ibo;

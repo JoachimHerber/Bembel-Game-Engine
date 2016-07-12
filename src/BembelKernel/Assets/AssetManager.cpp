@@ -48,6 +48,22 @@ unsigned AssetManager::LoadeAssets(
 	return 0;
 }
 
+unsigned AssetManager::LoadeAssets(const xml::Element* root)
+{
+	if (root == nullptr)
+		return 0;
+
+	std::map<std::string, std::vector<AssetDescription>> assets;
+	for (auto it : xml::IterateChildElements(root))
+		assets[it->Value()].push_back(AssetDescription::Parse(it));
+	
+	unsigned sum = 0;
+	for (auto& it : assets)
+		sum += LoadeAssets(it.first, it.second);
+	
+	return sum;
+}
+
 unsigned AssetManager::UnloadeAssets(
 	const std::string& assteTypeName,
 	const std::vector<std::string>& assetNames, bool force /*= false*/)
@@ -64,7 +80,7 @@ std::shared_ptr<AssetContainerBase> AssetManager::GetAssetContainer(
 	auto it = _assetTypeMap.find(assteTypeName);
 	if (it != _assetTypeMap.end())
 	{
-		return _assetTypes[it->second].container;
+		return _container[it->second];
 	}
 	return nullptr;
 }
@@ -75,7 +91,7 @@ std::shared_ptr<AssetLoaderBase> AssetManager::GetAssetLoader(
 	auto it = _assetTypeMap.find(assteTypeName);
 	if (it != _assetTypeMap.end())
 	{
-		return _assetTypes[it->second].loader;
+		return _loader[it->second];
 	}
 	return nullptr;
 }
@@ -87,7 +103,7 @@ bool AssetManager::SetAssetLoader(
 	auto it = _assetTypeMap.find(assteTypeName);
 	if (it != _assetTypeMap.end())
 	{
-		_assetTypes[it->second].loader = loader;
+		_loader[it->second] = loader;
 		return true;
 	}
 	return false;

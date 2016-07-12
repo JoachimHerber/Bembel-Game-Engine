@@ -38,7 +38,7 @@ namespace bembel{
 class BEMBEL_API RenderingPipeline final
 {
 public:
-	using EntityManagerPtr = std::shared_ptr<Scene>;
+	using ScenePtr = std::shared_ptr<Scene>;
 	using CameraPtr = std::shared_ptr<Camera>;
 	using TexturePtr = std::shared_ptr<Texture>;
 	using RendererPtr = std::shared_ptr<Renderer>;
@@ -60,8 +60,8 @@ public:
 	void Init();
 	void Cleanup();
 
-	void SetEntityManager(EntityManagerPtr);
-	EntityManagerPtr GetEntityManager() const;
+	void SetScene(ScenePtr);
+	ScenePtr GetScene() const;
 
 	CameraPtr GetCamera() const;
 
@@ -95,8 +95,7 @@ private:
 	bool       _enabled;
 	bool       _initalized;
 
-	EntityManagerPtr _entityMgr;
-
+	ScenePtr  _scene;
 	CameraPtr _camera;
 
 	std::map<std::string, TexturePtr> _textures;

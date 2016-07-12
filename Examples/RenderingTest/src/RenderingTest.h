@@ -5,6 +5,8 @@
 /*============================================================================*/
 #include <BembelKernel/Application.h>
 #include <BembelKernel/Events/EventManager.h>
+#include <BembelKernel/Assets/AssetManager.h>
+#include <BembelKernel/Scene/Scene.h>
 #include <BembelGraphics/GraphicSystem.h>
 #include <BembelGraphics/RenderingPipeline/RenderingPipeline.h>
 
@@ -25,11 +27,25 @@ public:
 
 	virtual void Update(double time) override;
 
+	void NextScene();
+	void PrevScene();
+
 	void HandleEvent(const WindowShouldCloseEvent&);
+	void HandleEvent(const KeyPressEvent&);
+
+private:
+	void InitScene();
+
+	std::shared_ptr<Scene> LoadScene(const std::string&);
 
 private:
 	std::shared_ptr<GraphicSystem>  _graphicSys;
 	std::shared_ptr<CameraControle> _cam;
+
+	std::shared_ptr<AssetManager> _assetMgr;
+
+	int _currentScene;
+	std::vector<std::shared_ptr<Scene>> _scenes;
 };
 
 } //end of namespace bembel

@@ -61,12 +61,12 @@ void DeferredLightingStage::SetInputTextures(const std::vector<std::string>& tex
 	SetTextureSamplerUniforms(_pointLightShader.get());
 }
 
-void DeferredLightingStage::SetEntityManager(EntityManagerPtr entityMgr)
+void DeferredLightingStage::SetScene(ScenePtr scene)
 {
-	_entityMgr = entityMgr;
-	_dirLightContainer   = _entityMgr->RequestComponentContainer<DirLightProperties>();
-	_pointLightContainer = _entityMgr->RequestComponentContainer<PointLightProperties>();
-	_positionConteiner   = _entityMgr->RequestComponentContainer<PositionComponent>();
+	_scene = scene;
+	_dirLightContainer   = _scene->RequestComponentContainer<DirLightProperties>();
+	_pointLightContainer = _scene->RequestComponentContainer<PointLightProperties>();
+	_positionConteiner   = _scene->RequestComponentContainer<PositionComponent>();
 }
 
 void DeferredLightingStage::Init()
@@ -264,7 +264,7 @@ void DeferredLightingStage::ApplyDirectionalLights()
 			_dirLightShader->GetUniformLocation("uLigthDir"),
 			dir.x, dir.y, dir.z);
 
-		if ((_entityMgr->GetEntitys()[it.first] & mask)!=mask)
+		if ((_scene->GetEntitys()[it.first] & mask)!=mask)
 			continue;// this should not happen
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -292,7 +292,7 @@ void DeferredLightingStage::ApplyPointLights()
 	std::vector<PointLight> pointLights;
 	for (const auto& it : _pointLightContainer->GetComponents())
 	{
-		if ((_entityMgr->GetEntitys()[it.first] & mask)!=mask)
+		if ((_scene->GetEntitys()[it.first] & mask)!=mask)
 			continue;// this should not happen
 
 		PointLight light;

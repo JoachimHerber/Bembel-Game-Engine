@@ -8,6 +8,10 @@
 #include <BembelConfig.h>
 
 #include <BembelBase/Image.h>
+#include <BembelKernel/Assets/AssetLoader.h>
+#include <BembelKernel/Assets/AssetManager.h>
+#include <BembelKernel/Assets/AssetContainer.h>
+
 #include <glm/glm.hpp>
 
 /*============================================================================*/
@@ -50,10 +54,34 @@ public:
 	GLenum GetTextureFormat() const;
 	GLenum GetTextureTarget() const;
 
+	const static std::string& GetTypeName();
+
 private:
 	GLenum _target;
 	GLenum _format;
 	GLuint _handle;
+};
+
+using TextureContainer    = AssetContainer<Texture>;
+using TextureContainerPtr = std::shared_ptr<TextureContainer>;
+
+class BEMBEL_API TextureLoader : public AssetLoaderBase
+{
+public:
+	TextureLoader(TextureContainerPtr);
+	~TextureLoader();
+
+	void CreateDummyTexture();
+
+	virtual bool LoadeAsset(const AssetDescription& asset) override;
+	virtual bool UnloadeAsset(const std::string& name, bool force = false) override;
+
+	static std::shared_ptr<TextureLoader> CreateDefaultLoader(AssetManager*);
+
+private:
+	TextureContainerPtr _container;
+
+	std::map<std::string, AssetHandle> _loadedTextures;
 };
 
 } //end of namespace bembel

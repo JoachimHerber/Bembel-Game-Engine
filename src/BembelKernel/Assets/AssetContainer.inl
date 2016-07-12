@@ -10,7 +10,10 @@ inline AssetContainer<AssetType>::AssetContainer()
 template<typename AssetType>
 inline AssetContainer<AssetType>::~AssetContainer()
 {
-	DeleteAllAssets();
+	for (auto& it :_assets)
+	{
+		delete it.data;
+	}
 }
 
 template<typename AssetType>
@@ -68,31 +71,29 @@ inline AssetType* AssetContainer<AssetType>::RemoveAsset(
 			return nullptr;
 	}
 
+	AssetType* asset = _assets[handle.index].data;
+
+	_assets[handle.index].data = nullptr;
 	_assets[handle.index].refCount = -1;
 	_unusedIds.push(handle.index);
 
-	return _assets[handle.index].data;
+	return asset;
 }
 
 template<typename AssetType>
 inline AssetHandle AssetContainer<AssetType>::GetAssetHandle(const std::string& name)
 {
-	AssetHandle handle = AssetHandle{~0U,~0U};
-
 	auto it = _assetMap.find(name);
 	if (it == _assetMap.end())
-		return handle;
+		return AssetHandle{~0U,~0U};
 
-	if (_assets[it->second].refCount < 0)
-	{
-		// asset has been delete so remove it from the map
-		_assetMap.erase(it);
-		return handle;
-	}
+	if (IsHandelValid(it->second))
+		return it->second;
 
-	handle.index = it->second;
-	handle.hash  = _assets[it->second].hash;
-	return handle;
+	// The entry in the assetMap refers to an asset, which no longer exist.
+	// The entry should hence be removed
+	_assetMap.erase(it);
+	return AssetHandle{~0U,~0U};
 }
 
 template<typename AssetType>
@@ -108,10 +109,13 @@ inline bool AssetContainer<AssetType>::IsHandelValid(AssetHandle handle)
 template<typename AssetType>
 inline AssetType* AssetContainer<AssetType>::GetAsset(AssetHandle handle)
 {
-	if (!IsHandelValid(handle))
-		return _dummyAsset;
+	if (IsHandelValid(handle))
+		return _assets[handle.index].data;
 
-	return _assets[handle.index].asset;
+	if (IsHandelValid(_dummyAsset))
+		return _assets[_dummyAsset.index].data;
+
+	return nullptr;
 }
 
 template<typename AssetType>
@@ -165,7 +169,7 @@ inline void AssetContainer<AssetType>::GetUnusedAssets(
 
 template<typename AssetType>
 inline void AssetContainer<AssetType>::SetDummyAsset(
-	AssetType* dummy)
+	AssetHandle dummy)
 {
 	_dummyAsset = dummy;
 }

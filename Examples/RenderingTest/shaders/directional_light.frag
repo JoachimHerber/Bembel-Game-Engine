@@ -48,7 +48,7 @@ void main()
 
 	oColor.rgb = uLigthColor*BRDF(
 		normalize(normal.xyz - vec3(0.5)),
-		-uLigthDir, 
+		-normalize(uLigthDir), 
 		-normalize(position.xyz), 
 		mat);
 	oColor.a   = 0;

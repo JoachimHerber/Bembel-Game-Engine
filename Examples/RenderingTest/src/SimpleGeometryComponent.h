@@ -6,6 +6,7 @@
 
 #include <BembelConfig.h>
 
+#include <BembelKernel/Assets/AssetHandle.h>
 #include <BembelKernel/Scene/Scene.h>
 #include <BembelKernel/Scene/Entity.h>
 #include <BembelKernel/Scene/ComponentContainer.hpp>
@@ -31,36 +32,15 @@ struct SimpleGeometryComponent
 
 	glm::vec3 size;
 
-	glm::vec4 albedo;
+	AssetHandle albedo;
 	float     roughness;
 
 	using ContainerType = DenseComponentContainer<SimpleGeometryComponent>;
 	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
-	static bool InitComponent(SimpleGeometryComponent&, const xml::Element*);
+	static bool InitComponent(SimpleGeometryComponent&, const xml::Element*, AssetManager*);
 };
-
-Entity CreateSphere(
-	Scene* world,
-	const glm::vec3& positon,
-	float radius,
-	const glm::vec4& albedo,
-	float roughness);
-
-Entity CreateXZPlain(
-	Scene* world,
-	const glm::vec3& positon,
-	const glm::vec2& size,
-	const glm::vec4& albedo,
-	float roughness);
-
-Entity CreateBox(
-	Scene* world,
-	const glm::vec3& positon,
-	const glm::vec3& size,
-	const glm::vec4& albedo,
-	float roughness);
 
 } //end of namespace bembel
 /*============================================================================*/

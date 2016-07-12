@@ -17,6 +17,7 @@
 namespace bembel{
 
 class ComponentContainerBase;
+class AssetManager;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -32,21 +33,27 @@ public:
 	using ComponentMask   = unsigned long long;
 
 	Scene();
+	Scene(std::shared_ptr<AssetManager>);
 	~Scene();
 
 	template<class ComponentType>
 	std::shared_ptr<typename ComponentType::ContainerType>
 		RequestComponentContainer();
 
+	template<class ComponentType>
+	void RegisterComponentType();
+
 	EntityID CreateEntity();
 	EntityID CreateEntity(const xml::Element*);
 
-	bool LoadEntities(const std::string& fileName);
+	bool LoadScene(const std::string& fileName);
 
 	template<class ComponentType>
 	ComponentType* CreateComponent(EntityID id);
 
 	const std::vector<ComponentMask>& GetEntitys() const;
+
+	std::shared_ptr<AssetManager> GetAssetManager();
 
 private:
 	using ContainerPtr = std::shared_ptr<ComponentContainerBase>;
@@ -55,6 +62,8 @@ private:
 
 	std::map<std::string, ComponentTypeID> _componentTypeMap;
 	std::vector<ContainerPtr>              _container;
+
+	std::shared_ptr<AssetManager> _assteManager;
 };
 
 } //end of namespace bembel
@@ -81,6 +90,21 @@ inline std::shared_ptr<typename ComponentType::ContainerType>
 		ComponentType::GetComponentTypeName(), _container.size());
 	_container.push_back(container);
 	return container;
+}
+
+template<class ComponentType>
+inline void Scene::RegisterComponentType()
+{
+	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
+	if (it != _componentTypeMap.end())
+		return;
+
+	auto container =
+		std::make_shared<ComponentType::ContainerType>(_container.size());
+
+	_componentTypeMap.emplace(
+		ComponentType::GetComponentTypeName(), _container.size());
+	_container.push_back(container);
 }
 
 template<class ComponentType>

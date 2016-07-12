@@ -39,6 +39,7 @@ public:
 	template<typename AssetType>
 	unsigned LoadeAssets(const std::vector<AssetDescription>& assets);
 	unsigned LoadeAssets(const std::string& assteTypeName, const std::vector<AssetDescription>& assets);
+	unsigned LoadeAssets(const xml::Element*);
 
 	template<typename AssetType>
 	unsigned UnloadeAssets(const std::vector<std::string>& assetNames, bool force = false);
@@ -59,15 +60,19 @@ public:
 	bool SetAssetLoader(std::shared_ptr<AssetLoaderBase>);
 	bool SetAssetLoader(const std::string& assteTypeName, std::shared_ptr<AssetLoaderBase>);
 
-private:
-	struct AssetType
-	{
-		std::shared_ptr<AssetLoaderBase>    loader;
-		std::shared_ptr<AssetContainerBase> container;
-	};
+	template<typename AssetType, typename AssetLoaderType, typename ... TArgs>
+	bool InitAssetLoader(TArgs ...);
 
-	std::unordered_map<std::string, std::size_t> _assetTypeMap;
-	std::vector<AssetType>                       _assetTypes;
+	template<typename AssetType>
+	AssetHandle GetAssetHandle(const std::string& name);
+
+	template<typename AssetType>
+	AssetType* GetAsset(AssetHandle handle);
+
+private:
+	std::unordered_map<std::string, std::size_t>     _assetTypeMap;
+	std::vector<std::shared_ptr<AssetLoaderBase>>    _loader;
+	std::vector<std::shared_ptr<AssetContainerBase>> _container;
 };
 
 } //end of namespace bembel

@@ -6,6 +6,8 @@
 
 #include <BembelConfig.h>
 
+#include <BembelBase/XML.h>
+
 #include <string>
 #include <unordered_map>
 
@@ -18,6 +20,7 @@ class BEMBEL_API AssetDescription
 {
 public:
 	AssetDescription();
+	AssetDescription(AssetDescription&&);
 	~AssetDescription();
 
 	const std::string& GetName() const;
@@ -28,6 +31,8 @@ public:
 
 	bool GetProperty(const std::string& name, std::string& value) const;
 	void SetProperty(const std::string& name, const std::string& value);
+
+	static AssetDescription Parse(const xml::Element*);
 
 private:
 	std::string _name;

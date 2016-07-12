@@ -30,7 +30,10 @@ public:
 	using ContainerPtr  = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
-	static bool InitComponent(PointLightProperties&, const xml::Element*);
+	static bool InitComponent(
+		PointLightProperties&,
+		const xml::Element*,
+		AssetManager*);
 };
 
 class BEMBEL_API DirLightProperties
@@ -43,7 +46,10 @@ public:
 	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
-	static bool InitComponent(DirLightProperties&, const xml::Element*);
+	static bool InitComponent(
+		DirLightProperties&, 
+		const xml::Element*, 
+		AssetManager*);
 };
 
 } //end of namespace bembel

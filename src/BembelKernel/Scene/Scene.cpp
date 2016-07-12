@@ -4,14 +4,19 @@
 
 #include "Scene.h"
 #include "ComponentContainer.hpp"
-#include "BembelBase\Logging\Logger.h"
+#include "../Assets/AssetManager.h"
+#include "BembelBase/Logging/Logger.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
 namespace bembel {
 
-Scene::Scene()
+Scene::Scene() : 
+	_assteManager(std::make_shared<AssetManager>())
+{}
+Scene::Scene(std::shared_ptr<AssetManager> assetMgr)
+	: _assteManager(assetMgr)
 {}
 
 Scene::~Scene()
@@ -38,7 +43,7 @@ Scene::EntityID Scene::CreateEntity(
 		if(it == _componentTypeMap.end())
 			continue; // unknow component type
 
-		if (_container[it->second]->CreateComponent(entity, component))
+		if (_container[it->second]->CreateComponent(entity, component, _assteManager.get()))
 		{
 			_entities[entity] |= _container[it->second]->GetComponentMask();
 		}
@@ -46,7 +51,7 @@ Scene::EntityID Scene::CreateEntity(
 	return entity;
 }
 
-bool Scene::LoadEntities(const std::string& fileName)
+bool Scene::LoadScene(const std::string& fileName)
 {
 	xml::Document doc;
 	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
@@ -57,11 +62,14 @@ bool Scene::LoadEntities(const std::string& fileName)
 		return false;
 	}
 
-	const xml::Element* root = doc.FirstChildElement("Entities");
+	const xml::Element* root = doc.FirstChildElement("Scene");
 	if (!root)
 		return false;
 
-	for (auto entity : xml::IterateChildElements(root, "Entity"))
+	_assteManager->LoadeAssets(root->FirstChildElement("Assets"));
+
+	const xml::Element* entities = root->FirstChildElement("Entities");
+	for (auto entity : xml::IterateChildElements(entities, "Entity"))
 	{
 		CreateEntity(entity);
 	}
@@ -71,6 +79,11 @@ bool Scene::LoadEntities(const std::string& fileName)
 const std::vector<Scene::ComponentMask>& Scene::GetEntitys() const
 {
 	return _entities;
+}
+
+std::shared_ptr<AssetManager> Scene::GetAssetManager()
+{
+	return _assteManager;
 }
 
 } //end of namespace bembel

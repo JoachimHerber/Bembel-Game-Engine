@@ -31,8 +31,8 @@ public:
 	virtual ~RenderingStage()
 	{}
 
-	using EntityManagerPtr = std::shared_ptr<Scene>;
-	virtual void SetEntityManager(EntityManagerPtr)
+	using ScenePtr = std::shared_ptr<Scene>;
+	virtual void SetScene(ScenePtr)
 	{}
 
 	virtual void Init() = 0;

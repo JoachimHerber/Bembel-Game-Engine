@@ -111,7 +111,7 @@ public:
 	 * Specifies the asset data that is returned by GetAsset() when it
 	 * is called with an invalid asset-handle.
 	 */
-	void SetDummyAsset(AssetType* dummy);
+	void SetDummyAsset(AssetHandle dummy);
 
 protected:
 	struct AssetData
@@ -126,7 +126,7 @@ protected:
 
 	std::stack<unsigned> _unusedIds;
 
-	AssetType* _dummyAsset;
+	AssetHandle _dummyAsset;
 };
 
 } //end of namespace bembel

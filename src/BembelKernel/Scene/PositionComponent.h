@@ -25,7 +25,10 @@ struct BEMBEL_API PositionComponent
 	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
-	static bool InitComponent(PositionComponent&, const xml::Element*);
+	static bool InitComponent(
+		PositionComponent&, 
+		const xml::Element*, 
+		AssetManager*);
 };
 
 } //end of namespace bembel

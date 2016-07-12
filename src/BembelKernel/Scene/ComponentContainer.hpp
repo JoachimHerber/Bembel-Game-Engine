@@ -26,7 +26,8 @@ public:
 	);
 	virtual ~ComponentContainerBase(){}
 
-	virtual bool CreateComponent(Scene::EntityID, const xml::Element*) = 0;
+	virtual bool CreateComponent(
+		Scene::EntityID, const xml::Element*, AssetManager*) = 0;
 
 	Scene::ComponentTypeID GetComponentTypeID();
 	Scene::ComponentMask   GetComponentMask();
@@ -47,7 +48,7 @@ public:
 	virtual ~SparseComponentContainer() {}
 
 	ComponentType* CreateComponent(Scene::EntityID);
-	bool CreateComponent(Scene::EntityID, const xml::Element*) override;
+	bool CreateComponent(Scene::EntityID, const xml::Element*, AssetManager*) override;
 
 	std::map<Scene::EntityID, ComponentType>& GetComponents();
 	ComponentType* GetComponent(Scene::EntityID);
@@ -67,7 +68,7 @@ public:
 	virtual ~DenseComponentContainer() {}
 
 	ComponentType* CreateComponent(Scene::EntityID);
-	bool CreateComponent(Scene::EntityID, const xml::Element*) override;
+	bool CreateComponent(Scene::EntityID, const xml::Element*, AssetManager*) override;
 
 	std::vector<ComponentType>& GetComponents();
 	ComponentType* GetComponent(Scene::EntityID);

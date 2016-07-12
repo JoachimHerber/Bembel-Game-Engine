@@ -19,39 +19,43 @@ namespace bembel{
 
 const static std::string VERT = R"(
 #version 330
-layout(location = 0) in vec4 aPosition;
-layout(location = 1) in vec4 aNormal;  
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aNormal;  
+layout(location = 2) in vec2 aTexCoord;  
 
 uniform mat4 uNormalMatrix;
 uniform mat4 uModleViewMatrix;
 uniform mat4 uProjectionMatrix;
 
 out vec3 vNormal;
+out vec2 vTexCoord;
 
 void main()
 {
-	vNormal = normalize((uNormalMatrix*aNormal).xyz);
-
+	vNormal   = normalize((uNormalMatrix*vec4(aNormal,0)).xyz);
+	vTexCoord = aTexCoord;
 	gl_Position = 
-		uProjectionMatrix*uModleViewMatrix*aPosition;
+		uProjectionMatrix*uModleViewMatrix*vec4(aPosition,1);
 }
 )";
 const static std::string FRAG = R"(
 #version 330
 
 in vec3 vNormal;
+in vec2 vTexCoord;
 
-uniform vec4  uAlbedo;
-uniform float uRoughness;
+uniform float     uRoughness;
+
+uniform sampler2D uAlbedoTexture;
 
 layout(location = 0) out vec4 oNormal;
 layout(location = 1) out vec4 oAlbedo;
 
 void main()
 {
-	oAlbedo       = uAlbedo;
+	oAlbedo       = texture(uAlbedoTexture, vTexCoord);
 	oNormal.xyz   = vec3(0.5*normalize(vNormal) + vec3(0.5));
-	oNormal.a     = uRoughness;
+	oNormal.a     = oAlbedo.a;
 }
 )";
 
@@ -79,11 +83,16 @@ void SimpleGeometryRenderer::Cleanup()
 	_shader.reset();
 }
 
-void SimpleGeometryRenderer::SetEntityManager(EntityManagerPtr entityMgr)
+void SimpleGeometryRenderer::SetScene(ScenePtr scene)
 {
-	_entityMgr = entityMgr;
-	_geometryContainer = _entityMgr->RequestComponentContainer<SimpleGeometryComponent>();
-	_positionConteiner = _entityMgr->RequestComponentContainer<PositionComponent>();
+	_scene = scene;
+
+	_geometryContainer = 
+		_scene->RequestComponentContainer<SimpleGeometryComponent>();
+	_positionConteiner = 
+		_scene->RequestComponentContainer<PositionComponent>();
+	_textureConteiner = 
+		_scene->GetAssetManager()->RequestAssetContainer<Texture>();
 }
 
 void SimpleGeometryRenderer::DoGeometryPass(
@@ -103,7 +112,7 @@ void SimpleGeometryRenderer::DoGeometryPass(
 
  	glBindVertexArray(_vao);
 
-	auto& entities  = _entityMgr->GetEntitys();
+	auto& entities  = _scene->GetEntitys();
 	auto& positions = _positionConteiner->GetComponents();
 	auto& geometry  = _geometryContainer->GetComponents();
 
@@ -115,6 +124,13 @@ void SimpleGeometryRenderer::DoGeometryPass(
 	{
 		if((entities[entity] & mask) != mask)
 			continue;
+
+		Texture* albedo = _textureConteiner->GetAsset(geometry[entity].albedo);
+		if (!albedo)
+			continue;
+
+		albedo->Bind();
+
 		glm::mat4 modleView;
 		modleView = glm::translate(modleView, positions[entity].position);
 		modleView = glm::scale(modleView, geometry[entity].size);
@@ -123,7 +139,6 @@ void SimpleGeometryRenderer::DoGeometryPass(
 
 		glUniformMatrix4fv(uNormalMatrix,  1, GL_FALSE, &normalMatix[0][0]);
 		glUniformMatrix4fv(uModleViewMatrix, 1, GL_FALSE, &modleView[0][0]);
-		glUniform4fv(uAlbedo, 1, &geometry[entity].albedo[0]);
 		glUniform1f(uRoughness, geometry[entity].roughness);
 
 		auto& shape = _shapes[geometry[entity].shape];
@@ -166,53 +181,62 @@ void SimpleGeometryRenderer::InitSpereGeometry(
 	std::vector<VertexData>& vertices, 
 	std::vector<unsigned>& indices)
 {
-	vertices.push_back({glm::vec4(0,0.5,0,1), glm::vec4(0,+1,0,0)});
+	vertices.push_back({
+		glm::vec3(0.0f, 0.5f, 0.0f), 
+		glm::vec3(0.0f, 1.0f, 0.0f), 
+		glm::vec2(0.5f, 1.0f)});
 
 	const float pi = 3.14159265359;
 
 	glm::vec3 offset;
 	for (int i = 1; i < 16; ++i)
 	{
+		float v = 1 - i/16.0f;
 		float f = pi*i/16.0f;
 		float r = sin(f);
 		offset.y = cos(f);
-		for (int j = 0; j < 32; ++j)
+		for (int j = 0; j <= 32; ++j)
 		{
+			float u = j/32.0f;
 			f = pi*j/16.0f;
 			offset.x = r*sin(f);
 			offset.z = r*cos(f);
-			vertices.push_back({glm::vec4(0.5f*offset,1),glm::vec4(offset,0)});
+			vertices.push_back({
+				0.5f*offset, offset, glm::vec2(u,v)});
 		}
 	}
-	vertices.push_back({glm::vec4(0,-0.5,0,1), glm::vec4(0,-1,0,0)});
+	vertices.push_back({
+		glm::vec3(0.0f,-0.5f, 0.0f),
+		glm::vec3(0.0f,-1.0f, 0.0f),
+		glm::vec2(0.5f, 0.0f)});
 
 	unsigned startIndex = 0;
 	for (int j = 0; j < 32; ++j)
 	{
 		indices.push_back(startIndex + 0);
-		indices.push_back(startIndex + 1 + (j));
-		indices.push_back(startIndex + 1 + ((j+1)%32));
+		indices.push_back(startIndex + j + 1 );
+		indices.push_back(startIndex + j + 2 );
 	}
 	++startIndex;
 	for (int i = 1; i < 15; ++i)
 	{
-		for (int j = 0; j < 32; ++j)
+		for (int j = 0; j <= 32; ++j)
 		{
-			indices.push_back(startIndex + ((j+0)%32));
-			indices.push_back(startIndex + ((j+1)%32) + 32);
-			indices.push_back(startIndex + ((j+1)%32));
+			indices.push_back(startIndex + ((j+0)));
+			indices.push_back(startIndex + ((j+1)) + 33);
+			indices.push_back(startIndex + ((j+1)));
 
-			indices.push_back(startIndex + ((j+0)%32));
-			indices.push_back(startIndex + ((j+0)%32) + 32);
-			indices.push_back(startIndex + ((j+1)%32) + 32);
+			indices.push_back(startIndex + ((j+0)));
+			indices.push_back(startIndex + ((j+0)) + 33);
+			indices.push_back(startIndex + ((j+1)) + 33);
 		}
-		startIndex += 32;
+		startIndex += 33;
 	}
 	for (int j = 0; j < 32; ++j)
 	{
-		indices.push_back(startIndex + (j));
-		indices.push_back(startIndex + 32);
-		indices.push_back(startIndex + ((j+1)%32));
+		indices.push_back(startIndex + j);
+		indices.push_back(startIndex + 33);
+		indices.push_back(startIndex + j + 1);
 	}
 
 	_shapes[SimpleGeometryComponent::SPHERE].first  = 0;
@@ -227,10 +251,10 @@ void SimpleGeometryRenderer::InitXZPlaneGeometry(
 	_shapes[SimpleGeometryComponent::XZ_PLAIN].second = 6;
 
 	unsigned startIndex = vertices.size();
-	vertices.push_back({glm::vec4(-0.5f, 0.0f, -0.5f, 1),glm::vec4(0,1,0,0)});
-	vertices.push_back({glm::vec4(-0.5f, 0.0f, +0.5f, 1),glm::vec4(0,1,0,0)});
-	vertices.push_back({glm::vec4(+0.5f, 0.0f, -0.5f, 1),glm::vec4(0,1,0,0)});
-	vertices.push_back({glm::vec4(+0.5f, 0.0f, +0.5f, 1),glm::vec4(0,1,0,0)});
+	vertices.push_back({glm::vec3(-0.5f, 0.0f, -0.5f),glm::vec3(0,1,0),glm::vec2(0,0)});
+	vertices.push_back({glm::vec3(-0.5f, 0.0f, +0.5f),glm::vec3(0,1,0),glm::vec2(0,1)});
+	vertices.push_back({glm::vec3(+0.5f, 0.0f, -0.5f),glm::vec3(0,1,0),glm::vec2(1,0)});
+	vertices.push_back({glm::vec3(+0.5f, 0.0f, +0.5f),glm::vec3(0,1,0),glm::vec2(1,1)});
 
 	indices.push_back(startIndex + 0);
 	indices.push_back(startIndex + 1);
@@ -263,10 +287,12 @@ void SimpleGeometryRenderer::InitVAO()
 	glBindVertexArray(_vao);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(0*sizeof(float)));
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(4*sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(0*sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);

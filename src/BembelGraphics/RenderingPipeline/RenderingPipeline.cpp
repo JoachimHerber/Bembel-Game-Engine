@@ -105,20 +105,20 @@ void RenderingPipeline::Cleanup()
 		it.second->Cleanup();
 }
 
-void RenderingPipeline::SetEntityManager(EntityManagerPtr entityMgr)
+void RenderingPipeline::SetScene(ScenePtr scene)
 {
-	_entityMgr = entityMgr;
+	_scene = scene;
 
 	for (auto& renderer : _renderer)
-		renderer->SetEntityManager(_entityMgr);
+		renderer->SetScene(_scene);
 
 	for (auto& stage : _stages)
-		stage->SetEntityManager(_entityMgr);
+		stage->SetScene(_scene);
 }
 
-std::shared_ptr<Scene> RenderingPipeline::GetEntityManager() const
+std::shared_ptr<Scene> RenderingPipeline::GetScene() const
 {
-	return _entityMgr;
+	return _scene;
 }
 
 std::shared_ptr<Camera> RenderingPipeline::GetCamera() const
