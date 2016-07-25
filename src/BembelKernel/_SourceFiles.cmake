@@ -40,7 +40,7 @@ set( DirFiles
 	Assets/AssetDescription.h
 	Assets/AssetDescription.cpp
 	Assets/AssetContainer.h
-	Assets/AssetContainer.cpp
+	Assets/AssetContainer.inl
 	Assets/AssetHandle.h
 	Assets/AssetLoader.h
 	Assets/AssetManager.h

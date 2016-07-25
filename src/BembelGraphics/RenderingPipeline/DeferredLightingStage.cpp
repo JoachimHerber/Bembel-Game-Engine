@@ -108,8 +108,8 @@ void DeferredLightingStage::Cleanup()
 void DeferredLightingStage::DoRendering()
 {
 	_fbo->BeginRenderToTexture();
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClearColor(0, 0, 0, 0);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 

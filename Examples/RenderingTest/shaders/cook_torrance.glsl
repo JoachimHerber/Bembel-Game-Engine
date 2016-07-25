@@ -1,11 +1,11 @@
 #version 330
 
+
 struct Material
 {
   float roughness;
-  float ior;
-  float metallic;
   vec3  albedo;
+  vec3  F0;
 };
 
 const float pi = 3.14159265359;
@@ -30,13 +30,9 @@ vec3 BRDF(vec3 n, vec3 l, vec3 v, Material mat)
 	
 	// fresnel
 	// Schlick approximation
-	vec3 F0 = vec3(abs ((1.0 - mat.ior) / (1.0 + mat.ior)));
-	F0 = F0 * F0;
-	F0 = mix(F0, mat.albedo.rgb, mat.metallic);
-
-	vec3 F = F0 + (1-F0)*pow(1.0 - VdotH, 5.0);
+	vec3 F = mat.F0 + (1-mat.F0)*pow(1.0 - VdotH, 5.0);
 	
 	vec3 specular = (F*D*G)/(pi*NdotV*NdotL);
-	vec3 diffuse  = mat.albedo*(1-F)*(1-mat.metallic) / pi;
+	vec3 diffuse  = (1-F)*mat.albedo / (2*pi);
 	return NdotL*(specular + diffuse);
 }

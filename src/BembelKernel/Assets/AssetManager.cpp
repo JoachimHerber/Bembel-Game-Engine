@@ -53,13 +53,12 @@ unsigned AssetManager::LoadeAssets(const xml::Element* root)
 	if (root == nullptr)
 		return 0;
 
-	std::map<std::string, std::vector<AssetDescription>> assets;
-	for (auto it : xml::IterateChildElements(root))
-		assets[it->Value()].push_back(AssetDescription::Parse(it));
-	
 	unsigned sum = 0;
-	for (auto& it : assets)
-		sum += LoadeAssets(it.first, it.second);
+	for (auto it : xml::IterateChildElements(root))
+	{
+		if (LoadeAsset(it->Value(), AssetDescription::Parse(it)))
+			++sum;
+	}
 	
 	return sum;
 }

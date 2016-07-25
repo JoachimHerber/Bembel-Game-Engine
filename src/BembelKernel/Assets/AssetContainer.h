@@ -75,11 +75,16 @@ public:
 	 */
 	bool IsHandelValid(AssetHandle handle);
 
+	bool HasAsset(const std::string& name)
+	{
+		return IsHandelValid(GetAssetHandle(name));
+	}
+
 	/**
 	 * Returns the data of the asset specified by the handle or the data of a 
 	 * dummy asset if the specified handle is infalid;
 	 */
-	AssetType* GetAsset(AssetHandle handle);
+	AssetType* GetAsset(AssetHandle handle, bool returnDummyIfHandleInfalid = true);
 
 	/**
 	* Return the reference count for the asset specified by the handle.

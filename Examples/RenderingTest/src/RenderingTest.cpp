@@ -15,6 +15,7 @@
 
 #include <BembelGraphics/Viewport.h>
 #include <BembelGraphics/TextureView.h>
+#include <BembelGraphics/Geometry/Material.h>
 #include <BembelGraphics/RenderingPipeline/Camera.h>
 #include <BembelGraphics/RenderingPipeline/RenderingPipeline.h>
 #include <BembelGraphics/RenderingPipeline/DeferredGeometryStage.h>
@@ -102,7 +103,8 @@ void RenderingTest::HandleEvent(const KeyPressEvent& event)
 void RenderingTest::InitScene()
 {
 	_assetMgr = std::make_shared<AssetManager>();
-	_assetMgr->InitAssetLoader<Texture, TextureLoader>();
+	_assetMgr->InitAssetLoader<Texture,  TextureLoader>();
+	_assetMgr->InitAssetLoader<Material, MaterialLoader>();
 
 	_scenes.push_back(LoadScene("chessboard.xml"));
 	_scenes.push_back(LoadScene("planets.xml"));

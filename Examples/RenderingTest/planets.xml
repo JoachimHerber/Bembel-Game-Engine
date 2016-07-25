@@ -1,29 +1,34 @@
 <Scene>
 	<Assets>
-		<Texture name="checker" file="textures/checker.png"/>
 		<Texture name="earth"   file="textures/earth.png"/>
 		<Texture name="sun"     file="textures/sun.png"/>
+		
+		<Material 
+			name                          = "earth"
+			albedo_texture                = "earth"
+			normal_map_contains_roughness = "true"
+			reflectivity                  = "0.1, 0.1, 0.1"
+			roughness                     = "0.9"
+		/>
+		<Material 
+			name                          = "sun"
+			emission_texture              = "sun"
+			albedo_texture                = "sun"
+			reflectivity                  = "0.1, 0.1, 0.1"
+			roughness                     = "0.9"
+		/>
 	</Assets>
 	<Entities>
-	
+			
 		<Entity>
-			<DirectionalLight color="0.90 0.90 0.95" direction="0 -1 0" intensity="1"/>
-		</Entity>
-	
-		<Entity>
-			<Position x="1000" y="1000" z="-1000"/>
-			<LightSource type="POINT" color="10 10 11" bulbRadius="1000" cutoffRadius="8000.0"/>
-		</Entity>
-		
-		<Entity>
-			<Position x="0.0" y="0.0" z="-8.0"/>
-			<PointLight color="1.0 0.3 0.1" bulbRadius="1.0" cutoffRadius="100.0" intensity="12"/>
-			<SimpleGeometry shape="SPHERE" size="1 1 1" albedo="sun"  roughness="0.01" />
+			<Position x="0.0" y="0.0" z="-10.0"/>
+			<PointLight color="1.0 0.9 0.8" bulbRadius="3.0" cutoffRadius="100.0" intensity="100"/>
+			<SimpleGeometry shape="SPHERE" size="3 3 3" material="sun" />
 		</Entity>
 		
 		<Entity>
 			<Position x="0.0" y="0.0" z="0.0"/>
-			<SimpleGeometry shape="SPHERE" size="3 3 3" albedo="earth" roughness="0.99" />
+			<SimpleGeometry shape="SPHERE" size="1 1 1" material="earth" />
 		</Entity>
 	</Entities>
 </Scene>

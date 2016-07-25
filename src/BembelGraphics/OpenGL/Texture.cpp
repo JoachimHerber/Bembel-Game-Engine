@@ -172,7 +172,7 @@ TextureLoader::~TextureLoader()
 
 void TextureLoader::CreateDummyTexture()
 {
-	if (_container->IsHandelValid(_container->GetAssetHandle("dummy")))
+	if (_container->HasAsset("dummy"))
 		return;
 
 	Image image(2,2,4);
@@ -206,11 +206,15 @@ void TextureLoader::CreateDummyTexture()
 
 bool TextureLoader::LoadeAsset(const AssetDescription& asset)
 {
-	if (_container->IsHandelValid(_container->GetAssetHandle(asset.GetName())))
+	if (_container->HasAsset(asset.GetName()))
 		return false; // there already is an asset with the specified name
 
+	std::string fileName;
+	if (!asset.GetProperty("file", fileName))
+		return false;//missing property file
+
 	Image image;
-	if (!image.Load(asset.GetFilePath()))
+	if (!image.Load(fileName))
 		return false; // field to load texture image
 
 	Texture* texture = new Texture();
@@ -218,6 +222,7 @@ bool TextureLoader::LoadeAsset(const AssetDescription& asset)
 
 	AssetHandle handle = _container->AddAsset(texture, asset.GetName());
 	_loadedTextures.emplace(asset.GetName(), handle);
+	return true;
 }
 
 bool TextureLoader::UnloadeAsset(const std::string& name, bool force)

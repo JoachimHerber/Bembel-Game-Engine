@@ -12,42 +12,48 @@
 			<RenderingPipelines>
 				<RenderingPipeline horizontal_resolution="600" vertical_resolution="600">
 					<Textures>
-						<Texture name="depth"   format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
-						<Texture name="color"   format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
-						<Texture name="normal"  format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
-						<Texture name="albedo"  format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
+						<Texture name="depth"        format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+						<Texture name="light"        format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="albedo"       format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="reflectivity" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="normal"       format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
 					</Textures>
 					<RenderingStages>
 						<DeferredGeometryStage>
 							<DepthOutput texture="depth"/>
-							<ColorOutput texture="normal"  attachment="0"/>
-							<ColorOutput texture="albedo"  attachment="1"/>
+							<ColorOutput texture="light"        attachment="0"/>
+							<ColorOutput texture="albedo"       attachment="1"/>
+							<ColorOutput texture="reflectivity" attachment="2"/>
+							<ColorOutput texture="normal"       attachment="3"/>
 						</DeferredGeometryStage>
 						<DeferredLightingStage>
 							<DirectionalLightProgram>
 								<VertexShader file="shaders/directional_light.vert"/>
 								<FragmentShader file="shaders/directional_light.frag"/>
-								<FragmentShader file="shaders/cook_torrance.frag"/>
+								<FragmentShader file="shaders/read_geom_data.glsl"/>
+								<FragmentShader file="shaders/cook_torrance.glsl"/>
 							</DirectionalLightProgram>
 							<PointLightShaderProgram>
 								<VertexShader file="shaders/point_light.vert"/>
 								<FragmentShader file="shaders/point_light.frag"/>
-								<FragmentShader file="shaders/cook_torrance.frag"/>
+								<FragmentShader file="shaders/read_geom_data.glsl"/>
+								<FragmentShader file="shaders/cook_torrance.glsl"/>
 							</PointLightShaderProgram>
-							<Output texture="color"/>
+							<Output texture="light"/>
 							<Input texture="depth" />
-							<Input texture="normal" />
 							<Input texture="albedo" />
+							<Input texture="reflectivity" />
+							<Input texture="normal" />
 						</DeferredLightingStage>
 					</RenderingStages>
 					<Renderer>
 						<TestRenderer />
 					</Renderer>
 					<Views>	
-						<View texture="color"  left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="normal" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="albedo" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="depth"  left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="light"         left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="normal"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="albedo"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="reflectivity"  left="0.0" right="1.0" bottom="0.0" top="1.0"/>
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />

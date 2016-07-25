@@ -10,6 +10,8 @@ set( DirFiles
 	Image.cpp
 	Factory.hpp
 	Factory.inl
+	Conversion.h
+	Conversion.cpp
 	
 	Logging/Logger.h
 	Logging/Logger.cpp

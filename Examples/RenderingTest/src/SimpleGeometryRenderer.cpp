@@ -44,18 +44,33 @@ const static std::string FRAG = R"(
 in vec3 vNormal;
 in vec2 vTexCoord;
 
-uniform float     uRoughness;
+uniform vec3  uEmission;
+uniform vec3  uAlbedo;
+uniform vec3  uReflectivity;
+uniform float uRoughness;
 
+uniform int uUseEmissionTexture;
+uniform int uUseAlbedoTexture;
+uniform int uUseReflectivityTexture;
+uniform int uUseRoughnessTexture;
+
+uniform sampler2D uEmissionTexture;
 uniform sampler2D uAlbedoTexture;
+uniform sampler2D uReflectivityTexture;
+uniform sampler2D uRoughnessTexture;
 
-layout(location = 0) out vec4 oNormal;
-layout(location = 1) out vec4 oAlbedo;
+layout(location = 0) out vec3 oEmission;
+layout(location = 1) out vec3 oAlbedo;
+layout(location = 2) out vec3 oReflectivity;
+layout(location = 3) out vec4 oNormal;
 
 void main()
 {
-	oAlbedo       = texture(uAlbedoTexture, vTexCoord);
+	oEmission     = uUseEmissionTexture     > 0 ? texture(uEmissionTexture,     vTexCoord).rgb : uEmission;
+	oAlbedo       = uUseAlbedoTexture       > 0 ? texture(uAlbedoTexture,       vTexCoord).rgb : uAlbedo;
+	oReflectivity = uUseReflectivityTexture > 0 ? texture(uReflectivityTexture, vTexCoord).rgb : uReflectivity;
+	oNormal.a     = uUseRoughnessTexture    > 0 ? texture(uRoughnessTexture,    vTexCoord).a : uRoughness;
 	oNormal.xyz   = vec3(0.5*normalize(vNormal) + vec3(0.5));
-	oNormal.a     = oAlbedo.a;
 }
 )";
 
@@ -75,6 +90,14 @@ void SimpleGeometryRenderer::Init()
 		_shader.reset();
 		return;
 	}
+
+	_shader->Use();
+	glUniform1i(_shader->GetUniformLocation("uEmissionTexture"), 0);
+	glUniform1i(_shader->GetUniformLocation("uAlbedoTexture"), 1);
+	glUniform1i(_shader->GetUniformLocation("uReflectivityTexture"), 2);
+	glUniform1i(_shader->GetUniformLocation("uRoughnessTexture"), 3);
+	glUseProgram(0);
+
 	InitGeometry();
 }
 
@@ -91,8 +114,11 @@ void SimpleGeometryRenderer::SetScene(ScenePtr scene)
 		_scene->RequestComponentContainer<SimpleGeometryComponent>();
 	_positionConteiner = 
 		_scene->RequestComponentContainer<PositionComponent>();
+
 	_textureConteiner = 
 		_scene->GetAssetManager()->RequestAssetContainer<Texture>();
+	_materialConteiner =
+		_scene->GetAssetManager()->RequestAssetContainer<Material>();
 }
 
 void SimpleGeometryRenderer::DoGeometryPass(
@@ -105,8 +131,17 @@ void SimpleGeometryRenderer::DoGeometryPass(
 	unsigned uNormalMatrix     = _shader->GetUniformLocation("uNormalMatrix");
 	unsigned uModleViewMatrix  = _shader->GetUniformLocation("uModleViewMatrix");
 	unsigned uProjectionMatrix = _shader->GetUniformLocation("uProjectionMatrix");
-	unsigned uAlbedo    = _shader->GetUniformLocation("uAlbedo");
-	unsigned uRoughness = _shader->GetUniformLocation("uRoughness");
+
+	unsigned uEmission     = _shader->GetUniformLocation("uEmission");
+	unsigned uAlbedo       = _shader->GetUniformLocation("uAlbedo");
+	unsigned uReflectivity = _shader->GetUniformLocation("uReflectivity");
+	unsigned uRoughness    = _shader->GetUniformLocation("uRoughness");
+
+	unsigned uUseEmissionTexture     = _shader->GetUniformLocation("uUseEmissionTexture");
+	unsigned uUseAlbedoTexture       = _shader->GetUniformLocation("uUseAlbedoTexture");
+	unsigned uUseReflectivityTexture = _shader->GetUniformLocation("uUseReflectivityTexture");
+	unsigned uUseRoughnessTexture    = _shader->GetUniformLocation("uUseRoughnessTexture");
+
 
 	glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, &projection[0][0]);
 
@@ -124,12 +159,20 @@ void SimpleGeometryRenderer::DoGeometryPass(
 	{
 		if((entities[entity] & mask) != mask)
 			continue;
-
-		Texture* albedo = _textureConteiner->GetAsset(geometry[entity].albedo);
-		if (!albedo)
+		
+		Material* mat = _materialConteiner->GetAsset(geometry[entity].material);
+		if(!mat)
 			continue;
 
-		albedo->Bind();
+		ApplyTexture(mat->GetEmissionTexture(),     0, uUseEmissionTexture);
+		ApplyTexture(mat->GetAlbedoTexture(),       1, uUseAlbedoTexture);
+		ApplyTexture(mat->GetReflectivityTexture(), 2, uUseReflectivityTexture);
+		ApplyTexture(mat->GetNormalTexture(),       3, uUseRoughnessTexture);
+		
+		glUniform3fv(uEmission, 1, &(mat->GetEmission()[0]));
+		glUniform3fv(uAlbedo, 1, &(mat->GetAlbedo()[0]));
+		glUniform3fv(uReflectivity, 1, &(mat->GetReflectivity()[0]));
+		glUniform1f(uRoughness, mat->GetRoughness());
 
 		glm::mat4 modleView;
 		modleView = glm::translate(modleView, positions[entity].position);
@@ -139,11 +182,21 @@ void SimpleGeometryRenderer::DoGeometryPass(
 
 		glUniformMatrix4fv(uNormalMatrix,  1, GL_FALSE, &normalMatix[0][0]);
 		glUniformMatrix4fv(uModleViewMatrix, 1, GL_FALSE, &modleView[0][0]);
-		glUniform1f(uRoughness, geometry[entity].roughness);
+		
 
 		auto& shape = _shapes[geometry[entity].shape];
 		glDrawElements(GL_TRIANGLES, shape.second, GL_UNSIGNED_INT, (void*)(shape.first));
 	}
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
  	glBindVertexArray(0);
 
 	glUseProgram(0);
@@ -297,6 +350,21 @@ void SimpleGeometryRenderer::InitVAO()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 	glBindVertexArray(0);
+}
+
+void SimpleGeometryRenderer::ApplyTexture(AssetHandle handle, unsigned unit, unsigned uniform)
+{
+	Texture* texture = _textureConteiner->GetAsset(handle, false);
+	if (texture)
+	{
+		glActiveTexture(GL_TEXTURE0 + unit);
+		texture->Bind();
+		glUniform1i(uniform, 1);
+	}
+	else
+	{
+		glUniform1i(uniform, 0);
+	}
 }
 
 } //end of namespace bembel

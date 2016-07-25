@@ -7,6 +7,7 @@
 #include <BembelConfig.h>
 
 #include <BembelBase/XML.h>
+#include <BembelBase/Conversion.h>
 
 #include <string>
 #include <unordered_map>
@@ -26,9 +27,8 @@ public:
 	const std::string& GetName() const;
 	void SetName(const std::string&);
 
-	const std::string& GetFilePath() const;
-	void SetFilePath(const std::string&);
-
+	template<typename T>
+	bool GetProperty(const std::string& name, T& value) const;
 	bool GetProperty(const std::string& name, std::string& value) const;
 	void SetProperty(const std::string& name, const std::string& value);
 
@@ -36,11 +36,21 @@ public:
 
 private:
 	std::string _name;
-	std::string _file;
-
 	std::unordered_map<std::string, std::string> _properties;
 };
 
+template<typename T>
+bool AssetDescription::GetProperty(const std::string& name, T& value) const
+{
+
+	auto it = _properties.find(name);
+	if (it != _properties.end())
+	{
+		conversion::FromString(it->second, value);
+		return true;
+	}
+	return false;
+}
 
 } //end of namespace bembel
 /*============================================================================*/

@@ -107,12 +107,14 @@ inline bool AssetContainer<AssetType>::IsHandelValid(AssetHandle handle)
 }
 
 template<typename AssetType>
-inline AssetType* AssetContainer<AssetType>::GetAsset(AssetHandle handle)
+inline AssetType* AssetContainer<AssetType>::GetAsset(
+	AssetHandle handle, 
+	bool returnDummyIfHandleInfalid)
 {
 	if (IsHandelValid(handle))
 		return _assets[handle.index].data;
 
-	if (IsHandelValid(_dummyAsset))
+	if (returnDummyIfHandleInfalid && IsHandelValid(_dummyAsset))
 		return _assets[_dummyAsset.index].data;
 
 	return nullptr;

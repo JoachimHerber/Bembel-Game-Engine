@@ -33,6 +33,8 @@ set( DirFiles
 	
 	Geometry/GeometryModel.h
 	Geometry/GeometryModel.cpp
+	Geometry/Material.h
+	Geometry/Material.cpp
 )
 
 foreach( File ${DirFiles} )

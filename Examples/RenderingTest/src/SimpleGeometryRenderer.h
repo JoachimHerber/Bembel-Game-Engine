@@ -10,6 +10,7 @@
 #include <BembelKernel/Scene/PositionComponent.h>
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelGraphics/OpenGL/Texture.h>
+#include <BembelGraphics/Geometry/Material.h>
 
 #include "SimpleGeometryComponent.h"
 
@@ -61,13 +62,18 @@ private:
 	void InitVBO(const std::vector<VertexData>&);
 	void InitIBO(const std::vector<unsigned>&);
 	void InitVAO();
+
+	void ApplyTexture(AssetHandle, unsigned, unsigned);
+
 private:
 	std::unique_ptr<ShaderProgram> _shader;
 
 	ScenePtr                              _scene;
 	SimpleGeometryComponent::ContainerPtr _geometryContainer;
 	PositionComponent::ContainerPtr       _positionConteiner;
-	TextureContainerPtr                   _textureConteiner;
+
+	TextureContainerPtr  _textureConteiner;
+	MaterialContainerPtr _materialConteiner;
 
 	GLuint _vbo;
 	GLuint _ibo;

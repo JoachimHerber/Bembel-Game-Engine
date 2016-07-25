@@ -1,46 +1,42 @@
-#ifndef BEMBEL_SIMPLEGEOMETRYCOMPONENT_H
-#define BEMBEL_SIMPLEGEOMETRYCOMPONENT_H
+#ifndef BEMBEL_CONVERSION_H
+#define BEMBEL_CONVERSION_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
 #include <BembelConfig.h>
 
-#include <BembelKernel/Assets/AssetHandle.h>
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/Entity.h>
-#include <BembelKernel/Scene/ComponentContainer.hpp>
-
 #include <glm/glm.hpp>
+
+#include <sstream>
+#include <string>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel{
+namespace conversion{
 
-struct SimpleGeometryComponent
+BEMBEL_API bool FromString(const std::string&, glm::vec2&);
+BEMBEL_API bool FromString(const std::string&, glm::vec3&);
+BEMBEL_API bool FromString(const std::string&, glm::vec4&);
+
+template<typename T>
+bool FromString(const std::string&, T&);
+
+
+template<typename T>
+bool FromString(const std::string& str, T& value)
 {
-	enum Shape
-	{
-		SPHERE = 0,
-		XZ_PLAIN,
-		BOX,
-		NUM_SHAPES
-	};
+	std::istringstream ss(str);
+	ss >> value;
+	char c;
+	if (ss.fail() || ss.bad() || ss.get(c))
+		return false;
+	return true;
+}
 
-	Shape shape;
-
-	glm::vec3 size;
-
-	AssetHandle material;
-
-	using ContainerType = DenseComponentContainer<SimpleGeometryComponent>;
-	using ContainerPtr = std::shared_ptr<ContainerType>;
-
-	static const std::string& GetComponentTypeName();
-	static bool InitComponent(SimpleGeometryComponent&, const xml::Element*, AssetManager*);
-};
-
+} //end of namespace conversion
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

@@ -1,14 +1,34 @@
 <Scene>
 	<Assets>
-		<Texture name="checker" file="textures/checker.png"/>
-		<Texture name="white"   file="textures/white.png"/>
-		<Texture name="black"   file="textures/black.png"/>
+		<Texture name="chessboard_albedo" file="textures/chessboard_albedo.png"/>
+		<Texture name="chessboard_normal" file="textures/chessboard_normal.png"/>
+		<Texture name="chessboard_reflectivity" file="textures/chessboard_reflectivity.png"/>
+		
+		<Material 
+			name                          = "chessboard"
+			albedo_texture                = "chessboard_albedo"
+			reflectivity_texture          = "chessboard_reflectivity"
+			normal_texture                = "chessboard_normal"
+			normal_map_contains_roughness = "true"
+		/>
+		<Material 
+			name                          = "white_chess_piece"
+			albedo                        = "0.9, 0.9, 0.9"
+			reflectivity                  = "0.1, 0.1, 0.1"
+			roughness                     = "0.9"
+		/>
+		<Material 
+			name                          = "black_chess_piece"
+			albedo                        = "0.1, 0.1, 0.1"
+			reflectivity                  = "0.1, 0.1, 0.1"
+			roughness                     = "0.5"
+		/>
 		
 	</Assets>
 	<Entities>
 	
 		<Entity>
-			<DirectionalLight color="0.90 0.90 0.95" direction="5 -4 0" intensity="5"/>
+			<DirectionalLight color="0.90 0.90 0.95" direction="5 -4 0" intensity="4"/>
 		</Entity>
 		<Entity>
 			<DirectionalLight color="0.90 0.90 0.95" direction="-3 -4 4" intensity="2"/>
@@ -19,140 +39,140 @@
 	
 		<Entity>
 			<Position x="0" y="0" z="0"/>
-			<SimpleGeometry shape="XZ_PLAIN" size="16 16 16" albedo="checker" roughness="0.10" />
+			<SimpleGeometry shape="XZ_PLAIN" size="16 16 16" material="chessboard" />
 		</Entity>
 		
 		<Entity>
 			<Position x="-7" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-5" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-3" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-1" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="1" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="3" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="5" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="7" y="0.90" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="white_chess_piece"/>
 		</Entity>
 		
 		<Entity>
 			<Position x="-7" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-5" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-3" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-1" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="1" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="3" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="5" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="7" y="0" z="-5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="white" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="white_chess_piece"/>
 		</Entity>
 		
 		
 		<Entity>
 			<Position x="-7" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-5" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-3" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-1" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="1" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="3" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="5" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="7" y="0.90" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.5 0.5 0.5" material="black_chess_piece"/>
 		</Entity>
 		
 		<Entity>
 			<Position x="-7" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-5" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-3" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="-1" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="1" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="3" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="5" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 		<Entity>
 			<Position x="7" y="0" z="5"/>
-			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" albedo="black" roughness="0.10"/>
+			<SimpleGeometry shape="SPHERE" size="0.7 1.75 0.7" material="black_chess_piece"/>
 		</Entity>
 	
 	</Entities>
