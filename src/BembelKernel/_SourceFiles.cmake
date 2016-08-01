@@ -43,6 +43,9 @@ set( DirFiles
 	Assets/AssetContainer.inl
 	Assets/AssetHandle.h
 	Assets/AssetLoader.h
+	Assets/AssetLoader.cpp
+	Assets/SerialAssetLoader.hpp
+	Assets/SerialAssetLoader.inl
 	Assets/AssetManager.h
 	Assets/AssetManager.cpp
 	Assets/AssetManager.inl

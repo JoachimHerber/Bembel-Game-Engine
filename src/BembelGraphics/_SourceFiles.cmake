@@ -17,6 +17,10 @@ set( DirFiles
 	OpenGL/ShaderProgram.cpp
 	OpenGL/FrameBufferObject.h
 	OpenGL/FrameBufferObject.cpp
+	OpenGL/BufferObject.h
+	OpenGL/BufferObject.cpp
+	OpenGL/VertexArrayObject.h
+	OpenGL/VertexArrayObject.cpp
 	
 	RenderingPipeline/Camera.h
 	RenderingPipeline/Camera.cpp

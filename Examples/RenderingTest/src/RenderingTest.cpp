@@ -10,8 +10,8 @@
 
 #include <BembelKernel/Kernel.h>
 #include <BembelKernel/Display/DisplayManager.h>
-
 #include <BembelKernel/Scene/PositionComponent.h>
+#include <BembelKernel/Assets/SerialAssetLoader.hpp>
 
 #include <BembelGraphics/Viewport.h>
 #include <BembelGraphics/TextureView.h>
@@ -103,9 +103,9 @@ void RenderingTest::HandleEvent(const KeyPressEvent& event)
 void RenderingTest::InitScene()
 {
 	_assetMgr = std::make_shared<AssetManager>();
-	_assetMgr->InitAssetLoader<Texture,  TextureLoader>();
-	_assetMgr->InitAssetLoader<Material, MaterialLoader>();
-
+	CreateSerialAssetLoader<Texture>(_assetMgr.get());
+	CreateSerialAssetLoader<Material>(_assetMgr.get());
+	
 	_scenes.push_back(LoadScene("chessboard.xml"));
 	_scenes.push_back(LoadScene("planets.xml"));
 

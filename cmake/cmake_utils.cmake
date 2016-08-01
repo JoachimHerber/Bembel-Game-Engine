@@ -3,6 +3,7 @@ macro( bembel_find_external_dependencies  )
 	find_package(OpenGL REQUIRED)
 	find_package(GLFW REQUIRED)
 	find_package(glbinding REQUIRED)
+	find_package(Assimp REQUIRED)
 
 	list( APPEND EXTERNAL_INCLUDE_DIRS "${GLFW_INCLUDE_DIR}" )
 	list( APPEND EXTERNAL_INCLUDE_DIRS "${GLBINDING_INCLUDE_DIR}" )
@@ -10,6 +11,7 @@ macro( bembel_find_external_dependencies  )
 	list( APPEND EXTERNAL_LIBRARIES "${OPENGL_LIBRARIES}" )
 	list( APPEND EXTERNAL_LIBRARIES "${GLFW_LIBRARY}" )
 	list( APPEND EXTERNAL_LIBRARIES "${GLBINDING_LIBRARIES}" )
+	
 	
 	get_filename_component(GLBINDING_BINARY_DIR  "${GLBINDING_BINARY_DEBUG}" PATH )
 	
@@ -64,9 +66,6 @@ macro( bembel_configure_application _PACKAGE_NAME _WORK_FOLDER )
 				@ONLY
 			)
 			set( ${_PACKAGE_NAME_UPPER}_TARGET_MSVC_PROJECT "${CMAKE_CURRENT_BINARY_DIR}/${_PACKAGE_NAME}.vcxproj" CACHE INTERNAL "" FORCE )
-			
-		else( VISTA_VCPROJUSER_PROTO_FILE )
-			message( WARNING "bembel_configure_application( ${_PACKAGE_NAME} ) - could not find file VisualStudio project user setting prototype \"${VISTA_VCPROJUSER_PROTO_FILE}\"" )
 		endif( VCPROJUSER_PROTO_FILE )
 	endif( MSVC )	
 	

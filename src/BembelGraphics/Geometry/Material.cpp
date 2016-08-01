@@ -113,42 +113,9 @@ const std::string& Material::GetTypeName()
 	return typeName;
 }
 
-MaterialLoader::MaterialLoader(
-	MaterialContainerPtr material,
-	TextureContainerPtr  textures)
-	: _materials(material)
-	, _textures(textures)
-{}
-
-MaterialLoader::~MaterialLoader()
+Material* Material::LoadeAsset(const AssetDescription& asset, AssetManager* mgr)
 {
-	//delete all loaded assets
-	for (auto it: _loadedMaterials)
-	{
-		Material* mat = _materials->RemoveAsset(it.second, true);
-		if (mat)
-			delete mat;
-	}
-}
-
-void MaterialLoader::CreateDummyMaterial()
-{
-	if (_materials->HasAsset("dummy"))
-		return;
-
-	Material* mat = new Material();
-
-	AssetHandle handle = _materials->AddAsset(mat, "dummy");
-	_materials->SetDummyAsset(handle);
-	_loadedMaterials.emplace("dummy", handle);
-}
-
-bool MaterialLoader::LoadeAsset(const AssetDescription& asset)
-{
-	if (_materials->HasAsset(asset.GetName()))
-		return false; // there already is an asset with the specified name
-
-	std::string value;
+	auto textures = mgr->GetAssetContainer<Texture>();
 
 	Material* mat = new Material();
 
@@ -157,64 +124,36 @@ bool MaterialLoader::LoadeAsset(const AssetDescription& asset)
 	asset.GetProperty("reflectivity", mat->_reflectivity);
 	asset.GetProperty("roughness", mat->_roughness);
 
-	if (asset.GetProperty("emission_texture", value))
+	if (textures)
 	{
-		mat->_emissionTexture = _textures->GetAssetHandle(value);
-		_textures->IncrementAssetRefCount(mat->_emissionTexture);
-	}
-	if (asset.GetProperty("albedo_texture", value))
-	{
-		mat->_albedoTexture = _textures->GetAssetHandle(value);
-		_textures->IncrementAssetRefCount(mat->_albedoTexture);
-	}
-	if (asset.GetProperty("reflectivity_texture", value))
-	{
-		mat->_reflectivityTexture = _textures->GetAssetHandle(value);
-		_textures->IncrementAssetRefCount(mat->_reflectivityTexture);
-	}
-	if (asset.GetProperty("normal_texture", value))
-	{
-		mat->_normalTexture = _textures->GetAssetHandle(value);
-		_textures->IncrementAssetRefCount(mat->_normalTexture);
+		std::string value;
+		if (asset.GetProperty("emission_texture", value))
+		{
+			mat->_emissionTexture = textures->GetAssetHandle(value);
+			textures->IncrementAssetRefCount(mat->_emissionTexture);
+		}
+		if (asset.GetProperty("albedo_texture", value))
+		{
+			mat->_albedoTexture = textures->GetAssetHandle(value);
+			textures->IncrementAssetRefCount(mat->_albedoTexture);
+		}
+		if (asset.GetProperty("reflectivity_texture", value))
+		{
+			mat->_reflectivityTexture = textures->GetAssetHandle(value);
+			textures->IncrementAssetRefCount(mat->_reflectivityTexture);
+		}
+		if (asset.GetProperty("normal_texture", value))
+		{
+			mat->_normalTexture = textures->GetAssetHandle(value);
+			textures->IncrementAssetRefCount(mat->_normalTexture);
+		}
 	}
 
 	asset.GetProperty(
-		"normal_map_contains_roughness", 
+		"normal_map_contains_roughness",
 		mat->_normalMapHasRoughness);
 
-	AssetHandle handle = _materials->AddAsset(mat, asset.GetName());
-	_loadedMaterials.emplace(asset.GetName(), handle);
-	return true;
-}
-
-bool MaterialLoader::UnloadeAsset(const std::string& name, bool force /*= false*/)
-{
-	auto it = _loadedMaterials.find(name);
-	if (it != _loadedMaterials.end())
-	{
-		Material* mat = _materials->RemoveAsset(it->second, force);
-		if (mat)
-		{
-			_textures->DecrementAssetRefCount(mat->_emissionTexture);
-			_textures->DecrementAssetRefCount(mat->_albedoTexture);
-			_textures->DecrementAssetRefCount(mat->_reflectivityTexture);
-			_textures->DecrementAssetRefCount(mat->_normalTexture);
-			delete mat;
-			_loadedMaterials.erase(it);
-			return true;
-		}
-	}
-	return false;
-}
-
-std::shared_ptr<MaterialLoader> MaterialLoader::CreateDefaultLoader(
-	AssetManager* assetMgr)
-{
-	auto materials = assetMgr->RequestAssetContainer<Material>();
-	auto textures  = assetMgr->RequestAssetContainer<Texture>();
-	auto loader = std::make_shared<MaterialLoader>(materials, textures);
-	loader->CreateDummyMaterial();
-	return loader;
+	return mat;
 }
 
 } //end of namespace bembel

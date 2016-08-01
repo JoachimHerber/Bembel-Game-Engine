@@ -155,101 +155,19 @@ const std::string& Texture::GetTypeName()
 	return typeName;
 }
 
-TextureLoader::TextureLoader(TextureContainerPtr container)
-	: _container(container)
-{}
-
-TextureLoader::~TextureLoader()
+Texture* Texture::LoadeAsset(const AssetDescription& asset, AssetManager*)
 {
-	//delete all loaded assets
-	for (auto it: _loadedTextures)
-	{
-		Texture* texture = _container->RemoveAsset(it.second, true);
-		if(texture)
-			delete texture;
-	}
-}
-
-void TextureLoader::CreateDummyTexture()
-{
-	if (_container->HasAsset("dummy"))
-		return;
-
-	Image image(2,2,4);
-	image.GetData()[0] = 255;
-	image.GetData()[1] = 0;
-	image.GetData()[2] = 255;
-	image.GetData()[3] = 255;
-
-	image.GetData()[4] = 200;
-	image.GetData()[5] = 0;
-	image.GetData()[6] = 200;
-	image.GetData()[7] = 255;
-
-	image.GetData()[8] = 200;
-	image.GetData()[9] = 0;
-	image.GetData()[10] = 200;
-	image.GetData()[11] = 255;
-
-	image.GetData()[12] = 255;
-	image.GetData()[13] = 0;
-	image.GetData()[14] = 255;
-	image.GetData()[15] = 255;
-
-	Texture* texture = new Texture();
-	texture->Init(image);
-
-	AssetHandle handle = _container->AddAsset(texture, "dummy");
-	_container->SetDummyAsset(handle);
-	_loadedTextures.emplace("dummy", handle);
-}
-
-bool TextureLoader::LoadeAsset(const AssetDescription& asset)
-{
-	if (_container->HasAsset(asset.GetName()))
-		return false; // there already is an asset with the specified name
-
-	std::string fileName;
-	if (!asset.GetProperty("file", fileName))
-		return false;//missing property file
+	std::string file;
+	if (!asset.GetProperty("file", file))
+		return nullptr;
 
 	Image image;
-	if (!image.Load(fileName))
-		return false; // field to load texture image
+	if (!image.Load(file))
+		return nullptr;
 
-	Texture* texture = new Texture();
+	Texture* texture = new Texture(GL_TEXTURE_2D, GL_RGBA);
 	texture->Init(image);
-
-	AssetHandle handle = _container->AddAsset(texture, asset.GetName());
-	_loadedTextures.emplace(asset.GetName(), handle);
-	return true;
-}
-
-bool TextureLoader::UnloadeAsset(const std::string& name, bool force)
-{
-	auto it = _loadedTextures.find(name);
-	
-	if (it != _loadedTextures.end())
-	{
-		Texture* texture = _container->RemoveAsset(it->second, force);
-		if (texture)
-		{
-			delete texture;
-			_loadedTextures.erase(it);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-std::shared_ptr<TextureLoader> TextureLoader::CreateDefaultLoader(
-	AssetManager* assetMgr)
-{
-	auto container = assetMgr->RequestAssetContainer<Texture>();
-	auto loader = std::make_shared<TextureLoader>(container);
-	loader->CreateDummyTexture();
-	return loader;
+	return texture;
 }
 
 } //end of namespace bembel

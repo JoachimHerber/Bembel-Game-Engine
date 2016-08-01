@@ -12,6 +12,14 @@
 #include <vector>
 
 /*============================================================================*/
+/* FORWARD DECLARATIONS                                                       */
+/*============================================================================*/
+namespace bembel{
+
+class AssetManager;
+
+} //end of namespace bembel
+/*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
@@ -19,31 +27,24 @@ namespace bembel {
 class BEMBEL_API AssetLoaderBase
 {
 public:
-	AssetLoaderBase()
-	{};
-	virtual ~AssetLoaderBase()
-	{};
+	AssetLoaderBase(const std::string& name, AssetManager* );
+	virtual ~AssetLoaderBase();
 	
-	virtual bool LoadeAsset(const AssetDescription& asset) = 0;
-	virtual bool UnloadeAsset(const std::string& name, bool force = false) = 0;
+	virtual bool     Loade(const AssetDescription& asset) = 0;
+	virtual unsigned Loade(const std::vector<AssetDescription>& assets);
 
-	virtual unsigned LoadeAssets(const std::vector<AssetDescription>& assets)
-	{
-		unsigned n = 0; 
-		for (auto& asset : assets) if (LoadeAsset(asset)) ++n;
-		return n;
-	}
-	virtual unsigned UnloadeAssets(const std::vector<std::string>& assetNames, bool force = false)
-	{
-		unsigned n = 0;
-		for (auto& assetName : assetNames) if (UnloadeAsset(assetName, force)) ++n;
-		return n;
-	}
+	virtual void Update() = 0;
 
-	virtual void Update()
-	{};
+	virtual void  ResetProgess() = 0;
+	virtual float GetProgress() = 0;
+	virtual bool  LoadingFinished() = 0;
+
+	const std::string& GetName() const;
+
+protected:
+	const std::string _name;
+	AssetManager* _assetMgr;
 };
-
 
 } //end of namespace bembel
 /*============================================================================*/

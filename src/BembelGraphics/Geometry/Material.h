@@ -8,9 +8,8 @@
 
 #include "../OpenGL/Texture.h"
 
-#include <BembelKernel/Assets/AssetLoader.h>
 #include <BembelKernel/Assets/AssetManager.h>
-#include <BembelKernel/Assets/AssetContainer.h>
+#include <BembelKernel/Assets/AssetDescription.h>
 
 #include <glm/glm.hpp>
 
@@ -56,6 +55,7 @@ public:
 	void SetNormalMapHasRoughness(bool value);
 
 	const static std::string& GetTypeName();
+	static Material* LoadeAsset(const AssetDescription&, AssetManager*);
 
 private:
 	Color _emission     = Color(0.0f, 0.0f, 0.0f);
@@ -74,27 +74,6 @@ private:
 
 using MaterialContainer    = AssetContainer<Material>;
 using MaterialContainerPtr = std::shared_ptr<MaterialContainer>;
-
-
-class BEMBEL_API MaterialLoader : public AssetLoaderBase
-{
-public:
-	MaterialLoader(MaterialContainerPtr, TextureContainerPtr);
-	~MaterialLoader();
-
-	void CreateDummyMaterial();
-
-	virtual bool LoadeAsset(const AssetDescription& asset) override;
-	virtual bool UnloadeAsset(const std::string& name, bool force = false) override;
-
-	static std::shared_ptr<MaterialLoader> CreateDefaultLoader(AssetManager*);
-
-private:
-	MaterialContainerPtr _materials;
-	TextureContainerPtr  _textures;
-
-	std::map<std::string, AssetHandle> _loadedMaterials;
-};
 
 } //end of namespace bembel
 /*============================================================================*/

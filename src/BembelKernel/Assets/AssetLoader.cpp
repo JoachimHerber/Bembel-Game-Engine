@@ -2,44 +2,34 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryModel.h"
+#include "AssetLoader.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
 namespace bembel {
 
-GeometryModel::GeometryModel()
+AssetLoaderBase::AssetLoaderBase(const std::string& name, AssetManager* assetMgr)
+	: _name(name)
+	, _assetMgr(assetMgr)
 {}
 
-GeometryModel::~GeometryModel()
+AssetLoaderBase::~AssetLoaderBase()
 {}
 
-std::shared_ptr<VertexArrayObject> GeometryModel::GetVAO() const
+unsigned AssetLoaderBase::Loade(const std::vector<AssetDescription>& assets)
 {
-	return _vao;
+	int count = 0;
+	for (const AssetDescription& asset : assets)
+		if (Loade(asset))
+			++count;
+
+	return count;
 }
 
-void GeometryModel::SetVAO(std::shared_ptr<VertexArrayObject> vao)
+const std::string& AssetLoaderBase::GetName() const
 {
-	_vao = vao;
-}
-
-void GeometryModel::AddSubMesh(const SubMesh& mesh)
-{
-	_subMeshes.push_back(mesh);
-}
-
-const std::vector<GeometryModel::SubMesh>& 
-	GeometryModel::GetSubMeshes() const
-{
-	return _subMeshes;
-}
-
-const std::string& GeometryModel::GetTypeName()
-{
-	const static std::string typeName = "GeometryModel";
-	return typeName;
+	return _name;
 }
 
 } //end of namespace bembel
