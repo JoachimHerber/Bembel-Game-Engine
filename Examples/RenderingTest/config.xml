@@ -47,7 +47,8 @@
 						</DeferredLightingStage>
 					</RenderingStages>
 					<Renderer>
-						<TestRenderer />
+						<!-- <TestRenderer /> -->
+						<GeomRenderer />
 					</Renderer>
 					<Views>	
 						<View texture="light"         left="0.0" right="1.0" bottom="0.0" top="1.0"/>

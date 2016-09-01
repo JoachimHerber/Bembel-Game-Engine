@@ -11,6 +11,11 @@ struct AssetHandle final
 	unsigned hash;
 };
 
+inline bool operator < (const AssetHandle& first, const AssetHandle& second)
+{
+	return first.index < second.index;
+}
+
 } // end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

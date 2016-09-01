@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -31,6 +32,7 @@ public:
 	GLint  GetUniformLocation(const std::string& name) const;
 	GLuint GetUniformBlockIndex(const std::string& name) const;
 
+
 	bool Link();
 
 	bool Use();
@@ -40,6 +42,8 @@ private:
 	std::vector<GLuint> _shaderHandles;
 
 	bool _readyToUse = false;
+
+	mutable std::unordered_map<std::string, GLint> _uniormLocations;
 };
 
 } //end of namespace bembel

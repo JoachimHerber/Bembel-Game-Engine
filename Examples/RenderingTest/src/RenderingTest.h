@@ -34,6 +34,7 @@ public:
 	void HandleEvent(const KeyPressEvent&);
 
 private:
+	void InitTestGeometry();
 	void InitScene();
 
 	std::shared_ptr<Scene> LoadScene(const std::string&);

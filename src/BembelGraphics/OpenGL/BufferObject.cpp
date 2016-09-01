@@ -54,7 +54,7 @@ void BufferObject::SetData(GLsizeiptr sizeInByte, void* data)
 void BufferObject::BufferData(GLsizeiptr sizeInByte, void* data)
 {
 	glBindBuffer(_target, _handle);
-	glBufferData(_target, sizeInByte, nullptr, _usage);
+	glBufferData(_target, sizeInByte, data, _usage);
 	_capacity = sizeInByte;
 	glBindBuffer(_target, 0);
 }

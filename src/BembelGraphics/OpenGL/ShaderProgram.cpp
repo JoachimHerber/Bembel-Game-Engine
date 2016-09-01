@@ -139,7 +139,19 @@ bool ShaderProgram::Use()
 
 GLint ShaderProgram::GetUniformLocation(const std::string& name) const
 {
-	return glGetUniformLocation(_programHandle, name.c_str());
+	auto it = _uniormLocations.find(name);
+	if (it != _uniormLocations.end())
+		return it->second;
+
+	GLint location = glGetUniformLocation(_programHandle, name.c_str());
+
+	if (location >= 0)
+	{
+		// add location to the map for faster lookup in the future.
+		_uniormLocations.emplace(name, location);
+	}
+
+	return location;
 }
 
 GLuint ShaderProgram::GetUniformBlockIndex(const std::string& name) const

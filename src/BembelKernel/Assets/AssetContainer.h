@@ -134,6 +134,9 @@ protected:
 	AssetHandle _dummyAsset;
 };
 
+template<typename T>
+using AssetContainerPtr = std::shared_ptr<AssetContainer<T>>;
+
 } //end of namespace bembel
 /*============================================================================*/
 /* INLINE IMPLEMENTATIONS													  */

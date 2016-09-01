@@ -40,7 +40,7 @@ public:
 	static std::shared_ptr<BufferObject> CreateVertexBufferObject(const std::vector<float>& data);
 	static std::shared_ptr<BufferObject> CreateIndexBufferObject(const std::vector<unsigned>& data);
 
-private:
+public:
 	GLenum _target;
 	GLenum _usage;
 	GLuint _handle;
