@@ -9,7 +9,6 @@
 
 #include <BembelBase/Image.h>
 #include <BembelKernel/Assets/AssetManager.h>
-#include <BembelKernel/Assets/AssetDescription.h>
 
 #include <glm/glm.hpp>
 
@@ -54,7 +53,7 @@ public:
 	GLenum GetTextureTarget() const;
 
 	const static std::string& GetTypeName();
-	static Texture* LoadeAsset(const AssetDescription&, AssetManager*);
+	//static Texture* LoadeAsset(const AssetDescription&, AssetManager*);
 
 private:
 	GLenum _target;

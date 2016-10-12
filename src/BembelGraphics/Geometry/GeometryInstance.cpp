@@ -3,9 +3,9 @@
 /*============================================================================*/
 
 #include "GeometryInstance.h"
-#include "GeometryModel.h"
 
 #include <BembelKernel/Assets/AssetManager.h>
+#include <BembelKernel/Renderig/GeometryModel.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

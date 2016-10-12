@@ -66,8 +66,6 @@ bool Scene::LoadScene(const std::string& fileName)
 	if (!root)
 		return false;
 
-	_assteManager->LoadeAssets(root->FirstChildElement("Assets"));
-
 	const xml::Element* entities = root->FirstChildElement("Entities");
 	for (auto entity : xml::IterateChildElements(entities, "Entity"))
 	{

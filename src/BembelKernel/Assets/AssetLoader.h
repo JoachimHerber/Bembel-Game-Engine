@@ -6,8 +6,10 @@
 
 #include <BembelConfig.h>
 
-#include "AssetDescription.h"
+#include <BembelBase/XML.h>
+#include "AssetHandle.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -17,6 +19,7 @@
 namespace bembel{
 
 class AssetManager;
+class AssetContainerBase;
 
 } //end of namespace bembel
 /*============================================================================*/
@@ -27,11 +30,11 @@ namespace bembel {
 class BEMBEL_API AssetLoaderBase
 {
 public:
-	AssetLoaderBase(const std::string& name, AssetManager* );
+	AssetLoaderBase();
 	virtual ~AssetLoaderBase();
 	
-	virtual bool     Loade(const AssetDescription& asset) = 0;
-	virtual unsigned Loade(const std::vector<AssetDescription>& assets);
+	virtual bool     CreateAsset(const xml::Element* propertiey) = 0;
+	virtual AssetHandle RequestAsset(const std::string& fileName) = 0;
 
 	virtual void Update() = 0;
 
@@ -39,11 +42,6 @@ public:
 	virtual float GetProgress() = 0;
 	virtual bool  LoadingFinished() = 0;
 
-	const std::string& GetName() const;
-
-protected:
-	const std::string _name;
-	AssetManager* _assetMgr;
 };
 
 } //end of namespace bembel

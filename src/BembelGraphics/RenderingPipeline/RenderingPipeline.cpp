@@ -8,9 +8,10 @@
 
 #include "../TextureView.h"
 #include "../GraphicSystem.h"
-#include "../OpenGL/Texture.h"
-#include "../OpenGL/ShaderProgram.h"
-#include "../OpenGL/FrameBufferObject.h"
+
+#include <BembelKernel/Renderig/Texture.h>
+#include <BembelKernel/Renderig/Shader.h>
+#include <BembelKernel/Renderig/FrameBufferObject.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */

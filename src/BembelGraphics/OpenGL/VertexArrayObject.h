@@ -76,7 +76,7 @@ public:
 	bool   HasIndexBuffer() const;
 	GLenum GetIndexType() const;
 
-public:
+private:
 	GLuint _handle;
 
 	std::vector<BufferObjectPtr> _vbos;

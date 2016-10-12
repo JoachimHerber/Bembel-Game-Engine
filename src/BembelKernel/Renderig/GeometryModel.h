@@ -16,14 +16,6 @@
 #include <vector>
 
 /*============================================================================*/
-/* FORWARD DECLARATIONS                                                       */
-/*============================================================================*/
-namespace bembel{
-
-class VertexArrayObject;
-
-}//end of namespace bembel
-/*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel{
@@ -31,27 +23,30 @@ namespace bembel{
 class BEMBEL_API GeometryModel
 {
 public:
+	using DefaultLoaderType = SerialAssetLoader<GeometryModel>;
+
+public:
 	GeometryModel();
 	~GeometryModel();
 
-	std::shared_ptr<VertexArrayObject> GetVAO() const;
-	void SetVAO(std::shared_ptr<VertexArrayObject> vao);
-
-	struct SubMesh
+	struct MaterialMapping
 	{
-		unsigned firstIndex;
-		unsigned numIndices;
-		GLenum   primitiveType;
 		AssetHandle material;
+		std::string subMesh;
 	};
 
-	void AddSubMesh(const SubMesh&);
-	const std::vector<SubMesh>& GetSubMeshes() const;
+	AssetHandle                         GetMesh();
+	const std::vector<MaterialMapping>& GetMateialMapping();
 
 	const static std::string& GetTypeName();
+
+	static std::unique_ptr<GeometryModel> CreateAsset(AssetManager* assetMgr, const xml::Element* properties);
+	static std::unique_ptr<GeometryModel> LoadFromFile(AssetManager* assetMgr, const std::string& fileName);
+
 private:
-	std::shared_ptr<VertexArrayObject> _vao;
-	std::vector<SubMesh>               _subMeshes;
+
+	AssetHandle                  _mesh;
+	std::vector<MaterialMapping> _materialMapping;
 };
 
 using GeometryModelContainer    = AssetContainer<GeometryModel>;

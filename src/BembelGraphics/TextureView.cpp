@@ -4,8 +4,8 @@
 
 #include "TextureView.h"
 
-#include "OpenGL/ShaderProgram.h"
-#include "OpenGL/Texture.h"
+#include <BembelKernel/Renderig/Shader.h>
+#include <BembelKernel/Renderig/Texture.h>
 
 #include <string>
 
@@ -62,7 +62,7 @@ void TextureView::SetViewArea(
 
 void TextureView::Init()
 {
-	_shader = std::make_shared<ShaderProgram>();
+	_shader = std::make_shared<Shader>();
 	_shader->AttachShader(GL_VERTEX_SHADER,   RenderingPipelineResultViewVert);
 	_shader->AttachShader(GL_FRAGMENT_SHADER, RenderingPipelineResultViewFrag);
 	_shader->Link();

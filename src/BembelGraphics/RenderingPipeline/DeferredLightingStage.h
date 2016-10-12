@@ -24,7 +24,7 @@ namespace bembel{
 
 class Scene;
 class Texture;
-class ShaderProgram;
+class Shader;
 class FrameBufferObject;
 
 }//end of namespace bembel
@@ -37,7 +37,7 @@ class BEMBEL_API DeferredLightingStage : public RenderingStage
 {
 public:
 	using TexturePtr           = std::shared_ptr<Texture>;
-	using ShaderProgramPtr     = std::shared_ptr<ShaderProgram>;
+	using ShaderProgramPtr     = std::shared_ptr<Shader>;
 	using FrameBufferObjectPtr = std::shared_ptr<FrameBufferObject>;
 
 	DeferredLightingStage(RenderingPipeline* pipline);
@@ -61,7 +61,7 @@ public:
 private:
 	static ShaderProgramPtr CreateShader(const xml::Element*);
 
-	void SetTextureSamplerUniforms(ShaderProgram* shader);
+	void SetTextureSamplerUniforms(Shader* shader);
 
 	void BindTextures();
 	void ReleaseTextures();

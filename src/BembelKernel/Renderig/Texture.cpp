@@ -155,20 +155,20 @@ const std::string& Texture::GetTypeName()
 	return typeName;
 }
 
-Texture* Texture::LoadeAsset(const AssetDescription& asset, AssetManager*)
-{
-	std::string file;
-	if (!asset.GetProperty("file", file))
-		return nullptr;
-
-	Image image;
-	if (!image.Load(file))
-		return nullptr;
-
-	Texture* texture = new Texture(GL_TEXTURE_2D, GL_RGBA);
-	texture->Init(image);
-	return texture;
-}
+// Texture* Texture::LoadeAsset(const AssetDescription& asset, AssetManager*)
+// {
+// 	std::string file;
+// 	if (!asset.GetProperty("file", file))
+// 		return nullptr;
+// 
+// 	Image image;
+// 	if (!image.Load(file))
+// 		return nullptr;
+// 
+// 	Texture* texture = new Texture(GL_TEXTURE_2D, GL_RGBA);
+// 	texture->Init(image);
+// 	return texture;
+// }
 
 } //end of namespace bembel
 /*============================================================================*/

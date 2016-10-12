@@ -10,17 +10,6 @@ set( DirFiles
 	Viewport.cpp
 	TextureView.h
 	TextureView.cpp
-
-	OpenGL/Texture.h
-	OpenGL/Texture.cpp
-	OpenGL/ShaderProgram.h
-	OpenGL/ShaderProgram.cpp
-	OpenGL/FrameBufferObject.h
-	OpenGL/FrameBufferObject.cpp
-	OpenGL/BufferObject.h
-	OpenGL/BufferObject.cpp
-	OpenGL/VertexArrayObject.h
-	OpenGL/VertexArrayObject.cpp
 	
 	RenderingPipeline/Camera.h
 	RenderingPipeline/Camera.cpp

@@ -2,7 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "ShaderProgram.h"
+#include "Shader.h"
 
 #include <BembelBase/Logging/Logger.h>
 
@@ -13,18 +13,18 @@
 /*============================================================================*/
 namespace bembel{
 
-ShaderProgram::ShaderProgram()
+Shader::Shader()
 	: _programHandle(glCreateProgram())
 {}
 
-ShaderProgram::~ShaderProgram()
+Shader::~Shader()
 {
 	glDeleteProgram(_programHandle);
 	for (auto it : _shaderHandles)
 		glDeleteShader(it);
 }
 
-bool ShaderProgram::AttachShader(GLenum type, const std::string& source)
+bool Shader::AttachShader(GLenum type, const std::string& source)
 {
 	GLint shaderHandle = glCreateShader(type);
 
@@ -56,7 +56,7 @@ bool ShaderProgram::AttachShader(GLenum type, const std::string& source)
 	return true;
 }
 
-bool ShaderProgram::AttachShaderFromFile(GLenum type, const std::string& fileName)
+bool Shader::AttachShaderFromFile(GLenum type, const std::string& fileName)
 {
 	std::fstream file(fileName.c_str(), std::ios_base::in | std::ios_base::binary);
 	if (!file.is_open())
@@ -82,17 +82,17 @@ bool ShaderProgram::AttachShaderFromFile(GLenum type, const std::string& fileNam
 	return AttachShader(type, source);
 }
 
-void ShaderProgram::BindAttribLocation(const std::string& name, unsigned int index)
+void Shader::BindAttribLocation(const std::string& name, unsigned int index)
 {
 	glBindAttribLocation(_programHandle, index, name.c_str());
 }
 
-void ShaderProgram::BindFragDataLocation(const std::string& name, unsigned int index)
+void Shader::BindFragDataLocation(const std::string& name, unsigned int index)
 {
 	glBindFragDataLocation(_programHandle, index, name.c_str());
 }
 
-bool ShaderProgram::Link()
+bool Shader::Link()
 {
 	if (_shaderHandles.empty())
 		return false;
@@ -106,7 +106,7 @@ bool ShaderProgram::Link()
 		&status
 		);
 
-	if (status != int(GL_TRUE))
+	if (status == int(GL_FALSE))
 	{
 		GLint maxLength = 0;
 		glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &maxLength);
@@ -128,7 +128,7 @@ bool ShaderProgram::Link()
 	return true;
 }
 
-bool ShaderProgram::Use()
+bool Shader::Use()
 {
 	if (!_readyToUse)
 		return false;
@@ -137,7 +137,7 @@ bool ShaderProgram::Use()
 	return true;
 }
 
-GLint ShaderProgram::GetUniformLocation(const std::string& name) const
+GLint Shader::GetUniformLocation(const std::string& name) const
 {
 	auto it = _uniormLocations.find(name);
 	if (it != _uniormLocations.end())
@@ -154,7 +154,7 @@ GLint ShaderProgram::GetUniformLocation(const std::string& name) const
 	return location;
 }
 
-GLuint ShaderProgram::GetUniformBlockIndex(const std::string& name) const
+GLuint Shader::GetUniformBlockIndex(const std::string& name) const
 {
 	return  glGetUniformBlockIndex(_programHandle, name.c_str());
 }

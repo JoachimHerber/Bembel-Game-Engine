@@ -8,8 +8,9 @@
 #include "RenderingPipeline.h"
 #include "Camera.h"
 #include "Renderer.h"
-#include "../OpenGL/Texture.h"
-#include "../OpenGL/FrameBufferObject.h"
+
+#include <BembelKernel/Renderig/Texture.h>
+#include <BembelKernel/Renderig/FrameBufferObject.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

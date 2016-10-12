@@ -22,7 +22,7 @@
 /*============================================================================*/
 namespace bembel{
 
-class ShaderProgram;
+class Shader;
 class GeometryModel;
 class Material;
 class Texture;
@@ -76,16 +76,12 @@ private:
 	void ApplyTexture(GLenum textureUnit, AssetHandle textureHandle, const std::string& uniform);
 
 private:
-	std::unique_ptr<ShaderProgram> _geometryPassShader;
-	std::unique_ptr<ShaderProgram> _shadowPassShader;
+	std::unique_ptr<Shader> _geometryPassShader;
+	std::unique_ptr<Shader> _shadowPassShader;
 
 	ScenePtr                        _scene;
 	GeometryInstance::ContainerPtr  _geometryContainer;
 	PositionComponent::ContainerPtr _positionConteiner;
-
-	AssetContainerPtr<GeometryModel> _models;
-	AssetContainerPtr<Material>      _materials;
-	AssetContainerPtr<Texture>       _textures;
 };
 
 } //end of namespace bembel

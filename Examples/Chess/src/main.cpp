@@ -3,7 +3,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "RenderingTest.h"
+#include "ChessApplication.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -11,7 +11,7 @@
 
 int main ()
 {
-	bembel::RenderingTest app;
+	bembel::ChessApplication app;
 	app.Run();
 }
 

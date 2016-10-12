@@ -5,12 +5,12 @@
 #include "GeometryRenderer.h"
 
 #include <BembelKernel/Assets/AssetManager.h>
-#include <BembelGraphics/OpenGL/Texture.h>
-#include <BembelGraphics/OpenGL/ShaderProgram.h>
-#include <BembelGraphics/OpenGL/VertexArrayObject.h>
+#include <BembelKernel/Renderig/Texture.h>
+#include <BembelKernel/Renderig/Shader.h>
+#include <BembelKernel/Renderig/GeometryMesh.h>
 
-#include "Material.h"
-#include "GeometryModel.h"
+#include <BembelKernel/Renderig/Material.h>
+#include <BembelKernel/Renderig/GeometryModel.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -42,11 +42,6 @@ uniform mat4 uProjectionMatrix;
 out vec3 vNormal;
 out vec2 vTexCoord;
 
-const vec3 gVertices[3] = vec3[](
-vec3(+0.0000,+2.5000,-0), 
-vec3(-1.0000,+0.0000,+0), 
-vec3(+1.0000,+0.0000,+0)
-);
 
 void main()
 {
@@ -55,8 +50,6 @@ void main()
 
 	gl_Position = 
 		uProjectionMatrix*uModleViewMatrix*vec4(aPosition,1);
-	//gl_Position = 
-	//	uProjectionMatrix*uModleViewMatrix*vec4(gVertices[gl_VertexID%3],1);
 }
 )";
 
@@ -66,6 +59,11 @@ const static std::string frag = R"(
 in vec3 vNormal;
 in vec2 vTexCoord;
 
+uniform vec3 uAlbedo;
+uniform vec3 uEmission;
+uniform vec3 uReflectivity;
+uniform float uRoughness;
+
 layout(location = 0) out vec3 oEmission;
 layout(location = 1) out vec3 oAlbedo;
 layout(location = 2) out vec3 oReflectivity;
@@ -73,13 +71,13 @@ layout(location = 3) out vec4 oNormal;
 
 void main()
 {
-	oEmission     = vec3(0.0, 0.0, 0.0);
-	oAlbedo       = vec3(1.0, 0.0, 0.0);
-	oReflectivity = vec3(0.5, 0.5, 0.5);
-	oNormal       = vec4(0.5, 0.5, 1.0, 0.2);
+	oEmission     = uEmission;
+	oAlbedo       = uAlbedo;
+	oReflectivity = uReflectivity;
+	oNormal       = vec4(0.5*normalize(vNormal) + vec3(0.5), uRoughness);
 }
 )";
-	_geometryPassShader = std::make_unique<ShaderProgram>();
+	_geometryPassShader = std::make_unique<Shader>();
 	_geometryPassShader->AttachShader(GL_VERTEX_SHADER, vert);
 	_geometryPassShader->AttachShader(GL_FRAGMENT_SHADER, frag);
 	_geometryPassShader->Link();
@@ -100,11 +98,6 @@ void GeometryRenderer::SetScene(ScenePtr scene)
 	_scene = scene;
 	_geometryContainer = scene->RequestComponentContainer<GeometryInstance>();
 	_positionConteiner = scene->RequestComponentContainer<PositionComponent>();
-
-	auto assetMgr = scene->GetAssetManager();
-	_models    = assetMgr->RequestAssetContainer<GeometryModel>();
-	_materials = assetMgr->RequestAssetContainer<Material>();
-	_textures  = assetMgr->RequestAssetContainer<Texture>();
 }
 
 void GeometryRenderer::DoGeometryPass(
@@ -150,28 +143,41 @@ void GeometryRenderer::DrawGeometry(
 		shader->GetUniformLocation("uProjectionMatrix"),
 		1, GL_FALSE, &projection[0][0]);
 
+	auto assetMgr = _scene->GetAssetManager();
+
 	for (const auto& it : visibleInstances)
 	{
-		GeometryModel* model = _models->GetAsset(it.first);
+		GeometryModel* model = assetMgr->GetAsset<GeometryModel>(it.first);
 		if(!model)
 			continue;
+		
+		GeometryMesh* mesh = assetMgr->GetAsset<GeometryMesh>(model->GetMesh());
+		if(!mesh)
+			continue;
 
-		model->GetVAO()->Bind();
-		for (const auto& subMesh : model->GetSubMeshes())
+		mesh->Bind();
+		for (const auto& matMapping : model->GetMateialMapping())
 		{
+			unsigned first, count;
+			if(!mesh->GetSubMesh(matMapping.subMesh, first, count))
+				continue;
+
 			if (!shadowPass)
-				UseMaterial(subMesh.material);
+				UseMaterial(matMapping.material);
 
 			for (const auto& instance : it.second)
 			{
 				glUniformMatrix4fv(
 					shader->GetUniformLocation("uModleViewMatrix"),
 					1, GL_FALSE, &instance[0][0]);
+				glUniformMatrix4fv(
+					shader->GetUniformLocation("uNormalMatrix"),
+					1, GL_FALSE, &instance[0][0]);
 				glDrawElements(
-					subMesh.primitiveType,
-					subMesh.numIndices, 
+					GL_TRIANGLES,
+					count, 
 					GL_UNSIGNED_INT, 
-					(void*)(subMesh.firstIndex)
+					(void*)(first)
 				);
 
 // 				glPointSize(5);
@@ -213,18 +219,20 @@ void GeometryRenderer::GetEntitysWhithinViewFrustum(
 
 bool GeometryRenderer::UseMaterial(AssetHandle materialHandle )
 {
-	Material* material = _materials->GetAsset(materialHandle);
+	auto assetMgr = _scene->GetAssetManager();
+
+	Material* material = assetMgr->GetAsset<Material>(materialHandle);
 
 	if (!material)
 		return false;
 
-	glUniform4fv(
+	glUniform3fv(
 		_geometryPassShader->GetUniformLocation("uAlbedo"),
 		1, &(material->GetAlbedo()[0]));
-	glUniform4fv(
+	glUniform3fv(
 		_geometryPassShader->GetUniformLocation("uEmission"),
 		1, &(material->GetEmission()[0]));
-	glUniform4fv(
+	glUniform3fv(
 		_geometryPassShader->GetUniformLocation("uReflectivity"),
 		1, &(material->GetReflectivity()[0]));
 	glUniform1f(
@@ -246,7 +254,7 @@ void GeometryRenderer::ApplyTexture(
 	AssetHandle textureHandle, 
 	const std::string& uniform)
 {
-	Texture* texture = _textures->GetAsset(textureHandle, false);
+	Texture* texture = _scene->GetAssetManager()->GetAsset<Texture>(textureHandle, false);
 	if (texture)
 	{
 		glActiveTexture(textureUnit);

@@ -113,47 +113,68 @@ const std::string& Material::GetTypeName()
 	return typeName;
 }
 
-Material* Material::LoadeAsset(const AssetDescription& asset, AssetManager* mgr)
+std::unique_ptr<Material> Material::CreateAsset(
+	AssetManager* assetMgr,
+	const xml::Element* properties)
 {
-	auto textures = mgr->GetAssetContainer<Texture>();
+	auto mat = std::make_unique<Material>();
 
-	Material* mat = new Material();
+	xml::GetAttribute(properties, "emission", mat->_emission);
+	xml::GetAttribute(properties, "albedo", mat->_albedo);
+	xml::GetAttribute(properties, "reflectivity", mat->_reflectivity);
+	xml::GetAttribute(properties, "roughness", mat->_roughness);
+	xml::GetAttribute(properties, "normal_map_contains_roughness", mat->_normalMapHasRoughness);
 
-	asset.GetProperty("emission", mat->_emission);
-	asset.GetProperty("albedo", mat->_albedo);
-	asset.GetProperty("reflectivity", mat->_reflectivity);
-	asset.GetProperty("roughness", mat->_roughness);
+// 	std::string texture;
+// 	if (xml::GetAttribute(properties, "emission_texture", texture))
+// 	{
+// 		mat->_emissionTexture =
+// 			assetMgr->RequestAsset<Texture>(texture);
+// 		assetMgr->IncrementAssetRefCount(mat->_emissionTexture);
+// 	}
+// 	if (xml::GetAttribute(properties, "albedo_texture", texture))
+// 	{
+// 		mat->_albedoTexture =
+// 			assetMgr->RequestAsset<Texture>(texture);
+// 		assetMgr->IncrementAssetRefCount(mat->_albedoTexture);
+// 	}
+// 	if (xml::GetAttribute(properties, "reflectivity_texture", texture))
+// 	{
+// 		mat->_reflectivityTexture =
+// 			assetMgr->RequestAsset<Texture>(texture);
+// 		assetMgr->IncrementAssetRefCount(mat->_reflectivityTexture);
+// 	}
+// 	if (xml::GetAttribute(properties, "normal_texture", texture))
+// 	{
+// 		mat->_normalTexture =
+// 			assetMgr->RequestAsset<Texture>(texture);
+// 		assetMgr->IncrementAssetRefCount(mat->_normalTexture);
+// 	}
 
-	if (textures)
+	return std::move(mat);
+}
+
+std::unique_ptr<Material> Material::LoadFromFile(
+	AssetManager* assetMgr, const std::string& fileName)
+{
+	xml::Document doc;
+	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
 	{
-		std::string value;
-		if (asset.GetProperty("emission_texture", value))
-		{
-			mat->_emissionTexture = textures->GetAssetHandle(value);
-			textures->IncrementAssetRefCount(mat->_emissionTexture);
-		}
-		if (asset.GetProperty("albedo_texture", value))
-		{
-			mat->_albedoTexture = textures->GetAssetHandle(value);
-			textures->IncrementAssetRefCount(mat->_albedoTexture);
-		}
-		if (asset.GetProperty("reflectivity_texture", value))
-		{
-			mat->_reflectivityTexture = textures->GetAssetHandle(value);
-			textures->IncrementAssetRefCount(mat->_reflectivityTexture);
-		}
-		if (asset.GetProperty("normal_texture", value))
-		{
-			mat->_normalTexture = textures->GetAssetHandle(value);
-			textures->IncrementAssetRefCount(mat->_normalTexture);
-		}
+		BEMBEL_LOG_ERROR()
+			<< "Failed to load file '" << fileName << "'\n"
+			<< doc.ErrorName() << std::endl;
+		return false;
 	}
 
-	asset.GetProperty(
-		"normal_map_contains_roughness",
-		mat->_normalMapHasRoughness);
-
-	return mat;
+	const xml::Element* root = doc.FirstChildElement("Material");
+	if (!root)
+	{
+		BEMBEL_LOG_ERROR()
+			<< "File '" << fileName << "' has no root element 'Material'"
+			<< std::endl;
+		return false;
+	}
+	return CreateAsset(assetMgr, root);
 }
 
 } //end of namespace bembel

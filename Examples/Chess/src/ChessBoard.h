@@ -1,48 +1,36 @@
+#ifndef BEMBEL_CHESSBOARD_H
+#define BEMBEL_CHESSBOARD_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryModel.h"
+#include <BembelKernel/Scene/Scene.h>
+
+#include <memory>
+#include <vector>
 
 /*============================================================================*/
-/* IMPLEMENTATION        													  */
+/* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-GeometryModel::GeometryModel()
-{}
-
-GeometryModel::~GeometryModel()
-{}
-
-std::shared_ptr<VertexArrayObject> GeometryModel::GetVAO() const
+class ChessBoard
 {
-	return _vao;
-}
+public:
+	ChessBoard();
+	~ChessBoard();
 
-void GeometryModel::SetVAO(std::shared_ptr<VertexArrayObject> vao)
-{
-	_vao = vao;
-}
+	void Init(std::shared_ptr<Scene>, unsigned w, unsigned h);
 
-void GeometryModel::AddSubMesh(const SubMesh& mesh)
-{
-	_subMeshes.push_back(mesh);
-}
+private:
+	std::shared_ptr<Scene> _scene;
 
-const std::vector<GeometryModel::SubMesh>& 
-	GeometryModel::GetSubMeshes() const
-{
-	return _subMeshes;
-}
-
-const std::string& GeometryModel::GetTypeName()
-{
-	const static std::string typeName = "GeometryModel";
-	return typeName;
-}
+	std::vector<std::vector<Scene::EntityID>> _chessPices;
+	std::vector<std::vector<Scene::EntityID>> _tiles;
+};
 
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/
+#endif //include guards

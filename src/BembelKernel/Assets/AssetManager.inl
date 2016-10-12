@@ -4,49 +4,25 @@
 namespace bembel{
 
 template<typename AssetType>
-inline std::shared_ptr<AssetContainer<AssetType>> 
-	AssetManager::RequestAssetContainer()
-{
-	auto it = _assetTypeMap.find(AssetType::GetTypeName());
-	if (it != _assetTypeMap.end())
-	{
-		return std::static_pointer_cast<AssetContainer<AssetType>>(
-			_container[it->second]);
-	}
-	else
-	{
-		auto container = 
-			std::make_shared<AssetContainer<AssetType>>();
-
-		_assetTypeMap.emplace(
-			AssetType::GetTypeName(), _container.size());
-		_container.push_back(container);
-		return container;
-	}
-}
-
-template<typename AssetType>
 inline std::shared_ptr<AssetContainer<AssetType>>
 AssetManager::GetAssetContainer()
 {
+	auto it = _assetTypeMap.find(AssetType::GetTypeName());
+	if (it == _assetTypeMap.end())
+		return nullptr;
+
 	return std::static_pointer_cast<AssetContainer<AssetType>>(
-		GetAssetContainer(AssetType::GetTypeName()));
+		_assetContainer[it->second]);
 }
 
 template<typename AssetType>
-inline std::shared_ptr<AssetLoaderBase> AssetManager::GetAssetLoader()
+inline AssetHandle AssetManager::RequestAsset(const std::string& filename)
 {
-	return GetAssetLoader(AssetType::GetTypeName());
-}
+	auto it = _assetTypeMap.find(AssetType::GetTypeName());
+	if (it == _assetTypeMap.end())
+		return AssetHandle();
 
-template<typename AssetType, typename AssetLoaderType, typename ... TArgs>
-inline bool AssetManager::InitAssetLoader(TArgs ... args)
-{
-	std::shared_ptr<AssetLoaderBase> loader = 
-		AssetLoaderType::CreateDefaultLoader(this, args ...);
-	if (!loader)
-		return false;
-	return SetAssetLoader(AssetType::GetTypeName(), loader);
+	return _assetLoader[it->second]->RequestAsset(filename);
 }
 
 template<typename AssetType>
@@ -56,17 +32,38 @@ inline AssetHandle AssetManager::GetAssetHandle(
 	auto container = GetAssetContainer<AssetType>();
 	if (container)
 		return container->GetAssetHandle(name);
-	return AssetHandle{~0U,~0U};
+	return AssetHandle();
 }
 
 template<typename AssetType>
 inline AssetType* AssetManager::GetAsset(
-	AssetHandle handle)
+	AssetHandle handle, 
+	bool returnDummyIfHandleInvalid)
 {
 	auto container = GetAssetContainer<AssetType>();
 	if (container)
-		return container->GetAsset(handle);
+		return container->GetAsset(handle, returnDummyIfHandleInvalid);
 	return nullptr;
+}
+
+template<typename AssetType, typename AssetLoaderType>
+inline bool AssetManager::RegisterAssetType()
+{
+	auto it = _assetTypeMap.find(AssetType::GetTypeName());
+	if (it != _assetTypeMap.end())
+		return false; // Asset type has already been registered
+
+	assert(_assetTypeMap.size() < 0xFFFFLU &&
+		   "number of asset-types surpasses the maximum");
+	uint16_t typeID = _assetTypeMap.size();
+
+	auto container = std::make_shared<AssetContainer<AssetType>>(typeID);
+	auto loader    = std::make_shared<AssetLoaderType>( this, container);
+
+	_assetTypeMap.emplace(AssetType::GetTypeName(), typeID);
+	_assetContainer.push_back(container);
+	_assetLoader.push_back(loader);
+	return true;
 }
 
 } //end of namespace bembel

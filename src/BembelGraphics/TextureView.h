@@ -14,7 +14,7 @@
 /*============================================================================*/
 namespace bembel{
 
-class ShaderProgram;
+class Shader;
 class Texture;
 
 }//end of namespace bembel
@@ -26,7 +26,7 @@ namespace bembel {
 class BEMBEL_API TextureView : public Viewport::View
 {
 public:
-	using ShaderPtr  = std::shared_ptr<ShaderProgram>;
+	using ShaderPtr  = std::shared_ptr<Shader>;
 	using TexturePtr = std::shared_ptr<Texture>;
 
 	TextureView(TexturePtr color);

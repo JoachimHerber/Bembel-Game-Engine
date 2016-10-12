@@ -37,8 +37,6 @@ set( DirFiles
 	Input/Button.h
 	Input/Button.cpp
 	
-	Assets/AssetDescription.h
-	Assets/AssetDescription.cpp
 	Assets/AssetContainer.h
 	Assets/AssetContainer.inl
 	Assets/AssetHandle.h
@@ -50,6 +48,19 @@ set( DirFiles
 	Assets/AssetManager.cpp
 	Assets/AssetManager.inl
 	
+	Rendering/Shader.h
+	Rendering/Shader.cpp
+	Rendering/Texture.h
+	Rendering/Texture.cpp
+	Rendering/Material.h
+	Rendering/Material.cpp
+	Rendering/GeometryMesh.h
+	Rendering/GeometryMesh.cpp
+	Rendering/GeometryModel.h
+	Rendering/GeometryModel.cpp
+	Rendering/FrameBufferObject.h
+	Rendering/FrameBufferObject.cpp
+	
 	Scene/Scene.h
 	Scene/Scene.cpp
 	Scene/Entity.h
@@ -58,6 +69,7 @@ set( DirFiles
 	Scene/ComponentContainer.inl
 	Scene/PositionComponent.h
 	Scene/PositionComponent.cpp
+	
 )
 
 foreach( File ${DirFiles} )

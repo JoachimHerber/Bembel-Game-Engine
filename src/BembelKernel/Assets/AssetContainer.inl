@@ -4,60 +4,59 @@
 namespace bembel{
 
 template<typename AssetType>
-inline AssetContainer<AssetType>::AssetContainer()
+inline AssetContainer<AssetType>::AssetContainer(uint16_t typeId)
+	: _assetTypeId(typeId)
 {}
 
 template<typename AssetType>
 inline AssetContainer<AssetType>::~AssetContainer()
-{
-	for (auto& it :_assets)
-	{
-		delete it.data;
-	}
-}
+{}
 
 template<typename AssetType>
 inline AssetHandle AssetContainer<AssetType>::AddAsset(
-	AssetType* data,
-	const std::string&   name)
+	AssetPtr asset)
 {
-	AssetHandle handle = AssetHandle{~0U,~0U};
-
-	if (!name.empty())
-	{
-		// a name has been specified for the for the asset so we
-		// have to test if the specified name is already taken.
-		if(IsHandelValid(GetAssetHandle(name)))
-			return handle; // Asset already exists
-	}
-
-	handle.hash = std::hash<AssetType*>()(data);
+	AssetHandle handle;
 
 	// find a place to put the asset
 	if (!_unusedIds.empty())
 	{
 		handle.index = _unusedIds.top();
+		handle.typeId = _assetTypeId;
+		
 		_unusedIds.pop();
 
-		_assets[handle.index].data = data;
-		_assets[handle.index].hash = handle.hash;
+		_assets[handle.index].asset = std::move(asset);
 		_assets[handle.index].refCount = 0;
+		handle.generation = ++_assets[handle.index].generation;
 	}
 	else
 	{
 		handle.index = _assets.size();
-		_assets.push_back({data, handle.hash, 0});
+		handle.typeId = _assetTypeId;
+		handle.generation = 1;
+
+		_assets.push_back({std::move(asset), 1, 0});
 	}
-
-	// add name to map if named
-	if (!name.empty())
-		_assetMap.emplace(name, handle);
-
 	return handle;
 }
 
 template<typename AssetType>
-inline AssetType* AssetContainer<AssetType>::RemoveAsset(
+inline bool AssetContainer<AssetType>::RegisterAssetAlias(
+	AssetHandle handle, const std::string& alias)
+{
+	if (_assetAliasses.find(alias) != _assetAliasses.end() )
+		return false; // alias already in use
+
+	if (!IsHandelValid(handle))
+		return false; // invalid handle
+
+	_assetAliasses.emplace(alias, handle);
+}
+
+template<typename AssetType>
+inline std::unique_ptr<AssetType>
+	AssetContainer<AssetType>::RemoveAsset(
 	AssetHandle handle, bool force)
 {
 	if (IsHandelValid(handle))
@@ -71,37 +70,37 @@ inline AssetType* AssetContainer<AssetType>::RemoveAsset(
 			return nullptr;
 	}
 
-	AssetType* asset = _assets[handle.index].data;
-
-	_assets[handle.index].data = nullptr;
+	AssetPtr asset = std::move(_assets[handle.index].asset);
 	_assets[handle.index].refCount = -1;
 	_unusedIds.push(handle.index);
 
-	return asset;
+	return std::move(asset);
 }
 
 template<typename AssetType>
 inline AssetHandle AssetContainer<AssetType>::GetAssetHandle(const std::string& name)
 {
-	auto it = _assetMap.find(name);
-	if (it == _assetMap.end())
-		return AssetHandle{~0U,~0U};
+	auto it = _assetAliasses.find(name);
+	if (it == _assetAliasses.end())
+		return AssetHandle();
 
 	if (IsHandelValid(it->second))
 		return it->second;
 
 	// The entry in the assetMap refers to an asset, which no longer exist.
 	// The entry should hence be removed
-	_assetMap.erase(it);
-	return AssetHandle{~0U,~0U};
+	_assetAliasses.erase(it);
+	return AssetHandle();
 }
 
 template<typename AssetType>
 inline bool AssetContainer<AssetType>::IsHandelValid(AssetHandle handle)
 {
+	if (handle.typeId != _assetTypeId)
+		return false;
 	if (handle.index >= _assets.size())
 		return false;
-	if (handle.hash != _assets[handle.index].hash)
+	if (handle.generation != _assets[handle.index].generation)
 		return false;
 	return _assets[handle.index].refCount >= 0;
 }
@@ -109,13 +108,13 @@ inline bool AssetContainer<AssetType>::IsHandelValid(AssetHandle handle)
 template<typename AssetType>
 inline AssetType* AssetContainer<AssetType>::GetAsset(
 	AssetHandle handle, 
-	bool returnDummyIfHandleInfalid)
+	bool returnDummyIfHandleInvalid)
 {
 	if (IsHandelValid(handle))
-		return _assets[handle.index].data;
+		return _assets[handle.index].asset.get();
 
-	if (returnDummyIfHandleInfalid && IsHandelValid(_dummyAsset))
-		return _assets[_dummyAsset.index].data;
+	if (returnDummyIfHandleInvalid && IsHandelValid(_dummyAsset))
+		return _assets[_dummyAsset.index].asset.get();
 
 	return nullptr;
 }

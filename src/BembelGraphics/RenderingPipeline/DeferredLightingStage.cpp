@@ -7,9 +7,10 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "LightSourceProperties.h"
-#include "../OpenGL/Texture.h"
-#include "../OpenGL/ShaderProgram.h"
-#include "../OpenGL/FrameBufferObject.h"
+
+#include <BembelKernel/Renderig/Texture.h>
+#include <BembelKernel/Renderig/Shader.h>
+#include <BembelKernel/Renderig/FrameBufferObject.h>
 
 #include <BembelBase/Logging/Logger.h>
 #include <BembelKernel/Scene/PositionComponent.h>
@@ -153,14 +154,14 @@ std::unique_ptr<DeferredLightingStage> DeferredLightingStage::CreateInstance(
 	return std::move(stage);
 }
 
-std::shared_ptr<ShaderProgram> DeferredLightingStage::CreateShader(const xml::Element* properties)
+std::shared_ptr<Shader> DeferredLightingStage::CreateShader(const xml::Element* properties)
 {
 	if (!properties)
 		return nullptr;
 
 	std::string filename;
 
-	auto program = std::make_shared<ShaderProgram>();
+	auto program = std::make_shared<Shader>();
 	for (auto shader : xml::IterateChildElements(properties, "VertexShader"))
 	{
 		if (xml::GetAttribute(shader, "file", filename))
@@ -178,7 +179,7 @@ std::shared_ptr<ShaderProgram> DeferredLightingStage::CreateShader(const xml::El
 	return program;
 }
 
-void DeferredLightingStage::SetTextureSamplerUniforms(ShaderProgram* shader)
+void DeferredLightingStage::SetTextureSamplerUniforms(Shader* shader)
 {
 	if (shader == nullptr)
 		return;

@@ -18,71 +18,60 @@ AssetManager::AssetManager()
 AssetManager::~AssetManager()
 {}
 
-bool AssetManager::LoadeAsset(
-	const std::string& loaderName,
-	const AssetDescription& asset)
+unsigned AssetManager::LoadAssets(const std::string& fileName)
 {
-	auto it = _loader.find(loaderName);
-	if (it != _loader.end())
-		return it->second->Loade(asset);
-	else
+	xml::Document doc;
+	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
+	{
+		BEMBEL_LOG_ERROR()
+			<< "Failed to load file '" << fileName << "'\n"
+			<< doc.ErrorName() << std::endl;
 		return false;
-}
+	}
 
-unsigned AssetManager::LoadeAssets(
-	const std::string& loaderName,
-	const std::vector<AssetDescription>& assets)
-{
-	auto it = _loader.find(loaderName);
-	if (it != _loader.end())
-		return it->second->Loade(assets);
-	else
+	const xml::Element* root = doc.FirstChildElement("Assets");
+	if (!root)
+	{
+		BEMBEL_LOG_ERROR()
+			<< "File '" << fileName << "' has no root element 'Assets'"
+			<< std::endl;
 		return false;
+	}
+
+	unsigned loadedAsssets = 0;
+	for (const xml::Element* element : xml::IterateChildElements(root))
+	{
+		auto it = _assetTypeMap.find(element->Value());
+		if (it == _assetTypeMap.end())
+			continue; // unknown asset type
+
+		if (!_assetLoader[it->second])
+			continue; // no loader for the the asset type
+
+		if (_assetLoader[it->second]->CreateAsset(element))
+			++loadedAsssets;
+	}
+	return loadedAsssets;
 }
 
-unsigned AssetManager::LoadeAssets(const xml::Element* root)
+int AssetManager::GetAssetRefCount(AssetHandle handle)
 {
-	if (root == nullptr)
-		return 0;
+	if (handle.typeId < _assetContainer.size())
+		return _assetContainer[handle.typeId]->GetAssetRefCount(handle);
 
-	unsigned sum = 0;
-	for (auto it : xml::IterateChildElements(root))
-	{
-		if (LoadeAsset(it->Value(), AssetDescription::Parse(it)))
-			++sum;
-	}
-	
-	return sum;
+	return -1;
 }
-
-std::shared_ptr<AssetContainerBase> AssetManager::GetAssetContainer(
-	const std::string& assteTypeName)
+void AssetManager::IncrementAssetRefCount(AssetHandle handle)
 {
-	auto it = _assetTypeMap.find(assteTypeName);
-	if (it != _assetTypeMap.end())
-	{
-		return _container[it->second];
-	}
-	return nullptr;
+	if (handle.typeId < _assetContainer.size())
+		_assetContainer[handle.typeId]->IncrementAssetRefCount(handle);
+}
+void AssetManager::DecrementAssetRefCount(AssetHandle handle)
+{
+	if (handle.typeId < _assetContainer.size())
+		_assetContainer[handle.typeId]->DecrementAssetRefCount(handle);
 }
 
-bool AssetManager::AddAssetLoader(
-	std::shared_ptr<AssetLoaderBase> loader,
-	bool overrideExisting)
-{
-	auto it = _loader.find(loader->GetName());
-	if (it == _loader.end())
-	{
-		_loader.emplace(loader->GetName(), loader);
-		return true;
-	}
-	if (overrideExisting)
-	{
-		it->second = loader;
-		return true;
-	}
-	return false;
-}
 
 } //end of namespace bembel
 /*============================================================================*/

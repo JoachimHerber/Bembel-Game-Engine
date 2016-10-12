@@ -21,12 +21,11 @@ public:
 	using ContainerType    = AssetContainer<AssetType>;
 	using ContainerTypePtr = std::shared_ptr<ContainerType>;
 
-	SerialAssetLoader(AssetManager* assetMgr);
+	SerialAssetLoader(AssetManager* assetMgr, ContainerTypePtr container);
 	virtual ~SerialAssetLoader();
 
-	virtual bool Loade(
-		const AssetDescription& asset
-		) override;
+	virtual bool CreateAsset( const xml::Element* ) override;
+	virtual AssetHandle RequestAsset( const std::string& fileName ) override;
 
 	virtual void Update() override;
 
@@ -35,6 +34,7 @@ public:
 	virtual bool  LoadingFinished() override;
 
 protected:
+	AssetManager*    _assetMgr;
 	ContainerTypePtr _container;
 };
 

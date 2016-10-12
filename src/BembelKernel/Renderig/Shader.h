@@ -1,44 +1,49 @@
-#ifndef BEMBEL_SIMPLEGEOMETRYCOMPONENT_H
-#define BEMBEL_SIMPLEGEOMETRYCOMPONENT_H
+#ifndef BEMBEL_SHADER_H
+#define BEMBEL_SHADER_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
+#include <BembelOpenGL.h>
 #include <BembelConfig.h>
 
-#include <BembelKernel/Assets/AssetHandle.h>
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/Entity.h>
-#include <BembelKernel/Scene/ComponentContainer.hpp>
-
-#include <glm/glm.hpp>
+#include <memory>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel{
 
-struct SimpleGeometryComponent
+class BEMBEL_API Shader final
 {
-	enum Shape
-	{
-		SPHERE = 0,
-		XZ_PLAIN,
-		BOX,
-		NUM_SHAPES
-	};
+public:
+	Shader();
+	~Shader();
 
-	Shape shape;
+	bool AttachShader(GLenum type, const std::string& source);
+	bool AttachShaderFromFile(GLenum type, const std::string& fileName);
 
-	glm::vec3 size;
+	void BindAttribLocation(const std::string& name, unsigned int index);
+	void BindFragDataLocation(const std::string& name, unsigned int index);
 
-	AssetHandle material;
+	GLint  GetUniformLocation(const std::string& name) const;
+	GLuint GetUniformBlockIndex(const std::string& name) const;
 
-	using ContainerType = DenseComponentContainer<SimpleGeometryComponent>;
-	using ContainerPtr = std::shared_ptr<ContainerType>;
 
-	static const std::string& GetComponentTypeName();
-	static bool InitComponent(SimpleGeometryComponent&, const xml::Element*, AssetManager*);
+	bool Link();
+
+	bool Use();
+
+private:
+	GLuint              _programHandle;
+	std::vector<GLuint> _shaderHandles;
+
+	bool _readyToUse = false;
+
+	mutable std::unordered_map<std::string, GLint> _uniormLocations;
 };
 
 } //end of namespace bembel

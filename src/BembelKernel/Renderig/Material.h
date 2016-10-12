@@ -6,10 +6,8 @@
 
 #include <BembelConfig.h>
 
-#include "../OpenGL/Texture.h"
-
 #include <BembelKernel/Assets/AssetManager.h>
-#include <BembelKernel/Assets/AssetDescription.h>
+#include <BembelKernel/Assets/SerialAssetLoader.hpp>
 
 #include <glm/glm.hpp>
 
@@ -21,7 +19,8 @@ namespace bembel {
 class BEMBEL_API Material final
 {
 public:
-	using Color = glm::vec3;
+	using Color             = glm::vec3;
+	using DefaultLoaderType = SerialAssetLoader<Material>;
 
 public:
 	Material();
@@ -55,7 +54,9 @@ public:
 	void SetNormalMapHasRoughness(bool value);
 
 	const static std::string& GetTypeName();
-	static Material* LoadeAsset(const AssetDescription&, AssetManager*);
+
+	static std::unique_ptr<Material> CreateAsset(AssetManager* assetMgr, const xml::Element* properties);
+	static std::unique_ptr<Material> LoadFromFile(AssetManager* assetMgr, const std::string& properties);
 
 private:
 	Color _emission     = Color(0.0f, 0.0f, 0.0f);
@@ -63,10 +64,10 @@ private:
 	Color _reflectivity = Color(0.1f, 0.1f, 0.1f);
 	float _roughness    = 1.0f;
 
-	AssetHandle _emissionTexture     = AssetHandle{~0U,~0U};
-	AssetHandle _albedoTexture       = AssetHandle{~0U,~0U};
-	AssetHandle _reflectivityTexture = AssetHandle{~0U,~0U};
-	AssetHandle _normalTexture       = AssetHandle{~0U,~0U};
+	AssetHandle _emissionTexture     = AssetHandle();
+	AssetHandle _albedoTexture       = AssetHandle();
+	AssetHandle _reflectivityTexture = AssetHandle();
+	AssetHandle _normalTexture       = AssetHandle();
 	bool _normalMapHasRoughness      = false;
 
 	friend class MaterialLoader;

@@ -5,9 +5,10 @@ namespace bembel{
 
 template<typename AssetType>
 inline SerialAssetLoader<AssetType>::SerialAssetLoader(
-	AssetManager* assetMgr)
-	: AssetLoaderBase(AssetType::GetTypeName(), assetMgr)
-	, _container(assetMgr->RequestAssetContainer<AssetType>())
+	AssetManager* assetMgr, 
+	ContainerTypePtr container)
+	: _assetMgr(assetMgr)
+	, _container(container)
 {}
 
 template<typename AssetType>
@@ -15,22 +16,53 @@ inline SerialAssetLoader<AssetType>::~SerialAssetLoader()
 {}
 
 template<typename AssetType>
-inline bool SerialAssetLoader<AssetType>::Loade(
-	const AssetDescription& asset)
+inline bool SerialAssetLoader<AssetType>::CreateAsset(
+	const xml::Element* properties )
 {
-	if (_container->HasAsset(asset.GetName()))
-		return false; // there already is an asset with the specified name
-
-	AssetType* assetData = AssetType::LoadeAsset(asset, _assetMgr);
-	if (assetData!=nullptr)
+	std::string name = "";
+	if (!xml::GetAttribute(properties, "name", name) ||
+		_container->HasAsset(name))
 	{
-		_container->AddAsset(assetData, asset.GetName());
-		return true;
-	}
-	else
-	{
+		// all assets must have a unique name
 		return false;
 	}
+
+	std::unique_ptr<AssetType> asset = 
+		AssetType::CreateAsset(_assetMgr, properties);
+	if (asset == nullptr)
+		return false; // failed to create asset
+
+	AssetHandle handle = _container->AddAsset(std::move(asset));
+	if (!_container->IsHandelValid(handle))
+		return false;
+
+	_container->RegisterAssetAlias(handle, name);
+
+	for (const xml::Element* alias : xml::IterateChildElements(properties, "Alias"))
+	{
+		if (xml::GetAttribute(alias, "name", name))
+			_container->RegisterAssetAlias(handle, name);
+	}
+	return true;
+}
+
+template<typename AssetType>
+inline AssetHandle SerialAssetLoader<AssetType>::RequestAsset(
+	const std::string& fileName )
+{
+	AssetHandle handle = _container->GetAssetHandle(fileName);
+
+	if (_container->IsHandelValid(handle))
+		return handle;// asset already loaded
+
+	std::unique_ptr<AssetType> asset =
+		AssetType::LoadFromFile(_assetMgr, fileName);
+	if (!asset)
+		return AssetHandle();
+
+	handle = _container->AddAsset(std::move(asset));
+	_container->RegisterAssetAlias(handle, fileName);
+	return handle;
 }
 
 template<typename AssetType>
