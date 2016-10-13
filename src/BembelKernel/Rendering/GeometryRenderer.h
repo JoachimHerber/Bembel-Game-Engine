@@ -67,7 +67,7 @@ private:
 	{
 		GeometryMesh* mesh;
 		Material*     material;
-		void*         first;
+		unsigned      first;
 		unsigned      count;
 		glm::mat4     transform;
 	};

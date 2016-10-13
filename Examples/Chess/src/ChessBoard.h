@@ -22,10 +22,15 @@ public:
 
 	void Init(std::shared_ptr<Scene>, unsigned w, unsigned h);
 
+	void AddChessPiece(const glm::uvec2& pos, const std::string& model);
+
 private:
 	std::shared_ptr<Scene> _scene;
 
-	std::vector<std::vector<Scene::EntityID>> _chessPices;
+	unsigned _width;
+	unsigned _height;
+
+	std::vector<Scene::EntityID> _chessPices;
 	std::vector<std::vector<Scene::EntityID>> _tiles;
 };
 

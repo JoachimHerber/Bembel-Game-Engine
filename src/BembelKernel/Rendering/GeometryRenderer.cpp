@@ -66,7 +66,7 @@ void GeometryRenderer::DrawGeometry(
 				continue;
 
 			s_renderData.push_back(RenderData{
-				mesh, mat, (void*)(first), count, transform
+				mesh, mat, first, count, transform
 			});
 		}
 	}
@@ -140,7 +140,7 @@ void GeometryRenderer::DoRendering(const glm::mat4& proj)
 			GL_TRIANGLES,
 			s_renderData[n].count,
 			GL_UNSIGNED_INT,
-			s_renderData[n].first
+			(void*)(s_renderData[n].first * sizeof(unsigned))
 		);
 	}
 }

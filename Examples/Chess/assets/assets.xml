@@ -9,7 +9,7 @@
 		name                          = "black_chess_piece"
 		albedo                        = "0.10 0.10 0.10"
 		reflectivity                  = "0.10 0.10 0.10"
-		roughness                     = "0.01"
+		roughness                     = "0.03"
 	/>
 	
 	<GeometryModel name="white.tile" mesh="assets/chess.mesh.xml" >

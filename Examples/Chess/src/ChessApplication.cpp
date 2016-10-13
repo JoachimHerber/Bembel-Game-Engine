@@ -102,6 +102,39 @@ bool ChessApplication::InitScene()
 	_board = std::make_shared<ChessBoard>();
 
 	_board->Init(_scene, 8, 8);
+	_board->AddChessPiece({0,0}, "white.rook");
+	_board->AddChessPiece({1,0}, "white.knight");
+	_board->AddChessPiece({2,0}, "white.bishop");
+	_board->AddChessPiece({3,0}, "white.king");
+	_board->AddChessPiece({4,0}, "white.queen");
+	_board->AddChessPiece({5,0}, "white.bishop");
+	_board->AddChessPiece({6,0}, "white.knight");
+	_board->AddChessPiece({7,0}, "white.rook");
+	_board->AddChessPiece({0,1}, "white.pawn");
+	_board->AddChessPiece({1,1}, "white.pawn");
+	_board->AddChessPiece({2,1}, "white.pawn");
+	_board->AddChessPiece({3,1}, "white.pawn");
+	_board->AddChessPiece({4,1}, "white.pawn");
+	_board->AddChessPiece({5,1}, "white.pawn");
+	_board->AddChessPiece({6,1}, "white.pawn");
+	_board->AddChessPiece({7,1}, "white.pawn");
+
+	_board->AddChessPiece({0,6}, "black.rook");
+	_board->AddChessPiece({1,6}, "black.knight");
+	_board->AddChessPiece({2,6}, "black.bishop");
+	_board->AddChessPiece({3,6}, "black.king");
+	_board->AddChessPiece({4,6}, "black.queen");
+	_board->AddChessPiece({5,6}, "black.bishop");
+	_board->AddChessPiece({6,6}, "black.knight");
+	_board->AddChessPiece({7,6}, "black.rook");
+	_board->AddChessPiece({0,7}, "black.pawn");
+	_board->AddChessPiece({1,7}, "black.pawn");
+	_board->AddChessPiece({2,7}, "black.pawn");
+	_board->AddChessPiece({3,7}, "black.pawn");
+	_board->AddChessPiece({4,7}, "black.pawn");
+	_board->AddChessPiece({5,7}, "black.pawn");
+	_board->AddChessPiece({6,7}, "black.pawn");
+	_board->AddChessPiece({7,7}, "black.pawn");
 
 	return true;
 }

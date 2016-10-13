@@ -33,6 +33,9 @@ void ChessBoard::Init(
 	AssetHandle blackTile =
 		assetMgr->GetAssetHandle<GeometryModel>("black.tile");
 
+	_width  = w;
+	_height = h;
+
 	_tiles.resize(w);
 	for (unsigned u = 0; u < w; ++u)
 	{
@@ -46,6 +49,20 @@ void ChessBoard::Init(
 			geomComt->model = ((u+v)%2 == 0 ? whiteTile : blackTile);
 		}
 	}
+}
+
+void ChessBoard::AddChessPiece(const glm::uvec2& pos, const std::string& model)
+{
+	AssetHandle whiteTile =
+		_scene->GetAssetManager()->GetAssetHandle<GeometryModel>(model);
+	
+	_chessPices.push_back(_scene->CreateEntity());
+	auto posComp = _scene->CreateComponent<PositionComponent>(_chessPices.back());
+	posComp->position = glm::vec3(2.0f*pos.x-_width, 0, 2.0f*pos.y-_height);
+	
+	auto geomComp = _scene->CreateComponent<GeometryComponent>(_chessPices.back());
+	geomComp->model = whiteTile;
+
 }
 
 } //end of namespace bembel
