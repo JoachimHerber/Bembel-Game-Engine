@@ -18,18 +18,20 @@
 /*============================================================================*/
 namespace bembel {
 
-class BEMBEL_API GeometryInstance
+class BEMBEL_API GeometryComponent
 {
 public:
 	AssetHandle model;
-	bool isCastingShadow;
 
-	using ContainerType = DenseComponentContainer<GeometryInstance>;
+	// the ID of the renderer that should be used for rendering the geometry
+	unsigned    renderer;
+
+	using ContainerType = DenseComponentContainer<GeometryComponent>;
 	using ContainerPtr  = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(
-		GeometryInstance&,
+		GeometryComponent&,
 		const xml::Element*,
 		AssetManager*);
 };

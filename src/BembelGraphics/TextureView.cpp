@@ -4,8 +4,8 @@
 
 #include "TextureView.h"
 
-#include <BembelKernel/Renderig/Shader.h>
-#include <BembelKernel/Renderig/Texture.h>
+#include <BembelKernel/Rendering/Shader.h>
+#include <BembelKernel/Rendering/Texture.h>
 
 #include <string>
 

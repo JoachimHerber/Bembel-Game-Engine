@@ -4,13 +4,12 @@
 
 #include "DeferredLightingStage.h"
 #include "RenderingPipeline.h"
-#include "Renderer.h"
 #include "Camera.h"
 #include "LightSourceProperties.h"
 
-#include <BembelKernel/Renderig/Texture.h>
-#include <BembelKernel/Renderig/Shader.h>
-#include <BembelKernel/Renderig/FrameBufferObject.h>
+#include <BembelKernel/Rendering/Texture.h>
+#include <BembelKernel/Rendering/Shader.h>
+#include <BembelKernel/Rendering/FrameBufferObject.h>
 
 #include <BembelBase/Logging/Logger.h>
 #include <BembelKernel/Scene/PositionComponent.h>
@@ -37,6 +36,26 @@ void DeferredLightingStage::SetPointLightShader(ShaderProgramPtr shader)
 {
 	_pointLightShader = shader;
 	SetTextureSamplerUniforms(_pointLightShader.get());
+}
+
+bool DeferredLightingStage::InitShader(
+	const std::string& pointLightVert, 
+	const std::string& pointLightFrag, 
+	const std::string& dirLightVert, 
+	const std::string& dirLightFrag)
+{
+	_pointLightShader = std::make_shared<Shader>();
+	_pointLightShader->AttachShaderFromFile(GL_VERTEX_SHADER, pointLightVert);
+	_pointLightShader->AttachShaderFromFile(GL_FRAGMENT_SHADER, pointLightFrag);
+
+	_dirLightShader = std::make_shared<Shader>();
+	_dirLightShader->AttachShaderFromFile(GL_VERTEX_SHADER, dirLightVert);
+	_dirLightShader->AttachShaderFromFile(GL_FRAGMENT_SHADER, dirLightFrag);
+
+	if (!_pointLightShader->Link() || !_dirLightShader->Link())
+		return false;
+
+	return true;
 }
 
 void DeferredLightingStage::SetOutputTexture(const std::string& texture)
@@ -108,6 +127,9 @@ void DeferredLightingStage::Cleanup()
 
 void DeferredLightingStage::DoRendering()
 {
+	if (!_scene)
+		return;
+
 	_fbo->BeginRenderToTexture();
 	//glClearColor(0, 0, 0, 0);
 	//glClear(GL_COLOR_BUFFER_BIT);

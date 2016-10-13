@@ -46,6 +46,12 @@ public:
 	void SetDirLightShader(ShaderProgramPtr);
 	void SetPointLightShader(ShaderProgramPtr);
 
+	bool InitShader(
+		const std::string& pointLightVert,
+		const std::string& pointLightFrag,
+		const std::string& dirLightVert,
+		const std::string& dirLightFrag );
+
 	void SetOutputTexture(const std::string&);
 	void SetInputTextures(const std::vector<std::string>&);
 

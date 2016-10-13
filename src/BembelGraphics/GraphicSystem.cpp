@@ -6,7 +6,7 @@
 #include "Viewport.h"
 #include "TextureView.h"
 #include "RenderingPipeline/RenderingPipeline.h"
-#include "RenderingPipeline/DeferredGeometryStage.h"
+#include "RenderingPipeline/GeometryRenderingStage.h"
 #include "RenderingPipeline/DeferredLightingStage.h"
 
 #include <BembelOpenGL.h>
@@ -32,7 +32,7 @@ GraphicSystem::GraphicSystem(Kernel* kernel)
 	_kernel->GetEventManager()->AddHandler<FrameBufferResizeEvent>(this);
 
 	_renderingStageFactory.RegisterDefaultObjectGenerator
-		<DeferredGeometryStage>("DeferredGeometryStage");
+		<GeometryRenderingStage>("DeferredGeometryStage");
 	_renderingStageFactory.RegisterDefaultObjectGenerator
 		<DeferredLightingStage>("DeferredLightingStage");
 }
@@ -59,6 +59,23 @@ std::vector<std::shared_ptr<Viewport>>&
 	return _viewports[windowID];
 }
 
+void GraphicSystem::UpdateViewports()
+{
+	for (size_t n = 0; n < _viewports.size(); ++n)
+	{
+		auto window = _kernel->GetDisplayManager()->GetWindow(n);
+		if (!window)
+			continue;
+
+		auto& windowViewports = _viewports[n];
+		for (auto viewport : windowViewports)
+		{
+			viewport->UpdatePosition(window->GetFrameBufferSize());
+			viewport->UpdateSize(window->GetFrameBufferSize());
+		}
+	}
+}
+
 GraphicSystem::RenderingPipelinePtr GraphicSystem::CreateRenderingPipline()
 {
 	RenderingPipelinePtr pipline = std::make_shared<RenderingPipeline>(this);
@@ -69,11 +86,6 @@ GraphicSystem::RenderingPipelinePtr GraphicSystem::CreateRenderingPipline()
 std::vector<std::shared_ptr<RenderingPipeline>>& GraphicSystem::GetRenderingPiplies()
 {
 	return _pipelines;
-}
-
-GraphicSystem::RendererFactory& GraphicSystem::GetRendererFactory()
-{
-	return _rendererFactory;
 }
 
 GraphicSystem::RendertingSrageFactory& GraphicSystem::GetRendertingSrageFactory()
@@ -97,6 +109,9 @@ bool GraphicSystem::Init()
 {
 	for (auto pipline : _pipelines)
 		pipline->Init();
+
+	UpdateViewports();
+
 	_kernel->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
 	return true;
 }

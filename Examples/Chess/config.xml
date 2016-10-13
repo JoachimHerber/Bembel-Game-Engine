@@ -16,7 +16,7 @@
 						<Texture name="light"        format="GL_RGB8"              target="GL_TEXTURE_2D"/>
 						<Texture name="albedo"       format="GL_RGB8"              target="GL_TEXTURE_2D"/>
 						<Texture name="reflectivity" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="normal"       format="GL_RGBA8"             target="GL_TEXTURE_2D"/>
+						<Texture name="normal"       format="GL_RGBA16"             target="GL_TEXTURE_2D"/>
 					</Textures>
 					<RenderingStages>
 						<DeferredGeometryStage>
@@ -48,7 +48,10 @@
 					</RenderingStages>
 					<Renderer>
 						<!-- <TestRenderer /> -->
-						<GeomRenderer />
+						<GeometryRenderer>
+							<VertexShader file="shaders/render_geometry.vert" />
+							<FragmentShader file="shaders/render_geometry.frag" />
+						</GeometryRenderer>
 					</Renderer>
 					<Views>	
 						<View texture="light"         left="0.0" right="1.0" bottom="0.0" top="1.0"/>
@@ -63,16 +66,16 @@
 				</RenderingPipeline>
 			</RenderingPipelines>
 			<Viewports>
-				<Viewport position="0 0" size="0.66667 1">
+				<Viewport position="0 0" size="0.75 1">
 					<PipelineResultView pipeline="0" view="0"/>
 				</Viewport>
-				<Viewport position="0.66667 0.00000" size="0.33333 0.33333">
+				<Viewport position="0.75 0.00000" size="0.25 0.33333">
 					<PipelineResultView pipeline="0" view="1"/>
 				</Viewport>
-				<Viewport position="0.66667 0.33333" size="0.33333 0.33334">
+				<Viewport position="0.75 0.33333" size="0.25 0.33334">
 					<PipelineResultView pipeline="0" view="2"/>
 				</Viewport>
-				<Viewport position="0.66667 0.66667" size="0.33333 0.33333">
+				<Viewport position="0.75 0.66667" size="0.25 0.33333">
 					<PipelineResultView pipeline="0" view="3"/>
 				</Viewport>
 			</Viewports>

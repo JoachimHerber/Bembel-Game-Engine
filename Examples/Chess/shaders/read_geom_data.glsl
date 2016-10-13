@@ -16,6 +16,11 @@ struct Material
   vec3  F0;
 };
 
+vec3 DecodeNormal(vec3 n)
+{
+    return normalize(2*n - vec3(1));
+}
+
 bool GetGeomData(vec2 texCoord, out vec4 position, out vec3 normal, out Material mat)
 {
 	float deapt = texelFetch( uDepthBuffer, ivec2(gl_FragCoord.xy), 0 ).r;
@@ -24,13 +29,13 @@ bool GetGeomData(vec2 texCoord, out vec4 position, out vec3 normal, out Material
 	vec4 n     = texelFetch( uNormalBuffer, ivec2(gl_FragCoord.xy), 0 );
 	
 	if(deapt==1)
-		return true;
+		return false;
 	
 	position = uInverseProjectionMatrix*vec4( 2*texCoord - vec2(1.0), 2*deapt - 1, 1 );
 	position.xyz /= position.w;
 
-	normal = normalize(n.xyz - vec3(0.5));
+	normal = DecodeNormal(n.xyz);
 	
 	mat.roughness = n.a;
-	return false;
+	return true;
 }

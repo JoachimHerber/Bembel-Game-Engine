@@ -11,7 +11,6 @@
 
 #include <BembelBase/Factory.hpp>
 
-#include "RenderingPipeline/Renderer.h"
 #include "RenderingPipeline/RenderingStage.h"
 
 #include <vector>
@@ -35,8 +34,6 @@ class BEMBEL_API GraphicSystem : public System
 public:
 	using ViewportPtr            = std::shared_ptr<Viewport>;
 	using RenderingPipelinePtr   = std::shared_ptr<RenderingPipeline>;
-
-	using RendererFactory = Factory<Renderer>;
 	using RendertingSrageFactory = TFactory<RenderingStage, const xml::Element*, RenderingPipeline*>;
 
 	GraphicSystem(Kernel*);
@@ -44,11 +41,11 @@ public:
 
 	std::shared_ptr<Viewport> CreateViewPort(unsigned windowID = 0);
 	std::vector<std::shared_ptr<Viewport>>& GetViewports(unsigned windowID = 0);
+	void UpdateViewports();
 
 	RenderingPipelinePtr CreateRenderingPipline();
 	std::vector<RenderingPipelinePtr>& GetRenderingPiplies();
 
-	RendererFactory& GetRendererFactory();
 	RendertingSrageFactory& GetRendertingSrageFactory();
 
 	virtual bool Configure(const xml::Element*) override;
@@ -68,7 +65,6 @@ private:
 	std::vector<std::vector<ViewportPtr>> _viewports;
 	std::vector<RenderingPipelinePtr>     _pipelines;
 
-	RendererFactory        _rendererFactory;
 	RendertingSrageFactory _renderingStageFactory;
 };
 

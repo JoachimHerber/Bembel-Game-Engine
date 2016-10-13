@@ -2,51 +2,57 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "DeferredGeometryStage.h"
+#include "GeometryRenderingStage.h"
 
 
 #include "RenderingPipeline.h"
 #include "Camera.h"
-#include "Renderer.h"
 
-#include <BembelKernel/Renderig/Texture.h>
-#include <BembelKernel/Renderig/FrameBufferObject.h>
+#include <BembelKernel/Rendering/Texture.h>
+#include <BembelKernel/Rendering/GeometryRenderer.h>
+#include <BembelKernel/Rendering/FrameBufferObject.h>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
 namespace bembel {
 
-DeferredGeometryStage::DeferredGeometryStage(RenderingPipeline* pipline)
+GeometryRenderingStage::GeometryRenderingStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
 	, _fbo(std::make_shared<FrameBufferObject>())
 {}
 
-DeferredGeometryStage::~DeferredGeometryStage()
+GeometryRenderingStage::~GeometryRenderingStage()
 {}
 
-void DeferredGeometryStage::SetDepthOutputTexture(const std::string& texture)
+void GeometryRenderingStage::SetDepthOutputTexture(const std::string& texture)
 {
 	_fbo->SetDepthAttechment(_pipline->GetTexture(texture));
 }
 
-void DeferredGeometryStage::SetColorOutputTexture(unsigned index, const std::string& texture)
+void GeometryRenderingStage::SetColorOutputTexture(
+	unsigned index, const std::string& texture)
 {
 	_fbo->SetColorAttechment(index, _pipline->GetTexture(texture));
 }
 
-void DeferredGeometryStage::Init()
+void GeometryRenderingStage::Init()
 {
 	_fbo->Init();
 }
 
-void DeferredGeometryStage::Cleanup()
+void GeometryRenderingStage::Cleanup()
 {
 	_fbo->CleanUp();
 }
 
-void DeferredGeometryStage::DoRendering()
+void GeometryRenderingStage::DoRendering()
 {
+	if (!_scene)
+		return;
+
  	_fbo->BeginRenderToTexture();
 
 	glEnable(GL_CULL_FACE);
@@ -57,21 +63,51 @@ void DeferredGeometryStage::DoRendering()
 
 	auto cam = _pipline->GetCamera();
 
+	const auto& entitis   = _scene->GetEntitys();
+// 	const auto& posComp = _positionComponents->GetComponents();
+// 	const auto& geometrys = _geometryComponents->GetComponents();
+	
+	std::vector<GeometryRenderer::GeometryInstance> geometry;
+	geometry.reserve(entitis.size());
+	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
+	{
+		if ((entitis[entity] & _geometryComponents->GetComponentMask()) == 0)
+			continue;
+
+		glm::mat4 transform(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		if (entitis[entity] & _positionComponents->GetComponentMask())
+		{
+			transform = glm::translate(
+				transform, _positionComponents->GetComponent(entity)->position);
+		}
+
+		GeometryComponent* geom = _geometryComponents->GetComponent(entity);
+		geometry.push_back({geom->model, transform});
+	}
+
 	for ( auto& renderer : _pipline->GetRenderer())
 	{
-		renderer->DoGeometryPass(
+		renderer->DrawGeometry(
 			cam->GetViewMatrix(), 
 			cam->GetProjectionMatrix(), 
-			cam->GetViewFrustum());
+			geometry);
 	}
  	_fbo->EndRenderToTexture();
 }
 
-std::unique_ptr<DeferredGeometryStage> DeferredGeometryStage::CreateInstance(
+void GeometryRenderingStage::SetScene(ScenePtr scene)
+{
+	_scene = scene;
+
+	_geometryComponents = scene->RequestComponentContainer<GeometryComponent>();
+	_positionComponents = scene->RequestComponentContainer<PositionComponent>();
+}
+
+std::unique_ptr<GeometryRenderingStage> GeometryRenderingStage::CreateInstance(
 	const xml::Element* properties,
 	RenderingPipeline* pipline)
 {
-	auto stage = std::make_unique<DeferredGeometryStage>(pipline);
+	auto stage = std::make_unique<GeometryRenderingStage>(pipline);
 
 	std::string textureName;
 	if (xml::GetAttribute(properties, "DepthOutput", "texture", textureName))

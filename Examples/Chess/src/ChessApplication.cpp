@@ -8,12 +8,12 @@
 #include <BembelKernel/Kernel.h>
 #include <BembelKernel/Display/DisplayManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
+#include <BembelKernel/Scene/GeometryComponent.h>
 #include <BembelKernel/Assets/SerialAssetLoader.hpp>
-#include <BembelKernel/Renderig/Material.h>
-#include <BembelKernel/Renderig/GeometryMesh.h>
-#include <BembelKernel/Renderig/GeometryModel.h>
+#include <BembelKernel/Rendering/Material.h>
+#include <BembelKernel/Rendering/GeometryMesh.h>
+#include <BembelKernel/Rendering/GeometryModel.h>
 
-#include <BembelGraphics/Geometry/GeometryInstance.h>
 #include <BembelGraphics/RenderingPipeline/LightSourceProperties.h>
 
 #include <chrono>
@@ -21,7 +21,6 @@
 #include <iostream>
 
 #include <GLFW/glfw3.h>
-#include "BembelGraphics/Geometry/GeometryRenderer.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -34,10 +33,6 @@ ChessApplication::ChessApplication()
 	_graphicSys = std::make_shared<bembel::GraphicSystem>(_kernel.get());
 	_kernel->AddSystem(_graphicSys);
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
-
-	auto& rendererFactory = _graphicSys->GetRendererFactory();
-	rendererFactory.RegisterDefaultObjectGenerator
-		<bembel::GeometryRenderer>("GeomRenderer");
 }
 
 ChessApplication::~ChessApplication()
@@ -96,7 +91,7 @@ bool ChessApplication::InitScene()
 	_scene->RegisterComponentType<PositionComponent>();
 	_scene->RegisterComponentType<PointLightProperties>();
 	_scene->RegisterComponentType<DirLightProperties>();
-	_scene->RegisterComponentType<GeometryInstance>();
+	_scene->RegisterComponentType<GeometryComponent>();
 
 	auto entity = _scene->CreateEntity();
 	auto light = _scene->CreateComponent<DirLightProperties>(entity);

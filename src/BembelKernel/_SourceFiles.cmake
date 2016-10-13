@@ -58,6 +58,8 @@ set( DirFiles
 	Rendering/GeometryMesh.cpp
 	Rendering/GeometryModel.h
 	Rendering/GeometryModel.cpp
+	Rendering/GeometryRenderer.h
+	Rendering/GeometryRenderer.cpp
 	Rendering/FrameBufferObject.h
 	Rendering/FrameBufferObject.cpp
 	
@@ -69,6 +71,8 @@ set( DirFiles
 	Scene/ComponentContainer.inl
 	Scene/PositionComponent.h
 	Scene/PositionComponent.cpp
+	Scene/GeometryComponent.h
+	Scene/GeometryComponent.cpp
 	
 )
 

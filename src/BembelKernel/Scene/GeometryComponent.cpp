@@ -2,24 +2,24 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryInstance.h"
+#include "GeometryComponent.h"
 
 #include <BembelKernel/Assets/AssetManager.h>
-#include <BembelKernel/Renderig/GeometryModel.h>
+#include <BembelKernel/Rendering/GeometryModel.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
 namespace bembel {
 
-const std::string& GeometryInstance::GetComponentTypeName()
+const std::string& GeometryComponent::GetComponentTypeName()
 {
-	const static std::string typeName = "GeometryInstance";
+	const static std::string typeName = "GeometryComponent";
 	return typeName;
 }
 
-bool GeometryInstance::InitComponent(
-	GeometryInstance& geom,
+bool GeometryComponent::InitComponent(
+	GeometryComponent& geom,
 	const xml::Element* properties, 
 	AssetManager* assetMgr)
 {

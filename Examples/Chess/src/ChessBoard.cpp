@@ -6,9 +6,8 @@
 
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Renderig/GeometryModel.h>
-
-#include <BembelGraphics/Geometry/GeometryInstance.h>
+#include <BembelKernel/Scene/GeometryComponent.h>
+#include <BembelKernel/Rendering/GeometryModel.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -43,8 +42,7 @@ void ChessBoard::Init(
 			_tiles[u][v] = _scene->CreateEntity();
 			auto posComp = _scene->CreateComponent<PositionComponent>(_tiles[u][v]);
 			posComp->position = glm::vec3(2.0f*u-w, 0, 2.0f*v-h);
-			auto geomComt = _scene->CreateComponent<GeometryInstance>(_tiles[u][v]);
-			geomComt->isCastingShadow = false;
+			auto geomComt = _scene->CreateComponent<GeometryComponent>(_tiles[u][v]);
 			geomComt->model = ((u+v)%2 == 0 ? whiteTile : blackTile);
 		}
 	}

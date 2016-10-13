@@ -35,4 +35,5 @@ vec3 BRDF(vec3 n, vec3 l, vec3 v, Material mat)
 	vec3 specular = (F*D*G)/(pi*NdotV*NdotL);
 	vec3 diffuse  = (1-F)*mat.albedo / (2*pi);
 	return NdotL*(specular + diffuse);
+	
 }

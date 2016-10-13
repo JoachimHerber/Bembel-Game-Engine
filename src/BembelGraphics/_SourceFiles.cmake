@@ -13,21 +13,15 @@ set( DirFiles
 	
 	RenderingPipeline/Camera.h
 	RenderingPipeline/Camera.cpp
-	RenderingPipeline/Renderer.h
 	RenderingPipeline/RenderingPipeline.h
 	RenderingPipeline/RenderingPipeline.cpp
 	RenderingPipeline/RenderingStage.h
-	RenderingPipeline/DeferredGeometryStage.h
-	RenderingPipeline/DeferredGeometryStage.cpp
+	RenderingPipeline/GeometryRenderingStage.h
+	RenderingPipeline/GeometryRenderingStage.cpp
 	RenderingPipeline/DeferredLightingStage.h
 	RenderingPipeline/DeferredLightingStage.cpp
 	RenderingPipeline/LightSourceProperties.h
 	RenderingPipeline/LightSourceProperties.cpp
-	
-	Geometry/GeometryModel.h
-	Geometry/GeometryModel.cpp
-	Geometry/Material.h
-	Geometry/Material.cpp
 )
 
 foreach( File ${DirFiles} )

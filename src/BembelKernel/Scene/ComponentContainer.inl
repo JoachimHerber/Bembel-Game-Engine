@@ -97,9 +97,7 @@ template<class ComponentType>
 inline ComponentType* DenseComponentContainer<ComponentType>::GetComponent(
 	Scene::EntityID entity)
 {
-	if (entity >= _components.size())
-		return nullptr;
-
+	assert(entity < _components.size());
 	return &_components[entity];
 }
 

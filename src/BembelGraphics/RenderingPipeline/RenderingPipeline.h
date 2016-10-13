@@ -10,6 +10,8 @@
 #include <BembelBase/XML.h>
 #include <BembelKernel/Scene/Scene.h>
 
+#include "../TextureView.h"
+
 #include <glm/glm.hpp>
 
 #include <memory>
@@ -24,8 +26,7 @@ namespace bembel{
 class Scene;
 class Camera;
 class Texture;
-class Renderer;
-class TextureView;
+class GeometryRenderer;
 class GraphicSystem;
 class RenderingStage;
 
@@ -41,7 +42,7 @@ public:
 	using ScenePtr = std::shared_ptr<Scene>;
 	using CameraPtr = std::shared_ptr<Camera>;
 	using TexturePtr = std::shared_ptr<Texture>;
-	using RendererPtr = std::shared_ptr<Renderer>;
+	using RendererPtr = std::shared_ptr<GeometryRenderer>;
 	using RenderingStagePtr = std::shared_ptr<RenderingStage>;
 	using ViewPtr = std::shared_ptr<TextureView>;
 
@@ -70,6 +71,9 @@ public:
 	TexturePtr CreateTexture(const std::string& name, GLenum format);
 
 	void AddRenderingStage(RenderingStagePtr);
+	
+	template<typename StageType>
+	StageType* AddRenderingStage();
 
 	void AddRenderer(RendererPtr);
 	std::vector<RendererPtr>& GetRenderer();
@@ -104,6 +108,13 @@ private:
 
 	std::vector<ViewPtr> _views;
 };
+
+template<typename StageType>
+inline StageType* RenderingPipeline::AddRenderingStage()
+{
+	_stages.push_back(std::make_unique<StageType>(this));
+	return static_cast<StageType*>(_stages.back().get());
+}
 
 } //end of namespace bembel
 /*============================================================================*/

@@ -9,9 +9,10 @@
 #include "../TextureView.h"
 #include "../GraphicSystem.h"
 
-#include <BembelKernel/Renderig/Texture.h>
-#include <BembelKernel/Renderig/Shader.h>
-#include <BembelKernel/Renderig/FrameBufferObject.h>
+#include <BembelKernel/Rendering/Texture.h>
+#include <BembelKernel/Rendering/Shader.h>
+#include <BembelKernel/Rendering/FrameBufferObject.h>
+#include <BembelKernel/Rendering/GeometryRenderer.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */
@@ -68,9 +69,6 @@ void RenderingPipeline::Init()
 	for (auto& stage : _stages)
 		stage->Init();
 
-	for (auto& renderer : _renderer)
-		renderer->Init();
-
 	for (auto& view : _views)
 		view->Init();
 }
@@ -96,9 +94,6 @@ void RenderingPipeline::Cleanup()
 	for (auto& view : _views)
 		view->Cleanup();
 
-	for (auto& renderer : _renderer)
-		renderer->Cleanup();
-
 	for (auto& stage : _stages)
 		stage->Cleanup();
 
@@ -111,7 +106,7 @@ void RenderingPipeline::SetScene(ScenePtr scene)
 	_scene = scene;
 
 	for (auto& renderer : _renderer)
-		renderer->SetScene(_scene);
+		renderer->SetAssetMannager(_scene->GetAssetManager());
 
 	for (auto& stage : _stages)
 		stage->SetScene(_scene);
@@ -193,7 +188,7 @@ void RenderingPipeline::AddRenderer(RendererPtr renderer)
 	_renderer.push_back(renderer);
 }
 
-std::vector<std::shared_ptr<Renderer>>& RenderingPipeline::GetRenderer()
+std::vector<RenderingPipeline::RendererPtr>& RenderingPipeline::GetRenderer()
 {
 	return _renderer;
 }
@@ -237,9 +232,8 @@ void RenderingPipeline::InitRenderer(const xml::Element* properties)
 	for (auto rendererProperties : xml::IterateChildElements(properties))
 	{
 		RendererPtr renderer =
-			_grapicSys->GetRendererFactory().CreateObject(
-				rendererProperties->Value(), rendererProperties);
-
+			GeometryRenderer::CreateRenderer(rendererProperties);
+	
 		if (renderer)
 			_renderer.push_back(renderer);
 	}
