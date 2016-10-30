@@ -41,6 +41,7 @@ void Window::Open(const std::string& titel)
 	_displaySys->OnWindowOpend(this);
 
 	MakeContextCurent();
+	glEnable(GL_FRAMEBUFFER_SRGB);
 }
 void Window::Close()
 {

@@ -21,7 +21,7 @@ namespace bembel {
 
 GeometryRenderingStage::GeometryRenderingStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, _fbo(std::make_shared<FrameBufferObject>())
+	, _fbo(std::make_unique<FrameBufferObject>())
 {}
 
 GeometryRenderingStage::~GeometryRenderingStage()

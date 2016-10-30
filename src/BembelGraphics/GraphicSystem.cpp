@@ -8,6 +8,7 @@
 #include "RenderingPipeline/RenderingPipeline.h"
 #include "RenderingPipeline/GeometryRenderingStage.h"
 #include "RenderingPipeline/DeferredLightingStage.h"
+#include "RenderingPipeline/EnvironmentMapReflectionStage.h"
 
 #include <BembelOpenGL.h>
 #include <BembelBase/XML.h>
@@ -35,6 +36,8 @@ GraphicSystem::GraphicSystem(Kernel* kernel)
 		<GeometryRenderingStage>("DeferredGeometryStage");
 	_renderingStageFactory.RegisterDefaultObjectGenerator
 		<DeferredLightingStage>("DeferredLightingStage");
+	_renderingStageFactory.RegisterDefaultObjectGenerator
+		<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
 }
 GraphicSystem::~GraphicSystem()
 {

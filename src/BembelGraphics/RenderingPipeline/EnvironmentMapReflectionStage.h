@@ -1,5 +1,5 @@
-#ifndef BEMBEL_GEOMETRYRENDERINGSTAGE_H
-#define BEMBEL_GEOMETRYRENDERINGSTAGE_H
+#ifndef BEMBEL_ENVIRONMENTMAPREFLECTIONSTAGE_H
+#define BEMBEL_ENVIRONMENTMAPREFLECTIONSTAGE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -8,8 +8,6 @@
 #include <BembelOpenGL.h>
 
 #include <BembelBase/XML.h>
-#include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Scene/GeometryComponent.h>
 
 #include "RenderingStage.h"
 
@@ -21,6 +19,7 @@
 /*============================================================================*/
 namespace bembel{
 
+class Shader;
 class Texture;
 class FrameBufferObject;
 
@@ -30,33 +29,50 @@ class FrameBufferObject;
 /*============================================================================*/
 namespace bembel {
 
-class BEMBEL_API GeometryRenderingStage : public RenderingStage
+class BEMBEL_API EnvironmentMapReflectionStage : public RenderingStage
 {
 public:
 	using TexturePtr = std::shared_ptr<Texture>;
+	using ShaderPtr  = std::shared_ptr<Shader>;
 
-	GeometryRenderingStage(RenderingPipeline* pipline);
-	~GeometryRenderingStage();
+	EnvironmentMapReflectionStage(RenderingPipeline* pipline);
+	~EnvironmentMapReflectionStage();
 
-	void SetDepthOutputTexture(const std::string&);
-	void SetColorOutputTexture(unsigned index, const std::string&);
+	bool InitEnvironmentMap(
+		const std::string& left,
+		const std::string& right,
+		const std::string& bottom,
+		const std::string& top,
+		const std::string& back,
+		const std::string& front);
+
+	void SetShader(ShaderPtr);
+
+	void SetOutputTexture(const std::string&);
+	void SetInputTextures(const std::vector<std::string>&);
 
 	virtual void Init() override;
 	virtual void Cleanup() override;
 	virtual void DoRendering() override;
 
-	void SetScene(ScenePtr) override;
-
-	static std::unique_ptr<GeometryRenderingStage>
+	static std::unique_ptr<EnvironmentMapReflectionStage>
 		CreateInstance(const xml::Element*, RenderingPipeline*);
+
+private:
+	static ShaderPtr CreateShader(const xml::Element*);
+	void SetTextureSamplerUniforms(Shader* shader);
+
+	void BindTextures();
+	void ReleaseTextures();
 
 private:
 	std::unique_ptr<FrameBufferObject> _fbo;
 
-	ScenePtr                        _scene;
-	GeometryComponent::ContainerPtr _geometryComponents;
-	PositionComponent::ContainerPtr _positionComponents;
+	TexturePtr _environmentMap;
+	ShaderPtr  _shader;
 
+	std::vector<TexturePtr>  _inputTextures;
+	std::vector<std::string> _inputTexturNames;
 };
 
 } //end of namespace bembel

@@ -73,49 +73,49 @@ bool Image::Load(const std::string& fileName)
 	_width    = w;
 	_height   = h;
 	_channels = 4;
-
 	_data.resize(w*h * 4);
+	_data = data;
 
-	for (unsigned int y = 0; y < h; ++y)
-	{
-		for (unsigned int x = 0; x < w; ++x)
-		{
-			_data[4 * (x + w*(y)) + 0] = data[4 * (x + w*(h - y - 1)) + 0];
-			_data[4 * (x + w*(y)) + 1] = data[4 * (x + w*(h - y - 1)) + 1];
-			_data[4 * (x + w*(y)) + 2] = data[4 * (x + w*(h - y - 1)) + 2];
-			_data[4 * (x + w*(y)) + 3] = data[4 * (x + w*(h - y - 1)) + 3];
-		}
-	}
+// 	for (unsigned int y = 0; y < h; ++y)
+// 	{
+// 		for (unsigned int x = 0; x < w; ++x)
+// 		{
+// 			_data[4 * (x + w*(y)) + 0] = data[4 * (x + w*(h - y - 1)) + 0];
+// 			_data[4 * (x + w*(y)) + 1] = data[4 * (x + w*(h - y - 1)) + 1];
+// 			_data[4 * (x + w*(y)) + 2] = data[4 * (x + w*(h - y - 1)) + 2];
+// 			_data[4 * (x + w*(y)) + 3] = data[4 * (x + w*(h - y - 1)) + 3];
+// 		}
+// 	}
 	return true;
 }
 
 bool Image::Save(const std::string& fileName)
 {
-	std::vector<unsigned char> data;
-	data.resize(_data.size());
-	for (unsigned int y = 0; y < _height; ++y)
-	{
-		for (unsigned int x = 0; x < _width; ++x)
-		{
-			for (unsigned int c = 0; c < _channels; ++c)
-			{
-				data[_channels * (x + _width*(y)) + c] =
-					_data[_channels * (x + _width*(_height - y - 1)) + c];
-			}
-		}
-	}
+//	std::vector<unsigned char> data;
+//	data.resize(_data.size());
+// 	for (unsigned int y = 0; y < _height; ++y)
+// 	{
+// 		for (unsigned int x = 0; x < _width; ++x)
+// 		{
+// 			for (unsigned int c = 0; c < _channels; ++c)
+// 			{
+// 				data[_channels * (x + _width*(y)) + c] =
+// 					_data[_channels * (x + _width*(_height - y - 1)) + c];
+// 			}
+// 		}
+// 	}
 
 	unsigned error = 0;
 	switch (_channels)
 	{
 	case 1:
-		error = lodepng::encode(fileName, data, _width, _height, LCT_GREY);
+		error = lodepng::encode(fileName, _data, _width, _height, LCT_GREY);
 		break;
 	case 3:
-		error = lodepng::encode(fileName, data, _width, _height, LCT_RGB);
+		error = lodepng::encode(fileName, _data, _width, _height, LCT_RGB);
 		break;
 	case 4:
-		error = lodepng::encode(fileName, data, _width, _height, LCT_RGBA);
+		error = lodepng::encode(fileName, _data, _width, _height, LCT_RGBA);
 		break;
 	default:
 		return false;

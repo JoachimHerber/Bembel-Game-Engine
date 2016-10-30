@@ -22,6 +22,8 @@ set( DirFiles
 	RenderingPipeline/DeferredLightingStage.cpp
 	RenderingPipeline/LightSourceProperties.h
 	RenderingPipeline/LightSourceProperties.cpp
+	RenderingPipeline/EnvironmentMapReflectionStage.h
+	RenderingPipeline/EnvironmentMapReflectionStage.cpp
 )
 
 foreach( File ${DirFiles} )

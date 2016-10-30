@@ -21,7 +21,7 @@ namespace bembel {
 
 DeferredLightingStage::DeferredLightingStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, _fbo(std::make_shared<FrameBufferObject>())
+	, _fbo(std::make_unique<FrameBufferObject>())
 {}
 
 DeferredLightingStage::~DeferredLightingStage()
@@ -86,7 +86,7 @@ void DeferredLightingStage::SetScene(ScenePtr scene)
 	_scene = scene;
 	_dirLightContainer   = _scene->RequestComponentContainer<DirLightProperties>();
 	_pointLightContainer = _scene->RequestComponentContainer<PointLightProperties>();
-	_positionConteiner   = _scene->RequestComponentContainer<PositionComponent>();
+	_positionContainer   = _scene->RequestComponentContainer<PositionComponent>();
 }
 
 void DeferredLightingStage::Init()
@@ -310,7 +310,7 @@ void DeferredLightingStage::ApplyPointLights()
 {
 	Scene::ComponentMask mask =
 		_pointLightContainer->GetComponentMask() |
-		_positionConteiner->GetComponentMask();
+		_positionContainer->GetComponentMask();
 
 	std::vector<PointLight> pointLights;
 	for (const auto& it : _pointLightContainer->GetComponents())
@@ -320,7 +320,7 @@ void DeferredLightingStage::ApplyPointLights()
 
 		PointLight light;
 
-		glm::vec4 position = glm::vec4(_positionConteiner->GetComponent(it.first)->position, 1);
+		glm::vec4 position = glm::vec4(_positionContainer->GetComponent(it.first)->position, 1);
 		position = _pipline->GetCamera()->GetViewMatrix()*position;
 
 		light.x = position.x;

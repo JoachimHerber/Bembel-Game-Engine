@@ -24,7 +24,7 @@ void main()
 	Material mat;
 	if(GetGeomData(vTexCoord, position, normal, mat))
 	{
-		oColor = uLigthColor*BRDF(normal, -normalize(uLigthDir), -normalize(position.xyz), mat);
+		oColor = max(uLigthColor*BRDF(normal, -normalize(uLigthDir), -normalize(position.xyz), mat),vec3(0));
 	}
 	else
 	{

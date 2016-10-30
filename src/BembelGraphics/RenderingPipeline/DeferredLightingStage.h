@@ -15,7 +15,6 @@
 #include <BembelKernel/Scene/PositionComponent.h>
 
 #include <memory>
-#include <array>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
@@ -38,7 +37,7 @@ class BEMBEL_API DeferredLightingStage : public RenderingStage
 public:
 	using TexturePtr           = std::shared_ptr<Texture>;
 	using ShaderProgramPtr     = std::shared_ptr<Shader>;
-	using FrameBufferObjectPtr = std::shared_ptr<FrameBufferObject>;
+	using FrameBufferObjectPtr = std::unique_ptr<FrameBufferObject>;
 
 	DeferredLightingStage(RenderingPipeline* pipline);
 	~DeferredLightingStage();
@@ -91,7 +90,7 @@ private:
 	ScenePtr                           _scene;
 	DirLightProperties::ContainerPtr   _dirLightContainer;
 	PointLightProperties::ContainerPtr _pointLightContainer;
-	PositionComponent::ContainerPtr    _positionConteiner;
+	PositionComponent::ContainerPtr    _positionContainer;
 };
 
 } //end of namespace bembel

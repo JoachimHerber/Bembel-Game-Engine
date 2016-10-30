@@ -10,13 +10,13 @@
 	<Systems>
 		<Graphics>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="600" vertical_resolution="600">
+				<RenderingPipeline horizontal_resolution="900" vertical_resolution="900">
 					<Textures>
 						<Texture name="depth"        format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
-						<Texture name="light"        format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="light"        format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
 						<Texture name="albedo"       format="GL_RGB8"              target="GL_TEXTURE_2D"/>
 						<Texture name="reflectivity" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="normal"       format="GL_RGBA16"             target="GL_TEXTURE_2D"/>
+						<Texture name="normal"       format="GL_RGBA16"            target="GL_TEXTURE_2D"/>
 					</Textures>
 					<RenderingStages>
 						<DeferredGeometryStage>
@@ -45,6 +45,25 @@
 							<Input texture="reflectivity" />
 							<Input texture="normal" />
 						</DeferredLightingStage>
+						<EnvironmentMapReflectionStage>
+							<EnvironmentMap
+								left   = "assets/skybox/X-.png"
+								right  = "assets/skybox/X+.png"
+								bottom = "assets/skybox/Y-.png"
+								top    = "assets/skybox/Y+.png"
+								back   = "assets/skybox/Z+.png"
+								front  = "assets/skybox/Z-.png"
+							/>
+							<Shader>
+								<VertexShader   file="shaders/environment_map_reflection.vert"/>
+								<FragmentShader file="shaders/environment_map_reflection.frag"/>
+							</Shader>
+							<Output texture="light"/>
+							<Input texture="depth" />
+							<Input texture="albedo" />
+							<Input texture="reflectivity" />
+							<Input texture="normal" />
+						</EnvironmentMapReflectionStage>
 					</RenderingStages>
 					<Renderer>
 						<!-- <TestRenderer /> -->
@@ -54,10 +73,10 @@
 						</GeometryRenderer>
 					</Renderer>
 					<Views>	
-						<View texture="light"         left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="normal"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="albedo"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="reflectivity"  left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="light"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="albedo"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="normal"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="reflectivity" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
