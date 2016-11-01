@@ -7,7 +7,8 @@
 #include <BembelKernel/Events/EventManager.h>
 #include <BembelKernel/Events/InputEvents.h>
 #include <BembelKernel/Events/DisplayEvents.h>
-
+#include <Bembelnteraction/Input/Button.h>
+#include <Bembelnteraction/InteractionSystem.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -39,6 +40,12 @@ public:
 	void HandleEvent(const CursorEnteredEvent&);
 	void HandleEvent(const CursorLeftEvent&);
 	void HandleEvent(const ScrollEvent&);
+
+	void HandleEvent(const ButtonPressEvent&);
+	void HandleEvent(const ButtonReleaseEvent&);
+
+private:
+	std::shared_ptr<InteractionSystem>  _interactionSys;
 };
 
 } //end of namespace bembel

@@ -14,10 +14,6 @@ Button::Button(const std::string& name)
 	, _pressed(false)
 {}
 
-Button::Button(Button&& other)
-	: _name(std::move(other._name))
-{}
-
 Button::~Button()
 {}
 

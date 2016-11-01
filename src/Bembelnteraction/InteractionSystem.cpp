@@ -4,6 +4,9 @@
 
 #include "InteractionSystem.h"
 
+#include "Input/Mouse.h"
+#include "Input/Keyboard.h"
+
 #include <BembelBase/XML.h>
 #include <BembelBase/Logging/Logger.h>
 #include <BembelKernel/Kernel.h>
@@ -16,6 +19,8 @@ namespace bembel {
 InteractionSystem::InteractionSystem(Kernel* kernel)
 	: System(kernel, "Interaction")
 {
+	_mouse    = std::make_unique<Mouse>(kernel->GetEventManager().get());
+	_keyboard = std::make_unique<Keyboard>(kernel->GetEventManager().get());
 }
 InteractionSystem::~InteractionSystem()
 {

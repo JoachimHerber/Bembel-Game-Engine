@@ -15,6 +15,9 @@
 /*============================================================================*/
 namespace bembel{
 
+class Keyboard;
+class Mouse;
+
 }//end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -34,7 +37,8 @@ public:
 	virtual void Update(double timeSinceLastUpdate) override;
 
 private:
-
+	std::unique_ptr<Mouse>    _mouse;
+	std::unique_ptr<Keyboard> _keyboard;
 };
 
 } //end of namespace bembel

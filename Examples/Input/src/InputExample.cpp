@@ -17,6 +17,9 @@ namespace bembel{
 InputExample::InputExample()
 	: bembel::Application()
 {
+	_interactionSys = std::make_shared<bembel::InteractionSystem>(_kernel.get());
+	_kernel->AddSystem(_interactionSys);
+
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 
 	_kernel->GetEventManager()->AddHandler<bembel::KeyPressEvent>(this);
@@ -30,6 +33,9 @@ InputExample::InputExample()
 	_kernel->GetEventManager()->AddHandler<bembel::CursorEnteredEvent>(this);
 	_kernel->GetEventManager()->AddHandler<bembel::CursorLeftEvent>(this);
 	_kernel->GetEventManager()->AddHandler<bembel::ScrollEvent>(this);
+
+	_kernel->GetEventManager()->AddHandler<bembel::ButtonPressEvent>(this);
+	_kernel->GetEventManager()->AddHandler<bembel::ButtonReleaseEvent>(this);
 }
 
 InputExample::~InputExample()
@@ -111,6 +117,16 @@ void InputExample::HandleEvent(const CursorLeftEvent& event)
 void InputExample::HandleEvent(const ScrollEvent& event)
 {
 	std::cout << "[Scroll] (" << event.x << ";"<< event.y << ")" << std::endl;
+}
+
+void InputExample::HandleEvent(const ButtonPressEvent& event)
+{
+	std::cout << "[ButtonPress] " << event.button->GetName() << std::endl;
+}
+
+void InputExample::HandleEvent(const ButtonReleaseEvent& event)
+{
+	std::cout << "[ButtonRelease] " << event.button->GetName() << std::endl;
 }
 
 } //end of namespace bembel
