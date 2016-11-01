@@ -30,13 +30,6 @@ set( DirFiles
 	Display/DisplayMode.h
 	Display/DisplayMode.cpp
 	
-	Input/Signal.hpp
-	Input/Signal.inl
-	Input/Slot.hpp
-	Input/Slot.inl
-	Input/Button.h
-	Input/Button.cpp
-	
 	Assets/AssetContainer.h
 	Assets/AssetContainer.inl
 	Assets/AssetHandle.h

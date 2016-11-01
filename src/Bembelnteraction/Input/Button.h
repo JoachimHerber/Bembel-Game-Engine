@@ -6,8 +6,9 @@
 
 #include <BembelConfig.h>
 
-#include "Signal.hpp"
-#include "../Events/EventManager.h"
+#include "../Signal.hpp"
+
+#include <BembelKernel/Events/EventManager.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -17,12 +18,10 @@ namespace bembel {
 class BEMBEL_API Button
 {
 public:
-public:
-	Button(const std::string& name, const std::string& dispName);
+	Button(const std::string& name);
 	~Button();
 
 	const std::string& GetName() const;
-	const std::string& GetDisplayName() const;
 
 	bool GetIsPressed() const;
 	void SetIsPressed(bool);
@@ -32,7 +31,6 @@ public:
 
 protected:
 	std::string _name;
-	std::string _displayName;
 
 	Signal<> _pressSignal;
 	Signal<> _releaseSignal;
@@ -44,8 +42,6 @@ struct BEMBEL_API ButtonPressEvent
 {
 	// the button that was pressed
 	Button* button;
-
-	int  modifierBits;
 
 	BEMBEL_EVENT_INTERVACE_DECLADRATION
 };

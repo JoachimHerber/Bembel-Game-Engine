@@ -2,61 +2,45 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Button.h"
+#include "InteractionSystem.h"
+
+#include <BembelBase/XML.h>
+#include <BembelBase/Logging/Logger.h>
+#include <BembelKernel/Kernel.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
 namespace bembel {
 
-Button::Button(const std::string& name, const std::string& dispName)
-	: _name(name)
-	, _displayName(dispName)
-	, _pressed(false)
-{}
-
-Button::~Button()
-{}
-
-const std::string& Button::GetName()const
+InteractionSystem::InteractionSystem(Kernel* kernel)
+	: System(kernel, "Interaction")
 {
-	return _name;
+}
+InteractionSystem::~InteractionSystem()
+{
 }
 
-const std::string& Button::GetDisplayName() const
+bool InteractionSystem::Configure(const xml::Element* properties)
 {
-	return _displayName;
+	if (!properties)
+		return false;
+
+	return true;
 }
 
-bool Button::GetIsPressed() const
+bool InteractionSystem::Init()
 {
-	return _pressed;
+	return true;
 }
 
-void Button::SetIsPressed(bool b)
+void InteractionSystem::Shutdown()
 {
-	if (_pressed == b)
-		return;
-
-	_pressed = b;
-	if (_pressed)
-		_pressSignal.Emit();
-	else
-		_releaseSignal.Emit();
 }
 
-Signal<>& Button::GetPressSignal()
+void InteractionSystem::Update(double)
 {
-	return _pressSignal;
 }
-
-Signal<>& Button::GetReleaseSignal()
-{
-	return _releaseSignal;
-}
-
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(ButtonPressEvent);
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(ButtonReleaseEvent);
 
 } //end of namespace bembel
 /*============================================================================*/
