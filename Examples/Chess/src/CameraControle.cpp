@@ -23,6 +23,11 @@ CameraControle::~CameraControle()
 	_eventMgr->RemoveHandler<bembel::CursorMovedEvent>(this);
 }
 
+void CameraControle::SetCameraOffset(const glm::vec3& pos)
+{
+	_offset = pos;
+}
+
 void CameraControle::Update(double dTime)
 {
 	glm::vec2 _cursorMovement = _cursorPos-_prevPos;
@@ -48,7 +53,7 @@ void CameraControle::Update(double dTime)
 	glm::quat yaw   = glm::angleAxis(_yaw,Y_AXIS);
 	_camera->SetOrientation(yaw*pitch);
 
-	glm::vec3 pos = _dist*glm::rotate(yaw*pitch, Z_AXIS);
+	glm::vec3 pos = _offset + _dist*glm::rotate(yaw*pitch, Z_AXIS);
 	_camera->SetPosition(pos);
 }
 

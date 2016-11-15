@@ -7,9 +7,13 @@
 #include <BembelKernel/Events/EventManager.h>
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/Scene.h>
+
 #include <BembelGraphics/GraphicSystem.h>
 #include <BembelGraphics/RenderingPipeline/RenderingPipeline.h>
-#include "ChessBoard.h"
+
+#include <Bembelnteraction/InteractionSystem.h>
+
+#include "Chess/ChessBoard.h"
 #include "CameraControle.h"
 
 /*============================================================================*/
@@ -28,20 +32,24 @@ public:
 
 	virtual void Update(double time) override;
 
+	void NextClessBoard();
+
 	void HandleEvent(const WindowShouldCloseEvent&);
 
 private:
 	bool InitAssets();
-	bool InitScene();
+	bool InitDefaultChessBoard();
+	bool InitFourPlayerChessBoard();
 
 private:
-	std::shared_ptr<GraphicSystem>  _graphicSys;
+	std::shared_ptr<GraphicSystem>     _graphicSys;
+	std::shared_ptr<InteractionSystem> _interactionSys;
 
 	std::shared_ptr<AssetManager> _assetMgr;
 
-	std::shared_ptr<Scene> _scene;
+	std::vector<std::unique_ptr<ChessBoard>> _chessBoards;
+	unsigned _currentChessBoard;
 
-	std::shared_ptr<ChessBoard>     _board;
 	std::shared_ptr<CameraControle> _cam;
 };
 

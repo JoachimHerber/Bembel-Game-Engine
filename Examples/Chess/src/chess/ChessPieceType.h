@@ -1,37 +1,41 @@
-#ifndef BEMBEL_CHESSBOARD_H
-#define BEMBEL_CHESSBOARD_H
+#ifndef BEMBEL_CHESSPIECETYPE_H
+#define BEMBEL_CHESSPIECETYPE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelKernel/Scene/Scene.h>
+#include <BembelKernel/Assets/AssetHandle.h>
+#include <BembelKernel/Assets/AssetManager.h>
 
 #include <memory>
-#include <vector>
+#include <map>
 
+/*============================================================================*/
+/* FORWARD DECLARATIONS                                                       */
+/*============================================================================*/
+namespace bembel{
+
+class Player;
+
+}//end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-class ChessBoard
+class ChessPieceType
 {
 public:
-	ChessBoard();
-	~ChessBoard();
+	ChessPieceType();
+	~ChessPieceType();
 
-	void Init(std::shared_ptr<Scene>, unsigned w, unsigned h);
+	void SetModle(Player*, AssetHandle);
+	void SetModle(Player*, AssetManager*, const std::string&);
 
-	void AddChessPiece(const glm::uvec2& pos, const std::string& model);
+	AssetHandle GetModle(Player*);
 
 private:
-	std::shared_ptr<Scene> _scene;
-
-	unsigned _width;
-	unsigned _height;
-
-	std::vector<Scene::EntityID> _chessPices;
-	std::vector<std::vector<Scene::EntityID>> _tiles;
+	std::map<Player*, AssetHandle> _modle;
 };
 
 } //end of namespace bembel

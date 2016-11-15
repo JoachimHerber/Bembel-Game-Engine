@@ -64,6 +64,14 @@
 							<Input texture="reflectivity" />
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
+						<SelectionRenderingStage>
+							<Shader>
+								<VertexShader   file="shaders/selection.vert"/>
+								<FragmentShader file="shaders/selection.frag"/>
+							</Shader>
+							<ColorOutput texture="light"/>
+							<DepthOutput texture="depth"/>
+						</SelectionRenderingStage>
 					</RenderingStages>
 					<Renderer>
 						<!-- <TestRenderer /> -->

@@ -24,6 +24,8 @@ public:
 	CameraControle(EventMgrPtr, CameraPtr camera);
 	~CameraControle();
 
+	void SetCameraOffset(const glm::vec3&);
+
 	void Update(double dTime);
 
 	void HandleEvent(const bembel::MouseButtonPressEvent&);
@@ -43,6 +45,8 @@ private:
 	float _pitch = 0;
 	float _yaw   = 0;
 	float _dist  = 1.0f;
+
+	glm::vec3 _offset;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

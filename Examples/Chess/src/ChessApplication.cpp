@@ -2,6 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 #include "ChessApplication.h"
+#include "SelectionRenderingStage.h"
 
 #include <BembelOpenGL.h>
 
@@ -15,6 +16,8 @@
 #include <BembelKernel/Rendering/GeometryModel.h>
 
 #include <BembelGraphics/RenderingPipeline/LightSourceProperties.h>
+
+#include <Bembelnteraction/Input/Keyboard.h>
 
 #include <chrono>
 #include <random>
@@ -30,14 +33,21 @@ namespace bembel{
 ChessApplication::ChessApplication()
 	: bembel::Application()
 {
-	_graphicSys = std::make_shared<bembel::GraphicSystem>(_kernel.get());
+	_graphicSys =
+		std::make_shared<GraphicSystem>(_kernel.get());
+	_interactionSys = 
+		std::make_shared<InteractionSystem>(_kernel.get());
+
+	_interactionSys->GetKeyboard()->GetKey(GLFW_KEY_N)->GetReleaseSignal().AddSlot(
+		this, &ChessApplication::NextClessBoard);
+
 	_kernel->AddSystem(_graphicSys);
-	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+	_kernel->AddSystem(_interactionSys);
+	_kernel->GetEventManager()->AddHandler<WindowShouldCloseEvent>(this);
 }
 
 ChessApplication::~ChessApplication()
 {}
-
 
 bool ChessApplication::Init()
 {
@@ -49,9 +59,12 @@ bool ChessApplication::Init()
 		_kernel->GetEventManager(), pipline->GetCamera());
 
 	InitAssets();
-	InitScene();
+	InitDefaultChessBoard();
+	InitFourPlayerChessBoard();
 
-	pipline->SetScene(_scene);
+	pipline->SetScene(_chessBoards[0]->GetScene());
+	_cam->SetCameraOffset(glm::vec3(
+		_chessBoards[0]->GetWidth(), 0.5f, _chessBoards[0]->GetHeight()));
 
 	_kernel->InitSystems();
 	return true;
@@ -66,6 +79,17 @@ void ChessApplication::Cleanup()
 void ChessApplication::Update(double time)
 {
 	_cam->Update(time);
+}
+
+void ChessApplication::NextClessBoard()
+{
+	_currentChessBoard = (_currentChessBoard+1)%_chessBoards.size();
+
+	auto board = _chessBoards[_currentChessBoard].get();
+
+	_graphicSys->GetRenderingPiplies()[0]->SetScene(board->GetScene());
+	_cam->SetCameraOffset(glm::vec3(
+		board->GetWidth(), 0.5f, board->GetHeight()));
 }
 
 void ChessApplication::HandleEvent(const WindowShouldCloseEvent& event)
@@ -84,58 +108,100 @@ bool ChessApplication::InitAssets()
 	return true;
 }
 
-bool ChessApplication::InitScene()
+bool ChessApplication::InitDefaultChessBoard()
 {
-	_scene = std::make_shared<Scene>(_assetMgr);
+	_chessBoards.push_back(
+		std::make_unique<ChessBoard>(_assetMgr, 8, 8));
 
-	_scene->RegisterComponentType<PositionComponent>();
-	_scene->RegisterComponentType<PointLightProperties>();
-	_scene->RegisterComponentType<DirLightProperties>();
-	_scene->RegisterComponentType<GeometryComponent>();
+	_chessBoards.back()->AddChessPiece({0,0}, ChessBoard::ROOK, 0);
+	_chessBoards.back()->AddChessPiece({0,1}, ChessBoard::KNIGHT, 0);
+	_chessBoards.back()->AddChessPiece({0,2}, ChessBoard::BISHOP, 0);
+	_chessBoards.back()->AddChessPiece({0,3}, ChessBoard::QUEEN, 0);
+	_chessBoards.back()->AddChessPiece({0,4}, ChessBoard::KING, 0);
+	_chessBoards.back()->AddChessPiece({0,5}, ChessBoard::BISHOP, 0);
+	_chessBoards.back()->AddChessPiece({0,6}, ChessBoard::KNIGHT, 0);
+	_chessBoards.back()->AddChessPiece({0,7}, ChessBoard::ROOK, 0);
 
-	auto entity = _scene->CreateEntity();
-	auto light = _scene->CreateComponent<DirLightProperties>(entity);
-	light->direction = glm::normalize(glm::vec3(-0.3, -1, -0.2));
-	light->color = 3.0f*glm::vec3(1, 1, 1);
-	
+	_chessBoards.back()->AddChessPiece({1,0}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,1}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,2}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,3}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,4}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,5}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,6}, ChessBoard::PAWN, 0);
+	_chessBoards.back()->AddChessPiece({1,7}, ChessBoard::PAWN, 0);
 
-	_board = std::make_shared<ChessBoard>();
+	_chessBoards.back()->AddChessPiece({6,0}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,1}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,2}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,3}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,4}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,5}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,6}, ChessBoard::PAWN, 1);
+	_chessBoards.back()->AddChessPiece({6,7}, ChessBoard::PAWN, 1);
 
-	_board->Init(_scene, 8, 8);
-	_board->AddChessPiece({0,0}, "white.rook");
-	_board->AddChessPiece({1,0}, "white.knight");
-	_board->AddChessPiece({2,0}, "white.bishop");
-	_board->AddChessPiece({3,0}, "white.king");
-	_board->AddChessPiece({4,0}, "white.queen");
-	_board->AddChessPiece({5,0}, "white.bishop");
-	_board->AddChessPiece({6,0}, "white.knight");
-	_board->AddChessPiece({7,0}, "white.rook");
-	_board->AddChessPiece({0,1}, "white.pawn");
-	_board->AddChessPiece({1,1}, "white.pawn");
-	_board->AddChessPiece({2,1}, "white.pawn");
-	_board->AddChessPiece({3,1}, "white.pawn");
-	_board->AddChessPiece({4,1}, "white.pawn");
-	_board->AddChessPiece({5,1}, "white.pawn");
-	_board->AddChessPiece({6,1}, "white.pawn");
-	_board->AddChessPiece({7,1}, "white.pawn");
+	_chessBoards.back()->AddChessPiece({7,0}, ChessBoard::ROOK, 1);
+	_chessBoards.back()->AddChessPiece({7,1}, ChessBoard::KNIGHT, 1);
+	_chessBoards.back()->AddChessPiece({7,2}, ChessBoard::BISHOP, 1);
+	_chessBoards.back()->AddChessPiece({7,3}, ChessBoard::QUEEN, 1);
+	_chessBoards.back()->AddChessPiece({7,4}, ChessBoard::KING, 1);
+	_chessBoards.back()->AddChessPiece({7,5}, ChessBoard::BISHOP, 1);
+	_chessBoards.back()->AddChessPiece({7,6}, ChessBoard::KNIGHT, 1);
+	_chessBoards.back()->AddChessPiece({7,7}, ChessBoard::ROOK, 1);
 
-	_board->AddChessPiece({0,7}, "black.rook");
-	_board->AddChessPiece({1,7}, "black.knight");
-	_board->AddChessPiece({2,7}, "black.bishop");
-	_board->AddChessPiece({3,7}, "black.king");
-	_board->AddChessPiece({4,7}, "black.queen");
-	_board->AddChessPiece({5,7}, "black.bishop");
-	_board->AddChessPiece({6,7}, "black.knight");
-	_board->AddChessPiece({7,7}, "black.rook");
-	_board->AddChessPiece({0,6}, "black.pawn");
-	_board->AddChessPiece({1,6}, "black.pawn");
-	_board->AddChessPiece({2,6}, "black.pawn");
-	_board->AddChessPiece({3,6}, "black.pawn");
-	_board->AddChessPiece({4,6}, "black.pawn");
-	_board->AddChessPiece({5,6}, "black.pawn");
-	_board->AddChessPiece({6,6}, "black.pawn");
-	_board->AddChessPiece({7,6}, "black.pawn");
+	return true;
+}
 
+bool ChessApplication::InitFourPlayerChessBoard()
+{
+	const std::vector<std::string> playerName = {"white","orange","black","blue"};
+	_chessBoards.push_back(
+		std::make_unique<ChessBoard>(
+			_assetMgr, 14, 14, playerName));
+
+	for (unsigned u = 0; u < 14; ++u)
+	{
+		if(2<u && u < 11)
+			continue;
+
+		for (unsigned v = 0; v < 14; ++v)
+		{
+			if (2<v && v < 11)
+				continue;
+			
+			_chessBoards.back()->DisableTile(u, v);
+		}
+	}
+
+	glm::ivec2 offsets[4]{{0,1},{-1,0},{0,-1},{1,0}};
+	glm::ivec2 firstRow[4]{{0,3},{10,0},{13,10},{3,13}};
+	glm::ivec2 secondRow[4]{{1,3},{10,1},{12,10},{3,12}};
+
+
+	for (int i = 0; i < 4; ++i)
+	{
+		glm::ivec2 pos = firstRow[i];
+		glm::ivec2 offset = offsets[i];
+
+		_chessBoards.back()->AddChessPiece(pos+0*offset, ChessBoard::ROOK, i);
+		_chessBoards.back()->AddChessPiece(pos+1*offset, ChessBoard::KNIGHT, i);
+		_chessBoards.back()->AddChessPiece(pos+2*offset, ChessBoard::BISHOP, i);
+		_chessBoards.back()->AddChessPiece(pos+3*offset, ChessBoard::QUEEN, i);
+		_chessBoards.back()->AddChessPiece(pos+4*offset, ChessBoard::KING, i);
+		_chessBoards.back()->AddChessPiece(pos+5*offset, ChessBoard::BISHOP, i);
+		_chessBoards.back()->AddChessPiece(pos+6*offset, ChessBoard::KNIGHT, i);
+		_chessBoards.back()->AddChessPiece(pos+7*offset, ChessBoard::ROOK, i);
+
+		pos = secondRow[i];
+		_chessBoards.back()->AddChessPiece(pos+0*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+1*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+2*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+3*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+4*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+5*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+6*offset, ChessBoard::PAWN, i);
+		_chessBoards.back()->AddChessPiece(pos+7*offset, ChessBoard::PAWN, i);
+	}
 	return true;
 }
 
