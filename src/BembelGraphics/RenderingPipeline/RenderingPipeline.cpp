@@ -217,7 +217,7 @@ void RenderingPipeline::InitStages(const xml::Element* properties)
 	for (auto stageProperties : xml::IterateChildElements(properties))
 	{
 		RenderingStagePtr stage =
-			_grapicSys->GetRendertingSrageFactory().CreateObject(
+			_grapicSys->GetRendertingStageFactory().CreateObject(
 				stageProperties->Value(), stageProperties, this);
 		if (stage)
 			_stages.push_back(stage);

@@ -36,6 +36,9 @@ public:
 	virtual void Shutdown() override;
 	virtual void Update(double timeSinceLastUpdate) override;
 
+	Mouse*    GetMouse()    const;
+	Keyboard* GetKeyboard() const;
+
 private:
 	std::unique_ptr<Mouse>    _mouse;
 	std::unique_ptr<Keyboard> _keyboard;

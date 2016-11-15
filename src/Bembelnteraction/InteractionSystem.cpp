@@ -29,7 +29,7 @@ InteractionSystem::~InteractionSystem()
 bool InteractionSystem::Configure(const xml::Element* properties)
 {
 	if (!properties)
-		return false;
+		return true;
 
 	return true;
 }
@@ -45,6 +45,16 @@ void InteractionSystem::Shutdown()
 
 void InteractionSystem::Update(double)
 {
+}
+
+Mouse* InteractionSystem::GetMouse() const
+{
+	return _mouse.get();
+}
+
+Keyboard* InteractionSystem::GetKeyboard() const
+{
+	return _keyboard.get();
 }
 
 } //end of namespace bembel

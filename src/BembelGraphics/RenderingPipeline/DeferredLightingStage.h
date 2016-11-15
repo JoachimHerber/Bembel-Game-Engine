@@ -27,9 +27,9 @@ class Shader;
 class FrameBufferObject;
 
 }//end of namespace bembel
- /*============================================================================*/
- /* CLASS DEFINITIONS                                                          */
- /*============================================================================*/
+/*============================================================================*/
+/* CLASS DEFINITIONS                                                          */
+/*============================================================================*/
 namespace bembel{
 
 class BEMBEL_API DeferredLightingStage : public RenderingStage

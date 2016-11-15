@@ -42,6 +42,19 @@ inline bool SparseComponentContainer<ComponentType>::CreateComponent(
 }
 
 template<class ComponentType>
+inline bool SparseComponentContainer<ComponentType>::DeleteComponent(
+	Scene::EntityID entity)
+{
+	auto it = _components.find(entity);
+	if (it != _components.end())
+	{
+		_components.erase(it);
+		return true;
+	}
+	return false;
+}
+
+template<class ComponentType>
 inline std::map<Scene::EntityID, ComponentType>& 
 	SparseComponentContainer<ComponentType>::GetComponents()
 {
@@ -84,6 +97,13 @@ inline bool DenseComponentContainer<ComponentType>::CreateComponent(
 		return true;
 	}
 	return false;
+}
+
+template<class ComponentType>
+inline bool DenseComponentContainer<ComponentType>::DeleteComponent(
+	Scene::EntityID entity)
+{
+	return true;
 }
 
 template<class ComponentType>

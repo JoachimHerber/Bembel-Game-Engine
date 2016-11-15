@@ -90,6 +90,17 @@ void TextureView::Draw()
 	glUseProgram(0);
 }
 
+
+const glm::vec2& TextureView::GetViewAreaMin() const
+{
+	return _min;
+}
+
+const glm::vec2& TextureView::GetViewAreaMax() const
+{
+	return _max;
+}
+
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

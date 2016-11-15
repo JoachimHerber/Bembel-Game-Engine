@@ -108,45 +108,45 @@ inline Slot<TArgs...>& Slot<TArgs...>::operator=(const Slot<TArgs...>& other)
 }
 
 template <typename ... TArgs>
-static void Slot<TArgs...>::InvokeFunction(void* function, TArgs... args)
+inline void Slot<TArgs...>::InvokeFunction(void* function, TArgs... args)
 {
 	static_cast<void(*)(TArgs...)>(function)(args...);
 }
 
 template <typename ... TArgs>
 template <typename FunctorType>
-static void Slot<TArgs...>::InvokeFunctor(void* functor, TArgs... args)
+inline void Slot<TArgs...>::InvokeFunctor(void* functor, TArgs... args)
 {
 	(*static_cast<FunctorType*>(functor))(args...);
 }
 
 template <typename ... TArgs>
 template <typename C>
-static void Slot<TArgs...>::InvokeMethod(void* p, TArgs... args)
+inline void Slot<TArgs...>::InvokeMethod(void* p, TArgs... args)
 {
 	auto pair = static_cast<ObjectMethodPair<C>*>(p);
-	((pair->_object)->*(pair->_method))(args...);
+	((pair->object)->*(pair->method))(args...);
 }
 
 template <typename ... TArgs>
 template <typename C>
-static void Slot<TArgs...>::InvokeConstMethod(void* p, TArgs... args)
+inline void Slot<TArgs...>::InvokeConstMethod(void* p, TArgs... args)
 {
 	auto pair = static_cast<ObjectConstMethodPair<C>*>(p);
-	((pair->_object)->*(pair->_method))(args...);
+	((pair->object)->*(pair->method))(args...);
 }
 
 
 template <typename ... TArgs>
 template <typename C>
-static void Slot<TArgs...>::ObjectMethodPair<C>::Delete(void* object)
+inline void Slot<TArgs...>::ObjectMethodPair<C>::Delete(void* object)
 {
 	delete static_cast<ObjectMethodPair<C>*>(object);
 }
 
 template <typename ... TArgs>
 template <typename C>
-static bool Slot<TArgs...>::ObjectMethodPair<C>::Compare(void* p1, void* p2)
+inline bool Slot<TArgs...>::ObjectMethodPair<C>::Compare(void* p1, void* p2)
 {
 	auto pair1 = static_cast<ObjectMethodPair<C>*>(p1);
 	auto pair2 = static_cast<ObjectMethodPair<C>*>(p2);
@@ -156,7 +156,7 @@ static bool Slot<TArgs...>::ObjectMethodPair<C>::Compare(void* p1, void* p2)
 
 template <typename ... TArgs>
 template <typename C>
-static void* Slot<TArgs...>::ObjectMethodPair<C>::Clone(void* p)
+inline void* Slot<TArgs...>::ObjectMethodPair<C>::Clone(void* p)
 {
 	auto* pair = static_cast<ObjectMethodPair<C>*>(p);
 	return new ObjectMethodPair<C>(pair->object, pair->method);
@@ -164,13 +164,13 @@ static void* Slot<TArgs...>::ObjectMethodPair<C>::Clone(void* p)
 
 template <typename ... TArgs>
 template <typename C>
-static void Slot<TArgs...>::ObjectConstMethodPair<C>::Delete(void* object)
+inline void Slot<TArgs...>::ObjectConstMethodPair<C>::Delete(void* object)
 {
 	delete static_cast<ObjectConstMethodPair<C>*>(object);
 }
 template <typename ... TArgs>
 template <typename C>
-static bool Slot<TArgs...>::ObjectConstMethodPair<C>::Compare(void* p1, void* p2)
+inline bool Slot<TArgs...>::ObjectConstMethodPair<C>::Compare(void* p1, void* p2)
 {
 	auto pair1 = static_cast<ObjectConstMethodPair<C>*>(p1);
 	auto pair2 = static_cast<ObjectConstMethodPair<C>*>(p2);
@@ -180,20 +180,20 @@ static bool Slot<TArgs...>::ObjectConstMethodPair<C>::Compare(void* p1, void* p2
 
 template <typename ... TArgs>
 template <typename C>
-static void* Slot<TArgs...>::ObjectConstMethodPair<C>::Clone(void* p)
+inline void* Slot<TArgs...>::ObjectConstMethodPair<C>::Clone(void* p)
 {
 	auto* pair = static_cast<ObjectConstMethodPair<C>*>(p);
 	return new ObjectConstMethodPair<C>(pair->object, pair->method);
 }
 
 template <typename ... TArgs>
-static bool Slot<TArgs...>::ComparePointerAddress(void* p1, void* p2)
+inline bool Slot<TArgs...>::ComparePointerAddress(void* p1, void* p2)
 {
 	return p1 == p2;
 }
 
 template <typename ... TArgs>
-static void* Slot<TArgs...>::ClonePointer(void* p)
+inline void* Slot<TArgs...>::ClonePointer(void* p)
 {
 	return p;
 }

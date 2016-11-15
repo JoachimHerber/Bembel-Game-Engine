@@ -30,8 +30,8 @@ public:
 
 	void SetUpProjection(float fildOfFiew, float aspectRation, float near, float far);
 
-	const glm::mat4& GetViewMatrix();
-	const glm::mat4& GetProjectionMatrix();
+	const glm::mat4& GetViewMatrix() const;
+	const glm::mat4& GetProjectionMatrix() const;
 
 	const std::array<glm::vec4, 6>& GetViewFrustum() const;
 

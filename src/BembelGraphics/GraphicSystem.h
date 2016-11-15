@@ -34,7 +34,7 @@ class BEMBEL_API GraphicSystem : public System
 public:
 	using ViewportPtr            = std::shared_ptr<Viewport>;
 	using RenderingPipelinePtr   = std::shared_ptr<RenderingPipeline>;
-	using RendertingSrageFactory = TFactory<RenderingStage, const xml::Element*, RenderingPipeline*>;
+	using RendertingStageFactory = TFactory<RenderingStage, const xml::Element*, RenderingPipeline*>;
 
 	GraphicSystem(Kernel*);
 	~GraphicSystem();
@@ -46,7 +46,7 @@ public:
 	RenderingPipelinePtr CreateRenderingPipline();
 	std::vector<RenderingPipelinePtr>& GetRenderingPiplies();
 
-	RendertingSrageFactory& GetRendertingSrageFactory();
+	RendertingStageFactory& GetRendertingStageFactory();
 
 	virtual bool Configure(const xml::Element*) override;
 
@@ -65,7 +65,7 @@ private:
 	std::vector<std::vector<ViewportPtr>> _viewports;
 	std::vector<RenderingPipelinePtr>     _pipelines;
 
-	RendertingSrageFactory _renderingStageFactory;
+	RendertingStageFactory _renderingStageFactory;
 };
 
 struct InitGraphicResourcesEvent

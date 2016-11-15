@@ -28,6 +28,7 @@ public:
 
 	virtual bool CreateComponent(
 		Scene::EntityID, const xml::Element*, AssetManager*) = 0;
+	virtual bool DeleteComponent(Scene::EntityID) = 0;
 
 	Scene::ComponentTypeID GetComponentTypeID();
 	Scene::ComponentMask   GetComponentMask();
@@ -49,6 +50,7 @@ public:
 
 	ComponentType* CreateComponent(Scene::EntityID);
 	bool CreateComponent(Scene::EntityID, const xml::Element*, AssetManager*) override;
+	bool DeleteComponent(Scene::EntityID) override;
 
 	std::map<Scene::EntityID, ComponentType>& GetComponents();
 	ComponentType* GetComponent(Scene::EntityID);
@@ -69,6 +71,7 @@ public:
 
 	ComponentType* CreateComponent(Scene::EntityID);
 	bool CreateComponent(Scene::EntityID, const xml::Element*, AssetManager*) override;
+	bool DeleteComponent(Scene::EntityID) override;
 
 	std::vector<ComponentType>& GetComponents();
 	ComponentType* GetComponent(Scene::EntityID);

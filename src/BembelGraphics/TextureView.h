@@ -32,6 +32,9 @@ public:
 	TextureView(TexturePtr color);
 	~TextureView();
 
+	const glm::vec2& GetViewAreaMin() const;
+	const glm::vec2& GetViewAreaMax() const;
+
 	void SetViewArea(const glm::vec2& min, const glm::vec2& max);
 
 	void Init();

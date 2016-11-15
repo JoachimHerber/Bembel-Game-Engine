@@ -55,12 +55,12 @@ void Camera::SetUpProjection(
 	_viewFrustum[5] = glm::vec4(0.f, 0.f, -1.f, +far);//               far clipping plane
 }
 
-const glm::mat4& Camera::GetViewMatrix()
+const glm::mat4& Camera::GetViewMatrix() const
 {
 	return _viewMatix;
 }
 
-const glm::mat4& Camera::GetProjectionMatrix()
+const glm::mat4& Camera::GetProjectionMatrix() const
 {
 	return _projMatrix;
 }

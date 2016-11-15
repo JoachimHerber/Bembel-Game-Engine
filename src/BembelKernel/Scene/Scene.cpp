@@ -24,13 +24,17 @@ Scene::~Scene()
 
 Scene::EntityID Scene::CreateEntity()
 {
-	for (EntityID entity = 0; entity< _entities.size(); ++entity)
+	if (_unusedEntityIds.empty())
 	{
-		if (_entities[entity] == 0)
-			return entity;
+		_entities.push_back(0);
+		return _entities.size() - 1;
 	}
-	_entities.push_back(0);
-	return _entities.size() - 1;
+	else
+	{
+		EntityID id = _unusedEntityIds.top();
+		_unusedEntityIds.pop();
+		return id;
+	}
 }
 
 Scene::EntityID Scene::CreateEntity(
@@ -41,7 +45,7 @@ Scene::EntityID Scene::CreateEntity(
 	{
 		auto it = _componentTypeMap.find(component->Value());
 		if(it == _componentTypeMap.end())
-			continue; // unknow component type
+			continue; // unknown component type
 
 		if (_container[it->second]->CreateComponent(entity, component, _assteManager.get()))
 		{
@@ -49,6 +53,22 @@ Scene::EntityID Scene::CreateEntity(
 		}
 	}
 	return entity;
+}
+
+bool Scene::DeleteEntity(EntityID id)
+{
+	if (id >= _entities.size())
+		return false; // invalid entity id
+
+	// delete all components of of the entity
+	for (auto& container : _container)
+	{
+		if (_entities[id] & container->GetComponentMask() != 0)
+			container->DeleteComponent(id);
+	}
+
+	_entities[id] = 0;
+	_unusedEntityIds.push(id);
 }
 
 bool Scene::LoadScene(const std::string& fileName)

@@ -91,7 +91,7 @@ std::vector<std::shared_ptr<RenderingPipeline>>& GraphicSystem::GetRenderingPipl
 	return _pipelines;
 }
 
-GraphicSystem::RendertingSrageFactory& GraphicSystem::GetRendertingSrageFactory()
+GraphicSystem::RendertingStageFactory& GraphicSystem::GetRendertingStageFactory()
 {
 	return _renderingStageFactory;
 }
