@@ -35,7 +35,7 @@ ChessBoard::ChessBoard(
 	light->color = 3.0f*glm::vec3(1, 1, 1);
 
 	for (const auto& playerName : playerNames)
-		_player.push_back(Player(playerName));
+		_player.push_back(Player(this, playerName));
 
 	InitTiles();
 	InitDefauldChessPieceTypes();
@@ -87,9 +87,13 @@ void ChessBoard::AddChessPiece(
 
 void ChessBoard::ResetChessBoard()
 {
+	for (auto& player : _player)
+		player.ClearChessPieces();
+
 	for (auto& it : _chessPieces)
 	{
 		it->Reset();
+		it->GetOwner()->AddChessPiece(it.get());
 	}
 }
 

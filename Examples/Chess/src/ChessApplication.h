@@ -14,6 +14,7 @@
 #include <Bembelnteraction/InteractionSystem.h>
 
 #include "Chess/ChessBoard.h"
+#include "GameLogic/StateMashine.h"
 #include "CameraControle.h"
 
 /*============================================================================*/
@@ -32,14 +33,14 @@ public:
 
 	virtual void Update(double time) override;
 
-	void NextClessBoard();
-
 	void HandleEvent(const WindowShouldCloseEvent&);
 
 private:
 	bool InitAssets();
 	bool InitDefaultChessBoard();
 	bool InitFourPlayerChessBoard();
+
+	bool InitGameStates();
 
 private:
 	std::shared_ptr<GraphicSystem>     _graphicSys;
@@ -48,7 +49,7 @@ private:
 	std::shared_ptr<AssetManager> _assetMgr;
 
 	std::vector<std::unique_ptr<ChessBoard>> _chessBoards;
-	unsigned _currentChessBoard;
+	StateMashine _stateMashine;
 
 	std::shared_ptr<CameraControle> _cam;
 };

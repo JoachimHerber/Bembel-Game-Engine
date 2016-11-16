@@ -36,6 +36,8 @@ public:
 	const glm::vec2& GetPositon() const;
 	void SetPosition(const glm::vec2& pos);
 
+	Scene::EntityID GetEntity();
+
 	bool IsAlive() const;
 	void Kill();
 	void Reset();

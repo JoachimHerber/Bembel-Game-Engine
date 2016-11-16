@@ -15,6 +15,8 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
+namespace bembel{
+
 class CameraControle
 {
 public:
@@ -23,6 +25,16 @@ public:
 
 	CameraControle(EventMgrPtr, CameraPtr camera);
 	~CameraControle();
+
+	void SetPitch(float);
+	void SetYaw(float);
+	void SetDist(float);
+
+	float GetPitch() const;
+	float GetYaw() const;
+	float GetDist() const;
+
+	void EnableManualControle(bool b);
 
 	void SetCameraOffset(const glm::vec3&);
 
@@ -36,6 +48,8 @@ private:
 	EventMgrPtr _eventMgr;
 	CameraPtr   _camera;
 
+	bool _enabeld = false;
+
 	bool _move;
 	bool _zoom;
 
@@ -48,6 +62,8 @@ private:
 
 	glm::vec3 _offset;
 };
+
+} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

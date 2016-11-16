@@ -9,10 +9,16 @@
 /*============================================================================*/
 namespace bembel {
 
-Player::Player(const std::string& name)
-	: _name(name)
+Player::Player(ChessBoard* board, const std::string& name)
+	: _board(board)
+	, _name(name)
 	, _direction(RIGHT)
 {}
+
+ChessBoard* Player::GetChessBoard() const
+{
+	return _board;
+}
 
 void Player::SetMovementDirection(MOVE_DIRECTION dir)
 {

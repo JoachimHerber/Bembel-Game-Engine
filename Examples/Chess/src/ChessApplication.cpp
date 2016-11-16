@@ -2,7 +2,9 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 #include "ChessApplication.h"
-#include "SelectionRenderingStage.h"
+
+#include "GameLogic/SelectChessPieceState.h"
+#include "GameLogic/SelectChessBoardState.h"
 
 #include <BembelOpenGL.h>
 
@@ -38,9 +40,6 @@ ChessApplication::ChessApplication()
 	_interactionSys = 
 		std::make_shared<InteractionSystem>(_kernel.get());
 
-	_interactionSys->GetKeyboard()->GetKey(GLFW_KEY_N)->GetReleaseSignal().AddSlot(
-		this, &ChessApplication::NextClessBoard);
-
 	_kernel->AddSystem(_graphicSys);
 	_kernel->AddSystem(_interactionSys);
 	_kernel->GetEventManager()->AddHandler<WindowShouldCloseEvent>(this);
@@ -62,6 +61,11 @@ bool ChessApplication::Init()
 	InitDefaultChessBoard();
 	InitFourPlayerChessBoard();
 
+	for (auto& it : _chessBoards)
+		it->ResetChessBoard();
+
+	InitGameStates();
+
 	pipline->SetScene(_chessBoards[0]->GetScene());
 	_cam->SetCameraOffset(glm::vec3(
 		_chessBoards[0]->GetWidth(), 0.5f, _chessBoards[0]->GetHeight()));
@@ -79,17 +83,7 @@ void ChessApplication::Cleanup()
 void ChessApplication::Update(double time)
 {
 	_cam->Update(time);
-}
-
-void ChessApplication::NextClessBoard()
-{
-	_currentChessBoard = (_currentChessBoard+1)%_chessBoards.size();
-
-	auto board = _chessBoards[_currentChessBoard].get();
-
-	_graphicSys->GetRenderingPiplies()[0]->SetScene(board->GetScene());
-	_cam->SetCameraOffset(glm::vec3(
-		board->GetWidth(), 0.5f, board->GetHeight()));
+	_stateMashine.Update(time);
 }
 
 void ChessApplication::HandleEvent(const WindowShouldCloseEvent& event)
@@ -201,6 +195,30 @@ bool ChessApplication::InitFourPlayerChessBoard()
 		_chessBoards.back()->AddChessPiece(pos+5*offset, ChessBoard::PAWN, i);
 		_chessBoards.back()->AddChessPiece(pos+6*offset, ChessBoard::PAWN, i);
 		_chessBoards.back()->AddChessPiece(pos+7*offset, ChessBoard::PAWN, i);
+	}
+	return true;
+}
+
+bool ChessApplication::InitGameStates()
+{
+	auto keyboard = _interactionSys->GetKeyboard();
+	_stateMashine.SetNextButton(keyboard->GetKey(GLFW_KEY_RIGHT));
+	_stateMashine.SetPrevButton(keyboard->GetKey(GLFW_KEY_LEFT));
+	_stateMashine.SetSelectButton(keyboard->GetKey(GLFW_KEY_SPACE));
+
+	auto boardSelect = _stateMashine.CreateState<SelectChessBoardState>(
+		_graphicSys->GetRenderingPiplies()[0].get(), _cam.get());
+
+	for (auto& board : _chessBoards)
+	{
+		std::vector<GameState*> selectPlayerStages;
+		for (size_t n = 0; n < board->GetNumPlayer(); ++n)
+		{
+			selectPlayerStages.push_back(
+				_stateMashine.CreateState<SelectChessPieceState>(
+					board->GetPlayer(n)));
+		}
+		boardSelect->AddChessBoard(board.get(), selectPlayerStages[0]);
 	}
 	return true;
 }

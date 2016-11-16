@@ -1,10 +1,11 @@
-#ifndef BEMBEL_PLAYER_H
-#define BEMBEL_PLAYER_H
+#ifndef BEMBEL_SELECTCHESSBOARDSTATE_H
+#define BEMBEL_SELECTCHESSBOARDSTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <string>
+#include "GameState.h"
+
 #include <vector>
 
 /*============================================================================*/
@@ -12,48 +13,44 @@
 /*============================================================================*/
 namespace bembel{
 
+class CameraControle;
+class RenderingPipeline;
 class ChessBoard;
-class ChessPiece;
 
 }//end of namespace bembel
-
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-class Player
+class SelectChessBoardState : public GameState
 {
 public:
-	enum MOVE_DIRECTION
-	{
-		RIGHT = 0,
-		UP    = 1,
-		LEFT  = 2,
-		DOWN  = 3
-	};
+	SelectChessBoardState(StateMashine*, RenderingPipeline*, CameraControle*);
+	~SelectChessBoardState();
 
-	Player(ChessBoard*, const std::string& name);
+	void AddChessBoard(ChessBoard* board, GameState* state);
 
-	ChessBoard* GetChessBoard() const;
+	virtual void OnNextButtonPress() override;
+	virtual void OnPrevButtonPress() override;
+	virtual void OnSelectButtonPress() override;
 
-	void SetMovementDirection(MOVE_DIRECTION);
-	MOVE_DIRECTION GetMovementDirection() const;
-	const std::string& GetName() const;
+	virtual void OnEnterState() override;
+	virtual void OnExitState() override;
 
-	const std::vector<ChessPiece*>& GetChessPieces() const;
-	
-	void ClearChessPieces();
-	void AddChessPiece(ChessPiece*);
-	void RemoveChessPiece(ChessPiece*);
+	virtual void Update(double time) override;
 
 private:
-	ChessBoard*    _board;
-	std::string    _name;
-	MOVE_DIRECTION _direction;
+	void OnBoardChange();
 
-	std::vector<ChessPiece*> _chessPices;
+private:
+	RenderingPipeline* _pipline;
+	CameraControle*    _cam;
 
+	std::vector<ChessBoard*> _boards;
+	std::vector<GameState*>  _states;
+
+	unsigned _selection = 0;
 };
 
 } //end of namespace bembel
@@ -61,3 +58,4 @@ private:
 /* END OF FILE                                                                */
 /*============================================================================*/
 #endif //include guards
+

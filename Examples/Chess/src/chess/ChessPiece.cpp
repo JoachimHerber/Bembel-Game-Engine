@@ -67,6 +67,11 @@ void ChessPiece::SetPosition(const glm::vec2& pos)
 	posComp->position = 2.0f*glm::vec3(_position.x, 0, _position.y);
 }
 
+Scene::EntityID ChessPiece::GetEntity()
+{
+	return _entity;
+}
+
 bool ChessPiece::IsAlive() const
 {
 	return _isAlive;

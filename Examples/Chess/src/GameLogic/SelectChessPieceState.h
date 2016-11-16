@@ -1,59 +1,45 @@
-#ifndef BEMBEL_PLAYER_H
-#define BEMBEL_PLAYER_H
+#ifndef BEMBEL_SELETCHESSPIECESTATE_H
+#define BEMBEL_SELETCHESSPIECESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <string>
-#include <vector>
+#include "GameState.h"
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
 namespace bembel{
 
-class ChessBoard;
-class ChessPiece;
+class Player;
 
 }//end of namespace bembel
-
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-class Player
+class SelectChessPieceState : public GameState
 {
 public:
-	enum MOVE_DIRECTION
-	{
-		RIGHT = 0,
-		UP    = 1,
-		LEFT  = 2,
-		DOWN  = 3
-	};
+	SelectChessPieceState(StateMashine*, Player*);
+	~SelectChessPieceState();
 
-	Player(ChessBoard*, const std::string& name);
+	virtual void OnNextButtonPress() override;
+	virtual void OnPrevButtonPress() override;
+	virtual void OnSelectButtonPress() override;
 
-	ChessBoard* GetChessBoard() const;
+	virtual void OnEnterState() override;
+	virtual void OnExitState() override;
 
-	void SetMovementDirection(MOVE_DIRECTION);
-	MOVE_DIRECTION GetMovementDirection() const;
-	const std::string& GetName() const;
-
-	const std::vector<ChessPiece*>& GetChessPieces() const;
-	
-	void ClearChessPieces();
-	void AddChessPiece(ChessPiece*);
-	void RemoveChessPiece(ChessPiece*);
+	virtual void Update(double time) override;
 
 private:
-	ChessBoard*    _board;
-	std::string    _name;
-	MOVE_DIRECTION _direction;
+	Player* _player;
 
-	std::vector<ChessPiece*> _chessPices;
+	unsigned _selectedChessPiece;
 
+	double _time = 0.0;
 };
 
 } //end of namespace bembel

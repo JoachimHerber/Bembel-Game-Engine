@@ -1,8 +1,18 @@
+/*============================================================================*/
+/* INCLUDES                                                                   */
+/*============================================================================*/
+
 #include "CameraControle.h"
 
 #include <glm/gtx/quaternion.hpp>
 #include <glfw/glfw3.h>
 #include <iostream>
+
+/*============================================================================*/
+/* IMPLEMENTATION        													  */
+/*============================================================================*/
+
+namespace bembel{
 
 CameraControle::CameraControle(EventMgrPtr eventMgr, CameraPtr camera)
 	: _eventMgr(eventMgr)
@@ -23,6 +33,41 @@ CameraControle::~CameraControle()
 	_eventMgr->RemoveHandler<bembel::CursorMovedEvent>(this);
 }
 
+void CameraControle::SetPitch(float f)
+{
+	_pitch = f;
+}
+
+void CameraControle::SetYaw(float f)
+{
+	_yaw = f;
+}
+
+void CameraControle::SetDist(float f)
+{
+	_dist = f;
+}
+
+float CameraControle::GetPitch() const
+{
+	return _pitch;
+}
+
+float CameraControle::GetYaw() const
+{
+	return _yaw;
+}
+
+float CameraControle::GetDist() const
+{
+	return _dist;
+}
+
+void CameraControle::EnableManualControle(bool b)
+{
+	_enabeld = b;
+}
+
 void CameraControle::SetCameraOffset(const glm::vec3& pos)
 {
 	_offset = pos;
@@ -33,17 +78,21 @@ void CameraControle::Update(double dTime)
 	glm::vec2 _cursorMovement = _cursorPos-_prevPos;
 	_prevPos = _cursorPos;
 
-	if (_move)
+	if (_enabeld)
 	{
-		_yaw   -= 0.01f*(_cursorMovement.x);
-		_pitch -= 0.01f*(_cursorMovement.y);
-		if (_pitch <= -1.5f) _pitch = -1.5f;
-		if (_pitch >= +1.5f) _pitch = +1.5f;
+		if (_move)
+		{
+			_yaw -= 0.01f*(_cursorMovement.x);
+			_pitch -= 0.01f*(_cursorMovement.y);
+			if (_pitch <= -1.5f) _pitch = -1.5f;
+			if (_pitch >= +1.5f) _pitch = +1.5f;
+		}
+		if (_zoom)
+		{
+			_dist += 0.1f*(_cursorMovement.y);
+		}
 	}
-	if (_zoom)
-	{
-		_dist += 0.1f*(_cursorMovement.y);
-	}
+
 
 	const static glm::vec3 X_AXIS = glm::vec3(1, 0, 0);
 	const static glm::vec3 Y_AXIS = glm::vec3(0, 1, 0);
@@ -78,3 +127,7 @@ void CameraControle::HandleEvent(const bembel::CursorMovedEvent& event)
 	_cursorPos = event.position;
 }
 
+} //end of namespace bembel
+/*============================================================================*/
+/* END OF FILE                                                                */
+/*============================================================================*/
