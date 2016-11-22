@@ -56,6 +56,12 @@ public:
 
 	void DisableTile(unsigned u, unsigned v);
 
+	void UpdatePossibleMoves();
+
+	bool IsPositionValid(const glm::ivec2&);
+	ChessPiece* GetChessPieceAt(const glm::ivec2&);
+	Scene::EntityID GetTileEntity(const glm::ivec2&) const;
+
 private:
 	void InitTiles();
 	void InitDefauldChessPieceTypes();

@@ -62,6 +62,22 @@ void Player::RemoveChessPiece(ChessPiece* piece)
 	}
 }
 
+glm::ivec2 Player::RotateOffset(const glm::ivec2& offset) const
+{
+	switch (_direction)
+	{
+	case bembel::Player::RIGHT:
+		return offset;
+	case bembel::Player::UP:
+		return glm::ivec2(-offset.y, offset.x);
+	case bembel::Player::LEFT:
+		return -offset;
+	case bembel::Player::DOWN:
+		return glm::ivec2(offset.y, -offset.x);
+		break;
+	}
+}
+
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

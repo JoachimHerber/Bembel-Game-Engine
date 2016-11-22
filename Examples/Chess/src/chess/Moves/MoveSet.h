@@ -1,14 +1,12 @@
-#ifndef BEMBEL_CHESSPIECE_H
-#define BEMBEL_CHESSPIECE_H
+#ifndef BEMBEL_CHESSPIECEMOVESET_H
+#define BEMBEL_CHESSPIECEMOVESET_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelKernel/Scene/Scene.h>
-
-#include "Moves/MoveSet.h"
-
 #include <glm/glm.hpp>
+
+#include <memory>
 #include <vector>
 
 /*============================================================================*/
@@ -16,9 +14,7 @@
 /*============================================================================*/
 namespace bembel{
 
-class Player;
-class ChessPieceType;
-class Scene;
+class ChessPiece;
 class ChessBoard;
 
 }//end of namespace bembel
@@ -27,42 +23,42 @@ class ChessBoard;
 /*============================================================================*/
 namespace bembel {
 
-class ChessPiece
+class ChessPieceMoveSet
 {
 public:
-	ChessPiece(Scene*, ChessPieceType*, Player*, const glm::ivec2&);
+	class MoveTemplate
+	{
+	public:
+		MoveTemplate(){};
+		virtual ~MoveTemplate(){};
 
-	void Promote(ChessPieceType*);
+		virtual void GetAvailableTargetPositions(ChessPiece*, ChessBoard*, std::vector<glm::ivec2>&) = 0;
+	};
 
-	ChessPieceType* GetType() const;
-	Player*         GetOwner() const;
+	struct Move
+	{
+		glm::ivec2    target;
+		MoveTemplate* move;
+	};
 
-	const glm::ivec2& GetPositon() const;
-	void SetPosition(const glm::ivec2& pos);
+public:
+	ChessPieceMoveSet();
+	~ChessPieceMoveSet();
 
-	Scene::EntityID GetEntity();
+	void AddMove(const glm::ivec2& dir, 
+				 unsigned maxDist,
+				 bool attack = true,
+				 bool move = true);
+	void AddMove(const glm::ivec2& dir,
+				 bool attack = true,
+				 bool move = true);
 
-	bool IsAlive() const;
-	void Kill();
-	void Reset();
+	void AddMoveTemplate(std::shared_ptr<MoveTemplate>);
 
-	void UpdatePossibleMoves(ChessBoard*);
+	void GetAvailableMoves(ChessPiece*, ChessBoard*, std::vector<Move>&);
 
-	const std::vector<ChessPieceMoveSet::Move>& GetPossibleMoves() const;
 private:
-	Scene* _scene;
-
-	ChessPieceType* _type;
-	ChessPieceType* _originalType;
-	Player*         _owner;
-	glm::ivec2      _position;
-	glm::ivec2      _startPositon;
-
-	bool            _isAlive;
-
-	Scene::EntityID _entity;
-
-	std::vector<ChessPieceMoveSet::Move> _possibleMoves;
+	std::vector<std::shared_ptr<MoveTemplate>> _moves;
 };
 
 } //end of namespace bembel

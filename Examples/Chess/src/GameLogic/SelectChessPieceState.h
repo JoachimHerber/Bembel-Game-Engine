@@ -34,6 +34,7 @@ public:
 
 	virtual void Update(double time) override;
 
+	void OnChessPieceChanged();
 private:
 	Player* _player;
 

@@ -39,6 +39,21 @@ AssetHandle ChessPieceType::GetModle(Player* player)
 	return AssetHandle();
 }
 
+void ChessPieceType::AddMove(const glm::ivec2& dir, unsigned maxDist, bool attack /*= true*/, bool move /*= true*/)
+{
+	_moveSet.AddMove(dir, maxDist, attack, move);
+}
+
+void ChessPieceType::AddMove(const glm::ivec2& dir, bool attack /*= true*/, bool move /*= true*/)
+{
+	_moveSet.AddMove(dir, attack, move);
+}
+
+ChessPieceMoveSet& ChessPieceType::GetMoveSet()
+{
+	return _moveSet;
+}
+
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

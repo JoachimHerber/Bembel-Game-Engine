@@ -16,6 +16,12 @@ set( ProjectSources
 	src/chess/Player.cpp 
 	src/chess/ChessPieceType.h
 	src/chess/ChessPieceType.cpp
+	src/chess/Moves/MoveSet.h
+	src/chess/Moves/MoveSet.cpp
+	src/chess/Moves/JumpMove.h
+	src/chess/Moves/JumpMove.cpp
+	src/chess/Moves/PawnMove.h
+	src/chess/Moves/PawnMove.cpp
 	
 	src/GameLogic/GameState.h
 	src/GameLogic/GameState.cpp
@@ -26,7 +32,12 @@ set( ProjectSources
 	src/GameLogic/StateMashine.h
 	src/GameLogic/StateMashine.cpp
 )
-source_group( "src" FILES ${ProjectSources} )
+
+foreach( File ${ProjectSources} )
+	string( REGEX REPLACE "(.*)/(.*)\\.(.*)" "\\1" subdir ${File} )
+	string(REPLACE "/" "\\" subdir  ${subdir})
+	source_group( ${subdir} FILES ${File} )
+endforeach()
 
 add_executable( ChessApp ${ProjectSources} )
 target_link_libraries( ChessApp Bembel ${EXTERNAL_LIBRARIES})

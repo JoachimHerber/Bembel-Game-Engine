@@ -7,6 +7,8 @@
 #include <BembelKernel/Assets/AssetHandle.h>
 #include <BembelKernel/Assets/AssetManager.h>
 
+#include "Moves/MoveSet.h"
+
 #include <memory>
 #include <map>
 
@@ -16,6 +18,7 @@
 namespace bembel{
 
 class Player;
+class ChessPieceMoveSet;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -34,8 +37,19 @@ public:
 
 	AssetHandle GetModle(Player*);
 
+	void AddMove(const glm::ivec2& dir,
+				 unsigned maxDist,
+				 bool attack = true,
+				 bool move = true);
+	void AddMove(const glm::ivec2& dir,
+				 bool attack = true,
+				 bool move = true);
+	ChessPieceMoveSet& GetMoveSet();
+
 private:
 	std::map<Player*, AssetHandle> _modle;
+	
+	ChessPieceMoveSet _moveSet;
 };
 
 } //end of namespace bembel

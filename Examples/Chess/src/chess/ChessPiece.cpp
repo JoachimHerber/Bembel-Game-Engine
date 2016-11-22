@@ -54,12 +54,12 @@ Player* ChessPiece::GetOwner() const
 	return _owner;
 }
 
-const glm::vec2& ChessPiece::GetPositon() const
+const glm::ivec2& ChessPiece::GetPositon() const
 {
 	return _position;
 }
 
-void ChessPiece::SetPosition(const glm::vec2& pos)
+void ChessPiece::SetPosition(const glm::ivec2& pos)
 {
 	_position = pos;
 
@@ -91,6 +91,17 @@ void ChessPiece::Reset()
 
 	auto geomComp = _scene->GetComponent<GeometryComponent>(_entity);
 	geomComp->model = _type->GetModle(_owner);
+}
+
+void ChessPiece::UpdatePossibleMoves(ChessBoard* board)
+{
+	_possibleMoves.clear();
+	_type->GetMoveSet().GetAvailableMoves(this, board, _possibleMoves);
+}
+
+const std::vector<ChessPieceMoveSet::Move>& ChessPiece::GetPossibleMoves() const
+{
+	return _possibleMoves;
 }
 
 } //end of namespace bembel

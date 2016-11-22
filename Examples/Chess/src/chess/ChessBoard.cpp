@@ -7,6 +7,9 @@
 #include "ChessPieceType.h"
 #include "Player.h"
 
+#include "Moves/JumpMove.h"
+#include "Moves/PawnMove.h"
+
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
 #include <BembelKernel/Scene/GeometryComponent.h>
@@ -104,6 +107,38 @@ void ChessBoard::DisableTile(unsigned u, unsigned v)
 	_tiles[u][v].entity = Scene::INVALID_ENTITY;
 }
 
+void ChessBoard::UpdatePossibleMoves()
+{
+	for (auto& it : _chessPieces)
+		it->UpdatePossibleMoves(this);
+}
+
+bool ChessBoard::IsPositionValid(const glm::ivec2& pos)
+{
+	if (pos.x < 0 || pos.y < 0 || _width <= pos.x || _height <= pos.y)
+		return false;
+
+	return !(_tiles[pos.x][pos.y].disabled);
+}
+
+ChessPiece* ChessBoard::GetChessPieceAt(const glm::ivec2& pos)
+{
+	for (auto& it : _chessPieces)
+	{
+		if (it->GetPositon() == pos)
+			return  it.get();
+	}
+	return nullptr;
+}
+
+Scene::EntityID ChessBoard::GetTileEntity(const glm::ivec2& pos) const
+{
+	if (pos.x < 0 || pos.y < 0 || _width <= pos.x || _height <= pos.y)
+		return Scene::INVALID_ENTITY;
+
+	return _tiles[pos.x][pos.y].entity;
+}
+
 void ChessBoard::InitTiles()
 {
 	AssetHandle whiteTile =
@@ -137,6 +172,47 @@ void ChessBoard::InitDefauldChessPieceTypes()
 	_chessPieceTypes[BISHOP] = CreateChessPieceType("bishop");
 	_chessPieceTypes[QUEEN]  = CreateChessPieceType("queen");
 	_chessPieceTypes[KING]   = CreateChessPieceType("king");
+
+	_chessPieceTypes[PAWN]->AddMove({1,-1}, 1, true, false);
+	_chessPieceTypes[PAWN]->AddMove({1,+0}, 1, false, true);
+	_chessPieceTypes[PAWN]->AddMove({1,+1}, 1, true, false);
+
+	_chessPieceTypes[ROOK]->AddMove({ 1, 0});
+	_chessPieceTypes[ROOK]->AddMove({ 0,-1});
+	_chessPieceTypes[ROOK]->AddMove({-1, 0});
+	_chessPieceTypes[ROOK]->AddMove({ 0,+1});
+
+	_chessPieceTypes[KNIGHT]->AddMove({+1,+2}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({+2,+1}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({+2,-1}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({+1,-2}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({-1,-2}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({-2,-1}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({-2,+1}, 1U);
+	_chessPieceTypes[KNIGHT]->AddMove({-1,+2}, 1U);
+
+	_chessPieceTypes[BISHOP]->AddMove({+1,+1});
+	_chessPieceTypes[BISHOP]->AddMove({+1,-1});
+	_chessPieceTypes[BISHOP]->AddMove({-1,-1});
+	_chessPieceTypes[BISHOP]->AddMove({-1,+1});
+
+	_chessPieceTypes[QUEEN]->AddMove({+1,+1});
+	_chessPieceTypes[QUEEN]->AddMove({+1, 0});
+	_chessPieceTypes[QUEEN]->AddMove({+1,-1});
+	_chessPieceTypes[QUEEN]->AddMove({ 0,-1});
+	_chessPieceTypes[QUEEN]->AddMove({-1,-1});
+	_chessPieceTypes[QUEEN]->AddMove({-1, 0});
+	_chessPieceTypes[QUEEN]->AddMove({-1,+1});
+	_chessPieceTypes[QUEEN]->AddMove({ 0,+1});
+
+	_chessPieceTypes[KING]->AddMove({+1,+1}, 1U);
+	_chessPieceTypes[KING]->AddMove({+1, 0}, 1U);
+	_chessPieceTypes[KING]->AddMove({+1,-1}, 1U);
+	_chessPieceTypes[KING]->AddMove({ 0,-1}, 1U);
+	_chessPieceTypes[KING]->AddMove({-1,-1}, 1U);
+	_chessPieceTypes[KING]->AddMove({-1, 0}, 1U);
+	_chessPieceTypes[KING]->AddMove({-1,+1}, 1U);
+	_chessPieceTypes[KING]->AddMove({ 0,+1}, 1U);
 }
 
 std::unique_ptr<ChessPieceType> ChessBoard::CreateChessPieceType(

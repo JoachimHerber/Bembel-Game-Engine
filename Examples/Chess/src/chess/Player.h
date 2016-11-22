@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <glm/glm.hpp>
+
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
@@ -16,7 +18,6 @@ class ChessBoard;
 class ChessPiece;
 
 }//end of namespace bembel
-
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
@@ -46,6 +47,8 @@ public:
 	void ClearChessPieces();
 	void AddChessPiece(ChessPiece*);
 	void RemoveChessPiece(ChessPiece*);
+
+	glm::ivec2 RotateOffset(const glm::ivec2&) const;
 
 private:
 	ChessBoard*    _board;
