@@ -6,9 +6,7 @@
 #include "ChessPiece.h"
 #include "ChessPieceType.h"
 #include "Player.h"
-
-#include "Moves/JumpMove.h"
-#include "Moves/PawnMove.h"
+#include "Moves/InitialPawnMove.h"
 
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
@@ -81,7 +79,6 @@ void ChessBoard::AddChessPiece(
 	unsigned owner)
 {
 	_chessPieces.push_back(std::make_unique<ChessPiece>(
-		_scene.get(),
 		_chessPieceTypes[type].get(), 
 		&_player[owner], 
 		pos
@@ -91,7 +88,10 @@ void ChessBoard::AddChessPiece(
 void ChessBoard::ResetChessBoard()
 {
 	for (auto& player : _player)
+	{
 		player.ClearChessPieces();
+		player.ClearCaptureChessPieces();
+	}
 
 	for (auto& it : _chessPieces)
 	{
@@ -110,7 +110,7 @@ void ChessBoard::DisableTile(unsigned u, unsigned v)
 void ChessBoard::UpdatePossibleMoves()
 {
 	for (auto& it : _chessPieces)
-		it->UpdatePossibleMoves(this);
+		it->UpdatePossibleMoves();
 }
 
 bool ChessBoard::IsPositionValid(const glm::ivec2& pos)
@@ -176,6 +176,8 @@ void ChessBoard::InitDefauldChessPieceTypes()
 	_chessPieceTypes[PAWN]->AddMove({1,-1}, 1, true, false);
 	_chessPieceTypes[PAWN]->AddMove({1,+0}, 1, false, true);
 	_chessPieceTypes[PAWN]->AddMove({1,+1}, 1, true, false);
+	_chessPieceTypes[PAWN]->GetMoveSet().AddMoveTemplate( 
+		std::make_shared<InitialPawnMove>());
 
 	_chessPieceTypes[ROOK]->AddMove({ 1, 0});
 	_chessPieceTypes[ROOK]->AddMove({ 0,-1});

@@ -18,7 +18,7 @@
 namespace bembel{
 
 class Player;
-class ChessPieceMoveSet;
+class MoveSet;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -44,12 +44,12 @@ public:
 	void AddMove(const glm::ivec2& dir,
 				 bool attack = true,
 				 bool move = true);
-	ChessPieceMoveSet& GetMoveSet();
+	MoveSet& GetMoveSet();
 
 private:
 	std::map<Player*, AssetHandle> _modle;
 	
-	ChessPieceMoveSet _moveSet;
+	MoveSet _moveSet;
 };
 
 } //end of namespace bembel

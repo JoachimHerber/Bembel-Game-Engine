@@ -50,12 +50,23 @@ public:
 
 	glm::ivec2 RotateOffset(const glm::ivec2&) const;
 
+	void ClearCaptureChessPieces();
+	void CaptureChessPiece(ChessPiece*);
+
+	void SetCaptureArea(glm::vec3, glm::vec3, glm::vec3, unsigned);
+
 private:
 	ChessBoard*    _board;
 	std::string    _name;
 	MOVE_DIRECTION _direction;
 
 	std::vector<ChessPiece*> _chessPices;
+	std::vector<ChessPiece*> _capturedChessPices;
+
+	glm::vec3 _captureAreaPos;
+	glm::vec3 _captureAreaRowOffset;
+	glm::vec3 _captureAreaCollumOffset;
+	unsigned  _captureAreaChessPicesPerRow;
 
 };
 

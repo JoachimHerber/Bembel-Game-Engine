@@ -30,12 +30,13 @@ namespace bembel {
 class ChessPiece
 {
 public:
-	ChessPiece(Scene*, ChessPieceType*, Player*, const glm::ivec2&);
+	ChessPiece(ChessPieceType*, Player*, const glm::ivec2&);
 
 	void Promote(ChessPieceType*);
 
 	ChessPieceType* GetType() const;
 	Player*         GetOwner() const;
+	ChessBoard*     GetBoard() const;
 
 	const glm::ivec2& GetPositon() const;
 	void SetPosition(const glm::ivec2& pos);
@@ -43,12 +44,14 @@ public:
 	Scene::EntityID GetEntity();
 
 	bool IsAlive() const;
-	void Kill();
+	void Kill(Player*);
 	void Reset();
 
-	void UpdatePossibleMoves(ChessBoard*);
+	bool HasMoved() const;
 
-	const std::vector<ChessPieceMoveSet::Move>& GetPossibleMoves() const;
+	void UpdatePossibleMoves();
+
+	const std::vector<MoveSet::Move>& GetPossibleMoves() const;
 private:
 	Scene* _scene;
 
@@ -59,10 +62,11 @@ private:
 	glm::ivec2      _startPositon;
 
 	bool            _isAlive;
+	bool			_hasMoved;
 
 	Scene::EntityID _entity;
 
-	std::vector<ChessPieceMoveSet::Move> _possibleMoves;
+	std::vector<MoveSet::Move> _possibleMoves;
 };
 
 } //end of namespace bembel

@@ -1,10 +1,12 @@
-#ifndef BEMBEL_SELECTCHESSBOARDSTATE_H
-#define BEMBEL_SELECTCHESSBOARDSTATE_H
+#ifndef BEMBEL_PERFORMMOVESTATE_H
+#define BEMBEL_PERFORMMOVESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
 #include "GameState.h"
+
+#include "../chess/Moves/MoveSet.h"
 
 #include <vector>
 
@@ -13,45 +15,43 @@
 /*============================================================================*/
 namespace bembel{
 
-class CameraControle;
-class RenderingPipeline;
 class ChessBoard;
+class ChessPiece;
+
 class SelectChessPieceState;
 
 }//end of namespace bembel
+
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-class SelectChessBoardState : public GameState
+class PerformMoveState : public GameState
 {
 public:
-	SelectChessBoardState(StateMashine*, RenderingPipeline*, CameraControle*);
-	~SelectChessBoardState();
+	PerformMoveState(StateMashine*, ChessBoard*);
+	~PerformMoveState();
 
-	void AddChessBoard(ChessBoard* board, SelectChessPieceState* state);
+	using Move = MoveSet::Move;
 
-	virtual void OnNextButtonPress() override;
-	virtual void OnPrevButtonPress() override;
-	virtual void OnSelectButtonPress() override;
+	void Init(SelectChessPieceState*);
 
 	virtual void OnEnterState() override;
 	virtual void OnExitState() override;
 
 	virtual void Update(double time) override;
 
+	void SetMove(ChessPiece*, const Move&);
 private:
-	void OnBoardChange();
 
-private:
-	RenderingPipeline* _pipline;
-	CameraControle*    _cam;
+	ChessBoard* _board;
+	ChessPiece* _chessPiece;
+	Move        _move;
 
-	std::vector<ChessBoard*>             _boards;
-	std::vector<SelectChessPieceState*>  _states;
+	SelectChessPieceState* _selectChessPieceState = nullptr;
 
-	unsigned _selection = 0;
+	double _time;
 };
 
 } //end of namespace bembel
@@ -59,4 +59,3 @@ private:
 /* END OF FILE                                                                */
 /*============================================================================*/
 #endif //include guards
-

@@ -10,13 +10,13 @@
 /*============================================================================*/
 namespace bembel {
 
-ChessPieceMoveSet::ChessPieceMoveSet()
+MoveSet::MoveSet()
 {}
 
-ChessPieceMoveSet::~ChessPieceMoveSet()
+MoveSet::~MoveSet()
 {}
 
-void ChessPieceMoveSet::AddMove(
+void MoveSet::AddMove(
 	const glm::ivec2& dir, 
 	unsigned maxDist, 
 	bool attack /*= true*/, 
@@ -27,7 +27,7 @@ void ChessPieceMoveSet::AddMove(
 			dir, maxDist, attack, move));
 }
 
-void ChessPieceMoveSet::AddMove(
+void MoveSet::AddMove(
 	const glm::ivec2& dir,
 	bool attack /*= true*/,
 	bool move /*= true*/)
@@ -37,25 +37,25 @@ void ChessPieceMoveSet::AddMove(
 			dir, attack, move));
 }
 
-void ChessPieceMoveSet::AddMoveTemplate(
+void MoveSet::AddMoveTemplate(
 	std::shared_ptr<MoveTemplate> move)
 {
 	_moves.push_back(move);
 }
 
-void ChessPieceMoveSet::GetAvailableMoves(
+void MoveSet::GetAvailableMoves(
 	ChessPiece* chessPice, 
-	ChessBoard* board, 
 	std::vector<Move>& moves)
 {
 	for (auto& move : _moves)
 	{
-		std::vector<glm::ivec2> positions;
-		move->GetAvailableTargetPositions(chessPice, board, positions);
+		std::vector<int> params;
+		move->GetPosibleMoveParameter(
+			chessPice, params);
 
-		for (const auto& pos : positions)
+		for (const auto& it : params)
 		{
-			moves.push_back(Move{pos, move.get()});
+			moves.push_back(Move{move.get(), it});
 		}
 	}
 }

@@ -12,6 +12,8 @@
 namespace bembel{
 
 class Player;
+class ChessBoard;
+class SelectMoveState;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -22,8 +24,10 @@ namespace bembel {
 class SelectChessPieceState : public GameState
 {
 public:
-	SelectChessPieceState(StateMashine*, Player*);
+	SelectChessPieceState(StateMashine*, ChessBoard*);
 	~SelectChessPieceState();
+
+	void Init(SelectMoveState*);
 
 	virtual void OnNextButtonPress() override;
 	virtual void OnPrevButtonPress() override;
@@ -34,13 +38,19 @@ public:
 
 	virtual void Update(double time) override;
 
+	void     SetCurrentPlayer(unsigned);
+	unsigned GetCurrentPlayer() const;
+
 	void OnChessPieceChanged();
+
 private:
-	Player* _player;
+	ChessBoard* _board;
+	unsigned    _player;
 
 	unsigned _selectedChessPiece;
-
 	double _time = 0.0;
+
+	SelectMoveState* _selectMove;
 };
 
 } //end of namespace bembel

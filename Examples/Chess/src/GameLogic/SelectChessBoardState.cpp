@@ -3,6 +3,7 @@
 /*============================================================================*/
 
 #include "SelectChessBoardState.h"
+#include "SelectChessPieceState.h"
 #include "../CameraControle.h"
 #include "../Chess/ChessBoard.h"
 
@@ -26,7 +27,9 @@ SelectChessBoardState::SelectChessBoardState(
 SelectChessBoardState::~SelectChessBoardState()
 {}
 
-void SelectChessBoardState::AddChessBoard(ChessBoard* board, GameState* state)
+void SelectChessBoardState::AddChessBoard(
+	ChessBoard* board, 
+	SelectChessPieceState* state)
 {
 	_boards.push_back(board);
 	_states.push_back(state);
@@ -50,6 +53,7 @@ void SelectChessBoardState::OnPrevButtonPress()
 
 void SelectChessBoardState::OnSelectButtonPress()
 {
+	_states[_selection]->SetCurrentPlayer(0);
 	NextState(_states[_selection]);
 }
 

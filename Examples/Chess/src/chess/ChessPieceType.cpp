@@ -49,7 +49,7 @@ void ChessPieceType::AddMove(const glm::ivec2& dir, bool attack /*= true*/, bool
 	_moveSet.AddMove(dir, attack, move);
 }
 
-ChessPieceMoveSet& ChessPieceType::GetMoveSet()
+MoveSet& ChessPieceType::GetMoveSet()
 {
 	return _moveSet;
 }

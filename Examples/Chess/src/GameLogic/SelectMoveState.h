@@ -1,22 +1,19 @@
-#ifndef BEMBEL_SELECTCHESSBOARDSTATE_H
-#define BEMBEL_SELECTCHESSBOARDSTATE_H
+#ifndef BEMBEL_SELECTMOVESTATE_H
+#define BEMBEL_SELECTMOVESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
 #include "GameState.h"
 
-#include <vector>
-
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
 namespace bembel{
 
-class CameraControle;
-class RenderingPipeline;
+class ChessPiece;
 class ChessBoard;
-class SelectChessPieceState;
+class PerformMoveState;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -24,13 +21,13 @@ class SelectChessPieceState;
 /*============================================================================*/
 namespace bembel {
 
-class SelectChessBoardState : public GameState
+class SelectMoveState : public GameState
 {
 public:
-	SelectChessBoardState(StateMashine*, RenderingPipeline*, CameraControle*);
-	~SelectChessBoardState();
+	SelectMoveState(StateMashine*, ChessBoard*);
+	~SelectMoveState();
 
-	void AddChessBoard(ChessBoard* board, SelectChessPieceState* state);
+	void Init(PerformMoveState*);
 
 	virtual void OnNextButtonPress() override;
 	virtual void OnPrevButtonPress() override;
@@ -41,17 +38,18 @@ public:
 
 	virtual void Update(double time) override;
 
-private:
-	void OnBoardChange();
+	void SetChessPiece(ChessPiece*);
+
+	void OnMoveChanged();
 
 private:
-	RenderingPipeline* _pipline;
-	CameraControle*    _cam;
+	ChessBoard* _board;
+	ChessPiece* _chessPiece;
+	unsigned _selectedMove;
 
-	std::vector<ChessBoard*>             _boards;
-	std::vector<SelectChessPieceState*>  _states;
+	PerformMoveState* _performMove = nullptr;
 
-	unsigned _selection = 0;
+	double _time = 0.0;
 };
 
 } //end of namespace bembel
@@ -59,4 +57,3 @@ private:
 /* END OF FILE                                                                */
 /*============================================================================*/
 #endif //include guards
-

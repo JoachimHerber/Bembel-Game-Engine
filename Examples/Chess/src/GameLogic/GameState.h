@@ -19,14 +19,14 @@ public:
 	GameState(StateMashine* sm);
 	virtual ~GameState();
 
-	virtual void OnNextButtonPress() = 0;
-	virtual void OnPrevButtonPress() = 0;
-	virtual void OnSelectButtonPress() = 0;
+	virtual void OnNextButtonPress(){};
+	virtual void OnPrevButtonPress(){};
+	virtual void OnSelectButtonPress(){};
 
-	virtual void OnEnterState() = 0;
-	virtual void OnExitState()  = 0;
+	virtual void OnEnterState(){};
+	virtual void OnExitState(){};
 
-	virtual void Update(double time) = 0;
+	virtual void Update(double time){};
 
 protected:
 	void NextState(GameState* state);

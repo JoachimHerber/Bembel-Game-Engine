@@ -18,10 +18,10 @@ set( ProjectSources
 	src/chess/ChessPieceType.cpp
 	src/chess/Moves/MoveSet.h
 	src/chess/Moves/MoveSet.cpp
-	src/chess/Moves/JumpMove.h
-	src/chess/Moves/JumpMove.cpp
-	src/chess/Moves/PawnMove.h
-	src/chess/Moves/PawnMove.cpp
+	src/chess/Moves/StandardMove.h
+	src/chess/Moves/StandardMove.cpp
+	src/chess/Moves/InitialPawnMove.h
+	src/chess/Moves/InitialPawnMove.cpp
 	
 	src/GameLogic/GameState.h
 	src/GameLogic/GameState.cpp
@@ -29,6 +29,10 @@ set( ProjectSources
 	src/GameLogic/SelectChessBoardState.cpp
 	src/GameLogic/SelectChessPieceState.h
 	src/GameLogic/SelectChessPieceState.cpp
+	src/GameLogic/SelectMoveState.h
+	src/GameLogic/SelectMoveState.cpp
+	src/GameLogic/PerformMoveState.h
+	src/GameLogic/PerformMoveState.cpp
 	src/GameLogic/StateMashine.h
 	src/GameLogic/StateMashine.cpp
 )

@@ -3,7 +3,11 @@
 /*============================================================================*/
 
 #include "Player.h"
+#include "ChessPiece.h"
+#include "ChessBoard.h"
 
+#include <BembelKernel/Scene/Scene.h>
+#include <BembelKernel/Scene/PositionComponent.h>
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
@@ -76,6 +80,39 @@ glm::ivec2 Player::RotateOffset(const glm::ivec2& offset) const
 		return glm::ivec2(offset.y, -offset.x);
 		break;
 	}
+}
+
+void Player::ClearCaptureChessPieces()
+{
+	_capturedChessPices.clear();
+}
+
+void Player::CaptureChessPiece(ChessPiece* piece)
+{
+	unsigned  row = _capturedChessPices.size() / _captureAreaChessPicesPerRow;
+	unsigned  col = _capturedChessPices.size() % _captureAreaChessPicesPerRow;
+
+	_capturedChessPices.push_back(piece);
+
+	auto scene = _board->GetScene();
+	auto& entitiyPos = scene->GetComponent<PositionComponent>(
+		piece->GetEntity())->position;
+
+	entitiyPos = _captureAreaPos;
+	entitiyPos += _captureAreaRowOffset*float(row);
+	entitiyPos += _captureAreaCollumOffset*float(col);
+}
+
+void Player::SetCaptureArea(
+	glm::vec3 pos, 
+	glm::vec3 rowOffset,
+	glm::vec3 colOffset,
+	unsigned rowSize)
+{
+	_captureAreaPos = pos;
+	_captureAreaRowOffset = rowOffset;
+	_captureAreaCollumOffset = colOffset;
+	_captureAreaChessPicesPerRow = rowSize;
 }
 
 } //end of namespace bembel
