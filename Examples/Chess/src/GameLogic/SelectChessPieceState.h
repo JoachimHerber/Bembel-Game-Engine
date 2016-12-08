@@ -36,8 +36,6 @@ public:
 	virtual void OnEnterState() override;
 	virtual void OnExitState() override;
 
-	virtual void Update(double time) override;
-
 	void     SetCurrentPlayer(unsigned);
 	unsigned GetCurrentPlayer() const;
 
@@ -48,7 +46,6 @@ private:
 	unsigned    _player;
 
 	unsigned _selectedChessPiece;
-	double _time = 0.0;
 
 	SelectMoveState* _selectMove;
 };

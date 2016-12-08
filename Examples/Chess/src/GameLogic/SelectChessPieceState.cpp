@@ -4,12 +4,13 @@
 
 #include "SelectChessPieceState.h"
 #include "SelectMoveState.h"
+
+#include "../SelectionComponent.h"
 #include "../chess/Player.h"
 #include "../chess/ChessPiece.h"
 #include "../chess/ChessBoard.h"
 
 #include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/PositionComponent.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -75,9 +76,11 @@ void SelectChessPieceState::OnEnterState()
 		if (!pieces[n]->GetPossibleMoves().empty())
 		{
 			_selectedChessPiece = n;
-			return;
+			break;
 		}
 	}
+
+	OnChessPieceChanged();
 }
 
 void SelectChessPieceState::OnExitState()
@@ -85,37 +88,8 @@ void SelectChessPieceState::OnExitState()
 	auto scene  = _board->GetScene();
 	auto player = _board->GetPlayer(_player);
 	auto piece = player->GetChessPieces()[_selectedChessPiece]->GetEntity();
-	auto pos = scene->GetComponent<PositionComponent>(piece);
 
 	_selectMove->SetChessPiece(player->GetChessPieces()[_selectedChessPiece]);
-	pos->position.y = 0.0f;
-}
-
-void SelectChessPieceState::Update(double time)
-{
-	_time += time*2*3.14159265359;
-
-	auto scene  = _board->GetScene();
-	auto player = _board->GetPlayer(_player);
-	auto piece = player->GetChessPieces()[_selectedChessPiece];
-	auto  posContainer = scene->RequestComponentContainer<PositionComponent>();
-	auto& positions = posContainer->GetComponents();
-
-	positions[piece->GetEntity()].position.y =
-		0.3f + 0.3f*std::sin(_time);
-
-	for (const auto& move : piece->GetPossibleMoves())
-	{
-		glm::ivec2 target = move.move->GetTargetPosition(piece, move.param);
-		auto tile = _board->GetTileEntity(target);
-
-		if(tile != Scene::INVALID_ENTITY)
-			positions[tile].position.y =
-			  0.1f + 0.05f*std::sin(
-				  0.7836*_time +
-				  1.678*target.x + 
-				  3.764*target.y);
-	}
 }
 
 void SelectChessPieceState::SetCurrentPlayer(unsigned id)
@@ -130,25 +104,28 @@ unsigned SelectChessPieceState::GetCurrentPlayer() const
 
 void SelectChessPieceState::OnChessPieceChanged()
 {
-	auto scene         = _board->GetScene();
-	auto player        = _board->GetPlayer(_player);
-	auto  posContainer = scene->RequestComponentContainer<PositionComponent>();
-	auto& positions    = posContainer->GetComponents();
+	auto scene      = _board->GetScene();
+	auto player     = _board->GetPlayer(_player);
+	auto  container = scene->RequestComponentContainer<SelectionComponent>();
+	auto& selectionComponents = container->GetComponents();
 
-	for (auto& it : player->GetChessPieces())
-		positions[it->GetEntity()].position.y = 0;
+	for (auto& it : selectionComponents)
+		it.stat = SelectionComponent::UNSELECTABLE;
 
-	for (int u = 0; u < _board->GetWidth(); ++u)
+	auto piece = player->GetChessPieces()[_selectedChessPiece];
+
+	selectionComponents[piece->GetEntity()].stat = 
+		SelectionComponent::FOCUSED;
+
+	for (auto it : piece->GetPossibleMoves())
 	{
-		for (int v = 0; v < _board->GetHeight(); ++v)
-		{
-			if (!_board->IsPositionValid({u,v}))
-				continue;
+		auto target = it.move->GetTargetPosition(piece, it.param);
 
-			positions[_board->GetTileEntity({u,v})].position.y = 0;
-		}
+		auto tile = _board->GetTileEntity(target);
+		selectionComponents[tile].stat =
+			SelectionComponent::SELECTABLE;
 	}
-	_time = 0.0f;
+
 }
 
 } //end of namespace bembel

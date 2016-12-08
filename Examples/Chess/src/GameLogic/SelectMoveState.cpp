@@ -4,6 +4,7 @@
 
 #include "SelectMoveState.h"
 #include "PerformMoveState.h"
+#include "../SelectionComponent.h"
 #include "../chess/Player.h"
 #include "../chess/ChessPiece.h"
 #include "../chess/ChessBoard.h"
@@ -68,45 +69,6 @@ void SelectMoveState::OnExitState()
 	);
 }
 
-void SelectMoveState::Update(double time)
-{
-	_time += time*2*3.14159265359;
-
-	auto scene = _board->GetScene();
-	auto  posContainer = scene->RequestComponentContainer<PositionComponent>();
-	auto& positions = posContainer->GetComponents();
-
-	positions[_chessPiece->GetEntity()].position.y =
-		0.1f + 0.05f*std::sin(_time);
-
-	for (size_t n = 0; n < _chessPiece->GetPossibleMoves().size(); ++n)
-	{
-		auto& move = _chessPiece->GetPossibleMoves()[n];
-		glm::ivec2 target = move.move->GetTargetPosition(_chessPiece, move.param);
-		auto tile = _board->GetTileEntity(target);
-
-		if (tile != Scene::INVALID_ENTITY)
-		{
-			if (n == _selectedMove)
-			{
-				positions[tile].position.y =
-					0.2f + 0.1f*std::sin(
-						1.345*_time +
-						1.678*target.x +
-						3.764*target.y);
-			}
-			else
-			{
-				positions[tile].position.y =
-					0.02f + 0.01f*std::sin(
-						0.7836*_time +
-						1.678*target.x +
-						3.764*target.y);
-			}
-		}
-	}
-}
-
 void SelectMoveState::SetChessPiece(ChessPiece* pice)
 {
 	_chessPiece = pice;
@@ -114,7 +76,27 @@ void SelectMoveState::SetChessPiece(ChessPiece* pice)
 
 void SelectMoveState::OnMoveChanged()
 {
+	auto scene = _board->GetScene();
+	auto  container = scene->RequestComponentContainer<SelectionComponent>();
+	auto& selectionComponents = container->GetComponents();
 
+	for (auto& it : selectionComponents)
+		it.stat = SelectionComponent::UNSELECTABLE;
+
+	selectionComponents[_chessPiece->GetEntity()].stat =
+		SelectionComponent::SELECED;
+
+	for (size_t n = 0; n< _chessPiece->GetPossibleMoves().size(); ++n)
+	{
+		auto& move = _chessPiece->GetPossibleMoves()[n];
+		auto target = move.move->GetTargetPosition(_chessPiece, move.param);
+
+		auto tile = _board->GetTileEntity(target);
+		selectionComponents[tile].stat =
+			n == _selectedMove ?
+			SelectionComponent::FOCUSED :
+			SelectionComponent::SELECTABLE;
+	}
 }
 
 } //end of namespace bembel

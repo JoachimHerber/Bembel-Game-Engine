@@ -2,6 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 #include "ChessApplication.h"
+#include "SelectionRenderingStage.h"
 
 #include "GameLogic/SelectChessBoardState.h"
 #include "GameLogic/SelectChessPieceState.h"
@@ -41,6 +42,10 @@ ChessApplication::ChessApplication()
 		std::make_shared<GraphicSystem>(_kernel.get());
 	_interactionSys = 
 		std::make_shared<InteractionSystem>(_kernel.get());
+
+	_graphicSys->GetRendertingStageFactory()
+		.RegisterDefaultObjectGenerator<SelectionRenderingStage>(
+			"SelectionRenderingStage");
 
 	_kernel->AddSystem(_graphicSys);
 	_kernel->AddSystem(_interactionSys);

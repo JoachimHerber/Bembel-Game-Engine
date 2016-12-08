@@ -7,6 +7,8 @@
 #include "ChessBoard.h"
 #include "Player.h"
 
+#include "../SelectionComponent.h"
+
 #include <BembelKernel/Scene/Scene.h>
 #include <BembelKernel/Scene/PositionComponent.h>
 #include <BembelKernel/Scene/GeometryComponent.h>
@@ -36,6 +38,10 @@ ChessPiece::ChessPiece(
 
 	auto geomComp = _scene->CreateComponent<GeometryComponent>(_entity);
 	geomComp->model = _type->GetModle(_owner);
+
+	auto selectComp = _scene->CreateComponent<SelectionComponent>(_entity);
+	selectComp->stat = SelectionComponent::UNSELECTABLE;
+	//selectComp->stat = SelectionComponent::SELECTABLE;
 }
 
 void ChessPiece::Promote(ChessPieceType* type)

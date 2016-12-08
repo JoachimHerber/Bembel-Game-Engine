@@ -7,6 +7,10 @@ set( ProjectSources
 	src/ChessApplication.cpp 
 	src/CameraControle.h
 	src/CameraControle.cpp
+	src/SelectionComponent.h
+	src/SelectionComponent.cpp
+	src/SelectionRenderingStage.h
+	src/SelectionRenderingStage.cpp
 	
 	src/chess/ChessBoard.h 
 	src/chess/ChessBoard.cpp 

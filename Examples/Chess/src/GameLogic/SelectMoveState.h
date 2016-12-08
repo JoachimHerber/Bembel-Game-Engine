@@ -36,8 +36,6 @@ public:
 	virtual void OnEnterState() override;
 	virtual void OnExitState() override;
 
-	virtual void Update(double time) override;
-
 	void SetChessPiece(ChessPiece*);
 
 	void OnMoveChanged();
@@ -48,8 +46,6 @@ private:
 	unsigned _selectedMove;
 
 	PerformMoveState* _performMove = nullptr;
-
-	double _time = 0.0;
 };
 
 } //end of namespace bembel

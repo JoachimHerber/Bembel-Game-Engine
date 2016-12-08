@@ -8,6 +8,8 @@
 #include "Player.h"
 #include "Moves/InitialPawnMove.h"
 
+#include "../SelectionComponent.h"
+
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
 #include <BembelKernel/Scene/GeometryComponent.h>
@@ -29,6 +31,7 @@ ChessBoard::ChessBoard(
 	_scene->RegisterComponentType<PositionComponent>();
 	_scene->RegisterComponentType<DirLightProperties>();
 	_scene->RegisterComponentType<GeometryComponent>();
+	_scene->RegisterComponentType<SelectionComponent>();
 
 	auto entity = _scene->CreateEntity();
 	auto light = _scene->CreateComponent<DirLightProperties>(entity);
@@ -159,6 +162,8 @@ void ChessBoard::InitTiles()
 			posComp->position = glm::vec3(2.0f*u, 0, 2.0f*v);
 			auto geomComt = _scene->CreateComponent<GeometryComponent>(_tiles[u][v].entity);
 			geomComt->model = ((u+v)%2 == 0 ? whiteTile : blackTile);
+			auto selectComp = _scene->CreateComponent<SelectionComponent>(_tiles[u][v].entity);
+			selectComp->stat = SelectionComponent::UNSELECTABLE;
 		}
 	}
 }
