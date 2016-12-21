@@ -26,6 +26,8 @@ public:
 	Material();
 	~Material();
 
+	unsigned GetRenderer() const;
+
 	const Color& GetEmission() const;
 	void SetEmission(const Color& value);
 
@@ -59,6 +61,8 @@ public:
 	static std::unique_ptr<Material> LoadFromFile(AssetManager* assetMgr, const std::string& properties);
 
 private:
+	unsigned _renderer = 0;
+
 	Color _emission     = Color(0.0f, 0.0f, 0.0f);
 	Color _albedo       = Color(1.0f, 0.0f, 1.0f);
 	Color _reflectivity = Color(0.1f, 0.1f, 0.1f);

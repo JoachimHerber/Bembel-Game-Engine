@@ -9,8 +9,12 @@
 #include <BembelKernel/Rendering/Texture.h>
 #include <BembelKernel/Rendering/Shader.h>
 #include <BembelKernel/Rendering/FrameBufferObject.h>
+#include <BembelKernel/Rendering/Geometry/GeometryModel.h>
+#include <BembelKernel/Rendering/Geometry/GeometryMesh.h>
 
 #include "SelectionComponent.h"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -55,72 +59,81 @@ void SelectionRenderingStage::DoRendering()
  		return;
  
  	_fbo->BeginRenderToTexture();
- 
+	glm::mat4 proj = _pipline->GetCamera()->GetProjectionMatrix();
+	glm::mat4 view = _pipline->GetCamera()->GetViewMatrix();
+
+
  	glEnable(GL_DEPTH_TEST);
- 	glDisable(GL_CULL_FACE);
- 	glDisable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
  
  	_shader->Use(); 
  
- 	glm::mat4 proj = _pipline->GetCamera()->GetProjectionMatrix();
- 	glm::mat4 view = _pipline->GetCamera()->GetViewMatrix();
- 	glm::mat4 mvp = proj*view;
  
  	glUniformMatrix4fv(
- 		_shader->GetUniformLocation("uModleViewProjectionMatrix"),
- 		1, GL_FALSE, &mvp[0][0]);
+ 		_shader->GetUniformLocation("uProjectionMatrix"),
+ 		1, GL_FALSE, &proj[0][0]);
  
- 	const auto& entitis = _scene->GetEntitys();
+	std::vector<GeometryObject> geometry;
+
+	GetHiglightedObjects(geometry);
+
+	std::sort(geometry.begin(), geometry.end(), [ ](auto& first, auto& second){
+		return first.dist > second.dist;
+	});
  
- 	Scene::ComponentMask mask = 
- 		_positionComponents->GetComponentMask() |
- 		_selectionComponents->GetComponentMask();
- 
- 	glLineWidth(4);
- 	glBegin(GL_LINES);
- 	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
- 	{
- 		if((entitis[entity] & mask)!= mask)
- 			continue;
- 
- 		auto* selectionComp = _selectionComponents->GetComponent(entity);
- 
- 		glm::vec3 pos = _positionComponents->GetComponent(entity)->position;
- 
-		switch (selectionComp->stat)
-		{
-		case SelectionComponent::SELECTABLE:
-			glColor3f(1.0f, 1.0f, 1.0f);
-			break;
-		case SelectionComponent::FOCUSED:
-			glColor3f(0.0f, 1.0f, 1.0f);
-			break;
-		case SelectionComponent::SELECED:
-			glColor3f(1.0f, 1.0f, 0.0f);
-			break;
-		default:
+	GeometryMesh* currentMesh = nullptr;
+ 	for (auto& it : geometry)
+	{
+		glm::mat4 modelView = view*glm::translate(glm::mat4(), it.position);
+
+		glUniform1i(_shader->GetUniformLocation("uState"), it.state);
+
+		glUniformMatrix4fv(
+			_shader->GetUniformLocation("uModleViewMatrix"),
+			1, GL_FALSE, &modelView[0][0]);
+		glUniformMatrix4fv(
+			_shader->GetUniformLocation("uNormalMatrix"),
+			1, GL_FALSE, &modelView[0][0]);
+
+		auto mesh = _scene->GetAssetManager()->GetAsset<GeometryMesh>(
+			it.model->GetMesh());
+
+		if(mesh == nullptr)
 			continue;
+
+		if (mesh != currentMesh)
+		{
+			currentMesh = mesh;
+			glBindVertexArray(currentMesh->GetVAO());
 		}
-		
-		glVertex3f(pos.x + 1.0f, pos.y + 0.1f, pos.z + 1.0f);
-		glVertex3f(pos.x + 1.0f, pos.y + 0.1f, pos.z - 1.0f);
-		glVertex3f(pos.x + 1.0f, pos.y + 0.1f, pos.z - 1.0f);
-		glVertex3f(pos.x - 1.0f, pos.y + 0.1f, pos.z - 1.0f);
-		glVertex3f(pos.x - 1.0f, pos.y + 0.1f, pos.z - 1.0f);
-		glVertex3f(pos.x - 1.0f, pos.y + 0.1f, pos.z + 1.0f);
-		glVertex3f(pos.x - 1.0f, pos.y + 0.1f, pos.z + 1.0f);
-		glVertex3f(pos.x + 1.0f, pos.y + 0.1f, pos.z + 1.0f);
+
+		for (auto& mapping : it.model->GetMateialMapping())
+		{
+			unsigned first, count;
+			if (currentMesh->GetSubMesh(mapping.subMesh, first, count))
+			{
+				glDrawElements(
+					GL_TRIANGLES,
+					count,
+					GL_UNSIGNED_INT,
+					(void*)(first * sizeof(unsigned))
+				);
+			}
+		}
 
  	}
- 	glEnd(); 
  	_fbo->EndRenderToTexture();
+	glDisable(GL_BLEND);
 }
 
 void SelectionRenderingStage::SetScene(ScenePtr scene)
 {
 	_scene = scene;
-	_positionComponents = scene->RequestComponentContainer<PositionComponent>();
+	_positionComponents  = scene->RequestComponentContainer<PositionComponent>();
 	_selectionComponents = scene->RequestComponentContainer<SelectionComponent>();
+	_geometryComponents  = scene->RequestComponentContainer<GeometryComponent>();
 }
 
 std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance(
@@ -165,6 +178,45 @@ std::shared_ptr<Shader> SelectionRenderingStage::CreateShader(const xml::Element
 		return nullptr;
 
 	return program;
+}
+
+void SelectionRenderingStage::GetHiglightedObjects(
+	std::vector<GeometryObject>& objects)
+{
+	glm::vec3 camPos = _pipline->GetCamera()->GetPosition();
+
+	const auto& entitis = _scene->GetEntitys();
+
+	auto& positions = _positionComponents->GetComponents();
+	auto& selection = _selectionComponents->GetComponents();
+	auto& geometry  = _geometryComponents->GetComponents();
+
+	Scene::ComponentMask mask =
+		_positionComponents->GetComponentMask() |
+		_selectionComponents->GetComponentMask() |
+		_geometryComponents->GetComponentMask();
+
+	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
+	{
+		if ((entitis[entity] & mask)!= mask)
+			continue;
+
+		if (selection[entity].state == SelectionComponent::UNSELECTABLE)
+			continue;
+
+		auto model = _scene->GetAssetManager()->GetAsset<GeometryModel>(
+			geometry[entity].model);
+
+		if(model == nullptr)
+			continue;
+
+		float dist = glm::length(camPos - positions[entity].position);
+
+		objects.push_back({
+			positions[entity].position,
+			dist, model, unsigned(selection[entity].state - 1)
+		});
+	}
 }
 
 } //end of namespace bembel

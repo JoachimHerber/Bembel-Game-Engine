@@ -26,7 +26,7 @@ namespace bembel{
 class Scene;
 class Camera;
 class Texture;
-class GeometryRenderer;
+class GeometryRendererBase;
 class GraphicSystem;
 class RenderingStage;
 
@@ -42,12 +42,13 @@ public:
 	using ScenePtr = std::shared_ptr<Scene>;
 	using CameraPtr = std::shared_ptr<Camera>;
 	using TexturePtr = std::shared_ptr<Texture>;
-	using RendererPtr = std::shared_ptr<GeometryRenderer>;
 	using RenderingStagePtr = std::shared_ptr<RenderingStage>;
 	using ViewPtr = std::shared_ptr<TextureView>;
 
 	RenderingPipeline(GraphicSystem*);
 	~RenderingPipeline();
+
+	GraphicSystem* GetGraphicSystem() const;
 
 	void SetResulution(const glm::ivec2& value);
 	const glm::ivec2& GetResulution() const;
@@ -75,9 +76,6 @@ public:
 	template<typename StageType>
 	StageType* AddRenderingStage();
 
-	void AddRenderer(RendererPtr);
-	std::vector<RendererPtr>& GetRenderer();
-
 	ViewPtr CreateView(const std::string& textureName);
 	std::vector<ViewPtr>& GetViews();
 
@@ -86,7 +84,6 @@ public:
 private:
 	void InitTextures(const xml::Element*);
 	void InitStages(const xml::Element*);
-	void InitRenderer(const xml::Element*);
 	void InitViews(const xml::Element*);
 	void InitCamera(const xml::Element*);
 
@@ -104,7 +101,6 @@ private:
 
 	std::map<std::string, TexturePtr> _textures;
 	std::vector<RenderingStagePtr>    _stages;
-	std::vector<RendererPtr>          _renderer;
 
 	std::vector<ViewPtr> _views;
 };

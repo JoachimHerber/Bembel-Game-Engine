@@ -17,6 +17,7 @@
 #include <BembelKernel/Display/DisplayManager.h>
 #include <BembelKernel/Display/Window.h>
 #include <BembelKernel/Events/DisplayEvents.h>
+#include <BembelKernel/Rendering/Geometry/GeometryRenderer.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -45,16 +46,16 @@ GraphicSystem::~GraphicSystem()
 	_kernel->GetEventManager()->RemoveHandler<FrameBufferResizeEvent>(this);
 }
 
-std::shared_ptr<Viewport> GraphicSystem::CreateViewPort(unsigned windowID /*= 0*/)
+Viewport* GraphicSystem::CreateViewPort(unsigned windowID /*= 0*/)
 {
 	if (_viewports.size() <= windowID)
 		_viewports.resize(windowID+1);
 
-	_viewports[windowID].push_back(std::make_shared<Viewport>());
-	return _viewports[windowID].back();
+	_viewports[windowID].push_back(std::make_unique<Viewport>());
+	return _viewports[windowID].back().get();
 }
 
-std::vector<std::shared_ptr<Viewport>>& 
+const std::vector<std::shared_ptr<Viewport>>&
 	GraphicSystem::GetViewports(unsigned windowID /*= 0*/)
 {
 	if (_viewports.size() <= windowID)
@@ -71,7 +72,7 @@ void GraphicSystem::UpdateViewports()
 			continue;
 
 		auto& windowViewports = _viewports[n];
-		for (auto viewport : windowViewports)
+		for (auto& viewport : windowViewports)
 		{
 			viewport->UpdatePosition(window->GetFrameBufferSize());
 			viewport->UpdateSize(window->GetFrameBufferSize());
@@ -79,16 +80,21 @@ void GraphicSystem::UpdateViewports()
 	}
 }
 
-GraphicSystem::RenderingPipelinePtr GraphicSystem::CreateRenderingPipline()
+RenderingPipeline* GraphicSystem::CreateRenderingPipline()
 {
-	RenderingPipelinePtr pipline = std::make_shared<RenderingPipeline>(this);
-	_pipelines.push_back(pipline);
-	return pipline;
+	_pipelines.push_back(std::make_unique<RenderingPipeline>(this));
+	return _pipelines.back().get();
 }
 
-std::vector<std::shared_ptr<RenderingPipeline>>& GraphicSystem::GetRenderingPiplies()
+const std::vector<std::shared_ptr<RenderingPipeline>>&
+	GraphicSystem::GetRenderingPiplies()
 {
 	return _pipelines;
+}
+
+const std::vector<std::shared_ptr<GeometryRendererBase>>& GraphicSystem::GetRenderer() const
+{
+	return _renderer;
 }
 
 GraphicSystem::RendertingStageFactory& GraphicSystem::GetRendertingStageFactory()
@@ -96,11 +102,17 @@ GraphicSystem::RendertingStageFactory& GraphicSystem::GetRendertingStageFactory(
 	return _renderingStageFactory;
 }
 
+GeometryRenderQueue& GraphicSystem::GetGeometryRenderQueue()
+{
+	return _geometryRenderQueue;
+}
+
 bool GraphicSystem::Configure(const xml::Element* properties)
 {
 	if (!properties)
 		return false;
 
+	ConfigureRenderer(properties->FirstChildElement("Renderer"));
 	ConfigurePipelines(properties->FirstChildElement("RenderingPipelines"));
 	ConfigureViewports(properties->FirstChildElement("Viewports"));
 
@@ -110,7 +122,7 @@ bool GraphicSystem::Configure(const xml::Element* properties)
 
 bool GraphicSystem::Init()
 {
-	for (auto pipline : _pipelines)
+	for (auto& pipline : _pipelines)
 		pipline->Init();
 
 	UpdateViewports();
@@ -127,7 +139,7 @@ void GraphicSystem::Shutdown()
 
 void GraphicSystem::Update(double)
 {
-	for (auto pipline : _pipelines)
+	for (auto& pipline : _pipelines)
 		pipline->Update();
 }
 
@@ -138,7 +150,7 @@ void GraphicSystem::HandleEvent(const WindowUpdateEvent& event)
 		return;
 
 	auto& windowViewports = _viewports[windowID];
-	for (auto viewport : windowViewports )
+	for (auto& viewport : windowViewports )
 	{
 		if(!(viewport->IsEnabled()))
 			continue;
@@ -164,10 +176,26 @@ void GraphicSystem::HandleEvent(const FrameBufferResizeEvent& event)
 		return;
 
 	auto& windowViewports = _viewports[windowID];
-	for (auto viewport : windowViewports)
+	for (auto& viewport : windowViewports)
 	{
 		viewport->UpdatePosition(event.size);
 		viewport->UpdateSize(event.size);
+	}
+}
+
+void GraphicSystem::ConfigureRenderer(const xml::Element* properties)
+{
+	if (!properties)
+		return;
+
+	for (auto rendererProperties : xml::IterateChildElements(properties))
+	{
+		RendererPtr renderer =
+			DefaultGeometryRenderer::CreateRenderer(
+				rendererProperties, _renderer.size());
+
+		if (renderer)
+			_renderer.push_back(std::move(renderer));
 	}
 }
 
@@ -178,11 +206,11 @@ void GraphicSystem::ConfigurePipelines(const xml::Element* properties)
 
 	for( auto pipelineProperties : xml::IterateChildElements(properties, "RenderingPipeline"))
 	{
-		auto pipline = std::make_shared<RenderingPipeline>(this);
+		auto pipline = std::make_unique<RenderingPipeline>(this);
 		if (!pipline->Configure(pipelineProperties))
 			pipline.reset();
 
-		_pipelines.push_back(pipline);
+		_pipelines.push_back(std::move(pipline));
 	}
 }
 

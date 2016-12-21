@@ -9,7 +9,7 @@
 
 #include <BembelBase/XML.h>
 
-#include "../Assets/AssetHandle.h"
+#include "../../Assets/AssetHandle.h"
 
 #include <glm/glm.hpp>
 
@@ -25,58 +25,61 @@ class AssetManager;
 class Shader;
 class GeometryMesh;
 class Material;
+
 }//end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel{
 
-class BEMBEL_API GeometryRenderer
+struct GeometryRenderData
+{
+	GeometryMesh* mesh;
+	Material*     material;
+	unsigned      first;
+	unsigned      count;
+	glm::mat4     transform;
+};
+
+class BEMBEL_API GeometryRendererBase
 {
 public:
-	GeometryRenderer();
-	~GeometryRenderer();
+	GeometryRendererBase(unsigned id) : _id(id){};
+	virtual ~GeometryRendererBase() {};
 
-	void SetAssetMannager(
-		std::shared_ptr<AssetManager> assetMgr);
+	unsigned GetRendererID() const { return _id; };
+
+	virtual void Render(
+		const glm::mat4& proj,
+		const glm::mat4& view,
+		const std::vector<GeometryRenderData>& data) = 0;
+
+protected:
+	const unsigned _id;
+};
+
+class BEMBEL_API DefaultGeometryRenderer : public GeometryRendererBase
+{
+public:
+	DefaultGeometryRenderer(unsigned id);
+	~DefaultGeometryRenderer();
+
 	void SetShader(std::shared_ptr<Shader>);
 
-	struct GeometryInstance
-	{
-		AssetHandle model;
-		glm::mat4 transformation;
-	};
 
-	void DrawGeometry(
-		const glm::mat4& view,
+	virtual void Render(
 		const glm::mat4& proj,
-		const std::vector<GeometryInstance>& instances 
-	);
+		const glm::mat4& view,
+		const std::vector<GeometryRenderData>& data) override;
 
-	static std::shared_ptr<GeometryRenderer> CreateRenderer( const xml::Element*);
+	static std::unique_ptr<DefaultGeometryRenderer> 
+		CreateRenderer( const xml::Element*, unsigned id);
 
 private:
-	void DoRendering(const glm::mat4& proj);
 	void UseMaterial(Material*  material);
 
 private:
-	std::shared_ptr<AssetManager> _assetMgr;
-	std::shared_ptr<Shader>       _shader;
-
-	struct RenderData
-	{
-		GeometryMesh* mesh;
-		Material*     material;
-		unsigned      first;
-		unsigned      count;
-		glm::mat4     transform;
-	};
-
-	// a static vector for storing render data
-	// used to avoid unnecessary memory allocations
-	// @TODO replace this with the use of a memory pool
-	// once costume memory management is implemented
-	static std::vector<RenderData> s_renderData;
+	std::shared_ptr<Shader> _shader;
 };
 
 } //end of namespace bembel

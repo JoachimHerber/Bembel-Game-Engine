@@ -110,11 +110,11 @@ void SelectChessPieceState::OnChessPieceChanged()
 	auto& selectionComponents = container->GetComponents();
 
 	for (auto& it : selectionComponents)
-		it.stat = SelectionComponent::UNSELECTABLE;
+		it.state = SelectionComponent::UNSELECTABLE;
 
 	auto piece = player->GetChessPieces()[_selectedChessPiece];
 
-	selectionComponents[piece->GetEntity()].stat = 
+	selectionComponents[piece->GetEntity()].state = 
 		SelectionComponent::FOCUSED;
 
 	for (auto it : piece->GetPossibleMoves())
@@ -122,7 +122,7 @@ void SelectChessPieceState::OnChessPieceChanged()
 		auto target = it.move->GetTargetPosition(piece, it.param);
 
 		auto tile = _board->GetTileEntity(target);
-		selectionComponents[tile].stat =
+		selectionComponents[tile].state =
 			SelectionComponent::SELECTABLE;
 	}
 

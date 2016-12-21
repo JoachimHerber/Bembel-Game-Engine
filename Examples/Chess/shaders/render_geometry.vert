@@ -1,4 +1,4 @@
-#version 330
+#version 330 compatibility
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;  
@@ -19,4 +19,5 @@ void main()
  
  	gl_Position = 
  		uProjectionMatrix*uModleViewMatrix*vec4(aPosition,1);
+		
 }

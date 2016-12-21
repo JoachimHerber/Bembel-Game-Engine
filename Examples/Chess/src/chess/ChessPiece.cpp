@@ -40,7 +40,7 @@ ChessPiece::ChessPiece(
 	geomComp->model = _type->GetModle(_owner);
 
 	auto selectComp = _scene->CreateComponent<SelectionComponent>(_entity);
-	selectComp->stat = SelectionComponent::UNSELECTABLE;
+	selectComp->state = SelectionComponent::UNSELECTABLE;
 	//selectComp->stat = SelectionComponent::SELECTABLE;
 }
 

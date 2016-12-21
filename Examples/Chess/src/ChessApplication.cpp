@@ -16,9 +16,9 @@
 #include <BembelKernel/Scene/PositionComponent.h>
 #include <BembelKernel/Scene/GeometryComponent.h>
 #include <BembelKernel/Assets/SerialAssetLoader.hpp>
-#include <BembelKernel/Rendering/Material.h>
-#include <BembelKernel/Rendering/GeometryMesh.h>
-#include <BembelKernel/Rendering/GeometryModel.h>
+#include <BembelKernel/Rendering/Geometry/Material.h>
+#include <BembelKernel/Rendering/Geometry/GeometryMesh.h>
+#include <BembelKernel/Rendering/Geometry/GeometryModel.h>
 
 #include <BembelGraphics/RenderingPipeline/LightSourceProperties.h>
 
@@ -59,7 +59,7 @@ bool ChessApplication::Init()
 {
 	if (!_kernel->LoadSetting("config.xml"))
 		return false;
-	auto pipline = _graphicSys->GetRenderingPiplies()[0];
+	auto pipline = _graphicSys->GetRenderingPiplies()[0].get();
 
 	_cam = std::make_shared<CameraControle>(
 		_kernel->GetEventManager(), pipline->GetCamera());

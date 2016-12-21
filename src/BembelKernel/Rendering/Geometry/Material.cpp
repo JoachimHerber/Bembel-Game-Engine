@@ -17,6 +17,11 @@ Material::Material()
 Material::~Material()
 {}
 
+unsigned Material::GetRenderer() const
+{
+	return _renderer;
+}
+
 const Material::Color& Material::GetEmission() const
 {
 	return _emission;

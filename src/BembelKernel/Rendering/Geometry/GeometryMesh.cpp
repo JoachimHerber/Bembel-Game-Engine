@@ -18,11 +18,6 @@ GeometryMesh::GeometryMesh()
 GeometryMesh::~GeometryMesh()
 {}
 
-void GeometryMesh::Bind()
-{
-	glBindVertexArray(_vao);
-}
-
 bool GeometryMesh::GetSubMesh(
 	const std::string& name, 
 	unsigned& firstIndex, 
@@ -35,6 +30,11 @@ bool GeometryMesh::GetSubMesh(
 	firstIndex = it->second.firstIndex;
 	numIndices = it->second.numIndices;
 	return true;
+}
+
+GLuint GeometryMesh::GetVAO() const
+{
+	return _vao;
 }
 
 const std::string& GeometryMesh::GetTypeName()

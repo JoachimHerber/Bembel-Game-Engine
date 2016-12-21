@@ -10,6 +10,7 @@
 
 #include <BembelBase/XML.h>
 #include <BembelKernel/Scene/PositionComponent.h>
+#include <BembelKernel/Scene/GeometryComponent.h>
 #include <BembelGraphics/GraphicSystem.h>
 #include <BembelGraphics/RenderingPipeline/RenderingStage.h>
 
@@ -25,6 +26,7 @@ class Shader;
 class Texture;
 class FrameBufferObject;
 class SelectionManager;
+class GeometryModel;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -58,6 +60,16 @@ public:
 private:
 	static ShaderPtr CreateShader(const xml::Element*);
 
+
+	struct GeometryObject
+	{
+		glm::vec3      position;
+		float          dist;
+		GeometryModel* model;
+		unsigned       state;
+	};
+	void GetHiglightedObjects(std::vector<GeometryObject>& );
+
 private:
 	std::unique_ptr<FrameBufferObject> _fbo;
 
@@ -66,6 +78,7 @@ private:
 	ScenePtr                         _scene;
 	PositionComponent::ContainerPtr  _positionComponents;
 	SelectionComponent::ContainerPtr _selectionComponents;
+	GeometryComponent::ContainerPtr  _geometryComponents;
 };
 
 } //end of namespace bembel

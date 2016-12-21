@@ -4,12 +4,12 @@
 
 #include "GeometryRenderingStage.h"
 
-
-#include "RenderingPipeline.h"
 #include "Camera.h"
+#include "RenderingPipeline.h"
+#include "../GraphicSystem.h"
 
 #include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/GeometryRenderer.h>
+#include <BembelKernel/Rendering/Geometry/GeometryRenderer.h>
 #include <BembelKernel/Rendering/FrameBufferObject.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -57,6 +57,8 @@ void GeometryRenderingStage::DoRendering()
 
 	glEnable(GL_CULL_FACE);
  	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+
 
 	glClearColor(0.0, 0.0, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -67,14 +69,20 @@ void GeometryRenderingStage::DoRendering()
 // 	const auto& posComp = _positionComponents->GetComponents();
 // 	const auto& geometrys = _geometryComponents->GetComponents();
 	
-	std::vector<GeometryRenderer::GeometryInstance> geometry;
-	geometry.reserve(entitis.size());
+	auto& renderQueue = _pipline->GetGraphicSystem()->GetGeometryRenderQueue();
+	renderQueue.ClearRendarData();
+	renderQueue.SetAssetMannager(_scene->GetAssetManager().get());
+
 	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
 	{
 		if ((entitis[entity] & _geometryComponents->GetComponentMask()) == 0)
 			continue;
 
-		glm::mat4 transform(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		glm::mat4 transform(
+			1, 0, 0, 0, 
+			0, 1, 0, 0, 
+			0, 0, 1, 0, 
+			0, 0, 0, 1);
 		if (entitis[entity] & _positionComponents->GetComponentMask())
 		{
 			transform = glm::translate(
@@ -82,15 +90,16 @@ void GeometryRenderingStage::DoRendering()
 		}
 
 		GeometryComponent* geom = _geometryComponents->GetComponent(entity);
-		geometry.push_back({geom->model, transform});
+		renderQueue.AddGeometryObject(geom->model, transform);
 	}
 
-	for ( auto& renderer : _pipline->GetRenderer())
+	renderQueue.SortRenderData();
+	for ( auto& renderer :_pipline->GetGraphicSystem()->GetRenderer())
 	{
-		renderer->DrawGeometry(
-			cam->GetViewMatrix(), 
-			cam->GetProjectionMatrix(), 
-			geometry);
+		renderer->Render(
+			cam->GetProjectionMatrix(),
+			cam->GetViewMatrix(),
+			renderQueue.GetRenderData());
 	}
  	_fbo->EndRenderToTexture();
 }

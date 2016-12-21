@@ -22,7 +22,7 @@ struct SelectionComponent
 		SELECTABLE,
 		FOCUSED,
 		SELECED
-	} stat;
+	} state;
 
 
 	using ContainerType = DenseComponentContainer<SelectionComponent>;

@@ -24,9 +24,9 @@ bool SelectionComponent::InitComponent(
 {
 	bool b;
 	if (xml::GetAttribute(elem, "selectable", b) && b)
-		comp.stat = SELECTABLE;
+		comp.state = SELECTABLE;
 	else
-		comp.stat = UNSELECTABLE;
+		comp.state = UNSELECTABLE;
 
 	return true;
 }

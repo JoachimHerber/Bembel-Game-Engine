@@ -45,16 +45,18 @@ set( DirFiles
 	Rendering/Shader.cpp
 	Rendering/Texture.h
 	Rendering/Texture.cpp
-	Rendering/Material.h
-	Rendering/Material.cpp
-	Rendering/GeometryMesh.h
-	Rendering/GeometryMesh.cpp
-	Rendering/GeometryModel.h
-	Rendering/GeometryModel.cpp
-	Rendering/GeometryRenderer.h
-	Rendering/GeometryRenderer.cpp
 	Rendering/FrameBufferObject.h
 	Rendering/FrameBufferObject.cpp
+	Rendering/Geometry/Material.h
+	Rendering/Geometry/Material.cpp
+	Rendering/Geometry/GeometryMesh.h
+	Rendering/Geometry/GeometryMesh.cpp
+	Rendering/Geometry/GeometryModel.h
+	Rendering/Geometry/GeometryModel.cpp
+	Rendering/Geometry/GeometryRenderer.h
+	Rendering/Geometry/GeometryRenderer.cpp
+	Rendering/Geometry/GeometryRenderQueue.h
+	Rendering/Geometry/GeometryRenderQueue.cpp
 	
 	Scene/Scene.h
 	Scene/Scene.cpp

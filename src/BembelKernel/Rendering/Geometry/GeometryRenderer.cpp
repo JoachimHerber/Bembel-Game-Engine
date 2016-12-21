@@ -4,77 +4,88 @@
 
 #include "GeometryRenderer.h"
 
-#include "Shader.h"
+#include "../Shader.h"
 #include "GeometryModel.h"
 #include "GeometryMesh.h"
 
 #include <glm/glm.hpp>
+
+#include <iostream>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
 namespace bembel {
 
-GeometryRenderer::GeometryRenderer()
+DefaultGeometryRenderer::DefaultGeometryRenderer(unsigned id)
+	: GeometryRendererBase(id)
 {}
 
-GeometryRenderer::~GeometryRenderer()
+DefaultGeometryRenderer::~DefaultGeometryRenderer()
 {}
 
-void GeometryRenderer::SetAssetMannager(std::shared_ptr<AssetManager> assetMgr)
-{
-	_assetMgr = assetMgr;
-}
-
-void GeometryRenderer::SetShader(std::shared_ptr<Shader> shader)
+void DefaultGeometryRenderer::SetShader(std::shared_ptr<Shader> shader)
 {
 	_shader = shader;
 }
 
-void GeometryRenderer::DrawGeometry(
-	const glm::mat4& view, 
-	const glm::mat4& proj, 
-	const std::vector<GeometryInstance>& instances)
+void DefaultGeometryRenderer::Render(
+	const glm::mat4& proj,
+	const glm::mat4& view,
+	const std::vector<GeometryRenderData>& data)
 {
-	if (!_shader || !_assetMgr)
+
+	if (!_shader)
 		return;
 
-	s_renderData.clear();
-	s_renderData.reserve(instances.size());
+	_shader->Use(),
+	glUniformMatrix4fv(
+		_shader->GetUniformLocation("uProjectionMatrix"),
+		1, GL_FALSE, &proj[0][0]);
 
-	for (auto& it : instances)
+	GeometryMesh* currentMesh = nullptr;
+	Material*     currentMaterial = nullptr;
+	for (const auto& it : data)
 	{
-		glm::mat4 transform = view*it.transformation;
-
-		GeometryModel* model = _assetMgr->GetAsset<GeometryModel>(it.model);
-		if (!model)
+		if (!it.mesh || !it.material)
 			continue;
 
-		GeometryMesh* mesh = _assetMgr->GetAsset<GeometryMesh>(model->GetMesh());
-		if (!mesh)
-			continue;
-
-		mesh->Bind();
-		for (const auto& matMapping : model->GetMateialMapping())
+		if (it.mesh != currentMesh)
 		{
-			Material* mat = _assetMgr->GetAsset<Material>(matMapping.material);
-			if(!mat)
-				continue;
-
-			unsigned first, count;
-			if (!mesh->GetSubMesh(matMapping.subMesh, first, count))
-				continue;
-
-			s_renderData.push_back(RenderData{
-				mesh, mat, first, count, transform
-			});
+			currentMesh = it.mesh;
+			glBindVertexArray(currentMesh->GetVAO());
 		}
+		if (it.material != currentMaterial)
+		{
+			currentMaterial = it.material;
+			UseMaterial(currentMaterial);
+		}
+
+		glm::mat4 modleView = view*it.transform;
+
+		glUniformMatrix4fv(
+			_shader->GetUniformLocation("uModleViewMatrix"),
+			1, GL_FALSE, &(modleView[0][0]));
+		glUniformMatrix4fv(
+			_shader->GetUniformLocation("uNormalMatrix"),
+			1, GL_FALSE, &(modleView[0][0]));
+
+		glLoadIdentity();
+		glMultMatrixf(&(it.transform[0][0]));
+		glDrawElements(
+			GL_TRIANGLES,
+			it.count,
+			GL_UNSIGNED_INT,
+			(void*)(it.first * sizeof(unsigned))
+		);
 	}
-	DoRendering(proj);
+
+	glBindVertexArray(0);
 }
 
-std::shared_ptr<GeometryRenderer> GeometryRenderer::CreateRenderer(
-	const xml::Element* properties)
+std::unique_ptr<DefaultGeometryRenderer>
+	DefaultGeometryRenderer::CreateRenderer(
+		const xml::Element* properties, unsigned id)
 {
 	std::string filename;
 
@@ -92,62 +103,14 @@ std::shared_ptr<GeometryRenderer> GeometryRenderer::CreateRenderer(
 
 	if (program->Link())
 	{
-		auto renderer = std::make_shared<GeometryRenderer>();
+		auto renderer = std::make_unique<DefaultGeometryRenderer>(id);
 		renderer->SetShader(program);
-		return renderer;
+		return std::move(renderer);
 	}
 	return nullptr;
 }
 
-void GeometryRenderer::DoRendering(const glm::mat4& proj)
-{
-	std::sort(s_renderData.begin(), s_renderData.end(), [](
-		const RenderData& first, const RenderData& second
-	){
-		return (first.mesh != second.mesh) ? 
-			first.mesh < second.mesh :
-			first.material < second.material;
-	});
-
-	_shader->Use();
-	glUniformMatrix4fv(
-		_shader->GetUniformLocation("uProjectionMatrix"),
-		1, GL_FALSE, &proj[0][0]);
-
-	GeometryMesh* currentMesh = nullptr;
-	Material*     currentMaterial = nullptr;
-	for (size_t n = 0; n < s_renderData.size(); ++n)
-	{
-		if (s_renderData[n].mesh != currentMesh)
-		{
-			currentMesh = s_renderData[n].mesh;
-			currentMesh->Bind();
-		}
-		if (s_renderData[n].material != currentMaterial)
-		{
-			currentMaterial = s_renderData[n].material;
-			UseMaterial(currentMaterial);
-		}
-
-		glUniformMatrix4fv(
-			_shader->GetUniformLocation("uModleViewMatrix"),
-			1, GL_FALSE, &s_renderData[n].transform[0][0]);
-		glUniformMatrix4fv(
-			_shader->GetUniformLocation("uNormalMatrix"),
-			1, GL_FALSE, &s_renderData[n].transform[0][0]);
-
-		glDrawElements(
-			GL_TRIANGLES,
-			s_renderData[n].count,
-			GL_UNSIGNED_INT,
-			(void*)(s_renderData[n].first * sizeof(unsigned))
-		);
-	}
-}
-
-std::vector<GeometryRenderer::RenderData> GeometryRenderer::s_renderData;
-
-void GeometryRenderer::UseMaterial(Material* material)
+void DefaultGeometryRenderer::UseMaterial(Material* material)
 {
 	glUniform3fv(
 		_shader->GetUniformLocation("uAlbedo"),

@@ -81,9 +81,9 @@ void SelectMoveState::OnMoveChanged()
 	auto& selectionComponents = container->GetComponents();
 
 	for (auto& it : selectionComponents)
-		it.stat = SelectionComponent::UNSELECTABLE;
+		it.state = SelectionComponent::UNSELECTABLE;
 
-	selectionComponents[_chessPiece->GetEntity()].stat =
+	selectionComponents[_chessPiece->GetEntity()].state =
 		SelectionComponent::SELECED;
 
 	for (size_t n = 0; n< _chessPiece->GetPossibleMoves().size(); ++n)
@@ -92,7 +92,7 @@ void SelectMoveState::OnMoveChanged()
 		auto target = move.move->GetTargetPosition(_chessPiece, move.param);
 
 		auto tile = _board->GetTileEntity(target);
-		selectionComponents[tile].stat =
+		selectionComponents[tile].state =
 			n == _selectedMove ?
 			SelectionComponent::FOCUSED :
 			SelectionComponent::SELECTABLE;

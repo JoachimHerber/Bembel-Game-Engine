@@ -12,7 +12,7 @@
 #include <BembelKernel/Rendering/Texture.h>
 #include <BembelKernel/Rendering/Shader.h>
 #include <BembelKernel/Rendering/FrameBufferObject.h>
-#include <BembelKernel/Rendering/GeometryRenderer.h>
+#include <BembelKernel/Rendering/Geometry/GeometryRenderer.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */
@@ -29,6 +29,11 @@ RenderingPipeline::RenderingPipeline(GraphicSystem* graphicSys)
 
 RenderingPipeline::~RenderingPipeline()
 {}
+
+GraphicSystem* RenderingPipeline::GetGraphicSystem() const
+{
+	return _grapicSys;
+}
 
 void RenderingPipeline::Enable()
 {
@@ -83,7 +88,6 @@ bool RenderingPipeline::Configure(const xml::Element* properties)
 
 	InitTextures(properties->FirstChildElement("Textures"));
 	InitStages(properties->FirstChildElement("RenderingStages"));
-	InitRenderer(properties->FirstChildElement("Renderer"));
 	InitViews(properties->FirstChildElement("Views"));
 	InitCamera(properties->FirstChildElement("Camera"));
 	return true;
@@ -104,9 +108,6 @@ void RenderingPipeline::Cleanup()
 void RenderingPipeline::SetScene(ScenePtr scene)
 {
 	_scene = scene;
-
-	for (auto& renderer : _renderer)
-		renderer->SetAssetMannager(_scene->GetAssetManager());
 
 	for (auto& stage : _stages)
 		stage->SetScene(_scene);
@@ -183,16 +184,6 @@ void RenderingPipeline::AddRenderingStage(RenderingStagePtr stage)
 	_stages.push_back(stage);
 }
 
-void RenderingPipeline::AddRenderer(RendererPtr renderer)
-{
-	_renderer.push_back(renderer);
-}
-
-std::vector<RenderingPipeline::RendererPtr>& RenderingPipeline::GetRenderer()
-{
-	return _renderer;
-}
-
 std::vector<std::shared_ptr<TextureView>>& RenderingPipeline::GetViews()
 {
 	return _views;
@@ -221,21 +212,6 @@ void RenderingPipeline::InitStages(const xml::Element* properties)
 				stageProperties->Value(), stageProperties, this);
 		if (stage)
 			_stages.push_back(stage);
-	}
-}
-
-void RenderingPipeline::InitRenderer(const xml::Element* properties)
-{
-	if (!properties)
-		return;
-
-	for (auto rendererProperties : xml::IterateChildElements(properties))
-	{
-		RendererPtr renderer =
-			GeometryRenderer::CreateRenderer(rendererProperties);
-	
-		if (renderer)
-			_renderer.push_back(renderer);
 	}
 }
 

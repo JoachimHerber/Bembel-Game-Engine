@@ -9,6 +9,12 @@
 	</Display>
 	<Systems>
 		<Graphics>
+			<Renderer>
+				<GeometryRenderer>
+					<VertexShader file="shaders/render_geometry.vert" />
+					<FragmentShader file="shaders/render_geometry.frag" />
+				</GeometryRenderer>
+			</Renderer>
 			<RenderingPipelines>
 				<RenderingPipeline horizontal_resolution="900" vertical_resolution="900">
 					<Textures>
@@ -73,13 +79,7 @@
 							<DepthOutput texture="depth"/>
 						</SelectionRenderingStage>
 					</RenderingStages>
-					<Renderer>
-						<!-- <TestRenderer /> -->
-						<GeometryRenderer>
-							<VertexShader file="shaders/render_geometry.vert" />
-							<FragmentShader file="shaders/render_geometry.frag" />
-						</GeometryRenderer>
-					</Renderer>
+					
 					<Views>	
 						<View texture="light"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
 						<View texture="albedo"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>

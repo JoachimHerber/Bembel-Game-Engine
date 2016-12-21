@@ -27,9 +27,8 @@ public:
 	GeometryMesh();
 	~GeometryMesh();
 
-	void Bind();
-
 	bool GetSubMesh(const std::string& name, unsigned& firstIndex, unsigned& numIndices);
+	GLuint GetVAO() const;
 
 	const static std::string& GetTypeName();
 

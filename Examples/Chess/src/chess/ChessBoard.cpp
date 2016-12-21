@@ -13,7 +13,7 @@
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
 #include <BembelKernel/Scene/GeometryComponent.h>
-#include <BembelKernel/Rendering/GeometryModel.h>
+#include <BembelKernel/Rendering/Geometry/GeometryModel.h>
 #include <BembelGraphics/RenderingPipeline/LightSourceProperties.h>
 
 /*============================================================================*/
@@ -163,7 +163,7 @@ void ChessBoard::InitTiles()
 			auto geomComt = _scene->CreateComponent<GeometryComponent>(_tiles[u][v].entity);
 			geomComt->model = ((u+v)%2 == 0 ? whiteTile : blackTile);
 			auto selectComp = _scene->CreateComponent<SelectionComponent>(_tiles[u][v].entity);
-			selectComp->stat = SelectionComponent::UNSELECTABLE;
+			selectComp->state = SelectionComponent::UNSELECTABLE;
 		}
 	}
 }
