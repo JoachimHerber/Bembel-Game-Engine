@@ -22,7 +22,7 @@
 namespace bembel {
 
 ChessBoard::ChessBoard(
-	std::shared_ptr<AssetManager> assetMgr, unsigned w, unsigned h,
+	AssetManager* assetMgr, unsigned w, unsigned h,
 	const std::vector<std::string>& playerNames)
 	: _scene(std::make_shared<Scene>(assetMgr))
 	, _width(w)
@@ -231,7 +231,7 @@ std::unique_ptr<ChessPieceType> ChessBoard::CreateChessPieceType(
 	{
 		type->SetModle(
 			&_player[n], 
-			_scene->GetAssetManager().get(), 
+			_scene->GetAssetManager(), 
 			_player[n].GetName() + "." + modleSufix
 		);
 	}

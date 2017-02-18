@@ -100,11 +100,10 @@ void ChessApplication::HandleEvent(const WindowShouldCloseEvent& event)
 
 bool ChessApplication::InitAssets()
 {
-	_assetMgr = std::make_shared<AssetManager>();
-	_assetMgr->RegisterAssetType<Material>();
-	_assetMgr->RegisterAssetType<GeometryMesh>();
-	_assetMgr->RegisterAssetType<GeometryModel>();
-	_assetMgr->LoadAssets("assets/assets.xml");
+	_kernel->GetAssetManager()->RegisterAssetType<Material>();
+	_kernel->GetAssetManager()->RegisterAssetType<GeometryMesh>();
+	_kernel->GetAssetManager()->RegisterAssetType<GeometryModel>();
+	_kernel->GetAssetManager()->LoadAssets("assets/assets.xml");
 
 	return true;
 }
@@ -112,7 +111,7 @@ bool ChessApplication::InitAssets()
 bool ChessApplication::InitDefaultChessBoard()
 {
 	_chessBoards.push_back(
-		std::make_unique<ChessBoard>(_assetMgr, 8, 8));
+		std::make_unique<ChessBoard>( _kernel->GetAssetManager(), 8, 8));
 	auto board = _chessBoards.back().get();
 
 	board->GetPlayer(0)->SetMovementDirection(Player::RIGHT);
@@ -165,7 +164,7 @@ bool ChessApplication::InitFourPlayerChessBoard()
 	const std::vector<std::string> playerName = {"white","orange","black","blue"};
 	_chessBoards.push_back(
 		std::make_unique<ChessBoard>(
-			_assetMgr, 14, 14, playerName));
+			_kernel->GetAssetManager(), 14, 14, playerName));
 	auto board = _chessBoards.back().get();
 
 	board->GetPlayer(0)->SetMovementDirection(Player::RIGHT);

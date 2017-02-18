@@ -71,7 +71,7 @@ void GeometryRenderingStage::DoRendering()
 	
 	auto& renderQueue = _pipline->GetGraphicSystem()->GetGeometryRenderQueue();
 	renderQueue.ClearRendarData();
-	renderQueue.SetAssetMannager(_scene->GetAssetManager().get());
+	renderQueue.SetAssetMannager(_scene->GetAssetManager());
 
 	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
 	{

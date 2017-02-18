@@ -19,8 +19,8 @@ namespace bembel {
 InteractionSystem::InteractionSystem(Kernel* kernel)
 	: System(kernel, "Interaction")
 {
-	_mouse    = std::make_unique<Mouse>(kernel->GetEventManager().get());
-	_keyboard = std::make_unique<Keyboard>(kernel->GetEventManager().get());
+	_mouse    = std::make_unique<Mouse>(kernel->GetEventManager());
+	_keyboard = std::make_unique<Keyboard>(kernel->GetEventManager());
 }
 InteractionSystem::~InteractionSystem()
 {

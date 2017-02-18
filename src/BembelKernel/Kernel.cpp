@@ -4,8 +4,9 @@
 
 #include "Kernel.h"
 #include "System.h"
-#include "Display/DisplayManager.h"
 #include "Events/EventManager.h"
+#include "Assets/AssetManager.h"
+#include "Display/DisplayManager.h"
 
 #include <BembelBase/Logging/Logger.h>
 #include <BembelBase/XML.h>
@@ -21,6 +22,7 @@ namespace bembel{
 
 Kernel::Kernel()
 	: _eventMgr(std::make_unique<EventManager>())
+	, _assetMgr(std::make_unique<AssetManager>())
 {
 	if( glfwInit() == GL_FALSE )
 	{
@@ -38,14 +40,19 @@ Kernel::~Kernel()
 	glfwTerminate();
 }
 
-std::shared_ptr<EventManager> Kernel::GetEventManager() const
+EventManager* Kernel::GetEventManager() const
 {
-	return _eventMgr;
+	return _eventMgr.get();
 }
 
-std::shared_ptr<DisplayManager> Kernel::GetDisplayManager() const
+AssetManager* Kernel::GetAssetManager() const
 {
-	return _displayMgr;
+	return _assetMgr.get();
+}
+
+DisplayManager* Kernel::GetDisplayManager() const
+{
+	return _displayMgr.get();
 }
 
 bool Kernel::AddSystem(std::shared_ptr<System> system)

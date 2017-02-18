@@ -14,7 +14,7 @@
 
 namespace bembel{
 
-CameraControle::CameraControle(EventMgrPtr eventMgr, CameraPtr camera)
+CameraControle::CameraControle(EventManager* eventMgr, CameraPtr camera)
 	: _eventMgr(eventMgr)
 	, _camera(camera)
 {

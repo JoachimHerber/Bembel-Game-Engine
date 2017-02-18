@@ -29,7 +29,7 @@ class ChessBoard
 {
 public:
 	ChessBoard(
-		std::shared_ptr<AssetManager>, unsigned w, unsigned h, 
+		AssetManager*, unsigned w, unsigned h, 
 		const std::vector<std::string>& playerNames = {"white","black"});
 	~ChessBoard();
 

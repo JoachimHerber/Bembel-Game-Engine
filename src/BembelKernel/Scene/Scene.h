@@ -35,8 +35,7 @@ public:
 
 	enum{ INVALID_ENTITY = ~EntityID(0) };
 
-	Scene();
-	Scene(std::shared_ptr<AssetManager>);
+	Scene(AssetManager*);
 	~Scene();
 
 	template<class ComponentType>
@@ -60,7 +59,7 @@ public:
 
 	const std::vector<ComponentMask>& GetEntitys() const;
 
-	std::shared_ptr<AssetManager> GetAssetManager();
+	AssetManager* GetAssetManager();
 
 private:
 	using ContainerPtr = std::shared_ptr<ComponentContainerBase>;
@@ -71,7 +70,7 @@ private:
 	std::map<std::string, ComponentTypeID> _componentTypeMap;
 	std::vector<ContainerPtr>              _container;
 
-	std::shared_ptr<AssetManager> _assteManager;
+	AssetManager* _assteManager;
 };
 
 } //end of namespace bembel

@@ -46,8 +46,6 @@ private:
 	std::shared_ptr<GraphicSystem>     _graphicSys;
 	std::shared_ptr<InteractionSystem> _interactionSys;
 
-	std::shared_ptr<AssetManager> _assetMgr;
-
 	std::vector<std::unique_ptr<ChessBoard>> _chessBoards;
 	StateMashine _stateMashine;
 

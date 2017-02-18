@@ -17,6 +17,7 @@
 namespace bembel{
 
 class EventManager;
+class AssetManager;
 class DisplayManager;
 class System;
 
@@ -32,8 +33,9 @@ public:
 	Kernel();
 	~Kernel();
 	
-	std::shared_ptr<EventManager>   GetEventManager() const;
-	std::shared_ptr<DisplayManager> GetDisplayManager() const;
+	EventManager*   GetEventManager() const;
+	AssetManager*   GetAssetManager() const;
+	DisplayManager* GetDisplayManager() const;
 
 	bool AddSystem(std::shared_ptr<System>);
 	bool RemoveSystem(const std::string& name);
@@ -48,8 +50,9 @@ public:
 
 	void PollEvents();
 private:
-	std::shared_ptr<EventManager>   _eventMgr;
-	std::shared_ptr<DisplayManager> _displayMgr;
+	std::unique_ptr<EventManager>   _eventMgr;
+	std::unique_ptr<AssetManager>   _assetMgr;
+	std::unique_ptr<DisplayManager> _displayMgr;
 
 	std::unordered_map<std::string, unsigned> _systemMapping;
 	std::vector<std::shared_ptr<System>>      _systems;

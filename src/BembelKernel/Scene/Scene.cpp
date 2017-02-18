@@ -12,10 +12,7 @@
 /*============================================================================*/
 namespace bembel {
 
-Scene::Scene() : 
-	_assteManager(std::make_shared<AssetManager>())
-{}
-Scene::Scene(std::shared_ptr<AssetManager> assetMgr)
+Scene::Scene(AssetManager* assetMgr)
 	: _assteManager(assetMgr)
 {}
 
@@ -47,7 +44,7 @@ Scene::EntityID Scene::CreateEntity(
 		if(it == _componentTypeMap.end())
 			continue; // unknown component type
 
-		if (_container[it->second]->CreateComponent(entity, component, _assteManager.get()))
+		if (_container[it->second]->CreateComponent(entity, component, _assteManager))
 		{
 			_entities[entity] |= _container[it->second]->GetComponentMask();
 		}
@@ -99,7 +96,7 @@ const std::vector<Scene::ComponentMask>& Scene::GetEntitys() const
 	return _entities;
 }
 
-std::shared_ptr<AssetManager> Scene::GetAssetManager()
+AssetManager* Scene::GetAssetManager()
 {
 	return _assteManager;
 }

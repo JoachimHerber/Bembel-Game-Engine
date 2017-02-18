@@ -20,10 +20,9 @@ namespace bembel{
 class CameraControle
 {
 public:
-	using EventMgrPtr = std::shared_ptr<bembel::EventManager>;
 	using CameraPtr   = std::shared_ptr<bembel::Camera>;
 
-	CameraControle(EventMgrPtr, CameraPtr camera);
+	CameraControle(EventManager*, CameraPtr camera);
 	~CameraControle();
 
 	void SetPitch(float);
@@ -45,8 +44,8 @@ public:
 	void HandleEvent(const bembel::CursorMovedEvent&);
 
 private:
-	EventMgrPtr _eventMgr;
-	CameraPtr   _camera;
+	EventManager* _eventMgr;
+	CameraPtr     _camera;
 
 	bool _enabeld = false;
 
