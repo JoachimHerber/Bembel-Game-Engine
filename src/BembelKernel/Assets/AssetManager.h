@@ -42,8 +42,10 @@ public:
 	template<typename AssetType>
 	AssetType* GetAsset(AssetHandle handle, bool returnDummyIfHandleInvalid = true);
 
-	template<typename AssetType, typename AssetLoaderType = AssetType::DefaultLoaderType>
-	bool RegisterAssetType();	
+	template<typename AssetType, typename ... TArgs>
+	bool RegisterAssetType( TArgs ... args );
+	template<typename AssetType, typename AssetLoaderType,  typename ... TArgs>
+	bool RegisterAssetType(TArgs ... args);
 
 	int GetAssetRefCount(AssetHandle handle);
 	void IncrementAssetRefCount(AssetHandle handle);

@@ -47,6 +47,7 @@ public:
 	void UpdateViewports();
 
 	const std::vector<RendererPtr>& GetRenderer() const;
+	GeometryRendererBase* GetRenderer(const std::string& name) const;
 
 	RenderingPipeline* CreateRenderingPipline();
 	const std::vector<RenderingPipelinePtr>& GetRenderingPiplies();
@@ -72,6 +73,8 @@ private:
 	std::vector<std::vector<ViewportPtr>> _viewports;
 	std::vector<RendererPtr>              _renderer;
 	std::vector<RenderingPipelinePtr>     _pipelines;
+
+	std::map<std::string, unsigned> _rendererMap;
 
 	RendertingStageFactory _renderingStageFactory;
 	GeometryRenderQueue    _geometryRenderQueue;

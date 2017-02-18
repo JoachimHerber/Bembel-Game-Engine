@@ -4,7 +4,7 @@
 
 #include "ChessPieceType.h"
 
-#include <BembelKernel/Rendering/Geometry/GeometryModel.h>
+#include <BembelGraphics/Geometry/GeometryModel.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

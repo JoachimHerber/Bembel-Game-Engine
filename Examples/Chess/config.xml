@@ -10,7 +10,7 @@
 	<Systems>
 		<Graphics>
 			<Renderer>
-				<GeometryRenderer>
+				<GeometryRenderer name="default" >
 					<VertexShader file="shaders/render_geometry.vert" />
 					<FragmentShader file="shaders/render_geometry.frag" />
 				</GeometryRenderer>

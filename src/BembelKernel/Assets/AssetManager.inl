@@ -46,8 +46,28 @@ inline AssetType* AssetManager::GetAsset(
 	return nullptr;
 }
 
-template<typename AssetType, typename AssetLoaderType>
-inline bool AssetManager::RegisterAssetType()
+template<typename AssetType, typename ... TArgs>
+inline bool AssetManager::RegisterAssetType( TArgs ... args )
+{
+	auto it = _assetTypeMap.find( AssetType::GetTypeName() );
+	if( it != _assetTypeMap.end() )
+		return false; // Asset type has already been registered
+
+	assert( _assetTypeMap.size() < 0xFFFFLU &&
+		"number of asset-types surpasses the maximum" );
+	uint16_t typeID = _assetTypeMap.size();
+
+	auto container = std::make_shared<AssetContainer<AssetType>>( typeID );
+	auto loader = std::make_shared<AssetType::DefaultLoaderType>( this, container, args... );
+
+	_assetTypeMap.emplace( AssetType::GetTypeName(), typeID );
+	_assetContainer.push_back( container );
+	_assetLoader.push_back( loader );
+	return true;
+}
+
+template<typename AssetType, typename AssetLoaderType, typename ... TArgs>
+inline bool AssetManager::RegisterAssetType( TArgs ... args )
 {
 	auto it = _assetTypeMap.find(AssetType::GetTypeName());
 	if (it != _assetTypeMap.end())

@@ -1,24 +1,28 @@
 <Assets>
 	<Material 
 		name                          = "white_chess_piece"
+		renderer                      = "default"
 		albedo                        = "0.95 0.95 0.95"
 		reflectivity                  = "0.01 0.01 0.01"
 		roughness                     = "0.9"
 	/>
 	<Material 
 		name                          = "black_chess_piece"
+		renderer                      = "default"
 		albedo                        = "0.05 0.05 0.05"
 		reflectivity                  = "0.05 0.05 0.05"
 		roughness                     = "0.5"
 	/>
 	<Material 
 		name                          = "orange_chess_piece"
+		renderer                      = "default"
 		albedo                        = "0.95 0.25 0.00"
 		reflectivity                  = "0.01 0.01 0.01"
 		roughness                     = "0.95"
 	/>
 	<Material 
 		name                          = "blue_chess_piece"
+		renderer                      = "default"
 		albedo                        = "0.02 0.02 0.95"
 		reflectivity                  = "0.01 0.01 0.01"
 		roughness                     = "0.7"

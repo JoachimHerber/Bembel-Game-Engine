@@ -35,7 +35,7 @@ BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(CleanuptGraphicResourcesEvent);
 GraphicSystem::GraphicSystem(Kernel* kernel)
 	: System(kernel, "Graphics")
 {
-	_kernel->GetAssetManager()->RegisterAssetType<Material>();
+	_kernel->GetAssetManager()->RegisterAssetType<Material>(this);
 	_kernel->GetAssetManager()->RegisterAssetType<GeometryMesh>();
 	_kernel->GetAssetManager()->RegisterAssetType<GeometryModel>();
 
@@ -104,6 +104,15 @@ const std::vector<std::shared_ptr<RenderingPipeline>>&
 const std::vector<std::shared_ptr<GeometryRendererBase>>& GraphicSystem::GetRenderer() const
 {
 	return _renderer;
+}
+
+GeometryRendererBase* GraphicSystem::GetRenderer( const std::string& name ) const
+{
+	auto it = _rendererMap.find( name );
+	if(it != _rendererMap.end())
+		return _renderer[it->second].get();
+	else
+		return nullptr;
 }
 
 GraphicSystem::RendertingStageFactory& GraphicSystem::GetRendertingStageFactory()
@@ -203,8 +212,14 @@ void GraphicSystem::ConfigureRenderer(const xml::Element* properties)
 			DefaultGeometryRenderer::CreateRenderer(
 				rendererProperties, _renderer.size());
 
-		if (renderer)
-			_renderer.push_back(std::move(renderer));
+		if( renderer )
+		{
+			std::string name;
+			if( xml::GetAttribute( rendererProperties, "name", name ) )
+				_rendererMap.emplace( name, _renderer.size() );
+
+			_renderer.push_back( std::move( renderer ) );
+		}
 	}
 }
 
