@@ -101,9 +101,6 @@ void ChessApplication::HandleEvent(const WindowShouldCloseEvent& event)
 
 bool ChessApplication::InitAssets()
 {
-	_kernel->GetAssetManager()->RegisterAssetType<Material>();
-	_kernel->GetAssetManager()->RegisterAssetType<GeometryMesh>();
-	_kernel->GetAssetManager()->RegisterAssetType<GeometryModel>();
 	_kernel->GetAssetManager()->LoadAssets("assets/assets.xml");
 
 	return true;

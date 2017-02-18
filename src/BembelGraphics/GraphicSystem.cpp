@@ -17,7 +17,11 @@
 #include <BembelKernel/Display/DisplayManager.h>
 #include <BembelKernel/Display/Window.h>
 #include <BembelKernel/Events/DisplayEvents.h>
+#include <BembelKernel/Assets/AssetManager.h>
 
+#include "Geometry/Material.h"
+#include "Geometry/GeometryMesh.h"
+#include "Geometry/GeometryModel.h"
 #include "Geometry/GeometryRenderer.h"
 
 /*============================================================================*/
@@ -31,6 +35,10 @@ BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(CleanuptGraphicResourcesEvent);
 GraphicSystem::GraphicSystem(Kernel* kernel)
 	: System(kernel, "Graphics")
 {
+	_kernel->GetAssetManager()->RegisterAssetType<Material>();
+	_kernel->GetAssetManager()->RegisterAssetType<GeometryMesh>();
+	_kernel->GetAssetManager()->RegisterAssetType<GeometryModel>();
+
 	_kernel->GetEventManager()->AddHandler<WindowUpdateEvent>(this);
 	_kernel->GetEventManager()->AddHandler<FrameBufferResizeEvent>(this);
 
