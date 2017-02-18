@@ -31,7 +31,7 @@ public:
 
 	GLint  GetUniformLocation(const std::string& name) const;
 	GLuint GetUniformBlockIndex(const std::string& name) const;
-
+	GLint  GetUniformBlockDataSize( GLuint ) const;
 
 	bool Link();
 

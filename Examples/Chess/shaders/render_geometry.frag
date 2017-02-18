@@ -2,11 +2,14 @@
  
 in vec3 vNormal;
 in vec2 vTexCoord;
- 
-uniform vec3 uAlbedo;
-uniform vec3 uEmission;
-uniform vec3 uReflectivity;
-uniform float uRoughness;
+
+layout(std140) uniform Material
+{
+	vec4 uAlbedo;
+	vec4 uEmission;
+	vec4 uReflectivity;
+	float uRoughness;
+};
  
 layout(location = 0) out vec3 oEmission;
 layout(location = 1) out vec3 oAlbedo;
@@ -20,8 +23,8 @@ vec3 EncodeNormal (vec3 n)
 
 void main()
 {
- 	oEmission     = uEmission;
- 	oAlbedo       = uAlbedo;
- 	oReflectivity  = uReflectivity;
+ 	oEmission     = uEmission.rgb;
+ 	oAlbedo       = uAlbedo.rgb;
+ 	oReflectivity  = uReflectivity.rgb;
  	oNormal       = vec4(EncodeNormal(normalize(vNormal)), uRoughness);
 }

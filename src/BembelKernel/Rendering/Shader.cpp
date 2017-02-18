@@ -159,6 +159,14 @@ GLuint Shader::GetUniformBlockIndex(const std::string& name) const
 	return  glGetUniformBlockIndex(_programHandle, name.c_str());
 }
 
+GLint Shader::GetUniformBlockDataSize( GLuint index ) const
+{
+	GLint size;
+	glGetActiveUniformBlockiv( 
+		_programHandle, index, GL_UNIFORM_BLOCK_DATA_SIZE, &size );
+	return size;
+}
+
 } //end of namespace bembel
   /*============================================================================*/
   /* END OF FILE                                                                */
