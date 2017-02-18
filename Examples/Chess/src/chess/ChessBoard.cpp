@@ -12,8 +12,8 @@
 
 #include <BembelKernel/Assets/AssetManager.h>
 #include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Scene/GeometryComponent.h>
-#include <BembelKernel/Rendering/Geometry/GeometryModel.h>
+#include <BembelGraphics/Geometry/GeometryModel.h>
+#include <BembelGraphics/Geometry/GeometryComponent.h>
 #include <BembelGraphics/RenderingPipeline/LightSourceProperties.h>
 
 /*============================================================================*/

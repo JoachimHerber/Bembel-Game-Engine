@@ -24,6 +24,19 @@ set( DirFiles
 	RenderingPipeline/LightSourceProperties.cpp
 	RenderingPipeline/EnvironmentMapReflectionStage.h
 	RenderingPipeline/EnvironmentMapReflectionStage.cpp
+	
+	Geometry/Material.h
+	Geometry/Material.cpp
+	Geometry/GeometryMesh.h
+	Geometry/GeometryMesh.cpp
+	Geometry/GeometryModel.h
+	Geometry/GeometryModel.cpp
+	Geometry/GeometryRenderer.h
+	Geometry/GeometryRenderer.cpp
+	Geometry/GeometryRenderQueue.h
+	Geometry/GeometryRenderQueue.cpp
+	Geometry/GeometryComponent.h
+	Geometry/GeometryComponent.cpp
 )
 
 foreach( File ${DirFiles} )

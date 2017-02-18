@@ -8,11 +8,12 @@
 
 #include "../TextureView.h"
 #include "../GraphicSystem.h"
+#include "../Geometry/GeometryRenderer.h"
 
 #include <BembelKernel/Rendering/Texture.h>
 #include <BembelKernel/Rendering/Shader.h>
 #include <BembelKernel/Rendering/FrameBufferObject.h>
-#include <BembelKernel/Rendering/Geometry/GeometryRenderer.h>
+
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */

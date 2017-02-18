@@ -47,16 +47,6 @@ set( DirFiles
 	Rendering/Texture.cpp
 	Rendering/FrameBufferObject.h
 	Rendering/FrameBufferObject.cpp
-	Rendering/Geometry/Material.h
-	Rendering/Geometry/Material.cpp
-	Rendering/Geometry/GeometryMesh.h
-	Rendering/Geometry/GeometryMesh.cpp
-	Rendering/Geometry/GeometryModel.h
-	Rendering/Geometry/GeometryModel.cpp
-	Rendering/Geometry/GeometryRenderer.h
-	Rendering/Geometry/GeometryRenderer.cpp
-	Rendering/Geometry/GeometryRenderQueue.h
-	Rendering/Geometry/GeometryRenderQueue.cpp
 	
 	Scene/Scene.h
 	Scene/Scene.cpp
@@ -66,8 +56,6 @@ set( DirFiles
 	Scene/ComponentContainer.inl
 	Scene/PositionComponent.h
 	Scene/PositionComponent.cpp
-	Scene/GeometryComponent.h
-	Scene/GeometryComponent.cpp
 	
 )
 

@@ -8,11 +8,11 @@
 
 #include <BembelKernel/System.h>
 #include <BembelKernel/Events/DisplayEvents.h>
-#include <BembelKernel/Rendering/Geometry/GeometryRenderQueue.h>
 
 #include <BembelBase/Factory.hpp>
 
 #include "RenderingPipeline/RenderingStage.h"
+#include "Geometry/GeometryRenderQueue.h"
 
 #include <vector>
 

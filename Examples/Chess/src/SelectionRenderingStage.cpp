@@ -9,8 +9,9 @@
 #include <BembelKernel/Rendering/Texture.h>
 #include <BembelKernel/Rendering/Shader.h>
 #include <BembelKernel/Rendering/FrameBufferObject.h>
-#include <BembelKernel/Rendering/Geometry/GeometryModel.h>
-#include <BembelKernel/Rendering/Geometry/GeometryMesh.h>
+
+#include <BembelGraphics/Geometry/GeometryModel.h>
+#include <BembelGraphics/Geometry/GeometryMesh.h>
 
 #include "SelectionComponent.h"
 

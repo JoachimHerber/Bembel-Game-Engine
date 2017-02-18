@@ -10,8 +10,8 @@
 
 #include <BembelBase/XML.h>
 #include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Scene/GeometryComponent.h>
 #include <BembelGraphics/GraphicSystem.h>
+#include <BembelGraphics/Geometry/GeometryComponent.h>
 #include <BembelGraphics/RenderingPipeline/RenderingStage.h>
 
 #include <memory>

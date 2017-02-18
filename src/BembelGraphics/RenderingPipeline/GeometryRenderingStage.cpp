@@ -7,9 +7,9 @@
 #include "Camera.h"
 #include "RenderingPipeline.h"
 #include "../GraphicSystem.h"
+#include "../Geometry/GeometryRenderer.h"
 
 #include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/Geometry/GeometryRenderer.h>
 #include <BembelKernel/Rendering/FrameBufferObject.h>
 
 #include <glm/gtc/matrix_transform.hpp>

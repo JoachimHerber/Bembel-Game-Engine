@@ -17,7 +17,8 @@
 #include <BembelKernel/Display/DisplayManager.h>
 #include <BembelKernel/Display/Window.h>
 #include <BembelKernel/Events/DisplayEvents.h>
-#include <BembelKernel/Rendering/Geometry/GeometryRenderer.h>
+
+#include "Geometry/GeometryRenderer.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

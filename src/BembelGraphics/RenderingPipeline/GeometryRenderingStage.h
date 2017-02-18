@@ -9,7 +9,8 @@
 
 #include <BembelBase/XML.h>
 #include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Scene/GeometryComponent.h>
+
+#include "../Geometry/GeometryComponent.h"
 
 #include "RenderingStage.h"
 

@@ -11,7 +11,7 @@
 
 #include <BembelKernel/Scene/Scene.h>
 #include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Scene/GeometryComponent.h>
+#include <BembelGraphics/Geometry/GeometryComponent.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
