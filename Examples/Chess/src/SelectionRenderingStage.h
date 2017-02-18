@@ -14,6 +14,8 @@
 #include <BembelGraphics/Geometry/GeometryComponent.h>
 #include <BembelGraphics/RenderingPipeline/RenderingStage.h>
 
+#include <chrono>
+
 #include <memory>
 #include <vector>
 
@@ -60,7 +62,6 @@ public:
 private:
 	static ShaderPtr CreateShader(const xml::Element*);
 
-
 	struct GeometryObject
 	{
 		glm::vec3      position;
@@ -74,11 +75,14 @@ private:
 	std::unique_ptr<FrameBufferObject> _fbo;
 
 	ShaderPtr  _shader;
+	TexturePtr _noise;
 
 	ScenePtr                         _scene;
 	PositionComponent::ContainerPtr  _positionComponents;
 	SelectionComponent::ContainerPtr _selectionComponents;
 	GeometryComponent::ContainerPtr  _geometryComponents;
+
+	std::chrono::time_point<std::chrono::steady_clock> _starTime;
 };
 
 } //end of namespace bembel

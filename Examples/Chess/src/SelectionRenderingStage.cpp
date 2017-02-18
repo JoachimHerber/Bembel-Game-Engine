@@ -17,6 +17,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <random>
+
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
@@ -26,7 +28,30 @@ SelectionRenderingStage::SelectionRenderingStage(
 	RenderingPipeline* pipline)
 	: RenderingStage(pipline)
 	, _fbo(std::make_unique<FrameBufferObject>())
-{}
+{
+	_noise = std::make_shared<Texture>(GL_TEXTURE_3D, GL_R8 );
+
+	unsigned char data[32*32*32]; 
+	std::random_device rd;
+	std::mt19937 gen( rd() );
+	std::uniform_int_distribution<> dist( 0, 255 );
+	for( unsigned i = 0; i<32*32*32; ++i )
+		data[i] = dist( gen );
+
+	_noise->Init();
+	_noise->Bind();
+
+	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, static_cast<GLint>(GL_REPEAT) );
+	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, static_cast<GLint>(GL_REPEAT) );
+	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, static_cast<GLint>(GL_REPEAT) );
+	glTexImage3D(
+		GL_TEXTURE_3D, 0, static_cast<GLint>(GL_R8),
+		32, 32, 32, 0, GL_RED, GL_UNSIGNED_BYTE, data );
+
+	_noise->Release();
+
+	_starTime = std::chrono::high_resolution_clock::now();
+}
 
 SelectionRenderingStage::~SelectionRenderingStage()
 {}
@@ -63,19 +88,26 @@ void SelectionRenderingStage::DoRendering()
 	glm::mat4 proj = _pipline->GetCamera()->GetProjectionMatrix();
 	glm::mat4 view = _pipline->GetCamera()->GetViewMatrix();
 
-
  	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
  
  	_shader->Use(); 
- 
+	_noise->Bind();
  
  	glUniformMatrix4fv(
  		_shader->GetUniformLocation("uProjectionMatrix"),
  		1, GL_FALSE, &proj[0][0]);
- 
+
+	auto now = std::chrono::high_resolution_clock::now();
+	std::chrono::milliseconds ms =
+		std::chrono::duration_cast<std::chrono::milliseconds>(now - _starTime);
+
+	float time = 0.001f*(ms.count());
+
+	glUniform1f( _shader->GetUniformLocation( "uTime" ), time );
+
 	std::vector<GeometryObject> geometry;
 
 	GetHiglightedObjects(geometry);
@@ -125,6 +157,8 @@ void SelectionRenderingStage::DoRendering()
 		}
 
  	}
+
+	_noise->Release();
  	_fbo->EndRenderToTexture();
 	glDisable(GL_BLEND);
 }
