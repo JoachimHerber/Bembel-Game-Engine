@@ -6,6 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include "../ChessGame.h"
+
 #include <memory>
 #include <vector>
 
@@ -15,7 +17,6 @@
 namespace bembel{
 
 class ChessPiece;
-class ChessBoard;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -32,11 +33,11 @@ public:
 		MoveTemplate(){};
 		virtual ~MoveTemplate(){};
 
-		virtual void GetPosibleMoveParameter(ChessPiece*, std::vector<int>&) = 0;
+		virtual void GetPosibleMoveParameter(ChessPiece*, const ChessBoard&, std::vector<int>&) = 0;
 		virtual glm::vec2 GetTargetPosition(ChessPiece*, int) = 0;
 
-		virtual void StartMove(ChessPiece*, int) = 0;
-		virtual void EndeMove(ChessPiece*, int) = 0;
+		virtual void StartMove(ChessPiece*, ChessBoard&, int) = 0;
+		virtual void EndeMove(ChessPiece*, ChessBoard&, int) = 0;
 
 		virtual bool UpdateMoveAnimation(double, ChessPiece*, int) = 0;
 	};
@@ -61,7 +62,7 @@ public:
 
 	void AddMoveTemplate(std::shared_ptr<MoveTemplate>);
 
-	void GetAvailableMoves(ChessPiece*, std::vector<Move>&);
+	void GetAvailableMoves(ChessPiece*, const ChessBoard&, std::vector<Move>&);
 
 private:
 	std::vector<std::shared_ptr<MoveTemplate>> _moves;

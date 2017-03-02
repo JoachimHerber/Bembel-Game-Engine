@@ -14,7 +14,7 @@
 /*============================================================================*/
 namespace bembel{
 
-class ChessBoard;
+class ChessGame;
 class ChessPiece;
 
 }//end of namespace bembel
@@ -26,20 +26,10 @@ namespace bembel {
 class Player
 {
 public:
-	enum MOVE_DIRECTION
-	{
-		RIGHT = 0,
-		UP    = 1,
-		LEFT  = 2,
-		DOWN  = 3
-	};
 
-	Player(ChessBoard*, const std::string& name);
+	Player( ChessGame*, const std::string& name);
 
-	ChessBoard* GetChessBoard() const;
-
-	void SetMovementDirection(MOVE_DIRECTION);
-	MOVE_DIRECTION GetMovementDirection() const;
+	ChessGame* GetChessGame() const;
 	const std::string& GetName() const;
 
 	const std::vector<ChessPiece*>& GetChessPieces() const;
@@ -48,17 +38,12 @@ public:
 	void AddChessPiece(ChessPiece*);
 	void RemoveChessPiece(ChessPiece*);
 
-	glm::ivec2 RotateOffset(const glm::ivec2&) const;
-
 	void ClearCaptureChessPieces();
 	void CaptureChessPiece(ChessPiece*);
 
-	void SetCaptureArea(glm::vec3, glm::vec3, glm::vec3, unsigned);
-
 private:
-	ChessBoard*    _board;
+	ChessGame*     _game;
 	std::string    _name;
-	MOVE_DIRECTION _direction;
 
 	std::vector<ChessPiece*> _chessPices;
 	std::vector<ChessPiece*> _capturedChessPices;

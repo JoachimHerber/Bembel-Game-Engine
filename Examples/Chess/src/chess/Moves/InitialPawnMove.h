@@ -17,12 +17,12 @@ public:
 	InitialPawnMove();
 	~InitialPawnMove();
 
-	virtual void GetPosibleMoveParameter(ChessPiece*, std::vector<int>&) override;
+	virtual void GetPosibleMoveParameter(ChessPiece*, const ChessBoard&, std::vector<int>&) override;
 
 	virtual glm::vec2 GetTargetPosition(ChessPiece*, int) override;
 
-	virtual void StartMove(ChessPiece*, int) override;
-	virtual void EndeMove(ChessPiece*, int) override;
+	virtual void StartMove(ChessPiece*, ChessBoard&, int) override;
+	virtual void EndeMove(ChessPiece*, ChessBoard&, int) override;
 
 	virtual bool UpdateMoveAnimation(double, ChessPiece*, int) override;
 };

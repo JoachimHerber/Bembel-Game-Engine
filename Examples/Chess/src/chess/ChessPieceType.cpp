@@ -17,26 +17,14 @@ ChessPieceType::ChessPieceType()
 ChessPieceType::~ChessPieceType()
 {}
 
-void ChessPieceType::SetModle(Player* player, AssetHandle model)
+std::array<AssetHandle, 2>& ChessPieceType::GetModles()
 {
-	_modle[player] = model;
+	return _modles;
 }
 
-void ChessPieceType::SetModle(
-	Player* player,
-	AssetManager* assetMgr, 
-	const std::string& model)
+const std::array<AssetHandle, 2>& ChessPieceType::GetModles() const
 {
-	SetModle(player, assetMgr->GetAssetHandle<GeometryModel>(model));
-}
-
-AssetHandle ChessPieceType::GetModle(Player* player)
-{
-	auto it = _modle.find(player);
-	if (it != _modle.end())
-		return it->second;
-
-	return AssetHandle();
+	return _modles;
 }
 
 void ChessPieceType::AddMove(const glm::ivec2& dir, unsigned maxDist, bool attack /*= true*/, bool move /*= true*/)

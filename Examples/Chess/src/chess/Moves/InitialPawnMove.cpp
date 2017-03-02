@@ -5,7 +5,6 @@
 #include "InitialPawnMove.h"
 
 #include "../ChessPiece.h"
-#include "../ChessBoard.h"
 #include "../Player.h"
 
 #include <BembelKernel/Scene/Scene.h>
@@ -23,16 +22,16 @@ InitialPawnMove::~InitialPawnMove()
 {}
 
 void InitialPawnMove::GetPosibleMoveParameter(
-	ChessPiece* piece, std::vector<int>& params)
+	ChessPiece* piece, const ChessBoard& board, std::vector<int>& params)
 {
 	if (piece->HasMoved())
 		return;
-	Player* owner = piece->GetOwner();
-	auto p1 = piece->GetPositon() + owner->RotateOffset({1,0});
-	auto p2 = piece->GetPositon() + owner->RotateOffset({2,0});
 
-	if (piece->GetBoard()->GetChessPieceAt(p1) || 
-		piece->GetBoard()->GetChessPieceAt(p2))
+	unsigned owner = piece->GetOwner();
+	auto p1 = piece->GetPositon() + glm::ivec2{owner==0?1:-1,0};
+	auto p2 = piece->GetPositon() + glm::ivec2{owner==0?2:-2,0};
+
+	if ( board[p1.x][p1.y] != nullptr || board[p2.x][p2.y] != nullptr )
 	{
 		return;
 	}
@@ -42,28 +41,32 @@ void InitialPawnMove::GetPosibleMoveParameter(
 glm::vec2 InitialPawnMove::GetTargetPosition(
 	ChessPiece* piece, int)
 {
-	Player* owner = piece->GetOwner();
-	return piece->GetPositon() +
-		owner->RotateOffset({2,0});
+	unsigned owner = piece->GetOwner();
+	return piece->GetPositon() + glm::ivec2{owner==0 ? 2 : -2,0};
 }
 
-void InitialPawnMove::StartMove(ChessPiece*, int)
+
+void InitialPawnMove::StartMove(ChessPiece*, ChessBoard&, int)
 {
 	
 }
 
-void InitialPawnMove::EndeMove(ChessPiece* piece, int)
+void InitialPawnMove::EndeMove(ChessPiece* piece, ChessBoard& board, int)
 {
+	glm::vec2 pos = piece->GetPositon();
+	board[pos.x][pos.y] = nullptr;
+
 	glm::vec2 targetPos = GetTargetPosition(piece, 0);
 	piece->SetPosition(targetPos);
+	board[targetPos.x][targetPos.y] = piece;
 }
 
 bool InitialPawnMove::UpdateMoveAnimation(double time, ChessPiece* piece, int)
 {
-	auto scene = piece->GetBoard()->GetScene();
+	auto scene = piece->GetScene();
 
 	glm::ivec2 pos = 2*piece->GetPositon();
-	glm::ivec2 dir = 2*piece->GetOwner()->RotateOffset({2,0});
+	glm::ivec2 dir = 2*glm::ivec2{piece->GetOwner()==0 ? 2 : -2,0};
 
 	float progress = time / 2.0f;
 	float fract = progress-std::floor(progress);

@@ -21,7 +21,7 @@ struct SelectionComponent
 		UNSELECTABLE,
 		SELECTABLE,
 		FOCUSED,
-		SELECED
+		SELECTED
 	} state;
 
 

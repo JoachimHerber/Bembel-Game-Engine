@@ -45,13 +45,14 @@ void MoveSet::AddMoveTemplate(
 
 void MoveSet::GetAvailableMoves(
 	ChessPiece* chessPice, 
+	const ChessBoard& board,
 	std::vector<Move>& moves)
 {
 	for (auto& move : _moves)
 	{
 		std::vector<int> params;
 		move->GetPosibleMoveParameter(
-			chessPice, params);
+			chessPice, board, params);
 
 		for (const auto& it : params)
 		{

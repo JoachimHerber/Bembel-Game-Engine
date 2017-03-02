@@ -15,6 +15,7 @@
 
 #include "AssetContainer.h"
 #include "AssetLoader.h"
+#include "AssetFileLocator.h"
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -51,11 +52,15 @@ public:
 	void IncrementAssetRefCount(AssetHandle handle);
 	void DecrementAssetRefCount(AssetHandle handle);
 
+	AssetFileLocator& GetAssetFileLocator();
+
 private:
 	std::unordered_map<std::string, uint16_t>  _assetTypeMap;
 
 	std::vector<std::shared_ptr<AssetContainerBase>> _assetContainer;
 	std::vector<std::shared_ptr<AssetLoaderBase>>    _assetLoader;
+
+	AssetFileLocator _assetLocator;
 };
 
 } //end of namespace bembel

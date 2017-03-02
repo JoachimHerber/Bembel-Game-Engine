@@ -33,14 +33,21 @@ public:
 	const glm::mat4& GetViewMatrix() const;
 	const glm::mat4& GetProjectionMatrix() const;
 
+	const glm::mat4& GetinverseViewMatrix() const;
+	const glm::mat4& GetinverseProjectionMatrix() const;
+
 	const std::array<glm::vec4, 6>& GetViewFrustum() const;
+
 
 private:
 	glm::vec3 _position;
 	glm::quat _oriantation;
 
-	glm::mat4 _projMatrix;
 	glm::mat4 _viewMatix;
+	glm::mat4 _projMatrix;
+
+	glm::mat4 _inverseViewMatix;
+	glm::mat4 _inverseProjMatrix;
 
 	// clipping planes in order: left, right, bottom, top, near, far
 	std::array<glm::vec4, 6> _viewFrustum;

@@ -13,8 +13,7 @@
 
 #include <Bembelnteraction/InteractionSystem.h>
 
-#include "Chess/ChessBoard.h"
-#include "GameLogic/StateMashine.h"
+#include "Chess/ChessGame.h"
 #include "CameraControle.h"
 
 /*============================================================================*/
@@ -37,17 +36,14 @@ public:
 
 private:
 	bool InitAssets();
-	bool InitDefaultChessBoard();
-	bool InitFourPlayerChessBoard();
 
-	bool InitGameStates();
+	bool InitGame();
 
 private:
 	std::shared_ptr<GraphicSystem>     _graphicSys;
 	std::shared_ptr<InteractionSystem> _interactionSys;
 
-	std::vector<std::unique_ptr<ChessBoard>> _chessBoards;
-	StateMashine _stateMashine;
+	std::unique_ptr<ChessGame> _chessGame;
 
 	std::shared_ptr<CameraControle> _cam;
 };

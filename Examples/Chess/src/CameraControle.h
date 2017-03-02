@@ -42,6 +42,7 @@ public:
 	void HandleEvent(const bembel::MouseButtonPressEvent&);
 	void HandleEvent(const bembel::MouseButtonReleaseEvent&);
 	void HandleEvent(const bembel::CursorMovedEvent&);
+	void HandleEvent( const bembel::ScrollEvent& );
 
 private:
 	EventManager* _eventMgr;
@@ -50,7 +51,6 @@ private:
 	bool _enabeld = false;
 
 	bool _move;
-	bool _zoom;
 
 	glm::vec2 _cursorPos;
 	glm::vec2 _prevPos;

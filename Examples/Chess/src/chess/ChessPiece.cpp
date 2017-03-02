@@ -4,7 +4,6 @@
 
 #include "ChessPiece.h"
 #include "ChessPieceType.h"
-#include "ChessBoard.h"
 #include "Player.h"
 
 #include "../SelectionComponent.h"
@@ -20,9 +19,10 @@ namespace bembel {
 
 ChessPiece::ChessPiece(
 	ChessPieceType* type,
-	Player* owner,
+	Scene* scene,
+	unsigned owner,
 	const glm::ivec2& startPos)
-	: _scene(owner->GetChessBoard()->GetScene().get())
+	: _scene(scene)
 	, _type(type)
 	, _originalType(type)
 	, _owner(owner)
@@ -37,7 +37,7 @@ ChessPiece::ChessPiece(
 	posComp->position = 2.0f*glm::vec3(_position.x, 0, _position.y);
 
 	auto geomComp = _scene->CreateComponent<GeometryComponent>(_entity);
-	geomComp->model = _type->GetModle(_owner);
+	geomComp->model = _type->GetModles()[_owner];
 
 	auto selectComp = _scene->CreateComponent<SelectionComponent>(_entity);
 	selectComp->state = SelectionComponent::UNSELECTABLE;
@@ -48,7 +48,7 @@ void ChessPiece::Promote(ChessPieceType* type)
 {
 	_type = type;
 	auto geomComp = _scene->GetComponent<GeometryComponent>(_entity);
-	geomComp->model = _type->GetModle(_owner);
+	geomComp->model = _type->GetModles()[_owner];
 }
 
 ChessPieceType* ChessPiece::GetType() const
@@ -56,14 +56,14 @@ ChessPieceType* ChessPiece::GetType() const
 	return _type;
 }
 
-Player* ChessPiece::GetOwner() const
+Scene * ChessPiece::GetScene() const
 {
-	return _owner;
+	return _scene;
 }
 
-ChessBoard* ChessPiece::GetBoard() const
+unsigned ChessPiece::GetOwner() const
 {
-	return _owner->GetChessBoard();
+	return _owner;
 }
 
 const glm::ivec2& ChessPiece::GetPositon() const
@@ -90,13 +90,11 @@ bool ChessPiece::IsAlive() const
 	return _isAlive;
 }
 
-void ChessPiece::Kill(Player* killer)
+void ChessPiece::Kill()
 {
+	auto posComp = _scene->GetComponent<PositionComponent>( _entity );
+	posComp->position = 2.0f*glm::vec3( _position.x, -1000, _position.y );
 	_isAlive = true; 
-	_position.x = -1;
-	_position.y = -1;
-	_owner->RemoveChessPiece(this);
-	killer->CaptureChessPiece(this);
 }
 
 void ChessPiece::Reset()
@@ -108,7 +106,7 @@ void ChessPiece::Reset()
 	_type = _originalType;
 
 	auto geomComp = _scene->GetComponent<GeometryComponent>(_entity);
-	geomComp->model = _type->GetModle(_owner);
+	geomComp->model = _type->GetModles()[_owner];
 }
 
 bool ChessPiece::HasMoved() const
@@ -116,13 +114,13 @@ bool ChessPiece::HasMoved() const
 	return _hasMoved;
 }
 
-void ChessPiece::UpdatePossibleMoves()
+void ChessPiece::UpdatePossibleMoves(const ChessBoard& board)
 {
 	_possibleMoves.clear();
 	if (_isAlive)
 	{
 		_type->GetMoveSet().GetAvailableMoves(
-			this, _possibleMoves);
+			this, board, _possibleMoves);
 	}
 }
 

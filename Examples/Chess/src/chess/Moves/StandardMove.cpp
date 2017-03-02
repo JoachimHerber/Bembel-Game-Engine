@@ -5,7 +5,6 @@
 #include "StandardMove.h"
 
 #include "../ChessPiece.h"
-#include "../ChessBoard.h"
 #include "../Player.h"
 
 #include <BembelKernel/Scene/Scene.h>
@@ -39,18 +38,19 @@ StandardMove::~StandardMove()
 
 void StandardMove::GetPosibleMoveParameter(
 	ChessPiece* piece,
+	const ChessBoard& board,
 	std::vector<int>& params)
 {
-	Player* owner = piece->GetOwner();
+	unsigned owner = piece->GetOwner();
 
 	for (unsigned u = 1; u <= _maxDistance; ++u)
 	{
 		glm::ivec2 target = GetTargetPosition(piece, u);
 
-		if (!piece->GetBoard()->IsPositionValid(target))
+		if (target.x < 0 || target.y < 0 || target.x >= 8 || target.y >= 8 )
 			return;
 
-		ChessPiece* other = piece->GetBoard()->GetChessPieceAt(target);
+		ChessPiece* other = board[target.x][target.y];
 		if (other != nullptr)
 		{
 			if (_attack && other->GetOwner() != owner)
@@ -67,9 +67,10 @@ void StandardMove::GetPosibleMoveParameter(
 glm::vec2 StandardMove::GetTargetPosition(
 	ChessPiece* piece, int dist)
 {
-	Player* owner = piece->GetOwner();
-	return piece->GetPositon() + 
-		dist*owner->RotateOffset(_direction);
+	glm::ivec2 dir = _direction;
+	if( piece->GetOwner() == 1 )
+		dir.x *= -1;
+	return piece->GetPositon() + dist*dir;
 }
 
 bool StandardMove::UpdateMoveAnimation(
@@ -77,10 +78,12 @@ bool StandardMove::UpdateMoveAnimation(
 	ChessPiece* piece,
 	int param)
 {
-	auto scene = piece->GetBoard()->GetScene();
+	auto scene = piece->GetScene();
 
 	glm::ivec2 pos = 2*piece->GetPositon();
-	glm::ivec2 dir = 2*piece->GetOwner()->RotateOffset(_direction);
+	glm::ivec2 dir = 2*_direction;
+	if( piece->GetOwner() == 1 )
+		dir.x *= -1;
 
 	float dist = std::sqrt(float(_direction.x*_direction.x + _direction.y*_direction.y));
 	float progress = time / dist;
@@ -98,21 +101,27 @@ bool StandardMove::UpdateMoveAnimation(
 }
 
 void StandardMove::StartMove(
-	ChessPiece* piece, int param)
+	ChessPiece* piece,
+	ChessBoard& board,
+	int param)
 {
 	glm::vec2 targetPos = GetTargetPosition(piece, param);
-	auto other = piece->GetBoard()->GetChessPieceAt(targetPos);
+	auto other = board[targetPos.x][targetPos.y];
 	if (other)
-	{
-		other->Kill(piece->GetOwner());
-	}
+		other->Kill();
 }
 
 void StandardMove::EndeMove(
-	ChessPiece* piece, int param)
+	ChessPiece* piece, 
+	ChessBoard& board, 
+	int param)
 {
+	glm::vec2 pos = piece->GetPositon();
+	board[pos.x][pos.y] = nullptr;
+
 	glm::vec2 targetPos = GetTargetPosition(piece, param);
 	piece->SetPosition(targetPos);
+	board[targetPos.x][targetPos.y] = piece;
 }
 
 } //end of namespace bembel

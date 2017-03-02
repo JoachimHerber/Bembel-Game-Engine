@@ -72,6 +72,11 @@ void AssetManager::DecrementAssetRefCount(AssetHandle handle)
 		_assetContainer[handle.typeId]->DecrementAssetRefCount(handle);
 }
 
+AssetFileLocator& AssetManager::GetAssetFileLocator()
+{
+	return _assetLocator;
+}
+
 
 } //end of namespace bembel
 /*============================================================================*/

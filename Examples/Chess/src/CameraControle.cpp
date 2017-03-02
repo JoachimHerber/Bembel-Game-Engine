@@ -21,9 +21,9 @@ CameraControle::CameraControle(EventManager* eventMgr, CameraPtr camera)
 	_eventMgr->AddHandler<bembel::MouseButtonPressEvent>(this);
 	_eventMgr->AddHandler<bembel::MouseButtonReleaseEvent>(this);
 	_eventMgr->AddHandler<bembel::CursorMovedEvent>(this);
+	_eventMgr->AddHandler<bembel::ScrollEvent>( this );
 
 	_move = false;
-	_zoom = false;
 }
 
 CameraControle::~CameraControle()
@@ -87,10 +87,6 @@ void CameraControle::Update(double dTime)
 			if (_pitch <= -1.5f) _pitch = -1.5f;
 			if (_pitch >= +1.5f) _pitch = +1.5f;
 		}
-		if (_zoom)
-		{
-			_dist += 0.1f*(_cursorMovement.y);
-		}
 	}
 
 
@@ -108,23 +104,26 @@ void CameraControle::Update(double dTime)
 
 void CameraControle::HandleEvent(const bembel::MouseButtonPressEvent& event)
 {
-	if (event.buttonID == GLFW_MOUSE_BUTTON_LEFT)
+	if (event.buttonID == GLFW_MOUSE_BUTTON_RIGHT )
 		_move = true;
-	if (event.buttonID == GLFW_MOUSE_BUTTON_RIGHT)
-		_zoom = true;
 }
 
 void CameraControle::HandleEvent(const bembel::MouseButtonReleaseEvent& event)
 {
-	if (event.buttonID == GLFW_MOUSE_BUTTON_LEFT)
+	if (event.buttonID == GLFW_MOUSE_BUTTON_RIGHT )
 		_move = false;
-	if (event.buttonID == GLFW_MOUSE_BUTTON_RIGHT)
-		_zoom = false;
 }
 
 void CameraControle::HandleEvent(const bembel::CursorMovedEvent& event)
 {
 	_cursorPos = event.position;
+}
+
+void CameraControle::HandleEvent( const bembel::ScrollEvent& event )
+{
+	_dist += event.y;
+	if( _dist<1 )
+		_dist = 1.0f;
 }
 
 } //end of namespace bembel

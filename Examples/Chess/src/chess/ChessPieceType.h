@@ -10,6 +10,7 @@
 #include "Moves/MoveSet.h"
 
 #include <memory>
+#include <array>
 #include <map>
 
 /*============================================================================*/
@@ -17,7 +18,6 @@
 /*============================================================================*/
 namespace bembel{
 
-class Player;
 class MoveSet;
 
 }//end of namespace bembel
@@ -32,10 +32,8 @@ public:
 	ChessPieceType();
 	~ChessPieceType();
 
-	void SetModle(Player*, AssetHandle);
-	void SetModle(Player*, AssetManager*, const std::string&);
-
-	AssetHandle GetModle(Player*);
+	std::array<AssetHandle, 2>& GetModles();
+	const std::array<AssetHandle, 2>& GetModles() const;
 
 	void AddMove(const glm::ivec2& dir,
 				 unsigned maxDist,
@@ -47,7 +45,7 @@ public:
 	MoveSet& GetMoveSet();
 
 private:
-	std::map<Player*, AssetHandle> _modle;
+	std::array<AssetHandle, 2> _modles;
 	
 	MoveSet _moveSet;
 };

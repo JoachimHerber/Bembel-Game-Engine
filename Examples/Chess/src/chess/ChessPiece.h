@@ -7,6 +7,7 @@
 #include <BembelKernel/Scene/Scene.h>
 
 #include "Moves/MoveSet.h"
+#include "ChessGame.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -16,10 +17,8 @@
 /*============================================================================*/
 namespace bembel{
 
-class Player;
 class ChessPieceType;
 class Scene;
-class ChessBoard;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -30,13 +29,13 @@ namespace bembel {
 class ChessPiece
 {
 public:
-	ChessPiece(ChessPieceType*, Player*, const glm::ivec2&);
+	ChessPiece(ChessPieceType*, Scene*, unsigned,  const glm::ivec2&);
 
 	void Promote(ChessPieceType*);
 
 	ChessPieceType* GetType() const;
-	Player*         GetOwner() const;
-	ChessBoard*     GetBoard() const;
+	Scene*          GetScene() const;
+	unsigned        GetOwner() const;
 
 	const glm::ivec2& GetPositon() const;
 	void SetPosition(const glm::ivec2& pos);
@@ -44,12 +43,12 @@ public:
 	Scene::EntityID GetEntity();
 
 	bool IsAlive() const;
-	void Kill(Player*);
+	void Kill();
 	void Reset();
 
 	bool HasMoved() const;
 
-	void UpdatePossibleMoves();
+	void UpdatePossibleMoves(const ChessBoard&);
 
 	const std::vector<MoveSet::Move>& GetPossibleMoves() const;
 private:
@@ -57,7 +56,7 @@ private:
 
 	ChessPieceType* _type;
 	ChessPieceType* _originalType;
-	Player*         _owner;
+	unsigned        _owner;
 	glm::ivec2      _position;
 	glm::ivec2      _startPositon;
 

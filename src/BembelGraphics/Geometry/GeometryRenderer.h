@@ -84,6 +84,7 @@ private:
 
 	GLuint _materialUniformBlockIndex;
 	GLuint _materialUniformBufferSize;
+
 };
 
 } //end of namespace bembel

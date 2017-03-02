@@ -5,6 +5,7 @@
 #include "Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
@@ -24,6 +25,7 @@ void Camera::SetPosition(const glm::vec3& value)
 {
 	_position = value;
 	_viewMatix = glm::translate(glm::mat4_cast(glm::inverse(_oriantation)), -_position);
+	_inverseViewMatix = glm::affineInverse(_viewMatix);
 }
 
 const glm::quat& Camera::GetOrientation() const
@@ -34,6 +36,7 @@ void Camera::SetOrientation(const glm::quat& value)
 {
 	_oriantation = value;
 	_viewMatix = glm::translate(glm::mat4_cast(glm::inverse(_oriantation)), -_position);
+	_inverseViewMatix = glm::affineInverse( _viewMatix );
 }
 
 void Camera::SetUpProjection(
@@ -43,6 +46,8 @@ void Camera::SetUpProjection(
 	float far)
 {
 	_projMatrix = glm::perspective(fildOfFiew, aspectRation, near, far);
+	glm::mat4 tmp = _projMatrix;
+	_inverseProjMatrix = glm::inverse( tmp );
 
 	float x = sin(fildOfFiew)*aspectRation;
 	float y = sin(fildOfFiew);
@@ -63,6 +68,16 @@ const glm::mat4& Camera::GetViewMatrix() const
 const glm::mat4& Camera::GetProjectionMatrix() const
 {
 	return _projMatrix;
+}
+
+const glm::mat4 & Camera::GetinverseViewMatrix() const
+{
+	return _inverseViewMatix;
+}
+
+const glm::mat4 & Camera::GetinverseProjectionMatrix() const
+{
+	return _inverseProjMatrix;
 }
 
 const std::array<glm::vec4, 6>& Camera::GetViewFrustum() const
