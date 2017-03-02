@@ -2,10 +2,10 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryComponent.h"
-#include "GeometryModel.h"
+#include "geometry-component.h"
+#include "geometry-model.h"
 
-#include <BembelKernel/Assets/AssetManager.h>
+#include "bembel-kernel/assets/asset-manager.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

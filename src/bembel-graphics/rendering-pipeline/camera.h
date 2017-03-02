@@ -1,10 +1,10 @@
-#ifndef BEMBEL_CAMERA_H
-#define BEMBEL_CAMERA_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_CAMERA_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_CAMERA_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

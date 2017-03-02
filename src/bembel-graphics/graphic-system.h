@@ -1,20 +1,19 @@
-#ifndef BEMBEL_GRAPHICSSYSTEM_H
-#define BEMBEL_GRAPHICSSYSTEM_H
+#ifndef BEMBEL_GRAPHICS_GRAPHICSSYSTEM_H_
+#define BEMBEL_GRAPHICS_GRAPHICSSYSTEM_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
-#include <BembelKernel/System.h>
-#include <BembelKernel/Events/DisplayEvents.h>
-
-#include <BembelBase/Factory.hpp>
-
-#include "RenderingPipeline/RenderingStage.h"
-#include "Geometry/GeometryRenderQueue.h"
+#include "geometry/geometry-render-queue.h"
+#include "rendering-pipeline/rendering-stage.h"
 
 #include <vector>
+
+#include <bembel-base/factory.hpp>
+#include <bembel-kernel/system.h>
+#include <bembel-kernel/events/display-events.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

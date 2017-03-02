@@ -1,12 +1,11 @@
-#ifndef BEMBEL_DISPLAYEVENTS_H
-#define BEMBEL_DISPLAYEVENTS_H
+#ifndef BEMBEL_KERNEL_EVENTS_DISPLAYEVENTS_H_
+#define BEMBEL_KERNEL_EVENTS_DISPLAYEVENTS_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include "EventManager.h"
+#include "bembel-config.h"
+#include "event-manager.h"
 
 #include <glm/glm.hpp>
 

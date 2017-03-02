@@ -1,11 +1,11 @@
-#ifndef BEMBEL_ENTITY_H
-#define BEMBEL_ENTITY_H
+#ifndef BEMBEL_KERNEL_SCENE_ENTITY_H_
+#define BEMBEL_KERNEL_SCENE_ENTITY_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include "Scene.h"
+#include "bembel-config.h"
+#include "scene.h"
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

@@ -1,5 +1,5 @@
-#ifndef BEMBEL_CHANNEL_H
-#define BEMBEL_CHANNEL_H
+#ifndef BEMBEL_KERNEL_EVENTS_CHANNEL_H_
+#define BEMBEL_KERNEL_EVENTS_CHANNEL_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -54,7 +54,7 @@ private:
 /* INLINE IMPLEMENTATIONS													  */
 /*============================================================================*/
 
-#include "EventChannel.inl"
+#include "event-channel.inl"
 
 /*============================================================================*/
 /* END OF FILE                                                                */

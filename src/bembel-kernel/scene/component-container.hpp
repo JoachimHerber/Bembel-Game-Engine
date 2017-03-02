@@ -1,17 +1,16 @@
-#ifndef BEMBEL_COMPONENCONTAINER_H
-#define BEMBEL_COMPONENCONTAINER_H
+#ifndef BEMBEL_KERNEL_SCENE_COMPONENCONTAINER_H_
+#define BEMBEL_KERNEL_SCENE_COMPONENCONTAINER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include "Scene.h"
-
-#include <BembelBase/XML.h>
+#include "bembel-config.h"
+#include "scene.h"
 
 #include <vector>
 #include <map>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -84,7 +83,7 @@ private:
 /* INLINE IMPLEMENTATIONS													  */
 /*============================================================================*/
 
-#include "ComponentContainer.inl"
+#include "component-container.inl"
 
 /*============================================================================*/
 /* END OF FILE                                                                */

@@ -1,12 +1,11 @@
-#ifndef BEMBEL_RENDERINGPIPELINEVIEW_H
-#define BEMBEL_RENDERINGPIPELINEVIEW_H
+#ifndef BEMBEL_GRAPHICS_RENDERINGPIPELINEVIEW_H_
+#define BEMBEL_GRAPHICS_RENDERINGPIPELINEVIEW_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include "Viewport.h"
-
+#include "bembel-config.h"
+#include "viewport.h"
 
 #include <glm/glm.hpp>
 /*============================================================================*/

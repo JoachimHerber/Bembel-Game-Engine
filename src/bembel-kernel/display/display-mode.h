@@ -1,16 +1,17 @@
-#ifndef BEMBEL_DISPLAYMODE_H
-#define BEMBEL_DISPLAYMODE_H
+#ifndef BEMBEL_KERNEL_DISPLAY_DISPLAYMODE_H_
+#define BEMBEL_KERNEL_DISPLAY_DISPLAYMODE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelBase/XML.h>
-
-#include <glm/glm.hpp>
+#include "bembel-config.h"
 
 #include <string>
 #include <memory>
+
+#include <glm/glm.hpp>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

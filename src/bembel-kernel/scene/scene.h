@@ -1,16 +1,17 @@
-#ifndef BEMBEL_SCENE_H
-#define BEMBEL_SCENE_H
+#ifndef BEMBEL_KERNEL_SCENE_SCENE_H_
+#define BEMBEL_KERNEL_SCENE_SCENE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelBase/XML.h>
+#include "bembel-config.h"
 
 #include <memory>
 #include <vector>
 #include <stack>
 #include <map>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

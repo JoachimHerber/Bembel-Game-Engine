@@ -1,16 +1,16 @@
-#ifndef BEMBEL_MATERIAL_H
-#define BEMBEL_MATERIAL_H
+#ifndef BEMBEL_GRAPHICS_GEOMETRY_MATERIAL_H_
+#define BEMBEL_GRAPHICS_GEOMETRY_MATERIAL_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <BembelConfig.h>
-
-#include <BembelKernel/Assets/AssetManager.h>
-#include <BembelKernel/Assets/AssetLoader.h>
+#include "bembel-open-gl.h"
+#include "bembel-config.h"
 
 #include <glm/glm.hpp>
+
+#include <bembel-kernel/assets/asset-manager.h>
+#include <bembel-kernel/assets/asset-loader.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

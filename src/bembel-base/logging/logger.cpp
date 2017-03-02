@@ -2,9 +2,9 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Logger.h"
-#include "LogSink.h"
-#include "ConsoleLogSink.h"
+#include "logger.h"
+#include "log-sink.h"
+#include "console-log-sink.h"
 
 
 /*============================================================================*/

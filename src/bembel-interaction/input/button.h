@@ -1,14 +1,14 @@
-#ifndef BEMBEL_BUTTON_H
-#define BEMBEL_BUTTON_H
+#ifndef BEMBEL_INTERACTION_INPUT_BUTTON_H_
+#define BEMBEL_INTERACTION_INPUT_BUTTON_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
-#include "../Signal.hpp"
+#include "../signal.hpp"
 
-#include <BembelKernel/Events/EventManager.h>
+#include <bembel-kernel/events/event-manager.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

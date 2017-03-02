@@ -1,17 +1,17 @@
-#ifndef BEMBEL_ASSETLOADER_H
-#define BEMBEL_ASSETLOADER_H
+#ifndef BEMBEL_KERNEL_ASSETS_ASSETLOADER_H_
+#define BEMBEL_KERNEL_ASSETS_ASSETLOADER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include <BembelBase/XML.h>
-#include "AssetHandle.h"
+#include "bembel-config.h"
+#include "asset-handle.h"
 
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

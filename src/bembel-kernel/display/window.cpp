@@ -2,16 +2,16 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <glbinding/Binding.h>
+#include "bembel-open-gl.h"
 
-#include <GLFW/glfw3.h>
-
-#include "DisplayManager.h"
-#include "Window.h"
-#include "DisplayMode.h"
+#include "window.h"
+#include "display-manager.h"
+#include "display-mode.h"
 
 #include <cassert>
+
+#include <glbinding/Binding.h>
+#include <GLFW/glfw3.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */

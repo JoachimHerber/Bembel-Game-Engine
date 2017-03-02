@@ -1,16 +1,17 @@
-#ifndef BEMBEL_ASSETFILELOCATOR_H
-#define BEMBEL_ASSETFILELOCATOR_H
+#ifndef BEMBEL_KERNEL_ASSETS_ASSETFILELOCATOR_H_
+#define BEMBEL_KERNEL_ASSETS_ASSETFILELOCATOR_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelBase/XML.h>
+#include "bembel-config.h"
 
 #include <cassert>
 #include <string>
 #include <vector>
 #include <unordered_map>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

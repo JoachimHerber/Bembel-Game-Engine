@@ -1,18 +1,18 @@
-#ifndef BEMBEL_ENVIRONMENTMAPREFLECTIONSTAGE_H
-#define BEMBEL_ENVIRONMENTMAPREFLECTIONSTAGE_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_ENVIRONMENTMAPREFLECTIONSTAGE_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_ENVIRONMENTMAPREFLECTIONSTAGE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelOpenGL.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
-#include <BembelBase/XML.h>
-
-#include "RenderingStage.h"
+#include "rendering-stage.h"
 
 #include <memory>
 #include <vector>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

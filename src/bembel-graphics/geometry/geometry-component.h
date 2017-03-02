@@ -1,16 +1,17 @@
-#ifndef BEMBEL_GEOMETRYINSTANCE_H
-#define BEMBEL_GEOMETRYINSTANCE_H
+#ifndef BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYINSTANCE_H_
+#define BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYINSTANCE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/Entity.h>
-#include <BembelKernel/Scene/ComponentContainer.hpp>
-#include <BembelKernel/Assets/AssetHandle.h>
+#include "bembel-config.h"
+#include "bembel-kernel/assets/asset-handle.h"
+#include "bembel-kernel/scene/scene.h"
+#include "bembel-kernel/scene/entity.h"
+#include "bembel-kernel/scene/component-container.hpp"
 
 #include <memory>
+
 #include <glm/glm.hpp>
 
 /*============================================================================*/

@@ -1,11 +1,11 @@
-#ifndef BEMBEL_SHADER_H
-#define BEMBEL_SHADER_H
+#ifndef BEMBEL_KERNEL_RENDERING_SHADER_H_
+#define BEMBEL_KERNEL_RENDERING_SHADER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <BembelConfig.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
 #include <memory>
 #include <string>

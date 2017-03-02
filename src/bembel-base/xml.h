@@ -1,16 +1,16 @@
-#ifndef BEMBEL_XML_H
-#define BEMBEL_XML_H
+#ifndef BEMBEL_BASE_XML_H_
+#define BEMBEL_BASE_XML_H_
 
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
-#include <BembelConfig.h>
 
-#include <tinyxml2/tinyxml2.h>
-
-#include <glm/glm.hpp>
+#include "bembel-config.h"
 
 #include <sstream>
+
+#include <glm/glm.hpp>
+#include <tinyxml2/tinyxml2.h>
 
 /*============================================================================*/
 /* DEFINITIONS                                                                */

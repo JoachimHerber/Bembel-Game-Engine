@@ -4,7 +4,7 @@
 
 #include "Texture.h"
 
-#include <BembelBase/Logging/Logger.h>
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

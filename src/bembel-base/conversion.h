@@ -1,15 +1,15 @@
-#ifndef BEMBEL_CONVERSION_H
-#define BEMBEL_CONVERSION_H
+#ifndef BEMBEL_BASE_CONVERSION_H_
+#define BEMBEL_BASE_CONVERSION_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include <glm/glm.hpp>
+#include "bembel-config.h"
 
 #include <sstream>
 #include <string>
+
+#include <glm/glm.hpp>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

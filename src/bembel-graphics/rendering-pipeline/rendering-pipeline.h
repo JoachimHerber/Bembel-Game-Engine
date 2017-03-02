@@ -1,22 +1,22 @@
-#ifndef BEMBEL_RENDERINGPIPELINE_H
-#define BEMBEL_RENDERINGPIPELINE_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_RENDERINGPIPELINE_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_RENDERINGPIPELINE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <BembelConfig.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
-#include <BembelBase/XML.h>
-#include <BembelKernel/Scene/Scene.h>
-
-#include "../TextureView.h"
-
-#include <glm/glm.hpp>
+#include "../texture-view.h"
 
 #include <memory>
 #include <vector>
 #include <map>
+
+#include <glm/glm.hpp>
+
+#include <bembel-base/xml.h>
+#include <bembel-kernel/scene/scene.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

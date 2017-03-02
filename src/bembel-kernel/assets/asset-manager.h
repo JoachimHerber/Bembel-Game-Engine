@@ -1,21 +1,22 @@
-#ifndef BEMBEL_ASSETMANAGER_H
-#define BEMBEL_ASSETMANAGER_H
+#ifndef BEMBEL_KERNEL_ASSETS_ASSETMANAGER_H_
+#define BEMBEL_KERNEL_ASSETS_ASSETMANAGER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelBase/XML.h>
-#include <BembelBase/Logging/Logger.h>
+#include "bembel-config.h"
+
+#include "asset-container.h"
+#include "asset-loader.h"
+#include "asset-locator.h"
 
 #include <cassert>
 #include <string>
 #include <vector>
 #include <unordered_map>
 
-#include "AssetContainer.h"
-#include "AssetLoader.h"
-#include "AssetFileLocator.h"
+#include <bembel-base/xml.h>
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -68,7 +69,7 @@ private:
 /* TEMPLATE IMPLEMENTATION                                                    */
 /*============================================================================*/
 
-#include "AssetManager.inl"
+#include "asset-manager.inl"
 
 /*============================================================================*/
 /* END OF FILE                                                                */

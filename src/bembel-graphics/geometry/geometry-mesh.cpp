@@ -2,7 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryMesh.h"
+#include "geometry-mesh.h"
 
 #include <vector>
 #include <sstream>

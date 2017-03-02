@@ -1,17 +1,17 @@
-#ifndef BEMBEL_INPUTDEVICEMOUSE_H
-#define BEMBEL_INPUTDEVICEMOUSE_H
+#ifndef BEMBEL_INTERACTION_INPUT_INPUTDEVICEMOUSE_H_
+#define BEMBEL_INTERACTION_INPUT_INPUTDEVICEMOUSE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
-#include <BembelKernel/Events/EventManager.h>
-#include <BembelKernel/Events/InputEvents.h>
-
-#include "InputDevice.h"
+#include "input-device.h"
 
 #include <memory>
+
+#include <bembel-kernel/events/event-manager.h>
+#include <bembel-kernel/events/input-events.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

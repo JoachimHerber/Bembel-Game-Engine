@@ -1,18 +1,17 @@
-#ifndef BEMBEL_INPUTDEVICEKEYBOARD_H
-#define BEMBEL_INPUTDEVICEKEYBOARD_H
+#ifndef BEMBEL_INTERACTION_INPUT_INPUTDEVICEKEYBOARD_H_
+#define BEMBEL_INTERACTION_INPUT_INPUTDEVICEKEYBOARD_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include "InputDevice.h"
-
-#include <BembelKernel/Events/EventManager.h>
-#include <BembelKernel/Events/InputEvents.h>
+#include "bembel-config.h"
+#include "input-device.h"
 
 #include <memory>
 #include <map>
+
+#include <bembel-kernel/events/event-manager.h>
+#include <bembel-kernel/events/input-events.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

@@ -1,13 +1,13 @@
-#ifndef BEMBEL_SERIALASSETLOADER_H
-#define BEMBEL_SERIALASSETLOADER_H
+#ifndef BEMBEL_KERNEL_ASSETS_SERIALASSETLOADER_H_
+#define BEMBEL_KERNEL_ASSETS_SERIALASSETLOADER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
-#include "AssetLoader.h"
-#include "AssetManager.h"
+#include "asset-loader.h"
+#include "asset-manager.h"
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -46,7 +46,7 @@ bool CreateSerialAssetLoader(AssetManager* assetMgr);
 /* TEMPLATE IMPLEMENTATION                                                    */
 /*============================================================================*/
 
-#include "SerialAssetLoader.inl"
+#include "serial-asset-loader.inl"
 
 /*============================================================================*/
 /* END OF FILE                                                                */

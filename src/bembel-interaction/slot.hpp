@@ -1,5 +1,5 @@
-#ifndef BEMBEL_SLOT_H
-#define BEMBEL_SLOT_H
+#ifndef BEMBEL_INTERACTION_SLOT_H_
+#define BEMBEL_INTERACTION_SLOT_H_
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/

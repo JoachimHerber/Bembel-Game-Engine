@@ -2,10 +2,11 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Scene.h"
-#include "ComponentContainer.hpp"
-#include "../Assets/AssetManager.h"
-#include "BembelBase/Logging/Logger.h"
+#include "scene.h"
+#include "component-container.hpp"
+#include "../assets/asset-manager.h"
+
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

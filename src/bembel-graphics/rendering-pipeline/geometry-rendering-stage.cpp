@@ -2,17 +2,17 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryRenderingStage.h"
+#include "geometry-rendering-stage.h"
 
-#include "Camera.h"
-#include "RenderingPipeline.h"
-#include "../GraphicSystem.h"
-#include "../Geometry/GeometryRenderer.h"
-
-#include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/FrameBufferObject.h>
+#include "camera.h"
+#include "rendering-pipeline.h"
+#include "../graphic-system.h"
+#include "../geometry/geometry-renderer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+
+#include <bembel-kernel/rendering/texture.h>
+#include <bembel-kernel/rendering/frame-buffer-object.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

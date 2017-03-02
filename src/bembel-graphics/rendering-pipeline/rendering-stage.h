@@ -1,10 +1,10 @@
-#ifndef BEMBEL_RENDERINGSTAGE_H
-#define BEMBEL_RENDERINGSTAGE_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_RENDERINGSTAGE_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_RENDERINGSTAGE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
 #include <memory>
 

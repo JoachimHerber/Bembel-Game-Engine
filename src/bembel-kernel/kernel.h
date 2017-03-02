@@ -1,10 +1,10 @@
-#ifndef BEMBEL_KERNEL_H
-#define BEMBEL_KERNEL_H
+#ifndef BEMBEL_KERNEL_KERNEL_H_
+#define BEMBEL_KERNEL_KERNEL_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
 #include <memory>
 #include <string>

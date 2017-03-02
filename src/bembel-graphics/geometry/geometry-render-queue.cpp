@@ -2,11 +2,9 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryRenderQueue.h"
-
-#include "GeometryModel.h"
-#include "GeometryMesh.h"
-
+#include "geometry-render-queue.h"
+#include "geometry-model.h"
+#include "geometry-mesh.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

@@ -2,7 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "AssetFileLocator.h"
+#include "asset-locator.h"
 
 #include <fstream>
 

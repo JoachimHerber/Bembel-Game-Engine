@@ -1,10 +1,10 @@
-#ifndef BEMBEL_EVENTCALLBACKS_H
-#define BEMBEL_EVENTCALLBACKS_H
+#ifndef BEMBEL_KERNEL_EVENTS_EVENTCALLBACKS_H_
+#define BEMBEL_KERNEL_EVENTS_EVENTCALLBACKS_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

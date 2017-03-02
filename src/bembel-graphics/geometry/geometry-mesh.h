@@ -1,17 +1,17 @@
-#ifndef BEMBEL_GEOMETRYMESH_H
-#define BEMBEL_GEOMETRYMESH_H
+#ifndef BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYMESH_H_
+#define BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYMESH_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelOpenGL.h>
-
-#include <BembelKernel/Assets/SerialAssetLoader.hpp>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
 #include <memory>
 #include <string>
 #include <unordered_map>
+
+#include <bembel-kernel/assets/serial-asset-loader.hpp>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

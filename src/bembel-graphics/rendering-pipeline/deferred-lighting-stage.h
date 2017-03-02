@@ -1,20 +1,19 @@
-#ifndef BEMBEL_DEFERREDLIGHTINGSTAGE_H
-#define BEMBEL_DEFERREDLIGHTINGSTAGE_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_DEFERREDLIGHTINGSTAGE_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_DEFERREDLIGHTINGSTAGE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelOpenGL.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
-#include <BembelBase/XML.h>
-
-#include "RenderingStage.h"
-#include "LightSourceProperties.h"
-
-#include <BembelKernel/Scene/PositionComponent.h>
+#include "rendering-stage.h"
+#include "light-source-component.h"
 
 #include <memory>
+
+#include <bembel-base/xml.h>
+#include <bembel-kernel/scene/position-component.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

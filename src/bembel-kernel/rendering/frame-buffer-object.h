@@ -1,11 +1,11 @@
-#ifndef BEMBEL_RENDERTOTEXTURE_H
-#define BEMBEL_RENDERTOTEXTURE_H
+#ifndef BEMBEL_KERNEL_RENDERING_RENDERTOTEXTURE_H_
+#define BEMBEL_KERNEL_RENDERING_RENDERTOTEXTURE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <BembelConfig.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
 #include <memory>
 #include <vector>

@@ -18,8 +18,8 @@ include( "src/bembel-graphics/source-files.cmake" )
 include( "src/bembel-interaction/source-files.cmake" )
 
 include_directories( "${CMAKE_SOURCE_DIR}/src" )
-include_directories( "${CMAKE_SOURCE_DIR}/dependences" )
-include_directories( "${CMAKE_SOURCE_DIR}/dependences/glm" )
+include_directories( "${CMAKE_SOURCE_DIR}/dependencies" )
+include_directories( "${CMAKE_SOURCE_DIR}/dependencies/glm" )
 include_directories( "${EXTERNAL_INCLUDE_DIRS}" )
 
 add_library( Bembel SHARED ${ProjectSources} )

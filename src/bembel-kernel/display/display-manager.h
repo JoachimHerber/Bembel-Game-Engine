@@ -1,16 +1,16 @@
-#ifndef BEMBEL_DISPLAYMANAGER_H
-#define BEMBEL_DISPLAYMANAGER_H
+#ifndef BEMBEL_KERNEL_DISPLAY_DISPLAYMANAGER_H_
+#define BEMBEL_KERNEL_DISPLAY_DISPLAYMANAGER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelBase/Factory.hpp>
-
-#include "DisplayMode.h"
+#include "bembel-config.h"
+#include "display-mode.h"
 
 #include <memory>
 #include <vector>
+
+#include <bembel-base/factory.hpp>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

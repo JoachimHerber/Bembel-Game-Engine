@@ -1,10 +1,10 @@
-#ifndef BEMBEL_INPUTDEVICE_H
-#define BEMBEL_INPUTDEVICE_H
+#ifndef BEMBEL_INTERACTION_INPUT_INPUTDEVICE_H_
+#define BEMBEL_INTERACTION_INPUT_INPUTDEVICE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 #include "Button.h"
 
 #include <string>

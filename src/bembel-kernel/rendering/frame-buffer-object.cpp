@@ -2,8 +2,8 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "FrameBufferObject.h"
-#include "Texture.h"
+#include "frame-buffer-object.h"
+#include "texture.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

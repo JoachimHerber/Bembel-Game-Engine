@@ -2,12 +2,12 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
+#include "mouse.h"
+
 #include <GLFW/glfw3.h>
 
-#include "Mouse.h"
-
-#include <BembelBase/Logging/Logger.h>
-#include <BembelKernel/Events/EventManager.h>
+#include <bembel-base/logging/logger.h>
+#include <bembel-kernel/events/event-manager.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */

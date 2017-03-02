@@ -1,14 +1,14 @@
-#ifndef BEMBEL_INTERACTIONSYSTEM_H
-#define BEMBEL_INTERACTIONSYSTEM_H
+#ifndef BEMBEL_INTERACTION_INTERACTIONSYSTEM_H_
+#define BEMBEL_INTERACTION_INTERACTIONSYSTEM_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include <BembelKernel/System.h>
+#include "bembel-config.h"
 
 #include <vector>
+
+#include <bembel-kernel/system.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

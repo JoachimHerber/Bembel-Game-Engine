@@ -2,8 +2,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "DisplayMode.h"
-
+#include "display-mode.h"
 
 #include <GLFW/glfw3.h>
 

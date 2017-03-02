@@ -1,11 +1,11 @@
-#ifndef BEMBEL_IMAGE_H
-#define BEMBEL_IMAGE_H
+#ifndef BEMBEL_BASE_IMAGE_H_
+#define BEMBEL_BASE_IMAGE_H_
 
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
 #include <vector>
 #include <string>

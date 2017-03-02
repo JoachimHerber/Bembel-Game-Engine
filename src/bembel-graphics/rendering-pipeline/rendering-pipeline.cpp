@@ -2,18 +2,17 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "RenderingPipeline.h"
-#include "RenderingStage.h"
-#include "Camera.h"
+#include "rendering-pipeline.h"
+#include "rendering-stage.h"
+#include "camera.h"
 
-#include "../TextureView.h"
-#include "../GraphicSystem.h"
-#include "../Geometry/GeometryRenderer.h"
+#include "../texture-view.h"
+#include "../graphic-system.h"
+#include "../geometry/geometry-renderer.h"
 
-#include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/Shader.h>
-#include <BembelKernel/Rendering/FrameBufferObject.h>
-
+#include <bembel-kernel/rendering/texture.h>
+#include <bembel-kernel/rendering/shader.h>
+#include <bembel-kernel/rendering/frame-buffer-object.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */

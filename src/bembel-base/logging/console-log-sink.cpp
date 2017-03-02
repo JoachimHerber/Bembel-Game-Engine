@@ -2,8 +2,8 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "ConsoleLogSink.h"
-#include "LogMessage.h"
+#include "console-log-sink.h"
+#include "log-message.h"
 
 #include <iostream>
 

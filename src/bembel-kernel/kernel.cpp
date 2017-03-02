@@ -2,18 +2,18 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Kernel.h"
-#include "System.h"
-#include "Events/EventManager.h"
-#include "Assets/AssetManager.h"
-#include "Display/DisplayManager.h"
+#include "kernel.h"
+#include "system.h"
+#include "events/event-manager.h"
+#include "assets/asset-manager.h"
+#include "display/display-manager.h"
 
-#include <BembelBase/Logging/Logger.h>
-#include <BembelBase/XML.h>
+#include <chrono>
 
 #include <glfw/glfw3.h>
 
-#include <chrono>
+#include <bembel-base/xml.h>
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

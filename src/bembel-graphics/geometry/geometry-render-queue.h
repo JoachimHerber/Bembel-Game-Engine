@@ -1,21 +1,21 @@
-#ifndef BEMBEL_GEOMETRYRENDERQUEUE_H
-#define BEMBEL_GEOMETRYRENDERQUEUE_H
+#ifndef BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYRENDERQUEUE_H_
+#define BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYRENDERQUEUE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelOpenGL.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
-#include <BembelBase/XML.h>
-#include <BembelKernel/Assets/AssetHandle.h>
-
-#include "GeometryRenderer.h"
-
-#include <glm/glm.hpp>
+#include "geometry-renderer.h"
 
 #include <memory>
 #include <vector>
+
+#include <glm/glm.hpp>
+
+#include <bembel-base/xml.h>
+#include <bembel-kernel/assets/asset-handle.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

@@ -1,10 +1,11 @@
-#ifndef BEMBEL_ASSETHANDLE_H
-#define BEMBEL_ASSETHANDLE_H
+#ifndef BEMBEL_KERNEL_ASSETS_ASSETHANDLE_H_
+#define BEMBEL_KERNEL_ASSETS_ASSETHANDLE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
+
 #include <stdint.h>
 
 /*============================================================================*/

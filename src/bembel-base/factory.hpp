@@ -1,10 +1,10 @@
-#ifndef BEMBEL_FACTORY_H
-#define BEMBEL_FACTORY_H
+#ifndef BEMBEL_BASE_FACTORY_H_
+#define BEMBEL_BASE_FACTORY_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "XML.h"
+#include "xml.h"
 
 #include <string>
 #include <memory>

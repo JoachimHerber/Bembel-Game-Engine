@@ -2,11 +2,10 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Application.h"
-#include "Kernel.h"
-#include "Events/EventManager.h"
-#include "Display/DisplayManager.h"
-
+#include "application.h"
+#include "kernel.h"
+#include "events/event-manager.h"
+#include "display/display-manager.h"
 
 #include <chrono>
 

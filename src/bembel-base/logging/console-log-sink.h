@@ -1,11 +1,11 @@
-#ifndef BEMBEL_CONSOLELOGSINK_H
-#define BEMBEL_CONSOLELOGSINK_H
+#ifndef BEMBEL_BASE_LOGGING_CONSOLELOGSINK_H_
+#define BEMBEL_BASE_LOGGING_CONSOLELOGSINK_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include "LogSink.h"
+#include "bembel-config.h"
+#include "log-sink.h"
 
 #include <string>
 

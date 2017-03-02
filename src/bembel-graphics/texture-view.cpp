@@ -2,13 +2,12 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "TextureView.h"
-
-#include <BembelKernel/Rendering/Shader.h>
-#include <BembelKernel/Rendering/Texture.h>
+#include "texture-view.h"
 
 #include <string>
 
+#include <bembel-kernel/rendering/shader.h>
+#include <bembel-kernel/rendering/texture.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

@@ -1,17 +1,17 @@
-#ifndef BEMBEL_ASSETCONTAINER_H
-#define BEMBEL_ASSETCONTAINER_H
+#ifndef BEMBEL_KERNEL_ASSETS_ASSETCONTAINER_H_
+#define BEMBEL_KERNEL_ASSETS_ASSETCONTAINER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelBase/Logging/Logger.h>
-
-#include "AssetHandle.h"
+#include "asset-handle.h"
 
 #include <memory>
 #include <vector>
 #include <stack>
 #include <map>
+
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -158,7 +158,7 @@ using AssetContainerPtr = std::shared_ptr<AssetContainer<T>>;
 /* INLINE IMPLEMENTATIONS													  */
 /*============================================================================*/
 
-#include "AssetContainer.inl"
+#include "asset-container.inl"
 
 /*============================================================================*/
 /* END OF FILE                                                                */

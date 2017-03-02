@@ -2,16 +2,16 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "DisplayManager.h"
+#include "display-manager.h"
 
-#include "Window.h"
-#include "../Events/DisplayEvents.h"
-#include "../Events/EventCallbacks.h"
-#include "../Kernel.h"
-
-#include <BembelBase/Logging/Logger.h>
+#include "window.h"
+#include "../kernel.h"
+#include "../events/display-events.h"
+#include "../events/event-callbacks.h"
 
 #include <glfw/glfw3.h>
+
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */

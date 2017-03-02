@@ -2,11 +2,11 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Shader.h"
-
-#include <BembelBase/Logging/Logger.h>
+#include "shader.h"
 
 #include <fstream>
+
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

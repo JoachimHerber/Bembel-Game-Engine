@@ -1,13 +1,12 @@
-#ifndef BEMBEL_POSITIONCOMPONENT_H
-#define BEMBEL_POSITIONCOMPONENT_H
+#ifndef BEMBEL_KERNEL_SCENE_POSITIONCOMPONENT_H_
+#define BEMBEL_KERNEL_SCENE_POSITIONCOMPONENT_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include "Scene.h"
-#include "ComponentContainer.hpp"
+#include "bembel-config.h"
+#include "scene.h"
+#include "component-container.hpp"
 
 #include <memory>
 #include <glm/glm.hpp>

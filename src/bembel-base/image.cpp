@@ -2,10 +2,10 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Image.h"
+#include "image.h"
 #include "lodepng/lodepng.h"
 
-#include <BembelBase/Logging/Logger.h>
+#include "bembel-base/logging/logger.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

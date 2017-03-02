@@ -2,17 +2,17 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "DeferredLightingStage.h"
-#include "RenderingPipeline.h"
-#include "Camera.h"
-#include "LightSourceProperties.h"
+#include "deferred-lighting-stage.h"
+#include "rendering-pipeline.h"
+#include "camera.h"
+#include "light-source-component.h"
 
-#include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/Shader.h>
-#include <BembelKernel/Rendering/FrameBufferObject.h>
+#include <bembel-base/logging/logger.h>
+#include <bembel-kernel/scene/position-component.h>
+#include <bembel-kernel/rendering/texture.h>
+#include <bembel-kernel/rendering/shader.h>
+#include <bembel-kernel/rendering/frame-buffer-object.h>
 
-#include <BembelBase/Logging/Logger.h>
-#include <BembelKernel/Scene/PositionComponent.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

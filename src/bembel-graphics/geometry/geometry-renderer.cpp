@@ -2,16 +2,16 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryRenderer.h"
+#include "geometry-renderer.h"
 
-#include <BembelKernel/Rendering/Shader.h>
+#include "geometry-model.h"
+#include "geometry-mesh.h"
 
-#include "GeometryModel.h"
-#include "GeometryMesh.h"
+#include <iostream>
 
 #include <glm/glm.hpp>
 
-#include <iostream>
+#include <bembel-kernel/rendering/shader.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

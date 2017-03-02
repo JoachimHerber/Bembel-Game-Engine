@@ -2,27 +2,26 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GraphicSystem.h"
-#include "Viewport.h"
-#include "TextureView.h"
-#include "RenderingPipeline/RenderingPipeline.h"
-#include "RenderingPipeline/GeometryRenderingStage.h"
-#include "RenderingPipeline/DeferredLightingStage.h"
-#include "RenderingPipeline/EnvironmentMapReflectionStage.h"
+#include "graphic-system.h"
+#include "viewport.h"
+#include "texture-view.h"
+#include "geometry/material.h"
+#include "geometry/geometry-mesh.h"
+#include "geometry/geometry-model.h"
+#include "geometry/geometry-renderer.h"
+#include "rendering-pipeline/rendering-pipeline.h"
+#include "rendering-pipeline/geometry-rendering-stage.h"
+#include "rendering-pipeline/deferred-lighting-stage.h"
+#include "rendering-pipeline/environment-map-reflection-stage.h"
 
-#include <BembelOpenGL.h>
-#include <BembelBase/XML.h>
-#include <BembelBase/Logging/Logger.h>
-#include <BembelKernel/Kernel.h>
-#include <BembelKernel/Display/DisplayManager.h>
-#include <BembelKernel/Display/Window.h>
-#include <BembelKernel/Events/DisplayEvents.h>
-#include <BembelKernel/Assets/AssetManager.h>
-
-#include "Geometry/Material.h"
-#include "Geometry/GeometryMesh.h"
-#include "Geometry/GeometryModel.h"
-#include "Geometry/GeometryRenderer.h"
+#include <bembel-open-gl.h>
+#include <bembel-base/xml.h>
+#include <bembel-base/logging/logger.h>
+#include <bembel-kernel/kernel.h>
+#include <bembel-kernel/display/display-manager.h>
+#include <bembel-kernel/display/window.h>
+#include <bembel-kernel/events/display-events.h>
+#include <bembel-kernel/assets/asset-manager.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

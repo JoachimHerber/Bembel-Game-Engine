@@ -1,14 +1,14 @@
-#ifndef BEMBEL_TEXTURE_H
-#define BEMBEL_TEXTURE_H
+#ifndef BEMBEL_KERNEL_RENDERING_TEXTURE_H_
+#define BEMBEL_KERNEL_RENDERING_TEXTURE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <BembelConfig.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
-#include <BembelBase/Image.h>
-#include <BembelKernel/Assets/AssetManager.h>
+#include <bembel-base/image.h>
+#include <bembel-kernel/assets/asset-manager.h>
 
 #include <glm/glm.hpp>
 

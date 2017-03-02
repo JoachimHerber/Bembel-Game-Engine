@@ -2,13 +2,13 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "EnvironmentMapReflectionStage.h"
-#include "RenderingPipeline.h"
-#include "Camera.h"
+#include "environment-map-reflection-stage.h"
+#include "rendering-pipeline.h"
+#include "camera.h"
 
-#include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/Shader.h>
-#include <BembelKernel/Rendering/FrameBufferObject.h>
+#include <bembel-kernel/rendering/texture.h>
+#include <bembel-kernel/rendering/shader.h>
+#include <bembel-kernel/rendering/frame-buffer-object.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

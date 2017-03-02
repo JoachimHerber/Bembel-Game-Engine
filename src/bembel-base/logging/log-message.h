@@ -1,10 +1,11 @@
-#ifndef BEMBEL_LOGMESSAGE_H
-#define BEMBEL_LOGMESSAGE_H
+#ifndef BEMBEL_BASE_LOGGING_LOGMESSAGE_H_
+#define BEMBEL_BASE_LOGGING_LOGMESSAGE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
+
 #include <sstream>
 
 /*============================================================================*/

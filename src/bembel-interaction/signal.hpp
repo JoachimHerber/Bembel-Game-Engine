@@ -1,10 +1,10 @@
-#ifndef BEMBEL_SIGNAL_H
-#define BEMBEL_SIGNAL_H
+#ifndef BEMBEL_INTERACTION_SIGNAL_H_
+#define BEMBEL_INTERACTION_SIGNAL_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Slot.hpp"
+#include "slot.hpp"
 
 #include <mutex>
 #include <vector>

@@ -2,9 +2,9 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "LightSourceProperties.h"
+#include "light-source-component.h"
 
-#include <BembelKernel/Scene/PositionComponent.h>
+#include <bembel-kernel/scene/position-component.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

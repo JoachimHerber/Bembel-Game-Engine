@@ -2,8 +2,8 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "GeometryModel.h"
-#include "GeometryMesh.h"
+#include "geometry-model.h"
+#include "geometry-mesh.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

@@ -2,12 +2,12 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "EventCallbacks.h"
-#include "DisplayEvents.h"
-#include "InputEvents.h"
-#include "../Kernel.h"
-#include "../Display/Window.h"
-#include "../Display/DisplayManager.h"
+#include "event-callbacks.h"
+#include "display-events.h"
+#include "input-events.h"
+#include "../kernel.h"
+#include "../display/window.h"
+#include "../display/display-manager.h"
 
 #include <GLFW/glfw3.h>
 

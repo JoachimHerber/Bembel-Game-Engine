@@ -1,14 +1,14 @@
-#ifndef BEMBE_SYSTEM_H
-#define BEMBE_SYSTEM_H
+#ifndef BEMBE_KERNEL_SYSTEM_H_
+#define BEMBE_KERNEL_SYSTEM_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include <BembelBase/XML.h>
+#include "bembel-config.h"
 
 #include <memory>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

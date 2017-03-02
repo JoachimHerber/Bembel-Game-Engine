@@ -1,21 +1,20 @@
-#ifndef BEMBEL_GEOMETRYRENDERINGSTAGE_H
-#define BEMBEL_GEOMETRYRENDERINGSTAGE_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_GEOMETRYRENDERINGSTAGE_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_GEOMETRYRENDERINGSTAGE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelOpenGL.h>
+#include "bembel-config.h"
+#include "bembel-open-gl.h"
 
-#include <BembelBase/XML.h>
-#include <BembelKernel/Scene/PositionComponent.h>
-
-#include "../Geometry/GeometryComponent.h"
-
-#include "RenderingStage.h"
+#include "rendering-stage.h"
+#include "../geometry/geometry-component.h"
 
 #include <memory>
 #include <vector>
+
+#include <bembel-base/xml.h>
+#include <bembel-kernel/scene/position-component.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

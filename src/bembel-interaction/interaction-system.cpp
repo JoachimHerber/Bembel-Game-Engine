@@ -2,14 +2,13 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "InteractionSystem.h"
+#include "interaction-system.h"
+#include "input/mouse.h"
+#include "input/keyboard.h"
 
-#include "Input/Mouse.h"
-#include "Input/Keyboard.h"
-
-#include <BembelBase/XML.h>
-#include <BembelBase/Logging/Logger.h>
-#include <BembelKernel/Kernel.h>
+#include <bembel-base/xml.h>
+#include <bembel-base/logging/logger.h>
+#include <bembel-kernel/kernel.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

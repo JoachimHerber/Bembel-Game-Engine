@@ -1,22 +1,22 @@
-#ifndef BEMBEL_LIGHTSOURCE_H
-#define BEMBEL_LIGHTSOURCE_H
+#ifndef BEMBEL_GRAPHICS_RENDERING_PIPELINE_LIGHTSOURCE_H_
+#define BEMBEL_GRAPHICS_RENDERING_PIPELINE_LIGHTSOURCE_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/Entity.h>
-#include <BembelKernel/Scene/ComponentContainer.hpp>
+#include "bembel-config.h"
 
 #include <memory>
 #include <glm/glm.hpp>
+
+#include <bembel-kernel/scene/scene.h>
+#include <bembel-kernel/scene/entity.h>
+#include <bembel-kernel/scene/component-container.hpp>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
-
 
 class BEMBEL_API PointLightProperties
 {

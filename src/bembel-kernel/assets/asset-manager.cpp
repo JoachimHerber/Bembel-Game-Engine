@@ -2,9 +2,9 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "AssetManager.h"
+#include "asset-manager.h"
 
-#include <BembelBase/Logging/Logger.h>
+#include <bembel-base/logging/logger.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

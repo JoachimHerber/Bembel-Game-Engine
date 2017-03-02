@@ -1,11 +1,11 @@
-#ifndef BEMBEL_EVENTMANAGER_H
-#define BEMBEL_EVENTMANAGER_H
+#ifndef BEMBEL_KERNEL_EVENTS_EVENTMANAGER_H_
+#define BEMBEL_KERNEL_EVENTS_EVENTMANAGER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include "EventChannel.hpp"
+#include "bembel-config.h"
+#include "event-channel.hpp"
 
 #include <vector>
 #include <memory>
@@ -57,7 +57,7 @@ unsigned _CLASS::GetEventTypeID(){return _eventTypeID;}
 /* INLINE IMPLEMENTATIONS													  */
 /*============================================================================*/
 
-#include "EventManager.inl"
+#include "event-manager.inl"
 
 /*============================================================================*/
 /* END OF FILE                                                                */

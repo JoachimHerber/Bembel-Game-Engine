@@ -1,11 +1,11 @@
-#ifndef BEMBEL_LOGGER_H
-#define BEMBEL_LOGGER_H
+#ifndef BEMBEL_BASE_LOGGING_LOGGER_H_
+#define BEMBEL_BASE_LOGGING_LOGGER_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include "LogMessage.h"
+#include "bembel-config.h"
+#include "log-message.h"
 
 #include <vector>
 #include <memory>

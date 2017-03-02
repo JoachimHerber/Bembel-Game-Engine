@@ -1,10 +1,10 @@
-#ifndef BEMBEL_LOGSINK_H
-#define BEMBEL_LOGSINK_H
+#ifndef BEMBEL_BASE_LOGGING_LOGSINK_H_
+#define BEMBEL_BASE_LOGGING_LOGSINK_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

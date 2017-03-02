@@ -2,11 +2,10 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Material.h"
+#include "material.h"
+#include "../graphic-system.h"
 
-#include "../GraphicSystem.h"
-
-#include <BembelBase/Conversion.h>
+#include <bembel-base/conversion.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */

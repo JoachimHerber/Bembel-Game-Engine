@@ -1,20 +1,20 @@
-#ifndef BEMBEL_GEOMETRYMODEL_H
-#define BEMBEL_GEOMETRYMODEL_H
+#ifndef BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYMODEL_H_
+#define BEMBEL_GRAPHICS_GEOMETRY_GEOMETRYMODEL_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
-#include <BembelConfig.h>
-
-#include <BembelKernel/Assets/AssetHandle.h>
-#include <BembelKernel/Assets/AssetContainer.h>
-#include <BembelKernel/Assets/SerialAssetLoader.hpp>
+#include "bembel-open-gl.h"
+#include "bembel-config.h"
 
 #include "Material.h"
 
 #include <memory>
 #include <vector>
+
+#include <bembel-kernel/assets/asset-handle.h>
+#include <bembel-kernel/assets/asset-container.h>
+#include <bembel-kernel/assets/serial-asset-loader.hpp>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

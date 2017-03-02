@@ -1,20 +1,20 @@
-#ifndef BEMBEL_WINDOW_H
-#define BEMBEL_WINDOW_H
+#ifndef BEMBEL_KERNEL_DISPLAY_WINDOW_H_
+#define BEMBEL_KERNEL_DISPLAY_WINDOW_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-
-#include <BembelBase/XML.h>
-
-#include <glm/glm.hpp>
+#include "bembel-config.h"
 
 #include <string>
 #include <memory>
 #include <vector>
 #include <stack>
 #include <map>
+
+#include <glm/glm.hpp>
+
+#include <bembel-base/xml.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */

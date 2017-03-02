@@ -1,13 +1,14 @@
-#ifndef BEMBEL_VIEW_PORT_H
-#define BEMBEL_VIEW_PORT_H
+#ifndef BEMBEL_GRAPHICS_VIEWPORT_H_
+#define BEMBEL_GRAPHICS_VIEWPORT_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
+#include "bembel-config.h"
+
+#include <memory>
 
 #include <glm/glm.hpp>
-#include <memory>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

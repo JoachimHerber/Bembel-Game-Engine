@@ -1,11 +1,11 @@
-#ifndef BEMBEL_INPUTEVENTS_H
-#define BEMBEL_INPUTEVENTS_H
+#ifndef BEMBEL_KERNEL_EVENTS_INPUTEVENTS_H_
+#define BEMBEL_KERNEL_EVENTS_INPUTEVENTS_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelConfig.h>
-#include "EventManager.h"
+#include "bembel-config.h"
+#include "event-manager.h"
 
 #include <glm/glm.hpp>
 
