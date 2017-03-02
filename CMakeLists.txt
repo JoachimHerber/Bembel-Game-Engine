@@ -12,10 +12,10 @@ bembel_find_external_dependencies()
 
 set( CMAKE_CONFIGURAION_TYPES "Debug;Release" )
 
-include( "src/BembelBase/_SourceFiles.cmake" )
-include( "src/BembelKernel/_SourceFiles.cmake" )
-include( "src/BembelGraphics/_SourceFiles.cmake" )
-include( "src/Bembelnteraction/_SourceFiles.cmake" )
+include( "src/bembel-base/source-files.cmake" )
+include( "src/bembel-kernel/source-files.cmake" )
+include( "src/bembel-graphics/source-files.cmake" )
+include( "src/bembel-interaction/source-files.cmake" )
 
 include_directories( "${CMAKE_SOURCE_DIR}/src" )
 include_directories( "${CMAKE_SOURCE_DIR}/dependences" )
@@ -41,6 +41,6 @@ if( WIN32 )
 	endif()
 endif( WIN32 )
 
-bembel_conditional_add_sub_project(Chess "Examples/Chess" "build chess example application")
-bembel_conditional_add_sub_project(Input "Examples/Input" "build a simple example for input handling in the bembel game engine")
+#bembel_conditional_add_sub_project(Chess "Examples/Chess" "build chess example application")
+#bembel_conditional_add_sub_project(Input "Examples/Input" "build a simple example for input handling in the bembel game engine")
 

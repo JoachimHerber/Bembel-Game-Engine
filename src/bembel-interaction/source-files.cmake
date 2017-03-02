@@ -1,25 +1,25 @@
-set( RelativeDir "src/Bembelnteraction" )
-set( SourceGroup "src\\Bembelnteraction" )
+set( RelativeDir "src/bembel-interaction" )
+set( SourceGroup "src\\bembel-interaction" )
 
 set( DirFiles
-	_SourceFiles.cmake
+	source-files.cmake
 	
-	InteractionSystem.h
-	InteractionSystem.cpp
+	interaction-system.h
+	interaction-system.cpp
 	
-	Signal.hpp
-	Signal.inl
-	Slot.hpp
-	Slot.inl
+	signal.hpp
+	signal.inl
+	slot.hpp
+	slot.inl
 	
-	Input/Button.h
-	Input/Button.cpp
-	Input/InputDevice.h
-	Input/InputDevice.cpp
-	Input/Keyboard.h
-	Input/Keyboard.cpp
-	Input/Mouse.h
-	Input/Mouse.cpp
+	input/button.h
+	input/button.cpp
+	input/input-device.h
+	input/input-device.cpp
+	input/keyboard.h
+	input/keyboard.cpp
+	input/mouse.h
+	input/mouse.cpp
 )
 
 foreach( File ${DirFiles} )
