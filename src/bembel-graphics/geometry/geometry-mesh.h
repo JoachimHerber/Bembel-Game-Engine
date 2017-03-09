@@ -32,10 +32,17 @@ public:
 
 	const static std::string& GetTypeName();
 
-	static std::unique_ptr<GeometryMesh> CreateAsset(AssetManager* assetMgr, const xml::Element* properties);
-	static std::unique_ptr<GeometryMesh> LoadFromFile(AssetManager* assetMgr, const std::string& fileName);
+	static std::unique_ptr<GeometryMesh> LoadAsset(
+		AssetManager* assetMgr, const std::string& fileName);
+	static std::unique_ptr<GeometryMesh> LoadAsset(
+		AssetManager* assetMgr, const xml::Element* properties);
+
+	static void DeleteAsset( AssetManager* assetMgr, std::unique_ptr<GeometryMesh> );
 
 private:
+	static std::unique_ptr<GeometryMesh> CreateGeometryMesh( const xml::Element* properties );
+
+
 	static bool ParseVertexData(const xml::Element*, std::vector<float>&);
 	static bool ParseIndexData(const xml::Element*, std::vector<unsigned>&);
 

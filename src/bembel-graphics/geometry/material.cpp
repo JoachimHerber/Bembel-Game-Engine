@@ -12,7 +12,7 @@
 /*============================================================================*/
 namespace bembel {
 
-Material::Material(unsigned renderer, GLint size)
+Material::Material( unsigned renderer, GLint size )
 	: _renderer( renderer )
 {
 	glGenBuffers( 1, &_uniformBufferObject );
@@ -42,10 +42,10 @@ const std::string& Material::GetTypeName()
 }
 
 MaterialLoader::MaterialLoader(
-	 AssetManager* assetMgr, 
-	ContainerTypePtr container, 
-	GraphicSystem* graphicSys)
-	: _graphicSys(graphicSys)
+	AssetManager* assetMgr,
+	ContainerType* container,
+	GraphicSystem* graphicSys )
+	: _graphicSys( graphicSys )
 	, _assetMgr( assetMgr )
 	, _container( container )
 {}
@@ -53,8 +53,68 @@ MaterialLoader::MaterialLoader(
 MaterialLoader::~MaterialLoader()
 {}
 
-bool MaterialLoader::CreateAsset(
-	const xml::Element* properties)
+AssetHandle MaterialLoader::RequestAsset(const std::string& fileName )
+{
+	AssetHandle handle = _container->GetAssetHandle( fileName );
+
+	if( !_container->IsHandelValid( handle ) )
+	{
+		// we have to load the asset
+		std::unique_ptr<Material> asset = nullptr;
+			//Material::LoadAsset( _assetMgr, fileName );
+		if( !asset )
+			return AssetHandle();
+
+		handle = _container->AddAsset( std::move( asset ) );
+		_container->IncrementAssetRefCount( handle );
+		_container->RegisterAssetAlias( handle, fileName );
+	}
+
+	_container->IncrementAssetRefCount( handle );
+	return handle;
+}
+
+AssetHandle MaterialLoader::RequestAsset(const xml::Element* properties )
+{
+	std::string name = "";
+	if( !xml::GetAttribute( properties, "name", name ) )
+		return AssetHandle();
+
+	AssetHandle handle = _container->GetAssetHandle( name );
+	if( !_container->IsHandelValid( handle ) )
+	{
+		// we have to load the asset
+		std::unique_ptr<Material> asset = nullptr;
+			//Material::LoadAsset( _assetMgr, properties );
+		if( !asset )
+			return AssetHandle();
+
+		handle = _container->AddAsset( std::move( asset ) );
+		_container->IncrementAssetRefCount( handle );
+		_container->RegisterAssetAlias( handle, name );
+	}
+
+	_container->IncrementAssetRefCount( handle );
+	return handle;
+}
+
+bool MaterialLoader::ReleaseAsset( AssetHandle assetHandel )
+{
+	if( _container->IsHandelValid( assetHandel ) )
+	{
+		_container->DecrementAssetRefCount( assetHandel );
+		if( _container->GetAssetRefCount( assetHandel ) == 0 )
+		{
+			_container->RemoveAsset( assetHandel );
+			return true;
+		}
+	}
+	return false;
+}
+
+/*
+AssetHandle MaterialLoader::RequestAsset(
+	const xml::Element* properties )
 {
 	std::string name = "", rendererName = "";
 	if( !xml::GetAttribute( properties, "name", name ) ||
@@ -79,15 +139,7 @@ bool MaterialLoader::CreateAsset(
 	_container->RegisterAssetAlias( handle, name );
 	return true;
 }
-
-AssetHandle MaterialLoader::RequestAsset(const std::string& fileName)
-{
-	AssetHandle handle = _container->GetAssetHandle( fileName );
-	if( _container->IsHandelValid( handle ) )
-		return handle;// asset already loaded
-
-	return AssetHandle();
-}
+*/
 
 void MaterialLoader::Update()
 {}

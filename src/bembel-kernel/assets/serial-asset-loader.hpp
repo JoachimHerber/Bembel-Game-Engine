@@ -19,13 +19,13 @@ class SerialAssetLoader : public AssetLoaderBase
 {
 public:
 	using ContainerType    = AssetContainer<AssetType>;
-	using ContainerTypePtr = std::shared_ptr<ContainerType>;
 
-	SerialAssetLoader(AssetManager* assetMgr, ContainerTypePtr container);
+	SerialAssetLoader(AssetManager* assetMgr, ContainerType* container);
 	virtual ~SerialAssetLoader();
 
-	virtual bool CreateAsset( const xml::Element* ) override;
-	virtual AssetHandle RequestAsset( const std::string& fileName ) override;
+	virtual AssetHandle RequestAsset( const std::string& filename ) override;
+	virtual AssetHandle RequestAsset( const xml::Element* properties ) override;
+	virtual bool ReleaseAsset( AssetHandle assetHandel ) override;
 
 	virtual void Update() override;
 
@@ -34,8 +34,8 @@ public:
 	virtual bool  LoadingFinished() override;
 
 protected:
-	AssetManager*    _assetMgr;
-	ContainerTypePtr _container;
+	AssetManager*   _assetMgr;
+	ContainerType*  _container;
 };
 
 template<typename AssetType>

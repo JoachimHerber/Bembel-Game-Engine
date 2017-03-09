@@ -43,87 +43,21 @@ const std::string& GeometryMesh::GetTypeName()
 	return typeName;
 }
 
-std::unique_ptr<GeometryMesh> GeometryMesh::CreateAsset(
-	AssetManager*, const xml::Element* properties)
+std::unique_ptr<GeometryMesh> GeometryMesh::LoadAsset(
+	AssetManager* assetMgr, const xml::Element* properties )
 {
-	std::vector<float> vertexData;
-	std::vector<unsigned> indexData;
+	std::string fileName;
+	if(xml::GetAttribute( properties, "file_name", fileName ))
+		return LoadAsset( assetMgr, fileName );
 
-	auto format   = properties->FirstChildElement("Format");
-	auto vertices = properties->FirstChildElement("Vertices");
-	auto indices  = properties->FirstChildElement("Indices");
-	auto subMeshs = properties->FirstChildElement("SubMeshs");
-
-	if (!format || !vertices || !indices || !subMeshs)
-	{
-		return nullptr;
-	}
-
-	unsigned numVertices;
-	unsigned numIndices;
-	if (!xml::GetAttribute(vertices, "count", numVertices) ||
-		!xml::GetAttribute(indices, "count", numIndices))
-	{
-		return nullptr;
-	}
-
-	vertexData.resize(numVertices);
-	indexData.resize(numIndices);
-
-	if (!ParseVertexData(vertices, vertexData) ||
-		!ParseIndexData(indices, indexData))
-	{
-		return nullptr;
-	}
-
-	auto mesh = std::make_unique<GeometryMesh>();
-
-	glGenVertexArrays(1, &mesh->_vao);
-	glBindVertexArray(mesh->_vao);
-
-	glGenBuffers(1, &mesh->_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->_vbo);
-	glBufferData(GL_ARRAY_BUFFER,
-				 sizeof(float)*vertexData.size(),
-				 &vertexData[0], GL_STATIC_DRAW);
-	glGenBuffers(1, &mesh->_ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
-				 sizeof(unsigned)*indexData.size(), 
-				 &indexData[0], GL_STATIC_DRAW);
-
-	for (const xml::Element* attrib : xml::IterateChildElements(format))
-	{
-		unsigned index, components, stride, offset;
-		xml::GetAttribute(attrib, "index",      index);
-		xml::GetAttribute(attrib, "components", components);
-		xml::GetAttribute(attrib, "stride",     stride);
-		xml::GetAttribute(attrib, "offset",     offset);
-
-		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(
-			index, components, GL_FLOAT, 
-			GL_FALSE, stride*sizeof(float), 
-			(void*)(offset*sizeof(float)));
-	}
-	glBindVertexArray(0);
-
-	for (const xml::Element* subMesh : xml::IterateChildElements(subMeshs))
-	{
-		std::string name;
-		unsigned first, count;
-		xml::GetAttribute(subMesh, "name", name);
-		xml::GetAttribute(subMesh, "first_index", first);
-		xml::GetAttribute(subMesh, "num_indiecs", count);
-		mesh->_subMeshes.emplace(
-			name, SubMesh{first, count});
-	}
-	return std::move(mesh);
+	return nullptr;
 }
 
-std::unique_ptr<GeometryMesh> GeometryMesh::LoadFromFile(
-	AssetManager* assetMgr,
-	const std::string& fileName)
+void GeometryMesh::DeleteAsset(AssetManager*, std::unique_ptr<GeometryMesh> )
+{}
+
+std::unique_ptr<GeometryMesh> GeometryMesh::LoadAsset(
+	AssetManager*, const std::string& fileName )
 {
 	xml::Document doc;
 	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
@@ -131,7 +65,7 @@ std::unique_ptr<GeometryMesh> GeometryMesh::LoadFromFile(
 		BEMBEL_LOG_ERROR()
 			<< "Failed to load file '" << fileName << "'\n"
 			<< doc.ErrorName() << std::endl;
-		return false;
+		return nullptr;
 	}
 
 	const xml::Element* root = doc.FirstChildElement("GeometryMesh");
@@ -140,9 +74,87 @@ std::unique_ptr<GeometryMesh> GeometryMesh::LoadFromFile(
 		BEMBEL_LOG_ERROR()
 			<< "File '" << fileName << "' has no root element 'GeometryMesh'"
 			<< std::endl;
-		return false;
+		return nullptr;
 	}
-	return CreateAsset(assetMgr, root);
+	return CreateGeometryMesh(root);
+}
+
+std::unique_ptr<GeometryMesh> GeometryMesh::CreateGeometryMesh(
+	const xml::Element* properties )
+{
+	std::vector<float> vertexData;
+	std::vector<unsigned> indexData;
+
+	auto format = properties->FirstChildElement( "Format" );
+	auto vertices = properties->FirstChildElement( "Vertices" );
+	auto indices = properties->FirstChildElement( "Indices" );
+	auto subMeshs = properties->FirstChildElement( "SubMeshs" );
+
+	if( !format || !vertices || !indices || !subMeshs )
+	{
+		return nullptr;
+	}
+
+	unsigned numVertices;
+	unsigned numIndices;
+	if( !xml::GetAttribute( vertices, "count", numVertices ) ||
+		!xml::GetAttribute( indices, "count", numIndices ) )
+	{
+		return nullptr;
+	}
+
+	vertexData.resize( numVertices );
+	indexData.resize( numIndices );
+
+	if( !ParseVertexData( vertices, vertexData ) ||
+		!ParseIndexData( indices, indexData ) )
+	{
+		return nullptr;
+	}
+
+	auto mesh = std::make_unique<GeometryMesh>();
+
+	glGenVertexArrays( 1, &mesh->_vao );
+	glBindVertexArray( mesh->_vao );
+
+	glGenBuffers( 1, &mesh->_vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, mesh->_vbo );
+	glBufferData( GL_ARRAY_BUFFER,
+		sizeof( float )*vertexData.size(),
+		&vertexData[0], GL_STATIC_DRAW );
+	glGenBuffers( 1, &mesh->_ibo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, mesh->_ibo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER,
+		sizeof( unsigned )*indexData.size(),
+		&indexData[0], GL_STATIC_DRAW );
+
+	for( const xml::Element* attrib : xml::IterateChildElements( format ) )
+	{
+		unsigned index, components, stride, offset;
+		xml::GetAttribute( attrib, "index", index );
+		xml::GetAttribute( attrib, "components", components );
+		xml::GetAttribute( attrib, "stride", stride );
+		xml::GetAttribute( attrib, "offset", offset );
+
+		glEnableVertexAttribArray( index );
+		glVertexAttribPointer(
+			index, components, GL_FLOAT,
+			GL_FALSE, stride*sizeof( float ),
+			(void*) (offset*sizeof( float )) );
+	}
+	glBindVertexArray( 0 );
+
+	for( const xml::Element* subMesh : xml::IterateChildElements( subMeshs ) )
+	{
+		std::string name;
+		unsigned first, count;
+		xml::GetAttribute( subMesh, "name", name );
+		xml::GetAttribute( subMesh, "first_index", first );
+		xml::GetAttribute( subMesh, "num_indiecs", count );
+		mesh->_subMeshes.emplace(
+			name, SubMesh{first, count} );
+	}
+	return std::move( mesh );
 }
 
 bool GeometryMesh::ParseVertexData(

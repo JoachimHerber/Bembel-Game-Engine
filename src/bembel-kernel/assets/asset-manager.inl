@@ -4,15 +4,15 @@
 namespace bembel{
 
 template<typename AssetType>
-inline std::shared_ptr<AssetContainer<AssetType>>
+inline AssetContainer<AssetType>*
 AssetManager::GetAssetContainer()
 {
 	auto it = _assetTypeMap.find(AssetType::GetTypeName());
 	if (it == _assetTypeMap.end())
 		return nullptr;
 
-	return std::static_pointer_cast<AssetContainer<AssetType>>(
-		_assetContainer[it->second]);
+	return static_cast<AssetContainer<AssetType>*>(
+		_assetContainer[it->second].get());
 }
 
 template<typename AssetType>
@@ -23,6 +23,15 @@ inline AssetHandle AssetManager::RequestAsset(const std::string& filename)
 		return AssetHandle();
 
 	return _assetLoader[it->second]->RequestAsset(filename);
+}
+template<typename AssetType>
+inline AssetHandle AssetManager::RequestAsset( const xml::Element* properties )
+{
+	auto it = _assetTypeMap.find( AssetType::GetTypeName() );
+	if( it == _assetTypeMap.end() )
+		return AssetHandle();
+
+	return _assetLoader[it->second]->RequestAsset( properties );
 }
 
 template<typename AssetType>
@@ -58,7 +67,7 @@ inline bool AssetManager::RegisterAssetType( TArgs ... args )
 	uint16_t typeID = _assetTypeMap.size();
 
 	auto container = std::make_shared<AssetContainer<AssetType>>( typeID );
-	auto loader = std::make_shared<AssetType::DefaultLoaderType>( this, container, args... );
+	auto loader = std::make_shared<AssetType::DefaultLoaderType>( this, container.get(), args... );
 
 	_assetTypeMap.emplace( AssetType::GetTypeName(), typeID );
 	_assetContainer.push_back( container );
@@ -78,7 +87,7 @@ inline bool AssetManager::RegisterAssetType( TArgs ... args )
 	uint16_t typeID = _assetTypeMap.size();
 
 	auto container = std::make_shared<AssetContainer<AssetType>>(typeID);
-	auto loader    = std::make_shared<AssetLoaderType>( this, container);
+	auto loader    = std::make_shared<AssetLoaderType>( this, container.get(), args... );
 
 	_assetTypeMap.emplace(AssetType::GetTypeName(), typeID);
 	_assetContainer.push_back(container);

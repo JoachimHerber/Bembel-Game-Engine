@@ -32,9 +32,10 @@ class BEMBEL_API AssetLoaderBase
 public:
 	AssetLoaderBase();
 	virtual ~AssetLoaderBase();
-	
-	virtual bool     CreateAsset(const xml::Element* propertiey) = 0;
-	virtual AssetHandle RequestAsset(const std::string& fileName) = 0;
+
+	virtual AssetHandle RequestAsset( const std::string& filename )    = 0;
+	virtual AssetHandle RequestAsset( const xml::Element* properties ) = 0;
+	virtual bool ReleaseAsset( AssetHandle assetHandel ) = 0;
 
 	virtual void Update() = 0;
 

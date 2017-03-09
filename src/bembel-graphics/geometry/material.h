@@ -11,6 +11,7 @@
 
 #include <bembel-kernel/assets/asset-manager.h>
 #include <bembel-kernel/assets/asset-loader.h>
+#include <bembel-kernel/assets/asset-handle.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
@@ -47,20 +48,17 @@ private:
 	GLuint _uniformBufferObject;
 }; 
 
-using MaterialContainer    = AssetContainer<Material>;
-using MaterialContainerPtr = std::shared_ptr<MaterialContainer>;
-
 class BEMBEL_API MaterialLoader final : public AssetLoaderBase
 {
 public:
 	using ContainerType = AssetContainer<Material>;
-	using ContainerTypePtr = std::shared_ptr<ContainerType>;
 
-	MaterialLoader( AssetManager* , ContainerTypePtr, GraphicSystem* );
+	MaterialLoader( AssetManager* , ContainerType*, GraphicSystem* );
 	virtual ~MaterialLoader();
 
-	virtual bool        CreateAsset(  const xml::Element* propertiey ) override;
-	virtual AssetHandle RequestAsset( const std::string&  fileName   ) override;
+	virtual AssetHandle RequestAsset( const std::string& filename ) override;
+	virtual AssetHandle RequestAsset( const xml::Element* properties ) override;
+	virtual bool ReleaseAsset( AssetHandle assetHandel ) override;
 
 	virtual void Update() override;
 
@@ -71,7 +69,7 @@ public:
 private:
 	GraphicSystem*   _graphicSys;
 	AssetManager*    _assetMgr;
-	ContainerTypePtr _container;
+	ContainerType*   _container;
 };
 
 } //end of namespace bembel

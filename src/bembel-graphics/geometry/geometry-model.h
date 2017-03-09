@@ -41,11 +41,18 @@ public:
 
 	const static std::string& GetTypeName();
 
-	static std::unique_ptr<GeometryModel> CreateAsset(AssetManager* assetMgr, const xml::Element* properties);
-	static std::unique_ptr<GeometryModel> LoadFromFile(AssetManager* assetMgr, const std::string& fileName);
+	static std::unique_ptr<GeometryModel> LoadAsset(
+		AssetManager* assetMgr, const std::string& fileName );
+	static std::unique_ptr<GeometryModel> LoadAsset(
+		AssetManager* assetMgr, const xml::Element* properties );
+
+	static void DeleteAsset( AssetManager* assetMgr, std::unique_ptr<GeometryModel> );
 
 private:
+	static std::unique_ptr<GeometryModel> CreateGeometryModel(
+		AssetManager* assetMgr, const xml::Element* properties );
 
+private:
 	AssetHandle                  _mesh;
 	std::vector<MaterialMapping> _materialMapping;
 };

@@ -5,8 +5,8 @@ namespace bembel{
 
 template<typename AssetType>
 inline SerialAssetLoader<AssetType>::SerialAssetLoader(
-	AssetManager* assetMgr, 
-	ContainerTypePtr container)
+	AssetManager*  assetMgr, 
+	ContainerType* container)
 	: _assetMgr(assetMgr)
 	, _container(container)
 {}
@@ -16,53 +16,70 @@ inline SerialAssetLoader<AssetType>::~SerialAssetLoader()
 {}
 
 template<typename AssetType>
-inline bool SerialAssetLoader<AssetType>::CreateAsset(
-	const xml::Element* properties )
+inline AssetHandle SerialAssetLoader<AssetType>::RequestAsset(
+	const std::string& fileName )
 {
-	std::string name = "";
-	if (!xml::GetAttribute(properties, "name", name) ||
-		_container->HasAsset(name))
+	AssetHandle handle = _container->GetAssetHandle( fileName );
+
+	if( !_container->IsHandelValid( handle ) )
 	{
-		// all assets must have a unique name
-		return false;
+		// we have to load the asset
+		std::unique_ptr<AssetType> asset =
+			AssetType::LoadAsset( _assetMgr, fileName );
+		if( !asset )
+			return AssetHandle();
+
+		handle = _container->AddAsset( std::move( asset ) );
+		_container->IncrementAssetRefCount( handle );
+		_container->RegisterAssetAlias( handle, fileName );
 	}
 
-	std::unique_ptr<AssetType> asset = 
-		AssetType::CreateAsset(_assetMgr, properties);
-	if (asset == nullptr)
-		return false; // failed to create asset
-
-	AssetHandle handle = _container->AddAsset(std::move(asset));
-	if (!_container->IsHandelValid(handle))
-		return false;
-
-	_container->RegisterAssetAlias(handle, name);
-
-	for (const xml::Element* alias : xml::IterateChildElements(properties, "Alias"))
-	{
-		if (xml::GetAttribute(alias, "name", name))
-			_container->RegisterAssetAlias(handle, name);
-	}
-	return true;
+	_container->IncrementAssetRefCount( handle );
+	return handle;
 }
 
 template<typename AssetType>
 inline AssetHandle SerialAssetLoader<AssetType>::RequestAsset(
-	const std::string& fileName )
+	const xml::Element* properties )
 {
-	AssetHandle handle = _container->GetAssetHandle(fileName);
-
-	if (_container->IsHandelValid(handle))
-		return handle;// asset already loaded
-
-	std::unique_ptr<AssetType> asset =
-		AssetType::LoadFromFile(_assetMgr, fileName);
-	if (!asset)
+	std::string name = "";
+	if (!xml::GetAttribute(properties, "name", name))
 		return AssetHandle();
 
-	handle = _container->AddAsset(std::move(asset));
-	_container->RegisterAssetAlias(handle, fileName);
+	AssetHandle handle = _container->GetAssetHandle( name );
+	if( !_container->IsHandelValid( handle ) )
+	{
+		// we have to load the asset
+		std::unique_ptr<AssetType> asset =
+			AssetType::LoadAsset( _assetMgr, properties );
+		if( !asset )
+			return AssetHandle();
+
+		handle = _container->AddAsset( std::move( asset ) );
+		_container->IncrementAssetRefCount( handle );
+		_container->RegisterAssetAlias( handle, name );
+	}
+
+	_container->IncrementAssetRefCount( handle );
 	return handle;
+}
+
+template<typename AssetType>
+inline bool SerialAssetLoader<AssetType>::ReleaseAsset(
+	AssetHandle assetHandel )
+{
+	if( _container->IsHandelValid( assetHandel ) )
+	{
+		_container->DecrementAssetRefCount( assetHandel );
+		if( _container->GetAssetRefCount( assetHandel ) == 0 )
+		{
+			AssetType::DeleteAsset( 
+				_assetMgr, 
+				_container->RemoveAsset( assetHandel ));
+			return true;
+		}
+	}
+	return false;
 }
 
 template<typename AssetType>

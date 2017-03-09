@@ -30,13 +30,12 @@ public:
 	AssetManager();
 	~AssetManager();
 
-	unsigned LoadAssets(const std::string& fileName);
-	
-	template<typename AssetType>
-	std::shared_ptr<AssetContainer<AssetType>> GetAssetContainer();
-
 	template<typename AssetType>
 	AssetHandle RequestAsset(const std::string& filename);
+	template<typename AssetType>
+	AssetHandle RequestAsset( const xml::Element* properties );
+
+	bool ReleaseAsset( AssetHandle assetHandel);
 
 	template<typename AssetType>
 	AssetHandle GetAssetHandle(const std::string& name);
@@ -49,19 +48,15 @@ public:
 	template<typename AssetType, typename AssetLoaderType,  typename ... TArgs>
 	bool RegisterAssetType(TArgs ... args);
 
-	int GetAssetRefCount(AssetHandle handle);
-	void IncrementAssetRefCount(AssetHandle handle);
-	void DecrementAssetRefCount(AssetHandle handle);
-
-	AssetFileLocator& GetAssetFileLocator();
+private:
+	template<typename AssetType>
+	AssetContainer<AssetType>* GetAssetContainer();
 
 private:
 	std::unordered_map<std::string, uint16_t>  _assetTypeMap;
 
 	std::vector<std::shared_ptr<AssetContainerBase>> _assetContainer;
 	std::vector<std::shared_ptr<AssetLoaderBase>>    _assetLoader;
-
-	AssetFileLocator _assetLocator;
 };
 
 } //end of namespace bembel
