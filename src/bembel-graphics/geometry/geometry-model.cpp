@@ -62,7 +62,7 @@ std::unique_ptr<GeometryModel> GeometryModel::LoadAsset(
 	if( xml::GetAttribute( properties, "file_name", fileName ) )
 		return LoadAsset( assetMgr, fileName );
 
-	return nullptr;
+	return CreateGeometryModel( assetMgr, properties );
 }
 
 void GeometryModel::DeleteAsset( 

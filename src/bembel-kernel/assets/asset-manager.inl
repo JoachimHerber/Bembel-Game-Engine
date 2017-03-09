@@ -18,20 +18,12 @@ AssetManager::GetAssetContainer()
 template<typename AssetType>
 inline AssetHandle AssetManager::RequestAsset(const std::string& filename)
 {
-	auto it = _assetTypeMap.find(AssetType::GetTypeName());
-	if (it == _assetTypeMap.end())
-		return AssetHandle();
-
-	return _assetLoader[it->second]->RequestAsset(filename);
+	return RequestAsset( AssetType::GetTypeName(), filename );
 }
 template<typename AssetType>
 inline AssetHandle AssetManager::RequestAsset( const xml::Element* properties )
 {
-	auto it = _assetTypeMap.find( AssetType::GetTypeName() );
-	if( it == _assetTypeMap.end() )
-		return AssetHandle();
-
-	return _assetLoader[it->second]->RequestAsset( properties );
+	return RequestAsset( AssetType::GetTypeName(), properties );
 }
 
 template<typename AssetType>

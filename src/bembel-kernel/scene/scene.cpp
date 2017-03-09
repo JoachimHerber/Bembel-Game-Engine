@@ -18,7 +18,12 @@ Scene::Scene(AssetManager* assetMgr)
 {}
 
 Scene::~Scene()
-{}
+{
+	for( auto asset_handle : _assets )
+	{
+		_assteManager->ReleaseAsset( asset_handle );
+	}
+}
 
 Scene::EntityID Scene::CreateEntity()
 {
@@ -97,9 +102,39 @@ const std::vector<Scene::ComponentMask>& Scene::GetEntitys() const
 	return _entities;
 }
 
-AssetManager* Scene::GetAssetManager()
+bool Scene::LoadAssets( const std::string& fileName )
 {
-	return _assteManager;
+	xml::Document doc;
+	if( doc.LoadFile( fileName.c_str() ) != tinyxml2::XML_SUCCESS )
+	{
+		BEMBEL_LOG_ERROR()
+			<< "Failed to load file '" << fileName << "'\n"
+			<< doc.ErrorName() << std::endl;
+		return false;
+	}
+
+	const xml::Element* root = doc.FirstChildElement( "Assets" );
+	if( !root )
+	{
+		BEMBEL_LOG_ERROR()
+			<< "File '" << fileName << "' has no root element 'GeometryMesh'"
+			<< std::endl;
+		return false;
+	}
+	for( auto it : xml::IterateChildElements( root ) )
+	{
+		LoadAsset( it );
+	}
+	return true;
+}
+
+void Scene::LoadAsset( const xml::Element* properties )
+{
+	AssetHandle hndl = _assteManager->RequestAsset(properties->Value(), properties);
+	if( _assteManager->IsHandelValid( hndl ) )
+	{
+		_assets.emplace( hndl );
+	}
 }
 
 } //end of namespace bembel

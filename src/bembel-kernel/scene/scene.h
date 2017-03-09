@@ -10,8 +10,10 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include <set>
 
 #include <bembel-base/xml.h>
+#include <bembel-kernel/assets/asset-handle.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
@@ -60,7 +62,16 @@ public:
 
 	const std::vector<ComponentMask>& GetEntitys() const;
 
-	AssetManager* GetAssetManager();
+	template<typename AssetType>
+	AssetHandle GetAssetHandle( const std::string& name );
+
+	template<typename AssetType>
+	AssetType* GetAsset( AssetHandle handle, bool returnDummyIfHandleInvalid = true );
+
+	bool LoadAssets(const std::string& file);
+
+private:
+	void LoadAsset( const xml::Element* );
 
 private:
 	using ContainerPtr = std::shared_ptr<ComponentContainerBase>;
@@ -72,6 +83,8 @@ private:
 	std::vector<ContainerPtr>              _container;
 
 	AssetManager* _assteManager;
+
+	std::set<AssetHandle> _assets;
 };
 
 } //end of namespace bembel
@@ -149,6 +162,18 @@ ComponentType* Scene::GetComponent(EntityID id)
 		return nullptr; // entity doesn't have a component of the requested type
 
 	return container->GetComponent(id);
+}
+
+template<typename AssetType>
+inline AssetHandle Scene::GetAssetHandle( const std::string & name )
+{
+	return _assteManager->GetAssetHandle<AssetType>( name );
+}
+
+template<typename AssetType>
+inline AssetType* Scene::GetAsset( AssetHandle handle, bool returnDummyIfHandleInvalid )
+{
+	return _assteManager->GetAsset<AssetType>( handle, returnDummyIfHandleInvalid );
 }
 
 } //end of namespace bembel

@@ -83,14 +83,18 @@ AssetHandle MaterialLoader::RequestAsset(const xml::Element* properties )
 	AssetHandle handle = _container->GetAssetHandle( name );
 	if( !_container->IsHandelValid( handle ) )
 	{
+		std::string rendererName;
+		xml::GetAttribute( properties, "renderer", rendererName );
+		auto renderer = _graphicSys->GetRenderer( rendererName );
+		if( !renderer )
+			return AssetHandle();
+
 		// we have to load the asset
-		std::unique_ptr<Material> asset = nullptr;
-			//Material::LoadAsset( _assetMgr, properties );
+		std::unique_ptr<Material> asset = renderer->CreateMaterial( properties );
 		if( !asset )
 			return AssetHandle();
 
 		handle = _container->AddAsset( std::move( asset ) );
-		_container->IncrementAssetRefCount( handle );
 		_container->RegisterAssetAlias( handle, name );
 	}
 

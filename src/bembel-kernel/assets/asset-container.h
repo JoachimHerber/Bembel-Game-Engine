@@ -26,6 +26,8 @@ public:
 	virtual ~AssetContainerBase()
 	{};
 
+	virtual bool IsHandelValid( AssetHandle handle ) = 0;
+
 	virtual int GetAssetRefCount(AssetHandle handle) = 0;
 	virtual void IncrementAssetRefCount(AssetHandle) = 0;
 	virtual void DecrementAssetRefCount(AssetHandle) = 0;
@@ -85,7 +87,7 @@ public:
 	/**
 	 * return true if the specified handle points to a valid asset.
 	 */
-	bool IsHandelValid(AssetHandle handle);
+	bool IsHandelValid(AssetHandle handle) override;
 
 	/**
 	 * returns true if the specified name has been register as an alias for an asset.

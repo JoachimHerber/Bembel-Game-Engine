@@ -47,6 +47,8 @@ GraphicSystem::GraphicSystem(Kernel* kernel)
 		<DeferredLightingStage>("DeferredLightingStage");
 	_renderingStageFactory.RegisterDefaultObjectGenerator
 		<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
+
+	_geometryRenderQueue.SetAssetMannager(kernel->GetAssetManager());
 }
 GraphicSystem::~GraphicSystem()
 {

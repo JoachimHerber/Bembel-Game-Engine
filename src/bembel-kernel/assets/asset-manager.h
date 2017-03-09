@@ -35,7 +35,12 @@ public:
 	template<typename AssetType>
 	AssetHandle RequestAsset( const xml::Element* properties );
 
+	AssetHandle RequestAsset( const std::string& asset_type_name, const std::string& filename );
+	AssetHandle RequestAsset( const std::string& asset_type_name, const xml::Element* properties );
+
 	bool ReleaseAsset( AssetHandle assetHandel);
+
+	bool IsHandelValid( AssetHandle assetHandel );
 
 	template<typename AssetType>
 	AssetHandle GetAssetHandle(const std::string& name);
