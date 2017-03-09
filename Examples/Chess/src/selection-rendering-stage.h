@@ -4,15 +4,15 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelOpenGL.h>
+#include <bembel-open-gl.h>
 
-#include "SelectionComponent.h"
+#include "selection-component.h"
 
-#include <BembelBase/XML.h>
-#include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelGraphics/GraphicSystem.h>
-#include <BembelGraphics/Geometry/GeometryComponent.h>
-#include <BembelGraphics/RenderingPipeline/RenderingStage.h>
+#include <bembel-base/xml.h>
+#include <bembel-kernel/scene/position-component.h>
+#include <bembel-graphics/graphic-system.h>
+#include <bembel-graphics/geometry/geometry-component.h>
+#include <bembel-graphics/rendering-pipeline/rendering-stage.h>
 
 #include <chrono>
 
@@ -34,15 +34,13 @@ class GeometryModel;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel {
-
-class SelectionRenderingStage : public RenderingStage
+class SelectionRenderingStage : public bembel::RenderingStage
 {
 public:
-	using TexturePtr = std::shared_ptr<Texture>;
-	using ShaderPtr  = std::shared_ptr<Shader>;
+	using TexturePtr = std::shared_ptr<bembel::Texture>;
+	using ShaderPtr  = std::shared_ptr<bembel::Shader>;
 
-	SelectionRenderingStage(RenderingPipeline* pipline);
+	SelectionRenderingStage( bembel::RenderingPipeline* pipline);
 	~SelectionRenderingStage();
 
 	void SetShader(ShaderPtr);
@@ -57,35 +55,33 @@ public:
 	void SetScene(ScenePtr) override;
 
 	static std::unique_ptr<SelectionRenderingStage>
-		CreateInstance(const xml::Element*, RenderingPipeline*);
+		CreateInstance(const bembel::xml::Element*, bembel::RenderingPipeline*);
 
 private:
-	static ShaderPtr CreateShader(const xml::Element*);
+	static ShaderPtr CreateShader(const bembel::xml::Element*);
 
 	struct GeometryObject
 	{
-		glm::vec3      position;
-		float          dist;
-		GeometryModel* model;
-		unsigned       state;
+		glm::vec3              position;
+		float                  dist;
+		bembel::GeometryModel* model;
+		unsigned               state;
 	};
 	void GetHiglightedObjects(std::vector<GeometryObject>& );
 
 private:
-	std::unique_ptr<FrameBufferObject> _fbo;
+	std::unique_ptr<bembel::FrameBufferObject> _fbo;
 
 	ShaderPtr  _shader;
 	TexturePtr _noise;
 
-	ScenePtr                         _scene;
-	PositionComponent::ContainerPtr  _positionComponents;
-	SelectionComponent::ContainerPtr _selectionComponents;
-	GeometryComponent::ContainerPtr  _geometryComponents;
+	ScenePtr                                 _scene;
+	bembel::PositionComponent::ContainerPtr  _positionComponents;
+	SelectionComponent::ContainerPtr         _selectionComponents;
+	bembel::GeometryComponent::ContainerPtr  _geometryComponents;
 
 	std::chrono::time_point<std::chrono::steady_clock> _starTime;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

@@ -1,54 +1,46 @@
-#ifndef BEMBEL_PLAYER_H
-#define BEMBEL_PLAYER_H
+#ifndef BEMBEL_PERFORMMOVESTATE_H
+#define BEMBEL_PERFORMMOVESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <string>
-#include <vector>
+#include "game-state.h"
 
-#include <glm/glm.hpp>
+#include "../moves/move-set.h"
+
+#include <vector>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-
-class ChessGame;
 class ChessPiece;
-
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-class Player
+class PerformMoveState : public GameState
 {
 public:
+	PerformMoveState(ChessGame*);
+	~PerformMoveState();
 
-	Player( ChessGame*, const std::string& name);
+	using Move = MoveSet::Move;
 
-	ChessGame* GetChessGame() const;
-	const std::string& GetName() const;
+	void Init( GameState*);
 
-	const std::vector<ChessPiece*>& GetChessPieces() const;
-	
-	void ClearChessPieces();
-	void AddChessPiece(ChessPiece*);
-	void RemoveChessPiece(ChessPiece*);
+	virtual void OnEnterState() override;
+	virtual void OnExitState() override;
 
-	void ClearCaptureChessPieces();
-	void CaptureChessPiece(ChessPiece*);
+	virtual void Update(double time) override;
+
+	void SetMove(ChessPiece*, const Move&);
 
 private:
-	ChessGame*     _game;
-	std::string    _name;
+	ChessPiece* _chessPiece;
+	Move        _move;
 
-	std::vector<ChessPiece*> _chessPices;
-	std::vector<ChessPiece*> _capturedChessPices;
+	GameState* _nextState = nullptr;
 
-	glm::vec3 _captureAreaPos;
-	glm::vec3 _captureAreaRowOffset;
-	glm::vec3 _captureAreaCollumOffset;
-	unsigned  _captureAreaChessPicesPerRow;
-
+	double _time;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

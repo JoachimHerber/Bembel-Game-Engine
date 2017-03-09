@@ -2,19 +2,17 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "InitialPawnMove.h"
+#include "initial-pawn-move.h"
 
-#include "../ChessPiece.h"
-#include "../Player.h"
+#include "../chess-piece.h"
+#include "../player.h"
 
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/PositionComponent.h>
+#include <bembel-kernel/scene/scene.h>
+#include <bembel-kernel/scene/position-component.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
-
 InitialPawnMove::InitialPawnMove()
 {}
 
@@ -45,7 +43,6 @@ glm::vec2 InitialPawnMove::GetTargetPosition(
 	return piece->GetPositon() + glm::ivec2{owner==0 ? 2 : -2,0};
 }
 
-
 void InitialPawnMove::StartMove(ChessPiece*, ChessBoard&, int)
 {
 	
@@ -73,7 +70,7 @@ bool InitialPawnMove::UpdateMoveAnimation(double time, ChessPiece* piece, int)
 	if (progress > 1)
 		return true; // animation finished
 
-	auto& entitiyPos = scene->GetComponent<PositionComponent>(
+	auto& entitiyPos = scene->GetComponent<bembel::PositionComponent>(
 		piece->GetEntity())->position;
 	entitiyPos.x = pos.x + float(progress)*dir.x;
 	entitiyPos.z = pos.y + float(progress)*dir.y;
@@ -81,8 +78,6 @@ bool InitialPawnMove::UpdateMoveAnimation(double time, ChessPiece* piece, int)
 
 	return false;
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

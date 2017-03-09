@@ -3,42 +3,39 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
-	src/ChessApplication.h 
-	src/ChessApplication.cpp 
-	src/CameraControle.h
-	src/CameraControle.cpp
-	src/SelectionComponent.h
-	src/SelectionComponent.cpp
-	src/SelectionRenderingStage.h
-	src/SelectionRenderingStage.cpp
+	src/chess-application.h 
+	src/chess-application.cpp 
+	src/camera-controle.h
+	src/camera-controle.cpp
+	src/selection-component.h
+	src/selection-component.cpp
+	src/selection-rendering-stage.h
+	src/selection-rendering-stage.cpp
 	
-	src/chess/ChessBoard.h 
-	src/chess/ChessBoard.cpp 
-	src/chess/ChessPiece.h 
-	src/chess/ChessPiece.cpp 
-	src/chess/Player.h 
-	src/chess/Player.cpp 
-	src/chess/ChessPieceType.h
-	src/chess/ChessPieceType.cpp
-	src/chess/Moves/MoveSet.h
-	src/chess/Moves/MoveSet.cpp
-	src/chess/Moves/StandardMove.h
-	src/chess/Moves/StandardMove.cpp
-	src/chess/Moves/InitialPawnMove.h
-	src/chess/Moves/InitialPawnMove.cpp
-	
-	src/GameLogic/GameState.h
-	src/GameLogic/GameState.cpp
-	src/GameLogic/SelectChessBoardState.h
-	src/GameLogic/SelectChessBoardState.cpp
-	src/GameLogic/SelectChessPieceState.h
-	src/GameLogic/SelectChessPieceState.cpp
-	src/GameLogic/SelectMoveState.h
-	src/GameLogic/SelectMoveState.cpp
-	src/GameLogic/PerformMoveState.h
-	src/GameLogic/PerformMoveState.cpp
-	src/GameLogic/StateMashine.h
-	src/GameLogic/StateMashine.cpp
+	src/chess/chess-game.h 
+	src/chess/chess-game.cpp  
+	src/chess/player.h 
+	src/chess/player.cpp 
+	src/chess/chess-piece.h 
+	src/chess/chess-piece.cpp
+	src/chess/chess-piece-type.h
+	src/chess/chess-piece-type.cpp
+	src/chess/moves/move-set.h
+	src/chess/moves/move-set.cpp
+	src/chess/moves/standard-move.h
+	src/chess/moves/standard-move.cpp
+	src/chess/moves/initial-pawn-move.h
+	src/chess/moves/initial-pawn-move.cpp
+	src/chess/game-logic/selection-pointer.h
+	src/chess/game-logic/selection-pointer.cpp
+	src/chess/game-logic/game-state.h
+	src/chess/game-logic/game-state.cpp
+	src/chess/game-logic/select-chess-piece.h
+	src/chess/game-logic/select-chess-piece.cpp
+	src/chess/game-logic/select-move.h
+	src/chess/game-logic/select-move.cpp
+	src/chess/game-logic/perform-move.h
+	src/chess/game-logic/perform-move.cpp
 )
 
 foreach( File ${ProjectSources} )
@@ -49,6 +46,6 @@ endforeach()
 
 add_executable( ChessApp ${ProjectSources} )
 target_link_libraries( ChessApp Bembel ${EXTERNAL_LIBRARIES})
-set_target_properties( ChessApp PROPERTIES FOLDER "Examples" )
-bembel_configure_application( ChessApp "Examples/Chess")
+set_target_properties( ChessApp PROPERTIES FOLDER "examples" )
+bembel_configure_application( ChessApp "examples/chess")
 

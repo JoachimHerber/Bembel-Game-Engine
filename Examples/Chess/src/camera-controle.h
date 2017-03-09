@@ -4,9 +4,9 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelKernel/Events/EventManager.h>
-#include <BembelKernel/Events/InputEvents.h>
-#include <BembelGraphics/RenderingPipeline/Camera.h>
+#include <bembel-kernel/events/event-manager.h>
+#include <bembel-kernel/events/input-events.h>
+#include <bembel-graphics/rendering-pipeline/camera.h>
 
 #include <glm/glm.hpp>
 
@@ -15,14 +15,10 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
-
 class CameraControle
 {
 public:
-	using CameraPtr   = std::shared_ptr<bembel::Camera>;
-
-	CameraControle(EventManager*, CameraPtr camera);
+	CameraControle( bembel::EventManager*, std::shared_ptr<bembel::Camera> camera);
 	~CameraControle();
 
 	void SetPitch(float);
@@ -45,8 +41,8 @@ public:
 	void HandleEvent( const bembel::ScrollEvent& );
 
 private:
-	EventManager* _eventMgr;
-	CameraPtr     _camera;
+	bembel::EventManager*           _eventMgr;
+	std::shared_ptr<bembel::Camera> _camera;
 
 	bool _enabeld = false;
 
@@ -61,8 +57,6 @@ private:
 
 	glm::vec3 _offset;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

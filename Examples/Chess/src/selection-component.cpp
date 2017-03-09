@@ -1,21 +1,33 @@
-
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "chess-application.h"
+#include "selection-component.h"
+
+#include <limits>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-
-int main ()
+const std::string& SelectionComponent::GetComponentTypeName()
 {
-	ChessApplication app;
-	app.Run();
+	const static std::string typeName = "SelectionComponent";
+	return typeName;
 }
 
+bool SelectionComponent::InitComponent(
+	SelectionComponent& comp,
+	const bembel::xml::Element* elem,
+	bembel::AssetManager*)
+{
+	bool b;
+	if ( bembel::xml::GetAttribute(elem, "selectable", b) && b)
+		comp.state = SELECTABLE;
+	else
+		comp.state = UNSELECTABLE;
+
+	return true;
+}
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/
-

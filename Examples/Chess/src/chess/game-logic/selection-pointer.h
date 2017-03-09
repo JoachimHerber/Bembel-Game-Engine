@@ -1,56 +1,62 @@
-#ifndef BEMBEL_CHESSPIECETYPE_H
-#define BEMBEL_CHESSPIECETYPE_H
+#ifndef BEMBEL_SELECTIONCURSOR_H
+#define BEMBEL_SELECTIONCURSOR_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelKernel/Assets/AssetHandle.h>
-#include <BembelKernel/Assets/AssetManager.h>
+#include <bembel-open-gl.h>
 
-#include "Moves/MoveSet.h"
+#include <bembel-graphics/viewport.h>
+#include <bembel-interaction/signal.hpp>
+#include <bembel-kernel/events/input-events.h>
 
-#include <memory>
-#include <array>
-#include <map>
+#include <glm/glm.hpp>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
-class MoveSet;
+class EventManager;
+class GraphicSystem;
+class Scene;
 
 }//end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel {
-
-class ChessPieceType
+class SelectionPointer
 {
 public:
-	ChessPieceType();
-	~ChessPieceType();
+	SelectionPointer( bembel::EventManager*, bembel::GraphicSystem*, bembel::Scene* scene );
+	~SelectionPointer();
 
-	std::array<AssetHandle, 2>& GetModles();
-	const std::array<AssetHandle, 2>& GetModles() const;
+	void HandleEvent( const bembel::CursorMovedEvent& event );
+	void HandleEvent( const bembel::MouseButtonPressEvent& event );
 
-	void AddMove(const glm::ivec2& dir,
-				 unsigned maxDist,
-				 bool attack = true,
-				 bool move = true);
-	void AddMove(const glm::ivec2& dir,
-				 bool attack = true,
-				 bool move = true);
-	MoveSet& GetMoveSet();
+	const glm::vec3& GetRayOrigin()   const;
+	const glm::vec3& GetRayDirection() const;
+
+	const glm::ivec2& GetSelectedTile() const;
+
+	bembel::Signal<>& GetSelectSignal();
 
 private:
-	std::array<AssetHandle, 2> _modles;
-	
-	MoveSet _moveSet;
+	void UpdateRay( bembel::Viewport::View* view, const glm::vec2& pos );
+
+private:
+	bembel::EventManager*   _eventMgr;
+	bembel::GraphicSystem*  _grapicSys;
+	bembel::Scene*          _scene;
+
+	glm::vec3 _rayOrigin;
+	glm::vec3 _rayDirection;
+
+	glm::ivec2 _tile;
+
+	bembel::Signal<> _select;
 };
 
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

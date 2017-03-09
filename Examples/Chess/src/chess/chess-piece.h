@@ -4,10 +4,10 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <BembelKernel/Scene/Scene.h>
+#include <bembel-kernel/scene/scene.h>
 
-#include "Moves/MoveSet.h"
-#include "ChessGame.h"
+#include "moves/move-set.h"
+#include "chess-game.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -15,32 +15,30 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
+class ChessPieceType;
 namespace bembel{
 
-class ChessPieceType;
 class Scene;
 
 }//end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel {
-
 class ChessPiece
 {
 public:
-	ChessPiece(ChessPieceType*, Scene*, unsigned,  const glm::ivec2&);
+	ChessPiece(ChessPieceType*, bembel::Scene*, unsigned,  const glm::ivec2&);
 
 	void Promote(ChessPieceType*);
 
 	ChessPieceType* GetType() const;
-	Scene*          GetScene() const;
+	bembel::Scene*  GetScene() const;
 	unsigned        GetOwner() const;
 
 	const glm::ivec2& GetPositon() const;
 	void SetPosition(const glm::ivec2& pos);
 
-	Scene::EntityID GetEntity();
+	bembel::Scene::EntityID GetEntity();
 
 	bool IsAlive() const;
 	void Kill();
@@ -52,7 +50,7 @@ public:
 
 	const std::vector<MoveSet::Move>& GetPossibleMoves() const;
 private:
-	Scene* _scene;
+	bembel::Scene* _scene;
 
 	ChessPieceType* _type;
 	ChessPieceType* _originalType;
@@ -63,12 +61,10 @@ private:
 	bool            _isAlive;
 	bool			_hasMoved;
 
-	Scene::EntityID _entity;
+	bembel::Scene::EntityID _entity;
 
 	std::vector<MoveSet::Move> _possibleMoves;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

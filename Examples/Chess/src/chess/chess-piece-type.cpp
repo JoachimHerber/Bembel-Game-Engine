@@ -2,27 +2,25 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "ChessPieceType.h"
+#include "chess-piece-type.h"
 
-#include <BembelGraphics/Geometry/GeometryModel.h>
+#include <bembel-graphics/geometry/geometry-model.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
-
 ChessPieceType::ChessPieceType()
 {}
 
 ChessPieceType::~ChessPieceType()
 {}
 
-std::array<AssetHandle, 2>& ChessPieceType::GetModles()
+std::array<bembel::AssetHandle, 2>& ChessPieceType::GetModles()
 {
 	return _modles;
 }
 
-const std::array<AssetHandle, 2>& ChessPieceType::GetModles() const
+const std::array<bembel::AssetHandle, 2>& ChessPieceType::GetModles() const
 {
 	return _modles;
 }
@@ -41,8 +39,6 @@ MoveSet& ChessPieceType::GetMoveSet()
 {
 	return _moveSet;
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

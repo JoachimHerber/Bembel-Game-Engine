@@ -1,54 +1,47 @@
-#ifndef BEMBEL_PLAYER_H
-#define BEMBEL_PLAYER_H
+#ifndef BEMBEL_SELECTMOVESTATE_H
+#define BEMBEL_SELECTMOVESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <string>
-#include <vector>
-
-#include <glm/glm.hpp>
+#include "game-state.h"
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
 
-class ChessGame;
+class SelectionPointer;
 class ChessPiece;
-
+class PerformMoveState;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-class Player
+class SelectMoveState : public GameState
 {
 public:
+	SelectMoveState( ChessGame* game, SelectionPointer* );
+	~SelectMoveState();
 
-	Player( ChessGame*, const std::string& name);
+	void SetPerformMoveState( PerformMoveState* );
 
-	ChessGame* GetChessGame() const;
-	const std::string& GetName() const;
+	void SetChessPiece( ChessPiece* );
 
-	const std::vector<ChessPiece*>& GetChessPieces() const;
-	
-	void ClearChessPieces();
-	void AddChessPiece(ChessPiece*);
-	void RemoveChessPiece(ChessPiece*);
+	virtual void OnEnterState();
+	virtual void OnExitState();
 
-	void ClearCaptureChessPieces();
-	void CaptureChessPiece(ChessPiece*);
+	virtual void Update( double time );
+
+	void SelectedMove();
 
 private:
-	ChessGame*     _game;
-	std::string    _name;
+	void UpdateSelection(int i);
+private:
+	SelectionPointer* _pointer;
+	ChessPiece* _chessPiece = nullptr;
 
-	std::vector<ChessPiece*> _chessPices;
-	std::vector<ChessPiece*> _capturedChessPices;
+	int _selctedMove = -1;
 
-	glm::vec3 _captureAreaPos;
-	glm::vec3 _captureAreaRowOffset;
-	glm::vec3 _captureAreaCollumOffset;
-	unsigned  _captureAreaChessPicesPerRow;
-
+	PerformMoveState* _performMove;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

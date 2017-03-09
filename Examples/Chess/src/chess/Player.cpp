@@ -2,17 +2,15 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "Player.h"
-#include "ChessPiece.h"
-#include "ChessGame.h"
+#include "player.h"
+#include "chess-piece.h"
+#include "chess-game.h"
 
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/PositionComponent.h>
+#include <bembel-kernel/scene/scene.h>
+#include <bembel-kernel/scene/position-component.h>
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
-
 Player::Player(ChessGame* game, const std::string& name)
 	: _game(game)
 	, _name(name)
@@ -68,15 +66,13 @@ void Player::CaptureChessPiece(ChessPiece* piece)
 	_capturedChessPices.push_back(piece);
 
 	auto scene = _game->GetScene();
-	auto& entitiyPos = scene->GetComponent<PositionComponent>(
+	auto& entitiyPos = scene->GetComponent<bembel::PositionComponent>(
 		piece->GetEntity())->position;
 
 	entitiyPos = _captureAreaPos;
 	entitiyPos += _captureAreaRowOffset*float(row);
 	entitiyPos += _captureAreaCollumOffset*float(col);
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

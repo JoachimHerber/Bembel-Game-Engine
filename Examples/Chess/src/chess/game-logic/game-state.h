@@ -1,41 +1,29 @@
-#ifndef BEMBEL_SELECTIONSHAPE_H
-#define BEMBEL_SELECTIONSHAPE_H
+#ifndef BEMBEL_GAMESTATE_H
+#define BEMBEL_GAMESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
-
-#include <BembelBase/XML.h>
-#include <BembelKernel/Scene/ComponentContainer.hpp>
-
-#include <memory>
-
+class ChessGame;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel {
-
-struct SelectionComponent
+class GameState
 {
-	enum
-	{
-		UNSELECTABLE,
-		SELECTABLE,
-		FOCUSED,
-		SELECTED
-	} state;
+public:
+	GameState( ChessGame* game );
+	virtual ~GameState();
 
+	virtual void OnEnterState(){};
+	virtual void OnExitState(){};
 
-	using ContainerType = DenseComponentContainer<SelectionComponent>;
-	using ContainerPtr = std::shared_ptr<ContainerType>;
+	virtual void Update(double time){};
 
-	static const std::string& GetComponentTypeName();
-	static bool InitComponent(
-		SelectionComponent&,
-		const xml::Element*,
-		AssetManager*);
+protected:
+	void NextState(GameState* state);
+
+protected:
+	ChessGame* _game;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

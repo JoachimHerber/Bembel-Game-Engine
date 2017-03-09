@@ -42,5 +42,5 @@ if( WIN32 )
 endif( WIN32 )
 
 bembel_conditional_add_sub_project(Input "examples/input" "a simple example that show how to handle input in the bembel game engine")
-#bembel_conditional_add_sub_project(Chess "Examples/Chess" "build chess example application")
+bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
 

@@ -2,19 +2,17 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "StandardMove.h"
+#include "standard-move.h"
 
-#include "../ChessPiece.h"
-#include "../Player.h"
+#include "../chess-piece.h"
+#include "../player.h"
 
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/PositionComponent.h>
+#include <bembel-kernel/scene/scene.h>
+#include <bembel-kernel/scene/position-component.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
-
 StandardMove::StandardMove(
 	const glm::ivec2& dir,
 	unsigned maxDist,
@@ -91,7 +89,7 @@ bool StandardMove::UpdateMoveAnimation(
 	if (progress > param)
 		return true; // animation finished
 
-	auto& entitiyPos = scene->GetComponent<PositionComponent>(
+	auto& entitiyPos = scene->GetComponent<bembel::PositionComponent>(
 		piece->GetEntity())->position;
 	entitiyPos.x = pos.x + float(progress)*dir.x;
 	entitiyPos.z = pos.y + float(progress)*dir.y;
@@ -123,8 +121,6 @@ void StandardMove::EndeMove(
 	piece->SetPosition(targetPos);
 	board[targetPos.x][targetPos.y] = piece;
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

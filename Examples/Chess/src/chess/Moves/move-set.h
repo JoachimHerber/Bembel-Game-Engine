@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../ChessGame.h"
+#include "../chess-game.h"
 
 #include <memory>
 #include <vector>
@@ -14,16 +14,10 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
-
 class ChessPiece;
-
-}//end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel {
-
 class MoveSet
 {
 public:
@@ -67,8 +61,6 @@ public:
 private:
 	std::vector<std::shared_ptr<MoveTemplate>> _moves;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

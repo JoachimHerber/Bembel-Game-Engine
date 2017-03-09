@@ -1,27 +1,13 @@
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
-#include "ChessApplication.h"
-#include "SelectionRenderingStage.h"
+#include "chess-application.h"
+#include "selection-rendering-stage.h"
 
-#include "chess/Player.h"
-#include "chess/ChessPiece.h"
-
-#include <BembelOpenGL.h>
-
-#include <BembelKernel/Kernel.h>
-#include <BembelKernel/Display/DisplayManager.h>
-#include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelKernel/Assets/SerialAssetLoader.hpp>
-
-#include <BembelGraphics/Geometry/Material.h>
-#include <BembelGraphics/Geometry/GeometryMesh.h>
-#include <BembelGraphics/Geometry/GeometryModel.h>
-#include <BembelGraphics/Geometry/GeometryComponent.h>
-
-#include <BembelGraphics/RenderingPipeline/LightSourceProperties.h>
-
-#include <Bembelnteraction/Input/Keyboard.h>
+#include <bembel-kernel/kernel.h>
+#include <bembel-kernel/display/display-manager.h>
+#include <bembel-graphics/rendering-pipeline/rendering-pipeline.h>
+#include <bembel-interaction/input/keyboard.h>
 
 #include <chrono>
 #include <random>
@@ -32,15 +18,13 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
-
 ChessApplication::ChessApplication()
 	: bembel::Application()
 {
 	_graphicSys =
-		std::make_shared<GraphicSystem>(_kernel.get());
+		std::make_shared<bembel::GraphicSystem>(_kernel.get());
 	_interactionSys = 
-		std::make_shared<InteractionSystem>(_kernel.get());
+		std::make_shared<bembel::InteractionSystem>(_kernel.get());
 
 	_graphicSys->GetRendertingStageFactory()
 		.RegisterDefaultObjectGenerator<SelectionRenderingStage>(
@@ -48,7 +32,7 @@ ChessApplication::ChessApplication()
 
 	_kernel->AddSystem(_graphicSys);
 	_kernel->AddSystem(_interactionSys);
-	_kernel->GetEventManager()->AddHandler<WindowShouldCloseEvent>(this);
+	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 }
 
 ChessApplication::~ChessApplication()
@@ -63,7 +47,6 @@ bool ChessApplication::Init()
 	_cam = std::make_shared<CameraControle>(
 		_kernel->GetEventManager(), pipline->GetCamera());
 
-	InitAssets();
 	InitGame();
 	_chessGame->ResetChessBoard();
 
@@ -87,15 +70,9 @@ void ChessApplication::Update(double time)
 	_chessGame->Update(time);
 }
 
-void ChessApplication::HandleEvent(const WindowShouldCloseEvent& event)
+void ChessApplication::HandleEvent(const bembel::WindowShouldCloseEvent& event)
 {
 	Quit();
-}
-
-bool ChessApplication::InitAssets()
-{
-	_kernel->GetAssetManager()->LoadAssets("assets/assets.xml");
-	return true;
 }
 
 bool ChessApplication::InitGame()
@@ -108,8 +85,6 @@ bool ChessApplication::InitGame()
 
 	return true;
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

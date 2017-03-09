@@ -2,18 +2,17 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "SelectionRenderingStage.h"
-#include <BembelGraphics/RenderingPipeline/RenderingPipeline.h>
-#include <BembelGraphics/RenderingPipeline/Camera.h>
+#include "selection-rendering-stage.h"
 
-#include <BembelKernel/Rendering/Texture.h>
-#include <BembelKernel/Rendering/Shader.h>
-#include <BembelKernel/Rendering/FrameBufferObject.h>
+#include <bembel-kernel/rendering/texture.h>
+#include <bembel-kernel/rendering/shader.h>
+#include <bembel-kernel/rendering/frame-buffer-object.h>
+#include <bembel-graphics/rendering-pipeline/rendering-pipeline.h>
+#include <bembel-graphics/rendering-pipeline/camera.h>
+#include <bembel-graphics/geometry/geometry-model.h>
+#include <bembel-graphics/geometry/geometry-mesh.h>
 
-#include <BembelGraphics/Geometry/GeometryModel.h>
-#include <BembelGraphics/Geometry/GeometryMesh.h>
-
-#include "SelectionComponent.h"
+#include "selection-component.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -22,14 +21,12 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
-
 SelectionRenderingStage::SelectionRenderingStage(
-	RenderingPipeline* pipline)
+	bembel::RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, _fbo(std::make_unique<FrameBufferObject>())
+	, _fbo(std::make_unique<bembel::FrameBufferObject>())
 {
-	_noise = std::make_shared<Texture>(GL_TEXTURE_3D, GL_R8 );
+	_noise = std::make_shared<bembel::Texture>(GL_TEXTURE_3D, GL_R8 );
 
 	unsigned char data[32*32*32]; 
 	std::random_device rd;
@@ -116,7 +113,7 @@ void SelectionRenderingStage::DoRendering()
 		return first.dist > second.dist;
 	});
  
-	GeometryMesh* currentMesh = nullptr;
+	bembel::GeometryMesh* currentMesh = nullptr;
  	for (auto& it : geometry)
 	{
 		glm::mat4 modelView = view*glm::translate(glm::mat4(), it.position);
@@ -130,7 +127,7 @@ void SelectionRenderingStage::DoRendering()
 			_shader->GetUniformLocation("uNormalMatrix"),
 			1, GL_FALSE, &modelView[0][0]);
 
-		auto mesh = _scene->GetAssetManager()->GetAsset<GeometryMesh>(
+		auto mesh = _scene->GetAsset<bembel::GeometryMesh>(
 			it.model->GetMesh());
 
 		if(mesh == nullptr)
@@ -166,14 +163,14 @@ void SelectionRenderingStage::DoRendering()
 void SelectionRenderingStage::SetScene(ScenePtr scene)
 {
 	_scene = scene;
-	_positionComponents  = scene->RequestComponentContainer<PositionComponent>();
+	_positionComponents  = scene->RequestComponentContainer<bembel::PositionComponent>();
 	_selectionComponents = scene->RequestComponentContainer<SelectionComponent>();
-	_geometryComponents  = scene->RequestComponentContainer<GeometryComponent>();
+	_geometryComponents  = scene->RequestComponentContainer<bembel::GeometryComponent>();
 }
 
 std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance(
-	const xml::Element* properties,
-	RenderingPipeline* pipline)
+	const bembel::xml::Element* properties,
+	bembel::RenderingPipeline* pipline)
 {
 	auto shader = CreateShader(properties->FirstChildElement("Shader"));
 
@@ -182,30 +179,31 @@ std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance
 	stage->SetShader(shader);
 
 	std::string textureName;
-	if (xml::GetAttribute(properties, "ColorOutput", "texture", textureName))
+	if ( bembel::xml::GetAttribute(properties, "ColorOutput", "texture", textureName))
 		stage->SetColorOutputTexture(textureName);
-	if (xml::GetAttribute(properties, "DepthOutput", "texture", textureName))
+	if ( bembel::xml::GetAttribute(properties, "DepthOutput", "texture", textureName))
 		stage->SetDepthOutputTexture(textureName);
 
 	return std::move(stage);
 }
 
-std::shared_ptr<Shader> SelectionRenderingStage::CreateShader(const xml::Element* properties)
+std::shared_ptr<bembel::Shader> SelectionRenderingStage::CreateShader(
+	const bembel::xml::Element* properties)
 {
 	if (!properties)
 		return nullptr;
 
 	std::string filename;
 
-	auto program = std::make_shared<Shader>();
-	for (auto shader : xml::IterateChildElements(properties, "VertexShader"))
+	auto program = std::make_shared<bembel::Shader>();
+	for (auto shader : bembel::xml::IterateChildElements(properties, "VertexShader"))
 	{
-		if (xml::GetAttribute(shader, "file", filename))
+		if ( bembel::xml::GetAttribute(shader, "file", filename))
 			program->AttachShaderFromFile(GL_VERTEX_SHADER, filename);
 	}
-	for (auto shader : xml::IterateChildElements(properties, "FragmentShader"))
+	for (auto shader : bembel::xml::IterateChildElements(properties, "FragmentShader"))
 	{
-		if (xml::GetAttribute(shader, "file", filename))
+		if ( bembel::xml::GetAttribute(shader, "file", filename))
 			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, filename);
 	}
 
@@ -226,12 +224,12 @@ void SelectionRenderingStage::GetHiglightedObjects(
 	auto& selection = _selectionComponents->GetComponents();
 	auto& geometry  = _geometryComponents->GetComponents();
 
-	Scene::ComponentMask mask =
+	bembel::Scene::ComponentMask mask =
 		_positionComponents->GetComponentMask() |
 		_selectionComponents->GetComponentMask() |
 		_geometryComponents->GetComponentMask();
 
-	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
+	for ( bembel::Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
 	{
 		if ((entitis[entity] & mask)!= mask)
 			continue;
@@ -239,7 +237,7 @@ void SelectionRenderingStage::GetHiglightedObjects(
 		if (selection[entity].state == SelectionComponent::UNSELECTABLE)
 			continue;
 
-		auto model = _scene->GetAssetManager()->GetAsset<GeometryModel>(
+		auto model = _scene->GetAsset<bembel::GeometryModel>(
 			geometry[entity].model);
 
 		if(model == nullptr)
@@ -253,8 +251,6 @@ void SelectionRenderingStage::GetHiglightedObjects(
 		});
 	}
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

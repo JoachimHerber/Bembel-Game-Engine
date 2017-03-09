@@ -1,54 +1,45 @@
-#ifndef BEMBEL_PLAYER_H
-#define BEMBEL_PLAYER_H
+#ifndef BEMBEL_SELETCHESSPIECESTATE_H
+#define BEMBEL_SELETCHESSPIECESTATE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include <string>
-#include <vector>
-
-#include <glm/glm.hpp>
+#include "game-state.h"
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-
-class ChessGame;
+class SelectionPointer;
 class ChessPiece;
-
+class SelectMoveState;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-class Player
+class SelectChessPieceState : public GameState
 {
 public:
+	SelectChessPieceState( ChessGame* game, unsigned player, SelectionPointer* );
+	~SelectChessPieceState();
 
-	Player( ChessGame*, const std::string& name);
+	void SetSelectMoveState( SelectMoveState* );
 
-	ChessGame* GetChessGame() const;
-	const std::string& GetName() const;
+	virtual void OnEnterState();
+	virtual void OnExitState();
 
-	const std::vector<ChessPiece*>& GetChessPieces() const;
-	
-	void ClearChessPieces();
-	void AddChessPiece(ChessPiece*);
-	void RemoveChessPiece(ChessPiece*);
+	virtual void Update( double time );
 
-	void ClearCaptureChessPieces();
-	void CaptureChessPiece(ChessPiece*);
+	void SelectChessPiece();
 
 private:
-	ChessGame*     _game;
-	std::string    _name;
+	void SetSelectedChessPice( ChessPiece* );
 
-	std::vector<ChessPiece*> _chessPices;
-	std::vector<ChessPiece*> _capturedChessPices;
+private:
+	unsigned _player;
 
-	glm::vec3 _captureAreaPos;
-	glm::vec3 _captureAreaRowOffset;
-	glm::vec3 _captureAreaCollumOffset;
-	unsigned  _captureAreaChessPicesPerRow;
+	SelectionPointer* _pointer;
+	ChessPiece* _selectedChessPiece = nullptr;
 
+	SelectMoveState* _selectMove;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

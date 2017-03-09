@@ -2,36 +2,23 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "SelectionComponent.h"
-
-#include <limits>
+#include "game-state.h"
+#include "../chess-game.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
+GameState::GameState(ChessGame* game)
+	: _game( game )
+{}
 
-const std::string& SelectionComponent::GetComponentTypeName()
+GameState::~GameState()
+{}
+
+void GameState::NextState(GameState* state)
 {
-	const static std::string typeName = "SelectionComponent";
-	return typeName;
+	_game->SetNextState(state);
 }
-
-bool SelectionComponent::InitComponent(
-	SelectionComponent& comp,
-	const xml::Element* elem,
-	AssetManager*)
-{
-	bool b;
-	if (xml::GetAttribute(elem, "selectable", b) && b)
-		comp.state = SELECTABLE;
-	else
-		comp.state = UNSELECTABLE;
-
-	return true;
-}
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

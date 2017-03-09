@@ -2,24 +2,22 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "ChessPiece.h"
-#include "ChessPieceType.h"
-#include "Player.h"
+#include "chess-piece.h"
+#include "chess-piece-type.h"
+#include "player.h"
 
-#include "../SelectionComponent.h"
+#include "../selection-component.h"
 
-#include <BembelKernel/Scene/Scene.h>
-#include <BembelKernel/Scene/PositionComponent.h>
-#include <BembelGraphics/Geometry/GeometryComponent.h>
+#include <bembel-kernel/scene/scene.h>
+#include <bembel-kernel/scene/position-component.h>
+#include <bembel-graphics/geometry/geometry-component.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel {
-
 ChessPiece::ChessPiece(
 	ChessPieceType* type,
-	Scene* scene,
+	bembel::Scene* scene,
 	unsigned owner,
 	const glm::ivec2& startPos)
 	: _scene(scene)
@@ -29,14 +27,14 @@ ChessPiece::ChessPiece(
 	, _position(startPos)
 	, _startPositon(startPos)
 	, _isAlive(false)
-	, _entity(Scene::INVALID_ENTITY)
+	, _entity( bembel::Scene::INVALID_ENTITY)
 {
 	_entity = _scene->CreateEntity();
 
-	auto posComp = _scene->CreateComponent<PositionComponent>(_entity);
+	auto posComp = _scene->CreateComponent<bembel::PositionComponent>(_entity);
 	posComp->position = 2.0f*glm::vec3(_position.x, 0, _position.y);
 
-	auto geomComp = _scene->CreateComponent<GeometryComponent>(_entity);
+	auto geomComp = _scene->CreateComponent<bembel::GeometryComponent>(_entity);
 	geomComp->model = _type->GetModles()[_owner];
 
 	auto selectComp = _scene->CreateComponent<SelectionComponent>(_entity);
@@ -47,7 +45,7 @@ ChessPiece::ChessPiece(
 void ChessPiece::Promote(ChessPieceType* type)
 {
 	_type = type;
-	auto geomComp = _scene->GetComponent<GeometryComponent>(_entity);
+	auto geomComp = _scene->GetComponent<bembel::GeometryComponent>(_entity);
 	geomComp->model = _type->GetModles()[_owner];
 }
 
@@ -56,7 +54,7 @@ ChessPieceType* ChessPiece::GetType() const
 	return _type;
 }
 
-Scene * ChessPiece::GetScene() const
+bembel::Scene * ChessPiece::GetScene() const
 {
 	return _scene;
 }
@@ -76,11 +74,11 @@ void ChessPiece::SetPosition(const glm::ivec2& pos)
 	_hasMoved = true;
 	_position = pos;
 
-	auto posComp = _scene->GetComponent<PositionComponent>(_entity);
+	auto posComp = _scene->GetComponent<bembel::PositionComponent>(_entity);
 	posComp->position = 2.0f*glm::vec3(_position.x, 0, _position.y);
 }
 
-Scene::EntityID ChessPiece::GetEntity()
+bembel::Scene::EntityID ChessPiece::GetEntity()
 {
 	return _entity;
 }
@@ -92,7 +90,7 @@ bool ChessPiece::IsAlive() const
 
 void ChessPiece::Kill()
 {
-	auto posComp = _scene->GetComponent<PositionComponent>( _entity );
+	auto posComp = _scene->GetComponent<bembel::PositionComponent>( _entity );
 	posComp->position = 2.0f*glm::vec3( _position.x, -1000, _position.y );
 	_isAlive = true; 
 }
@@ -105,7 +103,7 @@ void ChessPiece::Reset()
 
 	_type = _originalType;
 
-	auto geomComp = _scene->GetComponent<GeometryComponent>(_entity);
+	auto geomComp = _scene->GetComponent<bembel::GeometryComponent>(_entity);
 	geomComp->model = _type->GetModles()[_owner];
 }
 
@@ -128,8 +126,6 @@ const std::vector<MoveSet::Move>& ChessPiece::GetPossibleMoves() const
 {
 	return _possibleMoves;
 }
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

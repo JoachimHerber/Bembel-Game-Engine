@@ -3,25 +3,20 @@
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
-#include <BembelKernel/Application.h>
-#include <BembelKernel/Events/EventManager.h>
-#include <BembelKernel/Assets/AssetManager.h>
-#include <BembelKernel/Scene/Scene.h>
+#include <bembel-kernel/application.h>
+#include <bembel-kernel/events/event-manager.h>
+#include <bembel-kernel/assets/asset-manager.h>
+#include <bembel-kernel/scene/scene.h>
+#include <bembel-graphics/graphic-system.h>
+#include <bembel-interaction/interaction-system.h>
 
-#include <BembelGraphics/GraphicSystem.h>
-#include <BembelGraphics/RenderingPipeline/RenderingPipeline.h>
-
-#include <Bembelnteraction/InteractionSystem.h>
-
-#include "Chess/ChessGame.h"
-#include "CameraControle.h"
+#include "chess/chess-game.h"
+#include "camera-controle.h"
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
-
-class ChessApplication : public Application
+class ChessApplication : public bembel::Application
 {
 public:
 	ChessApplication();
@@ -32,23 +27,19 @@ public:
 
 	virtual void Update(double time) override;
 
-	void HandleEvent(const WindowShouldCloseEvent&);
+	void HandleEvent(const bembel::WindowShouldCloseEvent&);
 
 private:
-	bool InitAssets();
-
 	bool InitGame();
 
 private:
-	std::shared_ptr<GraphicSystem>     _graphicSys;
-	std::shared_ptr<InteractionSystem> _interactionSys;
+	std::shared_ptr<bembel::GraphicSystem>     _graphicSys;
+	std::shared_ptr<bembel::InteractionSystem> _interactionSys;
 
 	std::unique_ptr<ChessGame> _chessGame;
 
 	std::shared_ptr<CameraControle> _cam;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

@@ -1,33 +1,44 @@
-#ifndef BEMBEL_INITIALPAWNMOVE_H
-#define BEMBEL_INITIALPAWNMOVE_H
+#ifndef BEMBEL_CHESSPIECETYPE_H
+#define BEMBEL_CHESSPIECETYPE_H
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "MoveSet.h"
+#include <bembel-kernel/assets/asset-handle.h>
+#include <bembel-kernel/assets/asset-manager.h>
+
+#include "moves/move-set.h"
+
+#include <memory>
+#include <array>
+#include <map>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel {
-
-class InitialPawnMove : public MoveSet::MoveTemplate
+class ChessPieceType
 {
 public:
-	InitialPawnMove();
-	~InitialPawnMove();
+	ChessPieceType();
+	~ChessPieceType();
 
-	virtual void GetPosibleMoveParameter(ChessPiece*, const ChessBoard&, std::vector<int>&) override;
+	std::array<bembel::AssetHandle, 2>& GetModles();
+	const std::array<bembel::AssetHandle, 2>& GetModles() const;
 
-	virtual glm::vec2 GetTargetPosition(ChessPiece*, int) override;
+	void AddMove(const glm::ivec2& dir,
+				 unsigned maxDist,
+				 bool attack = true,
+				 bool move = true);
+	void AddMove(const glm::ivec2& dir,
+				 bool attack = true,
+				 bool move = true);
+	MoveSet& GetMoveSet();
 
-	virtual void StartMove(ChessPiece*, ChessBoard&, int) override;
-	virtual void EndeMove(ChessPiece*, ChessBoard&, int) override;
-
-	virtual bool UpdateMoveAnimation(double, ChessPiece*, int) override;
+private:
+	std::array<bembel::AssetHandle, 2> _modles;
+	
+	MoveSet _moveSet;
 };
-
-} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/
