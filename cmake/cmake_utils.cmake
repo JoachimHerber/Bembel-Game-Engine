@@ -3,7 +3,6 @@ macro( bembel_find_external_dependencies  )
 	find_package(OpenGL REQUIRED)
 	find_package(GLFW REQUIRED)
 	find_package(glbinding REQUIRED)
-	find_package(Assimp REQUIRED)
 
 	list( APPEND EXTERNAL_INCLUDE_DIRS "${GLFW_INCLUDE_DIR}" )
 	list( APPEND EXTERNAL_INCLUDE_DIRS "${GLBINDING_INCLUDE_DIR}" )
