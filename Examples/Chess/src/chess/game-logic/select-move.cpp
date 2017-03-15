@@ -95,6 +95,7 @@ void SelectMoveState::SelectedMove()
 			_chessPiece,
 			_chessPiece->GetPossibleMoves()[_selctedMove] );
 		NextState( _performMove );
+		_selctedMove = -1;
 	}
 }
 

@@ -28,7 +28,6 @@ public:
 	unsigned    renderer;
 
 	using ContainerType = DenseComponentContainer<GeometryComponent>;
-	using ContainerPtr  = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(

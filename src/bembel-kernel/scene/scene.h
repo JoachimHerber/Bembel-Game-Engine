@@ -39,11 +39,12 @@ public:
 	enum{ INVALID_ENTITY = ~EntityID(0) };
 
 	Scene(AssetManager*);
+	Scene(const Scene&) = delete;
+	Scene& operator=( const Scene& ) = delete;
 	~Scene();
 
 	template<class ComponentType>
-	std::shared_ptr<typename ComponentType::ContainerType>
-		RequestComponentContainer();
+	typename ComponentType::ContainerType* RequestComponentContainer();
 
 	template<class ComponentType>
 	void RegisterComponentType();
@@ -74,7 +75,7 @@ private:
 	void LoadAsset( const xml::Element* );
 
 private:
-	using ContainerPtr = std::shared_ptr<ComponentContainerBase>;
+	using ContainerPtr = std::unique_ptr<ComponentContainerBase>;
 
 	std::vector<ComponentMask> _entities;
 	std::stack<EntityID>       _unusedEntityIds;
@@ -94,23 +95,23 @@ private:
 namespace bembel{
 
 template<class ComponentType>
-inline std::shared_ptr<typename ComponentType::ContainerType>
-	Scene::RequestComponentContainer()
+inline typename ComponentType::ContainerType* Scene::RequestComponentContainer()
 {
 	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
 	if (it != _componentTypeMap.end())
 	{
-		return std::static_pointer_cast<ComponentType::ContainerType>(
-			_container[it->second]);
+		return static_cast<ComponentType::ContainerType*>(
+			_container[it->second].get());
 	}
 		
 	auto container = 
-		std::make_shared<ComponentType::ContainerType>(_container.size());
+		std::make_unique<ComponentType::ContainerType>(_container.size());
+	auto container_pointer = container.get();
 
 	_componentTypeMap.emplace(
 		ComponentType::GetComponentTypeName(), _container.size());
-	_container.push_back(container);
-	return container;
+	_container.push_back(std::move(container));
+	return container_pointer;
 }
 
 template<class ComponentType>
@@ -121,11 +122,11 @@ inline void Scene::RegisterComponentType()
 		return;
 
 	auto container =
-		std::make_shared<ComponentType::ContainerType>(_container.size());
+		std::make_unique<ComponentType::ContainerType>(_container.size());
 
 	_componentTypeMap.emplace(
 		ComponentType::GetComponentTypeName(), _container.size());
-	_container.push_back(container);
+	_container.push_back(std::move(container));
 }
 
 template<class ComponentType>
@@ -138,8 +139,8 @@ ComponentType* Scene::CreateComponent(EntityID id)
 	if (it == _componentTypeMap.end())
 		return nullptr;
 
-	auto container = std::static_pointer_cast<ComponentType::ContainerType>(
-		_container[it->second]);
+	auto container = static_cast<ComponentType::ContainerType*>(
+		_container[it->second].get());
 
 	_entities[id] |= container->GetComponentMask();
 	return container->CreateComponent(id);
@@ -155,8 +156,8 @@ ComponentType* Scene::GetComponent(EntityID id)
 	if (it == _componentTypeMap.end())
 		return nullptr; // component type does not exist
 
-	auto container = std::static_pointer_cast<ComponentType::ContainerType>(
-		_container[it->second]);
+	auto container = static_cast<ComponentType::ContainerType*>(
+		_container[it->second].get());
 
 	if ((_entities[id] & container->GetComponentMask()) == 0)
 		return nullptr; // entity doesn't have a component of the requested type

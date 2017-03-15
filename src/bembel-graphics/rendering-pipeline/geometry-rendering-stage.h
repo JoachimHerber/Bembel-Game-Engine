@@ -53,10 +53,9 @@ public:
 private:
 	std::unique_ptr<FrameBufferObject> _fbo;
 
-	ScenePtr                        _scene;
-	GeometryComponent::ContainerPtr _geometryComponents;
-	PositionComponent::ContainerPtr _positionComponents;
-
+	ScenePtr                          _scene;
+	GeometryComponent::ContainerType* _geometryComponents;
+	PositionComponent::ContainerType* _positionComponents;
 };
 
 } //end of namespace bembel

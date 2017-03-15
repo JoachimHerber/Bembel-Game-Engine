@@ -86,10 +86,10 @@ private:
 	std::vector<TexturePtr>  _inputTextures;
 	std::vector<std::string> _inputTexturNames;
 
-	ScenePtr                           _scene;
-	DirLightProperties::ContainerPtr   _dirLightContainer;
-	PointLightProperties::ContainerPtr _pointLightContainer;
-	PositionComponent::ContainerPtr    _positionContainer;
+	ScenePtr                             _scene;
+	DirLightProperties::ContainerType*   _dirLightContainer;
+	PointLightProperties::ContainerType* _pointLightContainer;
+	PositionComponent::ContainerType*    _positionContainer;
 };
 
 } //end of namespace bembel

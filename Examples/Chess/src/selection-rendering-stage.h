@@ -75,10 +75,10 @@ private:
 	ShaderPtr  _shader;
 	TexturePtr _noise;
 
-	ScenePtr                                 _scene;
-	bembel::PositionComponent::ContainerPtr  _positionComponents;
-	SelectionComponent::ContainerPtr         _selectionComponents;
-	bembel::GeometryComponent::ContainerPtr  _geometryComponents;
+	ScenePtr                                   _scene;
+	bembel::PositionComponent::ContainerType*  _positionComponents;
+	bembel::GeometryComponent::ContainerType*  _geometryComponents;
+	SelectionComponent::ContainerType*         _selectionComponents;
 
 	std::chrono::time_point<std::chrono::steady_clock> _starTime;
 };
