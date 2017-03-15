@@ -22,6 +22,8 @@ class BEMBEL_API Mouse : public InputDevice
 {
 public:
 	Mouse(EventManager*);
+	Mouse( const Mouse& ) = delete;
+	Mouse& operator= ( const Mouse& ) = delete;
 	~Mouse();
 
 	Button* GetButton(int);

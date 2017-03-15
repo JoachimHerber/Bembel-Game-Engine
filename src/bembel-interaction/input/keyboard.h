@@ -22,6 +22,8 @@ class BEMBEL_API Keyboard : public InputDevice
 {
 public:
 	Keyboard(EventManager*);
+	Keyboard( const Keyboard& ) = delete;
+	Keyboard& operator= ( const Keyboard& ) = delete;
 	~Keyboard();
 
 	Button* GetKey(int keyID, int scancode = -1);
@@ -30,9 +32,10 @@ public:
 	void HandleEvent(const KeyReleaseEvent&);
 
 private:
-	// the use of unique_ptr with std::vector causes problems 
-	// with Visual Studio so we use shared_ptr instead
-	std::vector<std::shared_ptr<Button>>   _keys;
+	void InitKey( int keyID, const std::string& name );
+
+private:
+	std::vector<std::unique_ptr<Button>>   _keys;
 
 	std::map<std::pair<int, int>, unsigned> _keyMapping;
 };
