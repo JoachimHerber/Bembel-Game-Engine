@@ -55,36 +55,6 @@ DisplayManager* Kernel::GetDisplayManager() const
 	return _displayMgr.get();
 }
 
-bool Kernel::AddSystem(std::shared_ptr<System> system)
-{
-	const std::string& name = system->GetName();
-
-	auto it = _systemMapping.find(name);
-	if (it != _systemMapping.end())
-	{
-		BEMBEL_LOG_ERROR()
-			<< "System \""
-			<< system->GetName()
-			<< "\" has already been added."
-			<< std::endl;
-		return false;
-	}
-
-	for (size_t n = 0; n <_systems.size(); ++n)
-	{
-		if (!_systems[n])
-		{
-			_systems[n] = system;
-			_systemMapping.emplace(name, n);
-			return true;
-		}
-	}
-
-	_systemMapping.emplace(name, _systems.size());
-	_systems.push_back(system);
-	return true;
-}
-
 bool Kernel::RemoveSystem(const std::string& name)
 {
 	auto it = _systemMapping.find(name);
@@ -99,11 +69,11 @@ bool Kernel::RemoveSystem(const std::string& name)
 	return true;
 }
 
-std::shared_ptr<System> Kernel::GetSystem(const std::string& name)
+System* Kernel::GetSystem(const std::string& name)
 {
 	auto it = _systemMapping.find(name);
 	if (it != _systemMapping.end())
-		return _systems[it->second];
+		return _systems[it->second].get();
 
 	BEMBEL_LOG_WARNING() << "Unknown system '" << name << "'." << std::endl;
 	return nullptr;
@@ -111,7 +81,7 @@ std::shared_ptr<System> Kernel::GetSystem(const std::string& name)
 
 bool Kernel::InitSystems()
 {
-	for (auto system : _systems)
+	for (auto& system : _systems)
 	{
 		if (!system->Init())
 			return false;
@@ -121,12 +91,12 @@ bool Kernel::InitSystems()
 
 void Kernel::UpdateSystems(double timeSinceLastUpdate)
 {
-	for (auto system : _systems)
+	for (auto& system : _systems)
 		system->Update(timeSinceLastUpdate);
 }
 void Kernel::ShutdownSystems()
 {
-	for (auto system : _systems)
+	for (auto& system : _systems)
 		system->Shutdown();
 }
 bool Kernel::LoadSetting(const std::string& configFileName)
@@ -151,7 +121,7 @@ bool Kernel::LoadSetting(const std::string& configFileName)
 	const xml::Element* systems = root->FirstChildElement("Systems");
 	if (systems)
 	{
-		for (auto system : _systems)
+		for (auto& system : _systems)
 		{
 			const xml::Element* systemConfig =
 				systems->FirstChildElement(system->GetName().c_str());

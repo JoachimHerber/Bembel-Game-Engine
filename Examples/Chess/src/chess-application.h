@@ -33,8 +33,8 @@ private:
 	bool InitGame();
 
 private:
-	std::shared_ptr<bembel::GraphicSystem>     _graphicSys;
-	std::shared_ptr<bembel::InteractionSystem> _interactionSys;
+	bembel::GraphicSystem*     _graphicSys;
+	bembel::InteractionSystem* _interactionSys;
 
 	std::unique_ptr<ChessGame> _chessGame;
 

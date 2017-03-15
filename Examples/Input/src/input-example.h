@@ -43,7 +43,6 @@ public:
 	void HandleEvent(const bembel::ButtonReleaseEvent&);
 
 private:
-	std::shared_ptr<bembel::InteractionSystem>  _interactionSys;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

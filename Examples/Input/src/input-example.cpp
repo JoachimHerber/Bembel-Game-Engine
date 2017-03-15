@@ -15,8 +15,7 @@
 InputExample::InputExample()
 	: bembel::Application()
 {
-	_interactionSys = std::make_shared<bembel::InteractionSystem>(_kernel.get());
-	_kernel->AddSystem(_interactionSys);
+	_kernel->AddSystem<bembel::InteractionSystem>();
 
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 

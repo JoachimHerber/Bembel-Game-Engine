@@ -21,17 +21,13 @@
 ChessApplication::ChessApplication()
 	: bembel::Application()
 {
-	_graphicSys =
-		std::make_shared<bembel::GraphicSystem>(_kernel.get());
-	_interactionSys = 
-		std::make_shared<bembel::InteractionSystem>(_kernel.get());
+	_graphicSys     = _kernel->AddSystem<bembel::GraphicSystem>();
+	_interactionSys = _kernel->AddSystem<bembel::InteractionSystem>();
 
 	_graphicSys->GetRendertingStageFactory()
 		.RegisterDefaultObjectGenerator<SelectionRenderingStage>(
 			"SelectionRenderingStage");
 
-	_kernel->AddSystem(_graphicSys);
-	_kernel->AddSystem(_interactionSys);
 	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 }
 
@@ -80,7 +76,7 @@ bool ChessApplication::InitGame()
 	_chessGame = std::make_unique<ChessGame>( 
 		_kernel->GetAssetManager(),
 		_kernel->GetEventManager(),
-		_graphicSys.get() );
+		_graphicSys );
 	_chessGame->ResetChessBoard();
 
 	return true;
