@@ -17,8 +17,8 @@
 namespace bembel {
 
 ConsoleLogSink::ConsoleLogSink(const std::string& prefix, int color)
-	: _prefix(prefix)
-	, _color(color)
+	: prefix_(prefix)
+	, color_(color)
 {}
 
 ConsoleLogSink::~ConsoleLogSink()
@@ -27,10 +27,10 @@ ConsoleLogSink::~ConsoleLogSink()
 void ConsoleLogSink::WriteMessage(const LogMessage&msg)
 {
 #ifdef _WIN32
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), _color);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color_);
 #endif
 
-	std::cout << _prefix << msg.GetDescription() << std::flush;
+	std::cout << prefix_ << msg.GetDescription() << std::flush;
 
 #ifdef _WIN32
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);

@@ -15,8 +15,8 @@
 /*============================================================================*/
 /* DEFINITIONS                                                                */
 /*============================================================================*/
-namespace bembel{
-namespace xml{
+namespace bembel {
+namespace xml {
 
 using Element = tinyxml2::XMLElement;
 using Document = tinyxml2::XMLDocument;
@@ -36,7 +36,7 @@ bool GetAttribute(const Element* node, const std::string& childNode, const std::
 template<typename T>
 inline bool SetAttribute(Element* node, const std::string& name, const T& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
 	std::stringstream sstream;
@@ -48,11 +48,11 @@ inline bool SetAttribute(Element* node, const std::string& name, const T& value)
 template<typename T>
 inline bool GetAttribute(const Element* node, const std::string& name, T& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
 	const char* attrib = node->Attribute(name.c_str());
-	if (!attrib)
+	if( !attrib )
 		return false;
 
 	std::stringstream sstream;
@@ -63,35 +63,35 @@ inline bool GetAttribute(const Element* node, const std::string& name, T& value)
 
 template<typename T>
 inline bool GetAttribute(
-	const Element* node, 
-	const std::string& childNode, 
-	const std::string& name, 
+	const Element* node,
+	const std::string& child_node,
+	const std::string& name,
 	T& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
 	return GetAttribute<T>(
-		node->FirstChildElement(childNode.c_str()), name, value);
+		node->FirstChildElement(child_node.c_str()), name, value);
 }
 
 class ElementIterator
 {
 public:
 	ElementIterator(const Element* element, const std::string& name)
-		: _element(element)
-		, _name(name)
+		: element_(element)
+		, name_(name)
 	{}
 
 	ElementIterator begin()
 	{
-		if (_name.empty())
+		if( name_.empty() )
 			return ElementIterator(
-				_element->FirstChildElement(), _name);
+				element_->FirstChildElement(), name_);
 		else
 			return ElementIterator(
-				_element->FirstChildElement(_name.c_str()), _name);
-		
+				element_->FirstChildElement(name_.c_str()), name_);
+
 	}
 
 	ElementIterator end()
@@ -101,30 +101,30 @@ public:
 
 	const Element* operator*()
 	{
-		return _element;
+		return element_;
 	}
 	bool operator != (const ElementIterator& other)
 	{
-		if (_element != other._element)
+		if( element_ != other.element_ )
 			return true;
-		return _element!=nullptr && _name != other._name;
+		return element_!=nullptr && name_ != other.name_;
 	}
 	ElementIterator& operator++()
 	{
-		if (_name.empty())
-			_element = _element->NextSiblingElement();
+		if( name_.empty() )
+			element_ = element_->NextSiblingElement();
 		else
-			_element = _element->NextSiblingElement(_name.c_str());
+			element_ = element_->NextSiblingElement(name_.c_str());
 
 		return *this;
 	}
 private:
-	const Element* _element;
-	const std::string _name;
+	const Element* element_;
+	const std::string name_;
 };
 
 inline ElementIterator IterateChildElements(
-	const Element* element, const std::string& name="")
+	const Element* element, const std::string& name = "")
 {
 	return ElementIterator(element, name);
 }

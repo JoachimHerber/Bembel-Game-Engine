@@ -35,9 +35,9 @@ public:
 	static unsigned GetNextFreeEventTypeID();
 
 private:
-	std::vector<EventChannelBase*> _channels;
-	
-	static unsigned _nextUnusedEventTypeID;
+	std::vector<EventChannelBase*> channels_;
+
+	static unsigned next_unused_event_type_id_;
 };
 
 using EventManagerPtr = std::shared_ptr<EventManager>;
@@ -46,11 +46,11 @@ using EventManagerPtr = std::shared_ptr<EventManager>;
 public:\
 	static unsigned GetEventTypeID();\
 private:\
-	static unsigned _eventTypeID;
+	static unsigned event_type_id_;
 
 #define BEMBEL_EVENT_INTERVACE_IMPLEMENTATION( _CLASS ) \
-unsigned _CLASS::_eventTypeID  = EventManager::GetNextFreeEventTypeID();\
-unsigned _CLASS::GetEventTypeID(){return _eventTypeID;}
+unsigned _CLASS::event_type_id_  = EventManager::GetNextFreeEventTypeID();\
+unsigned _CLASS::GetEventTypeID(){return event_type_id_;}
 
 } //end of namespace bembel
 /*============================================================================*/

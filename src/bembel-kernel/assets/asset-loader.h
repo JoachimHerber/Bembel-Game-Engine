@@ -16,7 +16,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class AssetManager;
 class AssetContainerBase;
@@ -33,9 +33,9 @@ public:
 	AssetLoaderBase();
 	virtual ~AssetLoaderBase();
 
-	virtual AssetHandle RequestAsset( const std::string& filename )    = 0;
-	virtual AssetHandle RequestAsset( const xml::Element* properties ) = 0;
-	virtual bool ReleaseAsset( AssetHandle assetHandel ) = 0;
+	virtual AssetHandle RequestAsset(const std::string& file_name) = 0;
+	virtual AssetHandle RequestAsset(const xml::Element* properties) = 0;
+	virtual bool ReleaseAsset(AssetHandle assetHandel) = 0;
 
 	virtual void Update() = 0;
 

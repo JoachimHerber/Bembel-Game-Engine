@@ -28,11 +28,11 @@ class BEMBEL_API Logger
 public:
 	Logger(std::shared_ptr<LogSink>);
 	~Logger();
-	
+
 	LogMessage operator()(
 		const std::string& file,
 		unsigned int line);
-	
+
 	void Flush(const LogMessage& message);
 
 	void SetLogSink(std::shared_ptr<LogSink>);
@@ -43,7 +43,7 @@ public:
 	static Logger warning;
 
 private:
-	std::shared_ptr<LogSink> _logSink;
+	std::shared_ptr<LogSink> log_sink_;
 };
 
 #define BEMBEL_LOG_INFO()    bembel::Logger::info(__FILE__,__LINE__)

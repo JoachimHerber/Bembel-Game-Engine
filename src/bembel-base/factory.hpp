@@ -13,40 +13,39 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 template<typename ObjectType, typename ... TArgs>
 class TFactory
 {
 public:
 	TFactory();
+	TFactory(const TFactory&) = delete;
+	TFactory& operator=(const TFactory&) = delete;
 	~TFactory();
-
-	using ObjectPtr = std::unique_ptr<ObjectType>;
 
 	class ObjectGeneratorBase
 	{
 	public:
-		virtual ObjectPtr CreateObject(TArgs ... args) = 0;
+		virtual std::unique_ptr<ObjectType>  CreateObject(TArgs ... args) = 0;
 	};
-	using ObjectGeneratorPtr = std::shared_ptr<ObjectGeneratorBase>;
 
-	void RegisterObjectGenerator(const std::string& type, ObjectGeneratorPtr);
+	void RegisterObjectGenerator(const std::string& type, std::unique_ptr<ObjectGeneratorBase>);
 
-	ObjectPtr CreateObject(const std::string&, TArgs ... args) const;
+	std::unique_ptr<ObjectType> CreateObject(const std::string&, TArgs ... args) const;
 
 	template<typename T>
 	class DefaultObjectGenerator : public ObjectGeneratorBase
 	{
 	public:
-		virtual ObjectPtr CreateObject(TArgs ... args) override;
+		virtual std::unique_ptr<ObjectType> CreateObject(TArgs ... args) override;
 	};
 
 	template<typename T>
 	void RegisterDefaultObjectGenerator(const std::string& type);
 
 private:
-	std::map<std::string, ObjectGeneratorPtr> _generators;
+	std::map<std::string, std::unique_ptr<ObjectGeneratorBase>> generators_;
 };
 
 template<typename T>

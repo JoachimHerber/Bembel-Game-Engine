@@ -33,56 +33,55 @@ BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(CleanuptGraphicResourcesEvent);
 
 GraphicSystem::GraphicSystem(Kernel* kernel)
 	: System(kernel, "Graphics")
+	, geometry_render_queue_(kernel->GetAssetManager())
 {
-	_kernel->GetAssetManager()->RegisterAssetType<Material>(this);
-	_kernel->GetAssetManager()->RegisterAssetType<GeometryMesh>();
-	_kernel->GetAssetManager()->RegisterAssetType<GeometryModel>();
+	kernel_->GetAssetManager()->RegisterAssetType<Material>(this);
+	kernel_->GetAssetManager()->RegisterAssetType<GeometryMesh>();
+	kernel_->GetAssetManager()->RegisterAssetType<GeometryModel>();
 
-	_kernel->GetEventManager()->AddHandler<WindowUpdateEvent>(this);
-	_kernel->GetEventManager()->AddHandler<FrameBufferResizeEvent>(this);
+	kernel_->GetEventManager()->AddHandler<WindowUpdateEvent>(this);
+	kernel_->GetEventManager()->AddHandler<FrameBufferResizeEvent>(this);
 
-	_renderingStageFactory.RegisterDefaultObjectGenerator
+	rendering_stage_factory_.RegisterDefaultObjectGenerator
 		<GeometryRenderingStage>("DeferredGeometryStage");
-	_renderingStageFactory.RegisterDefaultObjectGenerator
+	rendering_stage_factory_.RegisterDefaultObjectGenerator
 		<DeferredLightingStage>("DeferredLightingStage");
-	_renderingStageFactory.RegisterDefaultObjectGenerator
+	rendering_stage_factory_.RegisterDefaultObjectGenerator
 		<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
-
-	_geometryRenderQueue.SetAssetMannager(kernel->GetAssetManager());
 }
 GraphicSystem::~GraphicSystem()
 {
-	_kernel->GetEventManager()->RemoveHandler<WindowUpdateEvent>(this);
-	_kernel->GetEventManager()->RemoveHandler<FrameBufferResizeEvent>(this);
+	kernel_->GetEventManager()->RemoveHandler<WindowUpdateEvent>(this);
+	kernel_->GetEventManager()->RemoveHandler<FrameBufferResizeEvent>(this);
 }
 
 Viewport* GraphicSystem::CreateViewPort(unsigned windowID /*= 0*/)
 {
-	if (_viewports.size() <= windowID)
-		_viewports.resize(windowID+1);
+	if( viewports_.size() <= windowID )
+		viewports_.resize(windowID+1);
 
-	_viewports[windowID].push_back(std::make_unique<Viewport>());
-	return _viewports[windowID].back().get();
+	viewports_[windowID].push_back(std::make_unique<Viewport>());
+	return viewports_[windowID].back().get();
 }
 
 const std::vector<std::shared_ptr<Viewport>>&
-	GraphicSystem::GetViewports(unsigned windowID /*= 0*/)
+GraphicSystem::GetViewports(unsigned windowID /*= 0*/)
 {
-	if (_viewports.size() <= windowID)
-		_viewports.resize(windowID+1);
-	return _viewports[windowID];
+	if( viewports_.size() <= windowID )
+		viewports_.resize(windowID+1);
+	return viewports_[windowID];
 }
 
 void GraphicSystem::UpdateViewports()
 {
-	for (size_t n = 0; n < _viewports.size(); ++n)
+	for( size_t n = 0; n < viewports_.size(); ++n )
 	{
-		auto window = _kernel->GetDisplayManager()->GetWindow(n);
-		if (!window)
+		auto window = kernel_->GetDisplayManager()->GetWindow(n);
+		if( !window )
 			continue;
 
-		auto& windowViewports = _viewports[n];
-		for (auto& viewport : windowViewports)
+		auto& windowViewports = viewports_[n];
+		for( auto& viewport : windowViewports )
 		{
 			viewport->UpdatePosition(window->GetFrameBufferSize());
 			viewport->UpdateSize(window->GetFrameBufferSize());
@@ -92,90 +91,90 @@ void GraphicSystem::UpdateViewports()
 
 RenderingPipeline* GraphicSystem::CreateRenderingPipline()
 {
-	_pipelines.push_back(std::make_unique<RenderingPipeline>(this));
-	return _pipelines.back().get();
+	pipelines_.push_back(std::make_unique<RenderingPipeline>(this));
+	return pipelines_.back().get();
 }
 
 const std::vector<std::shared_ptr<RenderingPipeline>>&
-	GraphicSystem::GetRenderingPiplies()
+GraphicSystem::GetRenderingPiplies()
 {
-	return _pipelines;
+	return pipelines_;
 }
 
 const std::vector<std::shared_ptr<GeometryRendererBase>>& GraphicSystem::GetRenderer() const
 {
-	return _renderer;
+	return renderer_;
 }
 
-GeometryRendererBase* GraphicSystem::GetRenderer( const std::string& name ) const
+GeometryRendererBase* GraphicSystem::GetRenderer(const std::string& name) const
 {
-	auto it = _rendererMap.find( name );
-	if(it != _rendererMap.end())
-		return _renderer[it->second].get();
+	auto it = renderer_map_.find(name);
+	if( it != renderer_map_.end() )
+		return renderer_[it->second].get();
 	else
 		return nullptr;
 }
 
 GraphicSystem::RendertingStageFactory& GraphicSystem::GetRendertingStageFactory()
 {
-	return _renderingStageFactory;
+	return rendering_stage_factory_;
 }
 
 GeometryRenderQueue& GraphicSystem::GetGeometryRenderQueue()
 {
-	return _geometryRenderQueue;
+	return geometry_render_queue_;
 }
 
 bool GraphicSystem::Configure(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return false;
 
 	ConfigureRenderer(properties->FirstChildElement("Renderer"));
 	ConfigurePipelines(properties->FirstChildElement("RenderingPipelines"));
 	ConfigureViewports(properties->FirstChildElement("Viewports"));
 
-	_kernel->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
+	kernel_->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
 	return true;
 }
 
 bool GraphicSystem::Init()
 {
-	for (auto& pipline : _pipelines)
+	for( auto& pipline : pipelines_ )
 		pipline->Init();
 
 	UpdateViewports();
 
-	_kernel->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
+	kernel_->GetEventManager()->Broadcast(InitGraphicResourcesEvent{});
 	return true;
 }
 
 void GraphicSystem::Shutdown()
 {
-	_pipelines.clear();
-	_kernel->GetEventManager()->Broadcast(CleanuptGraphicResourcesEvent{});
+	pipelines_.clear();
+	kernel_->GetEventManager()->Broadcast(CleanuptGraphicResourcesEvent{});
 }
 
 void GraphicSystem::Update(double)
 {
-	for (auto& pipline : _pipelines)
+	for( auto& pipline : pipelines_ )
 		pipline->Update();
 }
 
 void GraphicSystem::HandleEvent(const WindowUpdateEvent& event)
 {
-	unsigned windowID = event.window->GetWindowID();
-	if (_viewports.size() <= windowID)
+	unsigned window_id = event.window->GetWindowID();
+	if( viewports_.size() <= window_id )
 		return;
 
-	auto& windowViewports = _viewports[windowID];
-	for (auto& viewport : windowViewports )
+	auto& windowViewports = viewports_[window_id];
+	for( auto& viewport : windowViewports )
 	{
-		if(!(viewport->IsEnabled()))
+		if( !(viewport->IsEnabled()) )
 			continue;
 
 		auto view = viewport->GetView();
-		if(!view)
+		if( !view )
 			continue;
 
 		glViewport(
@@ -190,12 +189,12 @@ void GraphicSystem::HandleEvent(const WindowUpdateEvent& event)
 
 void GraphicSystem::HandleEvent(const FrameBufferResizeEvent& event)
 {
-	unsigned windowID = event.window->GetWindowID();
-	if (_viewports.size() <= windowID)
+	unsigned window_id = event.window->GetWindowID();
+	if( viewports_.size() <= window_id )
 		return;
 
-	auto& windowViewports = _viewports[windowID];
-	for (auto& viewport : windowViewports)
+	auto& window_viewports = viewports_[window_id];
+	for( auto& viewport : window_viewports )
 	{
 		viewport->UpdatePosition(event.size);
 		viewport->UpdateSize(event.size);
@@ -204,81 +203,81 @@ void GraphicSystem::HandleEvent(const FrameBufferResizeEvent& event)
 
 void GraphicSystem::ConfigureRenderer(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
-	for (auto rendererProperties : xml::IterateChildElements(properties))
+	for( auto rendererProperties : xml::IterateChildElements(properties) )
 	{
 		RendererPtr renderer =
 			DefaultGeometryRenderer::CreateRenderer(
-				rendererProperties, _renderer.size());
+				rendererProperties, renderer_.size());
 
 		if( renderer )
 		{
 			std::string name;
-			if( xml::GetAttribute( rendererProperties, "name", name ) )
-				_rendererMap.emplace( name, _renderer.size() );
+			if( xml::GetAttribute(rendererProperties, "name", name) )
+				renderer_map_.emplace(name, renderer_.size());
 
-			_renderer.push_back( std::move( renderer ) );
+			renderer_.push_back(std::move(renderer));
 		}
 	}
 }
 
 void GraphicSystem::ConfigurePipelines(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
-	for( auto pipelineProperties : xml::IterateChildElements(properties, "RenderingPipeline"))
+	for( auto pipelineProperties : xml::IterateChildElements(properties, "RenderingPipeline") )
 	{
 		auto pipline = std::make_unique<RenderingPipeline>(this);
-		if (!pipline->Configure(pipelineProperties))
+		if( !pipline->Configure(pipelineProperties) )
 			pipline.reset();
 
-		_pipelines.push_back(std::move(pipline));
+		pipelines_.push_back(std::move(pipline));
 	}
 }
 
 void GraphicSystem::ConfigureViewports(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
-	for (auto viewportProperties : xml::IterateChildElements(properties, "Viewport"))
+	for( auto viewport_properties : xml::IterateChildElements(properties, "Viewport") )
 	{
-		int windowID = 0;
-		xml::GetAttribute(viewportProperties, "window", windowID);
-		auto viewport = CreateViewPort(windowID);
+		int window_id = 0;
+		xml::GetAttribute(viewport_properties, "window", window_id);
+		auto viewport = CreateViewPort(window_id);
 
-		glm::vec2 relPos(0, 0);
-		glm::vec2 relSize(1, 1);
-		glm::vec2 posOffset(0, 0);
-		glm::vec2 sizeOffset(0, 0);
-		xml::GetAttribute(viewportProperties, "position", relPos);
-		xml::GetAttribute(viewportProperties, "size", relSize);
-		xml::GetAttribute(viewportProperties, "position_offset", posOffset);
-		xml::GetAttribute(viewportProperties, "size_offset", sizeOffset);
-		viewport->SetRelativPosition(relPos);
-		viewport->SetRelativSize(relSize);
-		viewport->SetPositionOffset(posOffset);
-		viewport->SetSizeOffset(sizeOffset);
-		auto window = _kernel->GetDisplayManager()->GetWindow(windowID);
-		if (window)
+		glm::vec2 position(0, 0);
+		glm::vec2 size(1, 1);
+		glm::vec2 position_offset(0, 0);
+		glm::vec2 size_offset(0, 0);
+		xml::GetAttribute(viewport_properties, "position", position);
+		xml::GetAttribute(viewport_properties, "size", size);
+		xml::GetAttribute(viewport_properties, "position_offset", position_offset);
+		xml::GetAttribute(viewport_properties, "size_offset", size_offset);
+		viewport->SetRelativPosition(position);
+		viewport->SetRelativSize(size);
+		viewport->SetPositionOffset(position_offset);
+		viewport->SetSizeOffset(size_offset);
+		auto window = kernel_->GetDisplayManager()->GetWindow(window_id);
+		if( window )
 		{
-			glm::vec2 fbSize = window->GetFrameBufferSize();
-			viewport->UpdatePosition(fbSize);
-			viewport->UpdateSize(fbSize);
+			glm::vec2 frame_buffer_size = window->GetFrameBufferSize();
+			viewport->UpdatePosition(frame_buffer_size);
+			viewport->UpdateSize(frame_buffer_size);
 		}
 
-		for (auto viewProperties : xml::IterateChildElements(viewportProperties))
+		for( auto view_properties : xml::IterateChildElements(viewport_properties) )
 		{
-			std::string viewType = viewProperties->Value();
-			if (viewType == "PipelineResultView")
+			std::string viewType = view_properties->Value();
+			if( viewType == "PipelineResultView" )
 			{
 				int pipeline = 0, view = 0;
-				xml::GetAttribute(viewProperties, "pipeline", pipeline);
-				xml::GetAttribute(viewProperties, "view", view);
-				viewport->SetView(_pipelines[pipeline]->GetViews()[view]);
+				xml::GetAttribute(view_properties, "pipeline", pipeline);
+				xml::GetAttribute(view_properties, "view", view);
+				viewport->SetView(pipelines_[pipeline]->GetViews()[view]);
 			}
 		}
 	}

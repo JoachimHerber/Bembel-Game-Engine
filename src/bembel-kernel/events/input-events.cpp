@@ -7,7 +7,7 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(KeyPressEvent);
 BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(KeyRepeatEvent);

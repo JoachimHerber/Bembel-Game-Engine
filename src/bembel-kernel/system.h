@@ -37,11 +37,11 @@ public:
 	virtual bool Init();
 	virtual void Shutdown();
 
-	virtual void Update(double timeSinceLastUpdate) = 0;
+	virtual void Update(double time_since_last_update) = 0;
 
 protected:
-	Kernel*           _kernel;
-	const std::string _systemName;
+	Kernel*           kernel_;
+	const std::string system_name_;
 };
 
 } //end of namespace bembel

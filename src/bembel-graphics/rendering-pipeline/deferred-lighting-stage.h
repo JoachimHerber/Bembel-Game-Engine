@@ -18,7 +18,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Scene;
 class Texture;
@@ -29,13 +29,13 @@ class FrameBufferObject;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API DeferredLightingStage : public RenderingStage
 {
 public:
-	using TexturePtr           = std::shared_ptr<Texture>;
-	using ShaderProgramPtr     = std::shared_ptr<Shader>;
+	using TexturePtr = std::shared_ptr<Texture>;
+	using ShaderProgramPtr = std::shared_ptr<Shader>;
 	using FrameBufferObjectPtr = std::unique_ptr<FrameBufferObject>;
 
 	DeferredLightingStage(RenderingPipeline* pipline);
@@ -48,7 +48,7 @@ public:
 		const std::string& pointLightVert,
 		const std::string& pointLightFrag,
 		const std::string& dirLightVert,
-		const std::string& dirLightFrag );
+		const std::string& dirLightFrag);
 
 	void SetOutputTexture(const std::string&);
 	void SetInputTextures(const std::vector<std::string>&);
@@ -74,22 +74,22 @@ private:
 	void ApplyPointLights();
 
 private:
-	FrameBufferObjectPtr _fbo;
+	FrameBufferObjectPtr fbo_;
 
-	ShaderProgramPtr  _dirLightShader;
-	ShaderProgramPtr  _pointLightShader;
+	ShaderProgramPtr  dir_light_shader_;
+	ShaderProgramPtr  point_light_shader_;
 
-	GLuint _vao;
-	GLuint _vbo;
-	unsigned _bufferSize;
+	GLuint vao_;
+	GLuint vbo_;
+	unsigned buffer_size_;
 
-	std::vector<TexturePtr>  _inputTextures;
-	std::vector<std::string> _inputTexturNames;
+	std::vector<TexturePtr>  input_textures_;
+	std::vector<std::string> input_textur_names_;
 
-	ScenePtr                             _scene;
-	DirLightProperties::ContainerType*   _dirLightContainer;
-	PointLightProperties::ContainerType* _pointLightContainer;
-	PositionComponent::ContainerType*    _positionContainer;
+	ScenePtr                             scene_;
+	DirLightProperties::ContainerType*   dir_light_container_;
+	PointLightProperties::ContainerType* point_light_container_;
+	PositionComponent::ContainerType*    position_container_;
 };
 
 } //end of namespace bembel

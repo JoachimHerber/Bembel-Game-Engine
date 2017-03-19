@@ -13,29 +13,29 @@
 /*============================================================================*/
 namespace bembel {
 
-Scene::Scene(AssetManager* assetMgr)
-	: _assteManager(assetMgr)
+Scene::Scene(AssetManager* asset_manager)
+	: asste_manager_(asset_manager)
 {}
 
 Scene::~Scene()
 {
-	for( auto asset_handle : _assets )
+	for( auto asset_handle : assets_ )
 	{
-		_assteManager->ReleaseAsset( asset_handle );
+		asste_manager_->ReleaseAsset(asset_handle);
 	}
 }
 
 Scene::EntityID Scene::CreateEntity()
 {
-	if (_unusedEntityIds.empty())
+	if( unused_entity_ids_.empty() )
 	{
-		_entities.push_back(0);
-		return _entities.size() - 1;
+		entities_.push_back(0);
+		return entities_.size() - 1;
 	}
 	else
 	{
-		EntityID id = _unusedEntityIds.top();
-		_unusedEntityIds.pop();
+		EntityID id = unused_entity_ids_.top();
+		unused_entity_ids_.pop();
 		return id;
 	}
 }
@@ -44,15 +44,15 @@ Scene::EntityID Scene::CreateEntity(
 	const xml::Element* properties)
 {
 	EntityID entity = CreateEntity();
-	for (const xml::Element* component : xml::IterateChildElements(properties))
+	for( const xml::Element* component : xml::IterateChildElements(properties) )
 	{
-		auto it = _componentTypeMap.find(component->Value());
-		if(it == _componentTypeMap.end())
+		auto it = component_type_map_.find(component->Value());
+		if( it == component_type_map_.end() )
 			continue; // unknown component type
 
-		if (_container[it->second]->CreateComponent(entity, component, _assteManager))
+		if( container_[it->second]->CreateComponent(entity, component, asste_manager_) )
 		{
-			_entities[entity] |= _container[it->second]->GetComponentMask();
+			entities_[entity] |= container_[it->second]->GetComponentMask();
 		}
 	}
 	return entity;
@@ -60,37 +60,37 @@ Scene::EntityID Scene::CreateEntity(
 
 bool Scene::DeleteEntity(EntityID id)
 {
-	if (id >= _entities.size())
+	if( id >= entities_.size() )
 		return false; // invalid entity id
 
 	// delete all components of of the entity
-	for (auto& container : _container)
+	for( auto& container : container_ )
 	{
-		if (_entities[id] & container->GetComponentMask() != 0)
+		if( entities_[id] & container->GetComponentMask() != 0 )
 			container->DeleteComponent(id);
 	}
 
-	_entities[id] = 0;
-	_unusedEntityIds.push(id);
+	entities_[id] = 0;
+	unused_entity_ids_.push(id);
 }
 
-bool Scene::LoadScene(const std::string& fileName)
+bool Scene::LoadScene(const std::string& file_name)
 {
 	xml::Document doc;
-	if (doc.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
+	if( doc.LoadFile(file_name.c_str()) != tinyxml2::XML_SUCCESS )
 	{
 		BEMBEL_LOG_ERROR()
-			<< "Failed to lode file '" << fileName << "'\n"
+			<< "Failed to lode file '" << file_name << "'\n"
 			<< doc.ErrorName() << std::endl;
 		return false;
 	}
 
 	const xml::Element* root = doc.FirstChildElement("Scene");
-	if (!root)
+	if( !root )
 		return false;
 
 	const xml::Element* entities = root->FirstChildElement("Entities");
-	for (auto entity : xml::IterateChildElements(entities, "Entity"))
+	for( auto entity : xml::IterateChildElements(entities, "Entity") )
 	{
 		CreateEntity(entity);
 	}
@@ -99,41 +99,43 @@ bool Scene::LoadScene(const std::string& fileName)
 
 const std::vector<Scene::ComponentMask>& Scene::GetEntitys() const
 {
-	return _entities;
+	return entities_;
 }
 
-bool Scene::LoadAssets( const std::string& fileName )
+bool Scene::LoadAssets(const std::string& file_name)
 {
 	xml::Document doc;
-	if( doc.LoadFile( fileName.c_str() ) != tinyxml2::XML_SUCCESS )
+	if( doc.LoadFile(file_name.c_str()) != tinyxml2::XML_SUCCESS )
 	{
 		BEMBEL_LOG_ERROR()
-			<< "Failed to load file '" << fileName << "'\n"
+			<< "Failed to load file '" << file_name << "'\n"
 			<< doc.ErrorName() << std::endl;
 		return false;
 	}
 
-	const xml::Element* root = doc.FirstChildElement( "Assets" );
+	const xml::Element* root = doc.FirstChildElement("Assets");
 	if( !root )
 	{
 		BEMBEL_LOG_ERROR()
-			<< "File '" << fileName << "' has no root element 'GeometryMesh'"
+			<< "File '" << file_name << "' has no root element 'GeometryMesh'"
 			<< std::endl;
 		return false;
 	}
-	for( auto it : xml::IterateChildElements( root ) )
+	for( auto it : xml::IterateChildElements(root) )
 	{
-		LoadAsset( it );
+		LoadAsset(it);
 	}
 	return true;
 }
 
-void Scene::LoadAsset( const xml::Element* properties )
+void Scene::LoadAsset(const xml::Element* properties)
 {
-	AssetHandle hndl = _assteManager->RequestAsset(properties->Value(), properties);
-	if( _assteManager->IsHandelValid( hndl ) )
+	AssetHandle hndl = asste_manager_->RequestAsset(
+		properties->Value(), properties);
+
+	if( asste_manager_->IsHandelValid(hndl) )
 	{
-		_assets.emplace( hndl );
+		assets_.emplace(hndl);
 	}
 }
 

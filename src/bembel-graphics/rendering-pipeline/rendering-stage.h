@@ -26,7 +26,7 @@ class BEMBEL_API RenderingStage
 {
 public:
 	RenderingStage(RenderingPipeline* pipline)
-		: _pipline(pipline)
+		: pipline_(pipline)
 	{}
 	virtual ~RenderingStage()
 	{}
@@ -41,7 +41,7 @@ public:
 	virtual void DoRendering() = 0;
 
 protected:
-	RenderingPipeline* _pipline;
+	RenderingPipeline* pipline_;
 };
 
 } //end of namespace bembel

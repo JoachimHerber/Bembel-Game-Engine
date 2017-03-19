@@ -52,12 +52,12 @@ public:
 	void OnWindowClosed(Window*);
 
 private:
-	Kernel* _kernel;
+	Kernel* kernel_;
 
-	std::vector<Window*> _windows;
-	std::vector<Window*> _openWindows;
+	std::vector<std::unique_ptr<Window>> windows_;
+	std::vector<Window*> open_windows_;
 
-	Factory<DisplayModeBase> _displayModeFactory;
+	Factory<DisplayModeBase> display_mode_factory_;
 
 	friend class bembel::Window;
 };

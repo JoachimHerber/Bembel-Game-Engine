@@ -19,12 +19,12 @@
 namespace bembel{
 
 DisplayManager::DisplayManager(Kernel* kernel)
-	: _kernel(kernel)
+	: kernel_(kernel)
 {
 	//glfwSetMonitorCallback(glfw_callbacks::MonitorCallback);
 
-	_displayModeFactory.RegisterDefaultObjectGenerator<WindowDisplayMode>("Windowed");
-	_displayModeFactory.RegisterDefaultObjectGenerator<FullscreenDisplayMode>("Fullscreen");
+	display_mode_factory_.RegisterDefaultObjectGenerator<WindowDisplayMode>("Windowed");
+	display_mode_factory_.RegisterDefaultObjectGenerator<FullscreenDisplayMode>("Fullscreen");
 }
 
 DisplayManager::~DisplayManager()
@@ -37,49 +37,38 @@ bool DisplayManager::CreateWindows(const xml::Element* properties)
 	if (!properties)
 		return false;
 
-	const xml::Element* windowProperties =
-		properties->FirstChildElement("Window");
-	
-	while (windowProperties)
+	for (auto window_properties : xml::IterateChildElements(properties, "Window") )
 	{
-		_windows.push_back( new Window(this, _windows.size()));
-
-		_windows.back()->Init(windowProperties);
-
-		windowProperties =
-			windowProperties->NextSiblingElement("Window");
+		windows_.push_back( std::make_unique<Window>(this, windows_.size()));
+		windows_.back()->Init(window_properties);
 	}
 	return true;
 }
 
 void DisplayManager::CloseOpenWindows()
 {
-	while (!_openWindows.empty())
-		_openWindows.front()->Close();
+	while (!open_windows_.empty())
+		open_windows_.front()->Close();
 
 }
 
 void DisplayManager::DeleteAllWindows()
 {
 	CloseOpenWindows();
-
-	for( Window* window : _windows )
-		delete window;
-
-	_windows.clear();
+	windows_.clear();
 }
 
 
 void DisplayManager::UpdateWindows()
 {
-	for (Window* window : _openWindows)
+	for (Window* window : open_windows_ )
 	{
 		window->MakeContextCurent();
 
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		_kernel->GetEventManager()->Broadcast(WindowUpdateEvent{window});
+		kernel_->GetEventManager()->Broadcast(WindowUpdateEvent{window});
 
 		window->SwapBuffers();
 	}
@@ -87,7 +76,7 @@ void DisplayManager::UpdateWindows()
 
 void DisplayManager::OnWindowOpend(Window* window)
 {
-	_openWindows.push_back(window);
+	open_windows_.push_back(window);
 	GLFWwindow* glfw = window->GetGlfwWindow();
 
 	glfwSetWindowUserPointer(glfw, window);
@@ -113,46 +102,46 @@ void DisplayManager::OnWindowOpend(Window* window)
 
 	glfwSetDropCallback(glfw, DropCallback);
 
-	_kernel->GetEventManager()->Broadcast(WindowOpendEvent{window});
+	kernel_->GetEventManager()->Broadcast(WindowOpendEvent{window});
 }
 
 void DisplayManager::OnWindowClosed(Window* window)
 {
-	auto it = std::find(_openWindows.begin(), _openWindows.end(), window);
-	if(it != _openWindows.end())
+	auto it = std::find(open_windows_.begin(), open_windows_.end(), window);
+	if(it != open_windows_.end())
 	{
-		_openWindows.erase(it);
-		_kernel->GetEventManager()->Broadcast(WindowClosedEvent{window});
+		open_windows_.erase(it);
+		kernel_->GetEventManager()->Broadcast(WindowClosedEvent{window});
 	}
 }
 
 Window* DisplayManager::CreateWindow()
 {
-	_windows.push_back(new Window (this, _windows.size()));
-	return _windows.back();
+	windows_.push_back(std::make_unique<Window>(this, windows_.size()));
+	return windows_.back().get();
 }
 
 Window* DisplayManager::GetWindow(unsigned id) const
 {
-	if (id < _windows.size())
-		return _windows[id];
+	if (id < windows_.size())
+		return windows_[id].get();
 
 	return nullptr;
 }
 
 unsigned DisplayManager::GetNumWindows() const
 {
-	return _windows.size();
+	return windows_.size();
 }
 
 Kernel* DisplayManager::GetKernel() const
 {
-	return _kernel;
+	return kernel_;
 }
 
 Factory<DisplayModeBase>& DisplayManager::GetDisplayModeFactory()
 {
-	return _displayModeFactory;
+	return display_mode_factory_;
 }
 
 } //end of namespace JHL

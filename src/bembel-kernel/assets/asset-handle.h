@@ -21,7 +21,7 @@ struct BEMBEL_API AssetHandle final
 		{
 			uint32_t index;
 			uint16_t generation;
-			uint16_t typeId;
+			uint16_t type_id;
 		};
 		uint64_t value = ~uint64_t(0U);
 	};

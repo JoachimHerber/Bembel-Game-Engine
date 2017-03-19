@@ -18,42 +18,40 @@ AssetManager::AssetManager()
 AssetManager::~AssetManager()
 {}
 
-AssetHandle AssetManager::RequestAsset( const std::string & asset_type_name, const std::string & filename )
+AssetHandle AssetManager::RequestAsset(const std::string & asset_type_name, const std::string & filename)
 {
-	auto it = _assetTypeMap.find( asset_type_name );
-	if( it == _assetTypeMap.end() )
+	auto it = asset_type_map_.find(asset_type_name);
+	if( it == asset_type_map_.end() )
 		return AssetHandle();
 
-	return _assetLoader[it->second]->RequestAsset( filename );
+	return asset_loader_[it->second]->RequestAsset(filename);
 }
 
 AssetHandle AssetManager::RequestAsset(
 	const std::string& asset_type_name,
-	const xml::Element* properties )
+	const xml::Element* properties)
 {
-	auto it = _assetTypeMap.find( asset_type_name );
-	if( it == _assetTypeMap.end() )
+	auto it = asset_type_map_.find(asset_type_name);
+	if( it == asset_type_map_.end() )
 		return AssetHandle();
 
-	return _assetLoader[it->second]->RequestAsset( properties );
+	return asset_loader_[it->second]->RequestAsset(properties);
 }
 
-bool AssetManager::ReleaseAsset( AssetHandle assetHandel )
+bool AssetManager::ReleaseAsset(AssetHandle asset_handel)
 {
-	uint16_t typeID = assetHandel.typeId;
-	if( typeID >= _assetLoader.size() )
+	if( asset_handel.type_id >= asset_loader_.size() )
 		return false;
 
-	return _assetLoader[typeID]->ReleaseAsset( assetHandel );
+	return asset_loader_[asset_handel.type_id]->ReleaseAsset(asset_handel);
 }
 
-bool AssetManager::IsHandelValid( AssetHandle assetHandel )
+bool AssetManager::IsHandelValid(AssetHandle asset_handel)
 {
-	uint16_t typeID = assetHandel.typeId;
-	if( typeID >= _assetContainer.size() )
+	if( asset_handel.type_id >= asset_container_.size() )
 		return false;
 
-	return _assetContainer[typeID]->IsHandelValid( assetHandel );
+	return asset_container_[asset_handel.type_id]->IsHandelValid(asset_handel);
 }
 
 } //end of namespace bembel

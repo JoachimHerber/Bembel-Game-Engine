@@ -14,20 +14,21 @@ namespace bembel {
 
 const std::string& GeometryComponent::GetComponentTypeName()
 {
-	const static std::string typeName = "GeometryComponent";
-	return typeName;
+	const static std::string type_name = "GeometryComponent";
+	return type_name;
 }
 
 bool GeometryComponent::InitComponent(
-	GeometryComponent& geom,
-	const xml::Element* properties, 
-	AssetManager* assetMgr)
+	AssetManager* asset_manager,
+	const xml::Element* properties,
+	GeometryComponent* geometry_component )
 {
-	std::string modelName;
-	if (!xml::GetAttribute(properties, "model", modelName))
+	std::string model_name;
+	if( !xml::GetAttribute(properties, "model", model_name) )
 		return false;
 
-	geom.model = assetMgr->GetAssetHandle<GeometryModel>(modelName);
+	geometry_component->model = 
+		asset_manager->GetAssetHandle<GeometryModel>(model_name);
 
 	return true;
 }

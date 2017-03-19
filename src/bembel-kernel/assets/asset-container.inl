@@ -1,11 +1,11 @@
 /*============================================================================*/
 /* INLINE IMPLEMENTETION                                                      */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 template<typename AssetType>
-inline AssetContainer<AssetType>::AssetContainer(uint16_t typeId)
-	: _assetTypeId(typeId)
+inline AssetContainer<AssetType>::AssetContainer(uint16_t type_id)
+	: asset_type_id_(type_id)
 {}
 
 template<typename AssetType>
@@ -19,24 +19,24 @@ inline AssetHandle AssetContainer<AssetType>::AddAsset(
 	AssetHandle handle;
 
 	// find a place to put the asset
-	if (!_unusedIds.empty())
+	if( !unused_ids_.empty() )
 	{
-		handle.index = _unusedIds.top();
-		handle.typeId = _assetTypeId;
-		
-		_unusedIds.pop();
+		handle.index = unused_ids_.top();
+		handle.type_id = asset_type_id_;
 
-		_assets[handle.index].asset = std::move(asset);
-		_assets[handle.index].refCount = 0;
-		handle.generation = ++_assets[handle.index].generation;
+		unused_ids_.pop();
+
+		assets_[handle.index].asset = std::move(asset);
+		assets_[handle.index].reference_count = 0;
+		handle.generation = ++assets_[handle.index].generation;
 	}
 	else
 	{
-		handle.index = _assets.size();
-		handle.typeId = _assetTypeId;
+		handle.index = assets_.size();
+		handle.type_id = asset_type_id_;
 		handle.generation = 1;
 
-		_assets.push_back({std::move(asset), 1, 0});
+		assets_.push_back({std::move(asset), 1, 0});
 	}
 	return handle;
 }
@@ -45,76 +45,80 @@ template<typename AssetType>
 inline bool AssetContainer<AssetType>::RegisterAssetAlias(
 	AssetHandle handle, const std::string& alias)
 {
-	if (_assetAliasses.find(alias) != _assetAliasses.end() )
+	if( asset_aliasses_.find(alias) != asset_aliasses_.end() )
 		return false; // alias already in use
 
-	if (!IsHandelValid(handle))
+	if( !IsHandelValid(handle) )
 		return false; // invalid handle
 
-	_assetAliasses.emplace(alias, handle);
+	asset_aliasses_.emplace(alias, handle);
 }
 
 template<typename AssetType>
 inline std::unique_ptr<AssetType>
-	AssetContainer<AssetType>::RemoveAsset(
+AssetContainer<AssetType>::RemoveAsset(
 	AssetHandle handle, bool force)
 {
-	if (IsHandelValid(handle))
+	if( IsHandelValid(handle) )
 		return nullptr; // invalid handle
 
-	if (_assets[handle.index].refCount > 0)
+	if( assets_[handle.index].reference_count > 0 )
 	{
-		if (force)
-			BEMBEL_LOG_WARNING() << "Removing asset that is still in use." << std::endl;
+		if( force )
+		{
+			BEMBEL_LOG_WARNING()
+				<< "Removing asset that is still in use." << std::endl;
+		}
 		else
 			return nullptr;
 	}
 
-	AssetPtr asset = std::move(_assets[handle.index].asset);
-	_assets[handle.index].refCount = -1;
-	_unusedIds.push(handle.index);
+	AssetPtr asset = std::move(assets_[handle.index].asset);
+	assets_[handle.index].reference_count = -1;
+	unused_ids_.push(handle.index);
 
 	return std::move(asset);
 }
 
 template<typename AssetType>
-inline AssetHandle AssetContainer<AssetType>::GetAssetHandle(const std::string& name)
+inline AssetHandle AssetContainer<AssetType>::GetAssetHandle(
+	const std::string& name)
 {
-	auto it = _assetAliasses.find(name);
-	if (it == _assetAliasses.end())
+	auto it = asset_aliasses_.find(name);
+	if( it == asset_aliasses_.end() )
 		return AssetHandle();
 
-	if (IsHandelValid(it->second))
+	if( IsHandelValid(it->second) )
 		return it->second;
 
 	// The entry in the assetMap refers to an asset, which no longer exist.
 	// The entry should hence be removed
-	_assetAliasses.erase(it);
+	asset_aliasses_.erase(it);
 	return AssetHandle();
 }
 
 template<typename AssetType>
 inline bool AssetContainer<AssetType>::IsHandelValid(AssetHandle handle)
 {
-	if (handle.typeId != _assetTypeId)
+	if( handle.type_id != asset_type_id_ )
 		return false;
-	if (handle.index >= _assets.size())
+	if( handle.index >= assets_.size() )
 		return false;
-	if (handle.generation != _assets[handle.index].generation)
+	if( handle.generation != assets_[handle.index].generation )
 		return false;
-	return _assets[handle.index].refCount >= 0;
+	return assets_[handle.index].reference_count >= 0;
 }
 
 template<typename AssetType>
 inline AssetType* AssetContainer<AssetType>::GetAsset(
-	AssetHandle handle, 
-	bool returnDummyIfHandleInvalid)
+	AssetHandle handle,
+	bool return_dummy_if_handle_invalid)
 {
-	if (IsHandelValid(handle))
-		return _assets[handle.index].asset.get();
+	if( IsHandelValid(handle) )
+		return assets_[handle.index].asset.get();
 
-	if (returnDummyIfHandleInvalid && IsHandelValid(_dummyAsset))
-		return _assets[_dummyAsset.index].asset.get();
+	if( return_dummy_if_handle_invalid && IsHandelValid(dummy_asset_) )
+		return assets_[dummy_asset_.index].asset.get();
 
 	return nullptr;
 }
@@ -122,35 +126,35 @@ inline AssetType* AssetContainer<AssetType>::GetAsset(
 template<typename AssetType>
 inline int AssetContainer<AssetType>::GetAssetRefCount(AssetHandle handle)
 {
-	if (!IsHandelValid(handle))
+	if( !IsHandelValid(handle) )
 		return -1;
 
-	return _assets[handle.index].refCount;
+	return assets_[handle.index].reference_count;
 }
 
 template<typename AssetType>
 inline void AssetContainer<AssetType>::IncrementAssetRefCount(AssetHandle handle)
 {
-	if (IsHandelValid(handle))
-		++_assets[handle.index].refCount;
+	if( IsHandelValid(handle) )
+		++assets_[handle.index].reference_count;
 }
 template<typename AssetType>
 inline void AssetContainer<AssetType>::DecrementAssetRefCount(AssetHandle handle)
 {
-	if (IsHandelValid(handle) && _assets[handle.index].refCount > 0)
-		--_assets[handle.index].refCount;
+	if( IsHandelValid(handle) && assets_[handle.index].reference_count > 0 )
+		--assets_[handle.index].reference_count;
 }
 
 template<typename AssetType>
 inline void AssetContainer<AssetType>::GetAssets(std::vector<AssetHandle>& asset)
 {
 	asset.clear();
-	asset.reserve(_assets.size());
+	asset.reserve(assets_.size());
 
-	for (size_t n = 0; n < _assets.size(); ++n)
+	for( size_t n = 0; n < assets_.size(); ++n )
 	{
-		if (_assets[n].refCount >= 0)
-			asset.push_back(AssetHandle{n, _assets[n].hash});
+		if( assets_[n].reference_count >= 0 )
+			asset.push_back(AssetHandle{n, assets_[n].generation});
 	}
 }
 
@@ -161,10 +165,10 @@ inline void AssetContainer<AssetType>::GetUnusedAssets(
 	asset.clear();
 	asset.reserve(_assets.size());
 
-	for (size_t n = 0; n < _assets.size(); ++n)
+	for( size_t n = 0; n < assets_.size(); ++n )
 	{
-		if (_assets[n].refCount == 0)
-			asset.push_back(AssetHandle{n, _assets[n].hash});
+		if( _assets[n].reference_count == 0 )
+			asset.push_back(AssetHandle{n, assets_[n].generation});
 	}
 }
 
@@ -172,7 +176,7 @@ template<typename AssetType>
 inline void AssetContainer<AssetType>::SetDummyAsset(
 	AssetHandle dummy)
 {
-	_dummyAsset = dummy;
+	dummy_asset_ = dummy;
 }
 
 } //end of namespace bembel

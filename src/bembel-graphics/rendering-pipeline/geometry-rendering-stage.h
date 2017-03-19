@@ -19,7 +19,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Texture;
 class FrameBufferObject;
@@ -51,11 +51,11 @@ public:
 		CreateInstance(const xml::Element*, RenderingPipeline*);
 
 private:
-	std::unique_ptr<FrameBufferObject> _fbo;
+	std::unique_ptr<FrameBufferObject> fbo_;
 
-	ScenePtr                          _scene;
-	GeometryComponent::ContainerType* _geometryComponents;
-	PositionComponent::ContainerType* _positionComponents;
+	ScenePtr                          scene_;
+	GeometryComponent::ContainerType* geometry_components_;
+	PositionComponent::ContainerType* position_components_;
 };
 
 } //end of namespace bembel

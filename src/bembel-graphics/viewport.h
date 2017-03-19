@@ -21,15 +21,16 @@ public:
 	class BEMBEL_API View
 	{
 	public:
-		View(){}
-		virtual ~View(){}
+		View()
+		{}
+		virtual ~View()
+		{}
 
 		virtual void Draw() = 0;
 	};
 
 	Viewport();
 	Viewport(std::shared_ptr<View>);
-	Viewport(std::shared_ptr<View>, const glm::ivec2& pos, const glm::ivec2& size);
 	~Viewport();
 
 	const glm::vec2& GetRelativPosition() const;
@@ -43,31 +44,31 @@ public:
 	void SetSizeOffset(const glm::vec2& val);
 
 	const glm::ivec2& GetPosition() const;
-	const glm::ivec2& GetSize() const;
+	const glm::uvec2& GetSize() const;
 
 	void SetView(std::shared_ptr<View>);
 	std::shared_ptr<View> GetView() const;
 
-	void UpdatePosition(const glm::vec2& frameBufferSize);
-	void UpdateSize(const glm::vec2& frameBufferSize);
+	void UpdatePosition(const glm::vec2& frame_buffer_size);
+	void UpdateSize(const glm::vec2& frame_buffer_size);
 
 	void Enable();
 	void Disable();
 	bool IsEnabled();
 
 private:
-	std::shared_ptr<View> _view;
+	std::shared_ptr<View> view_;
 
-	glm::ivec2 _position;
-	glm::ivec2 _size;
+	glm::ivec2 position_;
+	glm::uvec2 size_;
 
-	glm::vec2 _relativPosition;
-	glm::vec2 _relativSize;
+	glm::vec2 relativ_position_;
+	glm::vec2 relativ_size_;
 
-	glm::ivec2 _positionOffset;
-	glm::ivec2 _sizeOffset;
+	glm::vec2 position_offset_;
+	glm::vec2 size_offset_;
 
-	bool _enabled = true;
+	bool enabled_ = true;
 };
 
 } //end of namespace bembel

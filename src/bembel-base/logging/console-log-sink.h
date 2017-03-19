@@ -23,8 +23,8 @@ public:
 	virtual void WriteMessage(const LogMessage&) override;
 
 private:
-	std::string _prefix;
-	int         _color;
+	std::string prefix_;
+	int         color_;
 };
 
 } //end of namespace bembel

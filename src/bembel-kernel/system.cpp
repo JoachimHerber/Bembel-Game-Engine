@@ -12,8 +12,8 @@
 namespace bembel{
 
 System::System(Kernel* kernel, const std::string& name)
-	: _kernel(kernel)
-	, _systemName(name)
+	: kernel_(kernel)
+	, system_name_(name)
 {}
 
 System::~System()
@@ -21,11 +21,11 @@ System::~System()
 
 const std::string& System::GetName() const
 {
-	return _systemName;
+	return system_name_;
 }
 Kernel* System::GetKernel() const
 {
-	return _kernel;
+	return kernel_;
 }
 
 bool System::Configure(const xml::Element*)

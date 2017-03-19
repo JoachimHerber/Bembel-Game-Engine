@@ -19,25 +19,25 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-struct GLFWwindow; 
+struct GLFWwindow;
 
-namespace bembel{
-	class DisplayManager;
-	class DisplayModeBase;
+namespace bembel {
+class DisplayManager;
+class DisplayModeBase;
 } //end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API Window
 {
-	Window(DisplayManager*, unsigned );
-	~Window();
 public:
+	Window(DisplayManager*, unsigned);
+	~Window();
 
- 	std::shared_ptr<DisplayModeBase> GetDisplayMode() const;
- 	void SetDisplayMode(std::shared_ptr<DisplayModeBase> val);
+	std::shared_ptr<DisplayModeBase> GetDisplayMode() const;
+	void SetDisplayMode(std::shared_ptr<DisplayModeBase> val);
 
 	void Init(const xml::Element* properties);
 
@@ -55,7 +55,7 @@ public:
 	bool SetVisible(bool b);
 
 	bool GetShouldClose() const;
-	bool SetShouldClose(bool shouldClose);
+	bool SetShouldClose(bool should_close);
 
 	DisplayManager* GetDisplayManager() const;
 	GLFWwindow*    GetGlfwWindow() const;
@@ -64,11 +64,11 @@ public:
 	void SwapBuffers();
 
 private:
-	DisplayManager* _displaySys;
-	GLFWwindow*  _windowImp;
-	std::shared_ptr<DisplayModeBase> _displayMode;
+	DisplayManager* display_system_;
+	GLFWwindow*  window_imp_;
+	std::shared_ptr<DisplayModeBase> display_mode_;
 
-	unsigned _windowID;
+	unsigned window_id_;
 
 	friend class DisplayManager;
 };

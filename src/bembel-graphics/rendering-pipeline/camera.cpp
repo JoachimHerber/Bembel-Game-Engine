@@ -9,7 +9,7 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 Camera::Camera()
 {}
@@ -19,24 +19,26 @@ Camera::~Camera()
 
 const glm::vec3& Camera::GetPosition() const
 {
-	return _position;
+	return position_;
 }
 void Camera::SetPosition(const glm::vec3& value)
 {
-	_position = value;
-	_viewMatix = glm::translate(glm::mat4_cast(glm::inverse(_oriantation)), -_position);
-	_inverseViewMatix = glm::affineInverse(_viewMatix);
+	position_ = value;
+	view_matrix_ = glm::translate(
+		glm::mat4_cast(glm::inverse(oriantation_)), -position_);
+	inverse_view_matrix_ = glm::affineInverse(view_matrix_);
 }
 
 const glm::quat& Camera::GetOrientation() const
 {
-	return _oriantation;
+	return oriantation_;
 }
 void Camera::SetOrientation(const glm::quat& value)
 {
-	_oriantation = value;
-	_viewMatix = glm::translate(glm::mat4_cast(glm::inverse(_oriantation)), -_position);
-	_inverseViewMatix = glm::affineInverse( _viewMatix );
+	oriantation_ = value;
+	view_matrix_ = glm::translate(
+		glm::mat4_cast(glm::inverse(oriantation_)), -position_);
+	inverse_view_matrix_ = glm::affineInverse(view_matrix_);
 }
 
 void Camera::SetUpProjection(
@@ -45,44 +47,44 @@ void Camera::SetUpProjection(
 	float near,
 	float far)
 {
-	_projMatrix = glm::perspective(fildOfFiew, aspectRation, near, far);
-	glm::mat4 tmp = _projMatrix;
-	_inverseProjMatrix = glm::inverse( tmp );
+	proj_matrix_ = glm::perspective(fildOfFiew, aspectRation, near, far);
+	glm::mat4 tmp = proj_matrix_;
+	inverse_proj_matrix_ = glm::inverse(tmp);
 
 	float x = sin(fildOfFiew)*aspectRation;
 	float y = sin(fildOfFiew);
 	float z = cos(fildOfFiew);
-	_viewFrustum[1] = glm::normalize(glm::vec4(-x, 0.f, z, 0.f));//   left clipping plane
-	_viewFrustum[0] = glm::normalize(glm::vec4(+x, 0.f, z, 0.f));//  right clipping plane
-	_viewFrustum[2] = glm::normalize(glm::vec4(0.f, -y, z, 0.f));// bottom clipping plane
-	_viewFrustum[3] = glm::normalize(glm::vec4(0.f, +y, z, 0.f));//    top clipping plane
-	_viewFrustum[4] = glm::vec4(0.f, 0.f, +1.f, -near);//             near clipping plane
-	_viewFrustum[5] = glm::vec4(0.f, 0.f, -1.f, +far);//               far clipping plane
+	view_frustum_[1] = glm::normalize(glm::vec4(-x, 0.f, z, 0.f));//   left clipping plane
+	view_frustum_[0] = glm::normalize(glm::vec4(+x, 0.f, z, 0.f));//  right clipping plane
+	view_frustum_[2] = glm::normalize(glm::vec4(0.f, -y, z, 0.f));// bottom clipping plane
+	view_frustum_[3] = glm::normalize(glm::vec4(0.f, +y, z, 0.f));//    top clipping plane
+	view_frustum_[4] = glm::vec4(0.f, 0.f, +1.f, -near);//             near clipping plane
+	view_frustum_[5] = glm::vec4(0.f, 0.f, -1.f, +far);//               far clipping plane
 }
 
 const glm::mat4& Camera::GetViewMatrix() const
 {
-	return _viewMatix;
+	return view_matrix_;
 }
 
 const glm::mat4& Camera::GetProjectionMatrix() const
 {
-	return _projMatrix;
+	return proj_matrix_;
 }
 
-const glm::mat4 & Camera::GetinverseViewMatrix() const
+const glm::mat4& Camera::GetinverseViewMatrix() const
 {
-	return _inverseViewMatix;
+	return inverse_view_matrix_;
 }
 
-const glm::mat4 & Camera::GetinverseProjectionMatrix() const
+const glm::mat4& Camera::GetinverseProjectionMatrix() const
 {
-	return _inverseProjMatrix;
+	return inverse_proj_matrix_;
 }
 
 const std::array<glm::vec4, 6>& Camera::GetViewFrustum() const
 {
-	return _viewFrustum;
+	return view_frustum_;
 }
 
 } //end of namespace bembel

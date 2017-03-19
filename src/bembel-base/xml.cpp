@@ -7,12 +7,12 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
-namespace xml{
+namespace bembel {
+namespace xml {
 
 bool GetAttribute(const Element* node, const std::string& name, bool& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
 	return tinyxml2::XML_SUCCESS ==	node->QueryBoolAttribute(name.c_str(), &value);
@@ -20,55 +20,52 @@ bool GetAttribute(const Element* node, const std::string& name, bool& value)
 
 bool GetAttribute(const Element* node, const std::string& name, glm::vec2& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
-
-	const char* attrib = node->Attribute(name.c_str());
-	if (!attrib)
+	const char* attribute = node->Attribute(name.c_str());
+	if( !attribute )
 		return false;
 
-	std::stringstream sstream;
-	sstream << attrib;
-	sstream >> value.x;
-	sstream >> value.y;
+	std::stringstream string_stream;
+	string_stream << attribute;
+	string_stream >> value.x;
+	string_stream >> value.y;
 	return true;
 }
 
 bool GetAttribute(const Element* node, const std::string& name, glm::vec3& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
-
-	const char* attrib = node->Attribute(name.c_str());
-	if (!attrib)
+	const char* attribute = node->Attribute(name.c_str());
+	if( !attribute )
 		return false;
 
-	std::stringstream sstream;
-	sstream << attrib;
-	sstream >> value.x;
-	sstream >> value.y;
-	sstream >> value.z;
+	std::stringstream string_stream;
+	string_stream << attribute;
+	string_stream >> value.x;
+	string_stream >> value.y;
+	string_stream >> value.z;
 	return true;
 }
 
 bool GetAttribute(const Element* node, const std::string& name, glm::vec4& value)
 {
-	if (!node)
+	if( !node )
 		return false;
 
-
-	const char* attrib = node->Attribute(name.c_str());
-	if (!attrib)
+	const char* attribute = node->Attribute(name.c_str());
+	if( !attribute )
 		return false;
 
-	std::stringstream sstream;
-	sstream << attrib;
-	sstream >> value.x;
-	sstream >> value.y;
-	sstream >> value.z;
-	sstream >> value.w;
+	std::stringstream string_stream;
+	string_stream << attribute;
+	string_stream >> value.x;
+	string_stream >> value.y;
+	string_stream >> value.z;
+	string_stream >> value.w;
 	return true;
 }
 

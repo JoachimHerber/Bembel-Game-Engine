@@ -17,7 +17,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Shader;
 class Texture;
@@ -33,7 +33,7 @@ class BEMBEL_API EnvironmentMapReflectionStage : public RenderingStage
 {
 public:
 	using TexturePtr = std::shared_ptr<Texture>;
-	using ShaderPtr  = std::shared_ptr<Shader>;
+	using ShaderPtr = std::shared_ptr<Shader>;
 
 	EnvironmentMapReflectionStage(RenderingPipeline* pipline);
 	~EnvironmentMapReflectionStage();
@@ -66,13 +66,13 @@ private:
 	void ReleaseTextures();
 
 private:
-	std::unique_ptr<FrameBufferObject> _fbo;
+	std::unique_ptr<FrameBufferObject> fbo_;
 
-	TexturePtr _environmentMap;
-	ShaderPtr  _shader;
+	TexturePtr environment_map_;
+	ShaderPtr  shader_;
 
-	std::vector<TexturePtr>  _inputTextures;
-	std::vector<std::string> _inputTexturNames;
+	std::vector<TexturePtr>  input_textures_;
+	std::vector<std::string> input_textur_names_;
 };
 
 } //end of namespace bembel

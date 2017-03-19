@@ -13,7 +13,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Texture;
 
@@ -42,7 +42,7 @@ public:
 	void EndRenderToTexture();
 
 private:
-	GLuint _handle;
+	GLuint handle_;
 
 	struct Attechment
 	{
@@ -50,8 +50,8 @@ private:
 		GLint      level;
 	};
 
-	Attechment              _depthAttechment;
-	std::vector<Attechment> _colorAttechments;
+	Attechment              depth_attechment_;
+	std::vector<Attechment> color_attechments_;
 };
 
 } //end of namespace bembel

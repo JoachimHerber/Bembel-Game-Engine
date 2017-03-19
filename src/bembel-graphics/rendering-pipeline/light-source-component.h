@@ -23,17 +23,17 @@ class BEMBEL_API PointLightProperties
 public:
 	glm::vec3 color;
 
-	float bulbRadius;
-	float cutoffRadius;
+	float bulb_radius;
+	float cutoff_radius;
 
 	using ContainerType = SparseComponentContainer<PointLightProperties>;
-	using ContainerPtr  = std::shared_ptr<ContainerType>;
+	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(
-		PointLightProperties&,
+		AssetManager*,
 		const xml::Element*,
-		AssetManager*);
+		PointLightProperties*);
 };
 
 class BEMBEL_API DirLightProperties
@@ -47,9 +47,9 @@ public:
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(
-		DirLightProperties&, 
-		const xml::Element*, 
-		AssetManager*);
+		AssetManager*,
+		const xml::Element*,
+		DirLightProperties*);
 };
 
 } //end of namespace bembel

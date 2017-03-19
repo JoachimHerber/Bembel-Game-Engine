@@ -7,18 +7,18 @@ template <typename EventType>
 template <typename EventHandlerType>
 inline bool EventChannel<EventType>::AddHandler(EventHandlerType* handler)
 {
-	std::lock_guard<std::mutex> lock(_mutex);
+	std::lock_guard<std::mutex> lock(mutex_);
 
-	for (auto it : _handler)
+	for (auto it : event_handler_)
 	{
-		if (it.eventHandler == handler)
+		if (it.event_handler == handler)
 			return false; // handler already registered
 	}
 
 	HandlerAdapter adapter;
-	adapter.eventHandler = handler;
-	adapter.forwardEvent = ForwardEvent<EventHandlerType>;
-	_handler.push_back(adapter);
+	adapter.event_handler = handler;
+	adapter.forward_event_function = ForwardEvent<EventHandlerType>;
+	event_handler_.push_back(adapter);
 	return true;
 }
 
@@ -26,13 +26,13 @@ template <typename EventType>
 template <typename EventHandlerType>
 inline bool EventChannel<EventType>::RemoveHandler(EventHandlerType* handler)
 {
-	std::lock_guard<std::mutex> lock(_mutex);
+	std::lock_guard<std::mutex> lock(mutex_);
 
-	for(auto it = _handler.begin(); it <= _handler.end(); ++it)
+	for(auto it = event_handler_.begin(); it <= event_handler_.end(); ++it)
 	{
-		if(it->eventHandler == handler)
+		if(it->event_handler == handler)
 		{
-			_handler.erase(it);
+			event_handler_.erase(it);
 			return true;
 		}
 	}
@@ -45,17 +45,18 @@ inline void EventChannel<EventType>::Broadcast(EventType& event)
 {
 	std::vector<HandlerAdapter> handler;
 	{
-		std::lock_guard<std::mutex> lock(_mutex);
-		handler = _handler;
+		std::lock_guard<std::mutex> lock(mutex_);
+		handler = event_handler_;
 	}
 
 	for(auto it : handler)
-		it.forwardEvent(it.eventHandler, event);
+		it.forward_event_function(it.event_handler, event);
 }
 
 template <typename EventType>
 template <typename EventHandlerType>
-inline void EventChannel<EventType>::ForwardEvent(void* handler, EventType& event)
+inline void EventChannel<EventType>::ForwardEvent(
+	void* handler, EventType& event)
 {
 	static_cast<EventHandlerType*>(handler)->HandleEvent(event);
 }

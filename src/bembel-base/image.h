@@ -13,7 +13,7 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API Image
 {
@@ -22,22 +22,22 @@ public:
 	Image(unsigned int w, unsigned int h, unsigned int c);
 	~Image();
 
-	unsigned char* GetData() ;
+	unsigned char* GetData();
 	const unsigned char* GetData() const;
 
 	unsigned int GetWidth() const;
 	unsigned int GetHeight() const;
 	unsigned int GetChannels() const;
 
-	bool Load(const std::string& fileName);
-	bool Save(const std::string& fileName);
+	bool Load(const std::string& file_name, bool invert_y_axis = true);
+	bool Save(const std::string& file_name, bool invert_y_axis = true);
 
 private:
-	std::vector<unsigned char> _data;
+	std::vector<unsigned char> data_;
 
-	unsigned int _width;
-	unsigned int _height;
-	unsigned int _channels;
+	unsigned int width_;
+	unsigned int height_;
+	unsigned int num_channels_;
 };
 
 } //end of namespace bembel

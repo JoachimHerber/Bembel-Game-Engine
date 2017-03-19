@@ -18,7 +18,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Viewport;
 class RenderingPipeline;
@@ -33,9 +33,9 @@ namespace bembel {
 class BEMBEL_API GraphicSystem : public System
 {
 public:
-	using ViewportPtr            = std::shared_ptr<Viewport>;
-	using RendererPtr            = std::shared_ptr<GeometryRendererBase>;
-	using RenderingPipelinePtr   = std::shared_ptr<RenderingPipeline>;
+	using ViewportPtr = std::shared_ptr<Viewport>;
+	using RendererPtr = std::shared_ptr<GeometryRendererBase>;
+	using RenderingPipelinePtr = std::shared_ptr<RenderingPipeline>;
 	using RendertingStageFactory = TFactory<RenderingStage, const xml::Element*, RenderingPipeline*>;
 
 	GraphicSystem(Kernel*);
@@ -50,7 +50,7 @@ public:
 
 	RenderingPipeline* CreateRenderingPipline();
 	const std::vector<RenderingPipelinePtr>& GetRenderingPiplies();
-	
+
 	RendertingStageFactory& GetRendertingStageFactory();
 	GeometryRenderQueue&    GetGeometryRenderQueue();
 
@@ -58,7 +58,7 @@ public:
 
 	virtual bool Init() override;
 	virtual void Shutdown() override;
-	virtual void Update(double timeSinceLastUpdate) override;
+	virtual void Update(double time_since_last_update) override;
 
 	void HandleEvent(const WindowUpdateEvent&);
 	void HandleEvent(const FrameBufferResizeEvent&);
@@ -69,14 +69,14 @@ private:
 	void ConfigureViewports(const xml::Element*);
 
 private:
-	std::vector<std::vector<ViewportPtr>> _viewports;
-	std::vector<RendererPtr>              _renderer;
-	std::vector<RenderingPipelinePtr>     _pipelines;
+	std::vector<std::vector<ViewportPtr>> viewports_;
+	std::vector<RendererPtr>              renderer_;
+	std::vector<RenderingPipelinePtr>     pipelines_;
 
-	std::map<std::string, unsigned> _rendererMap;
+	std::map<std::string, size_t> renderer_map_;
 
-	RendertingStageFactory _renderingStageFactory;
-	GeometryRenderQueue    _geometryRenderQueue;
+	RendertingStageFactory rendering_stage_factory_;
+	GeometryRenderQueue    geometry_render_queue_;
 };
 
 struct InitGraphicResourcesEvent

@@ -30,7 +30,6 @@ namespace bembel {
 class BEMBEL_API Material final
 {
 public:
-	using Color             = glm::vec3;
 	using DefaultLoaderType = MaterialLoader;
 
 public:
@@ -43,9 +42,9 @@ public:
 	const static std::string& GetTypeName();
 
 private:
-	unsigned _renderer = 0;
+	unsigned renderer_ = 0;
 
-	GLuint _uniformBufferObject;
+	GLuint uniform_buffer_object_;
 }; 
 
 class BEMBEL_API MaterialLoader final : public AssetLoaderBase
@@ -67,9 +66,9 @@ public:
 	virtual bool  LoadingFinished() override;
 
 private:
-	GraphicSystem*   _graphicSys;
-	AssetManager*    _assetMgr;
-	ContainerType*   _container;
+	GraphicSystem*   graphic_system_;
+	AssetManager*    asset_manager_;
+	ContainerType*   container_;
 };
 
 } //end of namespace bembel

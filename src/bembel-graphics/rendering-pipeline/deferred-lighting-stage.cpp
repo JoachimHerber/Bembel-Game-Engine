@@ -21,7 +21,7 @@ namespace bembel {
 
 DeferredLightingStage::DeferredLightingStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, _fbo(std::make_unique<FrameBufferObject>())
+	, fbo_(std::make_unique<FrameBufferObject>())
 {}
 
 DeferredLightingStage::~DeferredLightingStage()
@@ -29,30 +29,34 @@ DeferredLightingStage::~DeferredLightingStage()
 
 void DeferredLightingStage::SetDirLightShader(ShaderProgramPtr shader)
 {
-	_dirLightShader = shader;
-	SetTextureSamplerUniforms(_dirLightShader.get());
+	dir_light_shader_ = shader;
+	SetTextureSamplerUniforms(dir_light_shader_.get());
 }
 void DeferredLightingStage::SetPointLightShader(ShaderProgramPtr shader)
 {
-	_pointLightShader = shader;
-	SetTextureSamplerUniforms(_pointLightShader.get());
+	point_light_shader_ = shader;
+	SetTextureSamplerUniforms(point_light_shader_.get());
 }
 
 bool DeferredLightingStage::InitShader(
-	const std::string& pointLightVert, 
-	const std::string& pointLightFrag, 
-	const std::string& dirLightVert, 
-	const std::string& dirLightFrag)
+	const std::string& point_light_vert,
+	const std::string& point_light_frag,
+	const std::string& dir_light_vert,
+	const std::string& dir_light_frag)
 {
-	_pointLightShader = std::make_shared<Shader>();
-	_pointLightShader->AttachShaderFromFile(GL_VERTEX_SHADER, pointLightVert);
-	_pointLightShader->AttachShaderFromFile(GL_FRAGMENT_SHADER, pointLightFrag);
+	point_light_shader_ = std::make_shared<Shader>();
+	point_light_shader_->AttachShaderFromFile(
+		GL_VERTEX_SHADER, point_light_vert);
+	point_light_shader_->AttachShaderFromFile(
+		GL_FRAGMENT_SHADER, point_light_frag);
 
-	_dirLightShader = std::make_shared<Shader>();
-	_dirLightShader->AttachShaderFromFile(GL_VERTEX_SHADER, dirLightVert);
-	_dirLightShader->AttachShaderFromFile(GL_FRAGMENT_SHADER, dirLightFrag);
+	dir_light_shader_ = std::make_shared<Shader>();
+	dir_light_shader_->AttachShaderFromFile(
+		GL_VERTEX_SHADER, dir_light_vert);
+	dir_light_shader_->AttachShaderFromFile(
+		GL_FRAGMENT_SHADER, dir_light_frag);
 
-	if (!_pointLightShader->Link() || !_dirLightShader->Link())
+	if( !point_light_shader_->Link() || !dir_light_shader_->Link() )
 		return false;
 
 	return true;
@@ -60,56 +64,69 @@ bool DeferredLightingStage::InitShader(
 
 void DeferredLightingStage::SetOutputTexture(const std::string& texture)
 {
-	_fbo->SetColorAttechment(0, _pipline->GetTexture(texture));
+	fbo_->SetColorAttechment(0, pipline_->GetTexture(texture));
 }
 
-void DeferredLightingStage::SetInputTextures(const std::vector<std::string>& textures)
+void DeferredLightingStage::SetInputTextures(
+	const std::vector<std::string>& textures)
 {
-	_inputTextures.clear();
-	_inputTexturNames.clear();
-	for (const std::string& textureName : textures)
+	input_textures_.clear();
+	input_textur_names_.clear();
+	for( const std::string& texture_name : textures )
 	{
-		auto texture = _pipline->GetTexture(textureName);
-		if(!texture)
+		auto texture = pipline_->GetTexture(texture_name);
+		if( !texture )
 			continue;
 
-		_inputTextures.push_back(texture);
-		_inputTexturNames.push_back(textureName);
+		input_textures_.push_back(texture);
+		input_textur_names_.push_back(texture_name);
 	}
 
-	SetTextureSamplerUniforms(_dirLightShader.get());
-	SetTextureSamplerUniforms(_pointLightShader.get());
+	SetTextureSamplerUniforms(dir_light_shader_.get());
+	SetTextureSamplerUniforms(point_light_shader_.get());
 }
 
 void DeferredLightingStage::SetScene(ScenePtr scene)
 {
-	_scene = scene;
-	_dirLightContainer   = _scene->RequestComponentContainer<DirLightProperties>();
-	_pointLightContainer = _scene->RequestComponentContainer<PointLightProperties>();
-	_positionContainer   = _scene->RequestComponentContainer<PositionComponent>();
+	scene_ = scene;
+	dir_light_container_ =
+		scene_->RequestComponentContainer<DirLightProperties>();
+	point_light_container_ =
+		scene_->RequestComponentContainer<PointLightProperties>();
+	position_container_ =
+		scene_->RequestComponentContainer<PositionComponent>();
 }
 
 void DeferredLightingStage::Init()
 {
-	_fbo->Init();
-	_bufferSize = 32;
-	glGenBuffers(1, &_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-	glBufferData(GL_ARRAY_BUFFER, _bufferSize*8*sizeof(float), nullptr, GL_STREAM_DRAW);
+	fbo_->Init();
+	buffer_size_ = 32;
+	glGenBuffers(1, &vbo_);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+	glBufferData(GL_ARRAY_BUFFER,
+		buffer_size_*8*sizeof(float), nullptr, GL_STREAM_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenVertexArrays(1, &_vao);
-	glBindVertexArray(_vao);
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(0*sizeof(float)));// position
-	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));// bulbRadius
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(4*sizeof(float)));// color
-	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(7*sizeof(float)));// cutoffRadius
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+	glVertexAttribPointer(
+		0, 3, GL_FLOAT, GL_FALSE,
+		8*sizeof(float), (void*) (0*sizeof(float)));// position
+	glVertexAttribPointer(
+		1, 1, GL_FLOAT, GL_FALSE,
+		8*sizeof(float), (void*) (3*sizeof(float)));// bulbRadius
+	glVertexAttribPointer(
+		2, 3, GL_FLOAT, GL_FALSE,
+		8*sizeof(float), (void*) (4*sizeof(float)));// color
+	glVertexAttribPointer(
+		3, 1, GL_FLOAT, GL_FALSE,
+		8*sizeof(float), (void*) (7*sizeof(float)));// cutoffRadius
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glVertexAttribDivisor(0, 1);
@@ -122,15 +139,15 @@ void DeferredLightingStage::Init()
 
 void DeferredLightingStage::Cleanup()
 {
-	_fbo->CleanUp();
+	fbo_->CleanUp();
 }
 
 void DeferredLightingStage::DoRendering()
 {
-	if (!_scene)
+	if( !scene_ )
 		return;
 
-	_fbo->BeginRenderToTexture();
+	fbo_->BeginRenderToTexture();
 	//glClearColor(0, 0, 0, 0);
 	//glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
@@ -148,54 +165,54 @@ void DeferredLightingStage::DoRendering()
 
 	glDisable(GL_BLEND);
 
-	_fbo->EndRenderToTexture();
+	fbo_->EndRenderToTexture();
 }
 
 std::unique_ptr<DeferredLightingStage> DeferredLightingStage::CreateInstance(
 	const xml::Element* properties, RenderingPipeline* pipline)
 {
-	auto dirLightShader   = CreateShader(properties->FirstChildElement("DirectionalLightProgram"));
-	auto pointLightShader = CreateShader(properties->FirstChildElement("PointLightShaderProgram"));
+	auto dir_light_shader = CreateShader(properties->FirstChildElement("DirectionalLightProgram"));
+	auto point_light_shader = CreateShader(properties->FirstChildElement("PointLightShaderProgram"));
 
 	auto stage = std::make_unique<DeferredLightingStage>(pipline);
-	stage->SetDirLightShader(dirLightShader);
-	stage->SetPointLightShader(pointLightShader);
+	stage->SetDirLightShader(dir_light_shader);
+	stage->SetPointLightShader(point_light_shader);
 
-	std::string textureName;
-	if (xml::GetAttribute(properties, "Output", "texture", textureName))
-		stage->SetOutputTexture(textureName);
+	std::string texture_name;
+	if( xml::GetAttribute(properties, "Output", "texture", texture_name) )
+		stage->SetOutputTexture(texture_name);
 
-	std::vector<std::string> intputTextures;
-	for (auto input : xml::IterateChildElements(properties, "Input"))
+	std::vector<std::string> intput_textures;
+	for( auto input : xml::IterateChildElements(properties, "Input") )
 	{
-		if (xml::GetAttribute(input, "texture", textureName))
-			intputTextures.push_back(textureName);
+		if( xml::GetAttribute(input, "texture", texture_name) )
+			intput_textures.push_back(texture_name);
 	}
-	stage->SetInputTextures(intputTextures);
+	stage->SetInputTextures(intput_textures);
 
 	return std::move(stage);
 }
 
 std::shared_ptr<Shader> DeferredLightingStage::CreateShader(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return nullptr;
 
-	std::string filename;
+	std::string file_name;
 
 	auto program = std::make_shared<Shader>();
-	for (auto shader : xml::IterateChildElements(properties, "VertexShader"))
+	for( auto shader : xml::IterateChildElements(properties, "VertexShader") )
 	{
-		if (xml::GetAttribute(shader, "file", filename))
-			program->AttachShaderFromFile(GL_VERTEX_SHADER, filename);
+		if( xml::GetAttribute(shader, "file", file_name) )
+			program->AttachShaderFromFile(GL_VERTEX_SHADER, file_name);
 	}
-	for (auto shader : xml::IterateChildElements(properties, "FragmentShader"))
+	for( auto shader : xml::IterateChildElements(properties, "FragmentShader") )
 	{
-		if (xml::GetAttribute(shader, "file", filename))
-			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, filename);
+		if( xml::GetAttribute(shader, "file", file_name) )
+			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, file_name);
 	}
 
-	if (!program->Link())
+	if( !program->Link() )
 		return nullptr;
 
 	return program;
@@ -203,29 +220,29 @@ std::shared_ptr<Shader> DeferredLightingStage::CreateShader(const xml::Element* 
 
 void DeferredLightingStage::SetTextureSamplerUniforms(Shader* shader)
 {
-	if (shader == nullptr)
+	if( shader == nullptr )
 		return;
-	if (_inputTexturNames.empty())
+	if( input_textur_names_.empty() )
 		return;
 
-	const static std::vector<std::string> allowedPrefixes = 
+	const static std::vector<std::string> allowed_prefixes =
 	{"u", "uTex", "uTexture", "uSampler"};
-	const static std::vector<std::string> allowedPostfixes =
+	const static std::vector<std::string> allowed_postfixes =
 	{"", "Buffer", "Texture" "Sampler"};
 
 	shader->Use();
 	// search for uniform with name 'u{textureName}'
-	for (size_t n = 0; n<_inputTexturNames.size(); ++n)
+	for( size_t n = 0; n<input_textur_names_.size(); ++n )
 	{
-		std::string uniformName = _inputTexturNames[n];
+		std::string uniformName = input_textur_names_[n];
 		uniformName[0] = std::toupper(uniformName[0]);
 
-		for (const std::string& prefix : allowedPrefixes)
+		for( const std::string& prefix : allowed_prefixes )
 		{
-			for (const std::string& postfix : allowedPostfixes)
+			for( const std::string& postfix : allowed_postfixes )
 			{
 				int localtion = shader->GetUniformLocation(prefix + uniformName + postfix);
-				if (localtion >= 0)
+				if( localtion >= 0 )
 					glUniform1i(localtion, n);
 			}
 		}
@@ -235,24 +252,24 @@ void DeferredLightingStage::SetTextureSamplerUniforms(Shader* shader)
 
 void DeferredLightingStage::BindTextures()
 {
-	for (size_t n = 0; n<_inputTextures.size(); ++n)
+	for( size_t n = 0; n<input_textures_.size(); ++n )
 	{
-		if (_inputTextures[n])
+		if( input_textures_[n] )
 		{
 			glActiveTexture(GL_TEXTURE0 + n);
-			_inputTextures[n]->Bind();
+			input_textures_[n]->Bind();
 		}
 	}
 }
 
 void DeferredLightingStage::ReleaseTextures()
 {
-	for (size_t n = _inputTextures.size(); n>0; --n)
+	for( size_t n = input_textures_.size(); n>0; --n )
 	{
-		if (_inputTextures[n-1])
+		if( input_textures_[n-1] )
 		{
 			glActiveTexture(GL_TEXTURE0 + n-1);
-			_inputTextures[n-1]->Release();
+			input_textures_[n-1]->Release();
 		}
 	}
 }
@@ -260,40 +277,37 @@ void DeferredLightingStage::ReleaseTextures()
 void DeferredLightingStage::ApplyDirectionalLights()
 {
 	Scene::ComponentMask mask =
-		_dirLightContainer->GetComponentMask();
+		dir_light_container_->GetComponentMask();
 
-	_dirLightShader->Use();
+	dir_light_shader_->Use();
 
-	glm::mat4 projection = _pipline->GetCamera()->GetProjectionMatrix();
-	glm::mat4 invProjection = glm::inverse(projection);
+	glm::mat4 inv_projection = pipline_->GetCamera()->GetinverseProjectionMatrix();
 
 	glUniformMatrix4fv(
-		_dirLightShader->GetUniformLocation("uInverseProjectionMatrix"),
-		1, GL_FALSE, &invProjection[0][0]);
+		dir_light_shader_->GetUniformLocation("uInverseProjectionMatrix"),
+		1, GL_FALSE, &inv_projection[0][0]);
 
-	glm::mat3 normalMatrix = _pipline->GetCamera()->GetViewMatrix();
+	glm::mat3 normal_matrix = pipline_->GetCamera()->GetViewMatrix();
 
-	for (const auto& it : _dirLightContainer->GetComponents())
+	for( const auto& it : dir_light_container_->GetComponents() )
 	{
 		glm::vec3 dir = it.second.direction;
-		dir = normalMatrix*dir;
+		dir = normal_matrix*dir;
 
 		glUniform3f(
-			_dirLightShader->GetUniformLocation("uLigthColor"),
+			dir_light_shader_->GetUniformLocation("uLigthColor"),
 			it.second.color.r,
 			it.second.color.g,
 			it.second.color.b);
 		glUniform3f(
-			_dirLightShader->GetUniformLocation("uLigthDir"),
+			dir_light_shader_->GetUniformLocation("uLigthDir"),
 			dir.x, dir.y, dir.z);
 
-		if ((_scene->GetEntitys()[it.first] & mask)!=mask)
+		if( (scene_->GetEntitys()[it.first] & mask)!=mask )
 			continue;// this should not happen
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
-
-
 
 	glUseProgram(0);
 }
@@ -301,68 +315,73 @@ void DeferredLightingStage::ApplyDirectionalLights()
 struct PointLight
 {
 	float x, y, z;
-	float bulbRadius;
+	float bulb_radius;
 	float r, g, b;
-	float cutoffRadius;
+	float cutoff_radius;
 };
 
 void DeferredLightingStage::ApplyPointLights()
 {
 	Scene::ComponentMask mask =
-		_pointLightContainer->GetComponentMask() |
-		_positionContainer->GetComponentMask();
+		point_light_container_->GetComponentMask() |
+		position_container_->GetComponentMask();
 
-	std::vector<PointLight> pointLights;
-	for (const auto& it : _pointLightContainer->GetComponents())
+	Camera* camera = pipline_->GetCamera().get();
+
+	std::vector<PointLight> point_lights;
+	for( const auto& it : point_light_container_->GetComponents() )
 	{
-		if ((_scene->GetEntitys()[it.first] & mask)!=mask)
+		if( (scene_->GetEntitys()[it.first] & mask)!=mask )
 			continue;// this should not happen
 
 		PointLight light;
 
-		glm::vec4 position = glm::vec4(_positionContainer->GetComponent(it.first)->position, 1);
-		position = _pipline->GetCamera()->GetViewMatrix()*position;
+		glm::vec4 position = glm::vec4(
+			position_container_->GetComponent(it.first)->position, 1);
+		position = camera->GetViewMatrix()*position;
 
 		light.x = position.x;
 		light.y = position.y;
 		light.z = position.z;
 
-		light.bulbRadius = it.second.bulbRadius;
+		light.bulb_radius = it.second.bulb_radius;
 
 		light.r = it.second.color.r;
 		light.g = it.second.color.g;
 		light.b = it.second.color.b;
 
-		light.cutoffRadius = it.second.cutoffRadius;
-		pointLights.push_back(light);
+		light.cutoff_radius = it.second.cutoff_radius;
+		point_lights.push_back(light);
 	}
 
-	_pointLightShader->Use();
-	glBindVertexArray(_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	point_light_shader_->Use();
+	glBindVertexArray(vao_);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
 
-	glm::mat4 projection    = _pipline->GetCamera()->GetProjectionMatrix();
-	glm::mat4 invProjection = glm::inverse(projection);
+	glm::mat4 projection = camera->GetProjectionMatrix();
+	glm::mat4 invers_projection = camera->GetinverseProjectionMatrix();
 
 	glUniformMatrix4fv(
-		_pointLightShader->GetUniformLocation("uProjectionMatrix"),
+		point_light_shader_->GetUniformLocation("uProjectionMatrix"),
 		1, GL_FALSE, &projection[0][0]);
 	glUniformMatrix4fv(
-		_pointLightShader->GetUniformLocation("uInverseProjectionMatrix"),
-		1, GL_FALSE, &invProjection[0][0]);
+		point_light_shader_->GetUniformLocation("uInverseProjectionMatrix"),
+		1, GL_FALSE, &invers_projection[0][0]);
 	glUniform2f(
-		_pointLightShader->GetUniformLocation("uTexelSize"),
-		1.0f/_pipline->GetResulution().x, 
-		1.0f/_pipline->GetResulution().y);
+		point_light_shader_->GetUniformLocation("uTexelSize"),
+		1.0f/pipline_->GetResulution().x,
+		1.0f/pipline_->GetResulution().y);
 
-	for (size_t n = 0; n<pointLights.size(); n += _bufferSize)
+	for( size_t n = 0; n<point_lights.size(); n += buffer_size_ )
 	{
-		GLsizei numLights = std::min(_bufferSize, unsigned(pointLights.size()-n));
-		glBufferSubData(GL_ARRAY_BUFFER, 0, numLights*sizeof(PointLight), &pointLights[n]);
+		GLsizei num_lights = std::min(
+			buffer_size_, unsigned(point_lights.size()-n));
+		glBufferSubData(
+			GL_ARRAY_BUFFER, 0, num_lights*sizeof(PointLight), &point_lights[n]);
 
-		glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 10, numLights);
+		glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 10, num_lights);
 	}
-	
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);

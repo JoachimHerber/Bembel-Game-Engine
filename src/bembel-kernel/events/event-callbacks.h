@@ -14,8 +14,8 @@ struct GLFWmonitor;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
-namespace glfw_callbacks{
+namespace bembel {
+namespace glfw_callbacks {
 
 void WindowPositionCallback(GLFWwindow*, int, int);
 void WindowSizeCallback(GLFWwindow*, int, int);

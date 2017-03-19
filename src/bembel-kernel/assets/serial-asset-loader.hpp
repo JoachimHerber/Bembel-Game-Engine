@@ -18,14 +18,14 @@ template<typename AssetType>
 class SerialAssetLoader : public AssetLoaderBase
 {
 public:
-	using ContainerType    = AssetContainer<AssetType>;
+	using ContainerType = AssetContainer<AssetType>;
 
-	SerialAssetLoader(AssetManager* assetMgr, ContainerType* container);
+	SerialAssetLoader(AssetManager* asset_manager, ContainerType* container);
 	virtual ~SerialAssetLoader();
 
-	virtual AssetHandle RequestAsset( const std::string& filename ) override;
-	virtual AssetHandle RequestAsset( const xml::Element* properties ) override;
-	virtual bool ReleaseAsset( AssetHandle assetHandel ) override;
+	virtual AssetHandle RequestAsset(const std::string& file_name) override;
+	virtual AssetHandle RequestAsset(const xml::Element* properties) override;
+	virtual bool ReleaseAsset(AssetHandle asset_handel) override;
 
 	virtual void Update() override;
 
@@ -34,12 +34,9 @@ public:
 	virtual bool  LoadingFinished() override;
 
 protected:
-	AssetManager*   _assetMgr;
-	ContainerType*  _container;
+	AssetManager*   asset_manager_;
+	ContainerType*  container_;
 };
-
-template<typename AssetType>
-bool CreateSerialAssetLoader(AssetManager* assetMgr);
 
 } //end of namespace bembel
 /*============================================================================*/

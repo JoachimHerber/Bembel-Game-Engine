@@ -13,17 +13,17 @@
 namespace bembel {
 
 Image::Image()
-: _width(0)
-, _height(0)
-, _channels(0)
+	: width_(0)
+	, height_(0)
+	, num_channels_(0)
 {}
 
 Image::Image(unsigned int w, unsigned int h, unsigned int c)
-: _width(w)
-, _height(h)
-, _channels(c)
+	: width_(w)
+	, height_(h)
+	, num_channels_(c)
 {
-	_data.resize(_width*_height*_channels);
+	data_.resize(width_*height_*num_channels_);
 }
 
 Image::~Image()
@@ -31,100 +31,114 @@ Image::~Image()
 
 unsigned char* Image::GetData()
 {
-	return &(_data[0]);
+	return &(data_[0]);
 }
 
 const unsigned char* Image::GetData() const
 {
-	return &(_data[0]);
+	return &(data_[0]);
 }
 
 unsigned int Image::GetWidth() const
 {
-	return _width;
+	return width_;
 }
 
 unsigned int Image::GetHeight() const
 {
-	return _height;
+	return height_;
 }
 
 unsigned int Image::GetChannels() const
 {
-	return _channels;
+	return num_channels_;
 }
 
-bool Image::Load(const std::string& fileName)
+bool Image::Load(const std::string& file_name, bool invert_y_axis)
 {
 	std::vector<unsigned char> data;
 	unsigned int w, h;
-	unsigned error = lodepng::decode(data, w, h, fileName);
+	unsigned error = lodepng::decode(data, w, h, file_name);
 
-	if (error != 0)
+	if( error != 0 )
 	{
 		BEMBEL_LOG_ERROR()
-			<< "Can't load file \"" << fileName << "\"\n"
+			<< "Can't load file \"" << file_name << "\"\n"
 			<< lodepng_error_text(error) << std::endl;
 		return false;
 	}
 
 	// copy data
 
-	_width    = w;
-	_height   = h;
-	_channels = 4;
-	_data.resize(w*h * 4);
-	_data = data;
+	width_ = w;
+	height_ = h;
+	num_channels_ = 4;
+	data_.resize(w*h * 4);
 
-// 	for (unsigned int y = 0; y < h; ++y)
-// 	{
-// 		for (unsigned int x = 0; x < w; ++x)
-// 		{
-// 			_data[4 * (x + w*(y)) + 0] = data[4 * (x + w*(h - y - 1)) + 0];
-// 			_data[4 * (x + w*(y)) + 1] = data[4 * (x + w*(h - y - 1)) + 1];
-// 			_data[4 * (x + w*(y)) + 2] = data[4 * (x + w*(h - y - 1)) + 2];
-// 			_data[4 * (x + w*(y)) + 3] = data[4 * (x + w*(h - y - 1)) + 3];
-// 		}
-// 	}
+	if( invert_y_axis )
+	{
+		for( unsigned int y = 0; y < h; ++y )
+		{
+			for( unsigned int x = 0; x < w; ++x )
+			{
+				data_[4 * (x + w*(y)) + 0] = data[4 * (x + w*(h - y - 1)) + 0];
+				data_[4 * (x + w*(y)) + 1] = data[4 * (x + w*(h - y - 1)) + 1];
+				data_[4 * (x + w*(y)) + 2] = data[4 * (x + w*(h - y - 1)) + 2];
+				data_[4 * (x + w*(y)) + 3] = data[4 * (x + w*(h - y - 1)) + 3];
+			}
+		}
+	}
+	else
+	{
+		data_ = data;
+	}
+
 	return true;
 }
 
-bool Image::Save(const std::string& fileName)
+bool Image::Save(const std::string& file_name, bool invert_y_axis)
 {
-//	std::vector<unsigned char> data;
-//	data.resize(_data.size());
-// 	for (unsigned int y = 0; y < _height; ++y)
-// 	{
-// 		for (unsigned int x = 0; x < _width; ++x)
-// 		{
-// 			for (unsigned int c = 0; c < _channels; ++c)
-// 			{
-// 				data[_channels * (x + _width*(y)) + c] =
-// 					_data[_channels * (x + _width*(_height - y - 1)) + c];
-// 			}
-// 		}
-// 	}
+	std::vector<unsigned char> data;
+	if( invert_y_axis )
+	{
+		data.resize(data_.size());
+		for( unsigned int y = 0; y < height_; ++y )
+		{
+			for( unsigned int x = 0; x < width_; ++x )
+			{
+				for( unsigned int c = 0; c < num_channels_; ++c )
+				{
+					data[num_channels_ * (x + width_*(y)) + c] =
+						data_[num_channels_ * (x + width_*(height_ - y - 1)) + c];
+				}
+			}
+		}
+	}
+	else
+	{
+		data = data_;
+	}
 
 	unsigned error = 0;
-	switch (_channels)
+	switch( num_channels_ )
 	{
 	case 1:
-		error = lodepng::encode(fileName, _data, _width, _height, LCT_GREY);
+		error = lodepng::encode(file_name, data_, width_, height_, LCT_GREY);
 		break;
 	case 3:
-		error = lodepng::encode(fileName, _data, _width, _height, LCT_RGB);
+		error = lodepng::encode(file_name, data_, width_, height_, LCT_RGB);
 		break;
 	case 4:
-		error = lodepng::encode(fileName, _data, _width, _height, LCT_RGBA);
+		error = lodepng::encode(file_name, data_, width_, height_, LCT_RGBA);
 		break;
 	default:
 		return false;
 	}
 
-	if (error != 0)
+	if( error != 0 )
 	{
 		BEMBEL_LOG_ERROR()
-			<< "Can't load file \"" << fileName << "\"\n"
+			<< "Can't load file \"" << file_name << "\"\n"
 			<< lodepng_error_text(error) << std::endl;
 		return false;
 	}

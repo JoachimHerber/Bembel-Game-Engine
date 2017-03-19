@@ -23,7 +23,8 @@ public:
 	ComponentContainerBase(
 		Scene::ComponentTypeID
 	);
-	virtual ~ComponentContainerBase(){}
+	virtual ~ComponentContainerBase()
+	{}
 
 	virtual bool CreateComponent(
 		Scene::EntityID, const xml::Element*, AssetManager*) = 0;
@@ -33,8 +34,8 @@ public:
 	Scene::ComponentMask   GetComponentMask();
 
 private:
-	Scene::ComponentTypeID _typeID;
-	Scene::ComponentMask   _mask;
+	Scene::ComponentTypeID type_id_;
+	Scene::ComponentMask   mask_;
 };
 
 template<class ComponentType>
@@ -45,7 +46,8 @@ public:
 		Scene::ComponentTypeID id)
 		: ComponentContainerBase(id)
 	{}
-	virtual ~SparseComponentContainer() {}
+	virtual ~SparseComponentContainer()
+	{}
 
 	ComponentType* CreateComponent(Scene::EntityID);
 	bool CreateComponent(Scene::EntityID, const xml::Element*, AssetManager*) override;
@@ -55,7 +57,7 @@ public:
 	ComponentType* GetComponent(Scene::EntityID);
 
 private:
-	std::map<Scene::EntityID, ComponentType> _components;
+	std::map<Scene::EntityID, ComponentType> components_;
 };
 
 template<class ComponentType>
@@ -66,7 +68,8 @@ public:
 		Scene::ComponentTypeID id)
 		: ComponentContainerBase(id)
 	{}
-	virtual ~DenseComponentContainer() {}
+	virtual ~DenseComponentContainer()
+	{}
 
 	ComponentType* CreateComponent(Scene::EntityID);
 	bool CreateComponent(Scene::EntityID, const xml::Element*, AssetManager*) override;
@@ -76,7 +79,7 @@ public:
 	ComponentType* GetComponent(Scene::EntityID);
 
 private:
-	std::vector<ComponentType> _components;
+	std::vector<ComponentType> components_;
 };
 } //end of namespace bembel
 /*============================================================================*/

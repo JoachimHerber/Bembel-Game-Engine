@@ -35,13 +35,10 @@ namespace bembel {
 class BEMBEL_API GeometryRenderQueue
 {
 public:
-	GeometryRenderQueue();
+	GeometryRenderQueue(AssetManager* asset_manager);
 	~GeometryRenderQueue();
 
-	void SetAssetMannager( AssetManager* assetMgr);
-
 	bool AddGeometryObject(AssetHandle model, const glm::mat4& transform);
-
 	bool AddGeometryObject(GeometryModel* model, const glm::mat4& transform);
 
 	// sorts the renderables to minimize state changes dureing rendering
@@ -50,8 +47,8 @@ public:
 	const std::vector<GeometryRenderData>& GetRenderData() const;
 
 private:
-	AssetManager* _assetMgr;
-	std::vector<GeometryRenderData> _renderData;
+	AssetManager* asset_manager_;
+	std::vector<GeometryRenderData> render_data_;
 };
 
 } //end of namespace bembel

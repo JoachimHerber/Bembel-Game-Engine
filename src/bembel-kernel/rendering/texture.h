@@ -15,7 +15,7 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API Texture final
 {
@@ -24,29 +24,29 @@ public:
 	~Texture();
 
 	void Init(
-		GLenum minFilter = GL_LINEAR,
-		GLenum magFilter = GL_LINEAR,
-		GLenum warpS = GL_CLAMP_TO_EDGE,
-		GLenum warpT = GL_CLAMP_TO_EDGE);
+		GLenum min_filter = GL_LINEAR,
+		GLenum mag_filter = GL_LINEAR,
+		GLenum warp_s = GL_CLAMP_TO_EDGE,
+		GLenum warp_t = GL_CLAMP_TO_EDGE);
 	void Init(
 		const glm::uvec2& size,
-		GLenum minFilter = GL_LINEAR,
-		GLenum magFilter = GL_LINEAR,
-		GLenum warpS = GL_CLAMP_TO_EDGE,
-		GLenum warpT = GL_CLAMP_TO_EDGE);
+		GLenum min_filter = GL_LINEAR,
+		GLenum mag_filter = GL_LINEAR,
+		GLenum warp_s = GL_CLAMP_TO_EDGE,
+		GLenum warp_t = GL_CLAMP_TO_EDGE);
 	void Init(
-		const Image& data, 
-		GLenum minFilter = GL_LINEAR, 
-		GLenum magFilter = GL_LINEAR,
-		GLenum warpS = GL_CLAMP_TO_EDGE,
-		GLenum warpT = GL_CLAMP_TO_EDGE);
+		const Image& data,
+		GLenum min_filter = GL_LINEAR,
+		GLenum mag_filter = GL_LINEAR,
+		GLenum warp_s = GL_CLAMP_TO_EDGE,
+		GLenum warp_t = GL_CLAMP_TO_EDGE);
 	void Cleanup();
 
 	void Bind() const;
 	void Release() const;
 
 	bool SetSize(const glm::ivec2& size);
-	bool SetData(const Image&, GLint mipMapLevel = 0);
+	bool SetData(const Image&, GLint mip_map_level = 0);
 
 	GLuint GetTextureHandle() const;
 	GLenum GetTextureFormat() const;
@@ -56,12 +56,12 @@ public:
 	//static Texture* LoadeAsset(const AssetDescription&, AssetManager*);
 
 private:
-	GLenum _target;
-	GLenum _format;
-	GLuint _handle;
+	GLenum target_;
+	GLenum format_;
+	GLuint handle_;
 };
 
-using TextureContainer    = AssetContainer<Texture>;
+using TextureContainer = AssetContainer<Texture>;
 using TextureContainerPtr = std::shared_ptr<TextureContainer>;
 
 } //end of namespace bembel

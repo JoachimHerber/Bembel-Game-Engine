@@ -21,7 +21,7 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API AssetManager final
 {
@@ -31,26 +31,29 @@ public:
 	~AssetManager();
 
 	template<typename AssetType>
-	AssetHandle RequestAsset(const std::string& filename);
+	AssetHandle RequestAsset(const std::string& file_name);
 	template<typename AssetType>
-	AssetHandle RequestAsset( const xml::Element* properties );
+	AssetHandle RequestAsset(const xml::Element* properties);
 
-	AssetHandle RequestAsset( const std::string& asset_type_name, const std::string& filename );
-	AssetHandle RequestAsset( const std::string& asset_type_name, const xml::Element* properties );
+	AssetHandle RequestAsset(
+		const std::string& asset_type_name,
+		const std::string& file_name);
+	AssetHandle RequestAsset(const std::string& asset_type_name,
+		const xml::Element* properties);
 
-	bool ReleaseAsset( AssetHandle assetHandel);
+	bool ReleaseAsset(AssetHandle asset_handel);
 
-	bool IsHandelValid( AssetHandle assetHandel );
+	bool IsHandelValid(AssetHandle asset_handel);
 
 	template<typename AssetType>
 	AssetHandle GetAssetHandle(const std::string& name);
 
 	template<typename AssetType>
-	AssetType* GetAsset(AssetHandle handle, bool returnDummyIfHandleInvalid = true);
+	AssetType* GetAsset(AssetHandle handle, bool return_dummy_if_handle_invalid = true);
 
 	template<typename AssetType, typename ... TArgs>
-	bool RegisterAssetType( TArgs ... args );
-	template<typename AssetType, typename AssetLoaderType,  typename ... TArgs>
+	bool RegisterAssetType(TArgs ... args);
+	template<typename AssetType, typename AssetLoaderType, typename ... TArgs>
 	bool RegisterAssetType(TArgs ... args);
 
 private:
@@ -58,10 +61,10 @@ private:
 	AssetContainer<AssetType>* GetAssetContainer();
 
 private:
-	std::unordered_map<std::string, uint16_t>  _assetTypeMap;
+	std::unordered_map<std::string, uint16_t>  asset_type_map_;
 
-	std::vector<std::shared_ptr<AssetContainerBase>> _assetContainer;
-	std::vector<std::shared_ptr<AssetLoaderBase>>    _assetLoader;
+	std::vector<std::shared_ptr<AssetContainerBase>> asset_container_;
+	std::vector<std::shared_ptr<AssetLoaderBase>>    asset_loader_;
 };
 
 } //end of namespace bembel

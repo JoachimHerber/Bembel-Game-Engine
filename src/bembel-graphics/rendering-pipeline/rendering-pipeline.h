@@ -21,7 +21,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Scene;
 class Camera;
@@ -34,7 +34,7 @@ class RenderingStage;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API RenderingPipeline final
 {
@@ -72,7 +72,7 @@ public:
 	TexturePtr CreateTexture(const std::string& name, GLenum format);
 
 	void AddRenderingStage(RenderingStagePtr);
-	
+
 	template<typename StageType>
 	StageType* AddRenderingStage();
 
@@ -90,19 +90,19 @@ private:
 	GLenum StringToTextureFormat(const std::string&);
 
 private:
-	GraphicSystem* _grapicSys;
+	GraphicSystem* grapic_system_;
 
-	glm::ivec2 _resolution;
-	bool       _enabled;
-	bool       _initalized;
+	glm::ivec2 resolution_;
+	bool       enabled_;
+	bool       initalized_;
 
-	ScenePtr  _scene;
-	CameraPtr _camera;
+	ScenePtr  scene_;
+	CameraPtr camera_;
 
-	std::map<std::string, TexturePtr> _textures;
-	std::vector<RenderingStagePtr>    _stages;
+	std::map<std::string, TexturePtr> textures_;
+	std::vector<RenderingStagePtr>    stages_;
 
-	std::vector<ViewPtr> _views;
+	std::vector<ViewPtr> views_;
 };
 
 template<typename StageType>

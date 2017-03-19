@@ -18,7 +18,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class AssetManager;
 class Shader;
@@ -29,7 +29,7 @@ class Material;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 struct GeometryRenderData
 {
@@ -43,20 +43,25 @@ struct GeometryRenderData
 class BEMBEL_API GeometryRendererBase
 {
 public:
-	GeometryRendererBase(unsigned id) : _id(id){};
-	virtual ~GeometryRendererBase() {};
+	GeometryRendererBase(unsigned id) : id_(id)
+	{};
+	virtual ~GeometryRendererBase()
+	{};
 
-	unsigned GetRendererID() const { return _id; };
+	unsigned GetRendererID() const
+	{
+		return id_;
+	};
 
 	virtual void Render(
 		const glm::mat4& proj,
 		const glm::mat4& view,
 		const std::vector<GeometryRenderData>& data) = 0;
 
-	virtual std::unique_ptr<Material> CreateMaterial( const xml::Element* propertiey ) = 0;
+	virtual std::unique_ptr<Material> CreateMaterial(const xml::Element* propertiey) = 0;
 
 protected:
-	const unsigned _id;
+	const unsigned id_;
 };
 
 class BEMBEL_API DefaultGeometryRenderer : public GeometryRendererBase
@@ -72,17 +77,17 @@ public:
 		const glm::mat4& view,
 		const std::vector<GeometryRenderData>& data) override;
 
-	virtual std::unique_ptr<Material> CreateMaterial( 
-		const xml::Element* propertiey ) override;
+	virtual std::unique_ptr<Material> CreateMaterial(
+		const xml::Element* propertiey) override;
 
-	static std::unique_ptr<DefaultGeometryRenderer> 
-		CreateRenderer( const xml::Element*, unsigned id);
+	static std::unique_ptr<DefaultGeometryRenderer>
+		CreateRenderer(const xml::Element*, unsigned id);
 
 private:
-	std::shared_ptr<Shader> _shader;
+	std::shared_ptr<Shader> shader_;
 
-	GLuint _materialUniformBlockIndex;
-	GLuint _materialUniformBufferSize;
+	GLuint material_uniform_block_index_;
+	GLuint material_uniform_buffer_size_;
 
 };
 

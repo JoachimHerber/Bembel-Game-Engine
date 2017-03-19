@@ -11,47 +11,43 @@
 /*============================================================================*/
 namespace bembel {
 
-GeometryRenderQueue::GeometryRenderQueue()
+GeometryRenderQueue::GeometryRenderQueue(AssetManager* asset_manager)
+	: asset_manager_(asset_manager)
 {}
 
 GeometryRenderQueue::~GeometryRenderQueue()
 {}
 
-void GeometryRenderQueue::SetAssetMannager(AssetManager* assetMgr)
-{
-	_assetMgr = assetMgr;
-}
-
 bool GeometryRenderQueue::AddGeometryObject(
-	AssetHandle modelHndl, 
+	AssetHandle modelHndl,
 	const glm::mat4& transform)
 {
-	auto* model = _assetMgr->GetAsset<GeometryModel>(modelHndl);
+	auto* model = asset_manager_->GetAsset<GeometryModel>(modelHndl);
 	return AddGeometryObject(model, transform);
 }
 
 bool GeometryRenderQueue::AddGeometryObject(
-	GeometryModel* model, 
+	GeometryModel* model,
 	const glm::mat4& transform)
 {
-	if (model == nullptr)
+	if( model == nullptr )
 		return false;
 
-	auto mesh = _assetMgr->GetAsset<GeometryMesh>(model->GetMesh());
-	if (mesh == nullptr)
+	auto mesh = asset_manager_->GetAsset<GeometryMesh>(model->GetMesh());
+	if( mesh == nullptr )
 		return false;
 
-	for (const auto& matMap : model->GetMateialMapping())
+	for( const auto& mat_map : model->GetMateialMapping() )
 	{
-		Material* mat = _assetMgr->GetAsset<Material>(matMap.material);
-		if (mesh == nullptr)
+		Material* mat = asset_manager_->GetAsset<Material>(mat_map.material);
+		if( mesh == nullptr )
 			continue;
 
 		unsigned first, count;
-		if (mesh->GetSubMesh(matMap.subMesh, first, count))
+		if( mesh->GetSubMesh(mat_map.sub_mesh, first, count) )
 		{
-			_renderData.push_back({
-				mesh, mat, first, count, transform });
+			render_data_.push_back({
+				mesh, mat, first, count, transform});
 		}
 	}
 	return true;
@@ -59,13 +55,14 @@ bool GeometryRenderQueue::AddGeometryObject(
 
 void GeometryRenderQueue::SortRenderData()
 {
-	std::sort(_renderData.begin(), _renderData.end(), [](
-			const GeometryRenderData& r1,
-			const GeometryRenderData& r2
-	){
-		if (r1.material->GetRenderer() != r2.material->GetRenderer())
+	std::sort(render_data_.begin(), render_data_.end(), [](
+		const GeometryRenderData& r1,
+		const GeometryRenderData& r2
+		)
+	{
+		if( r1.material->GetRenderer() != r2.material->GetRenderer() )
 			return r1.material->GetRenderer() < r2.material->GetRenderer();
-		
+
 		return
 			(r1.mesh != r2.mesh) ?
 			(r1.mesh < r2.mesh) :
@@ -75,12 +72,12 @@ void GeometryRenderQueue::SortRenderData()
 
 void GeometryRenderQueue::ClearRendarData()
 {
-	_renderData.clear();
+	render_data_.clear();
 }
 
 const std::vector<GeometryRenderData>& GeometryRenderQueue::GetRenderData() const
 {
-	return _renderData;
+	return render_data_;
 }
 
 

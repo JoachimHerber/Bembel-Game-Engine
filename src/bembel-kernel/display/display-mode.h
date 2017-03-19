@@ -22,14 +22,14 @@ struct GLFWwindow;
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API DisplayModeBase
 {
 public:
 	DisplayModeBase() = default;
 	virtual ~DisplayModeBase() = default;
-	
+
 	virtual GLFWwindow* CreatWindow(const std::string&, GLFWwindow*) = 0;
 };
 
@@ -55,17 +55,17 @@ public:
 
 	static const std::string& GetTypeName();
 private:
-	int _width  = 800;
-	int _height = 600;
+	int width_ = 800;
+	int height_ = 600;
 
-	bool _limitSize = false;
-	glm::uvec2 _minSize;
-	glm::uvec2 _maxSize;
+	bool limit_size_ = false;
+	glm::uvec2 min_size_;
+	glm::uvec2 max_size_;
 
-	unsigned _aspectRatioNumer = 0;
-	unsigned _aspectRatioDenom = 0;
+	unsigned aspect_ratio_numer_ = 0;
+	unsigned aspect_ratio_denom_ = 0;
 
-	bool _resizable = true;
+	bool resizable_ = true;
 };
 
 class BEMBEL_API FullscreenDisplayMode : public DisplayModeBase
@@ -82,15 +82,15 @@ public:
 
 	GLFWwindow* CreatWindow(const std::string&, GLFWwindow*) override;
 
-	static std::unique_ptr<FullscreenDisplayMode> 
+	static std::unique_ptr<FullscreenDisplayMode>
 		CreateInstance(const xml::Element*);
 
 	static const std::string& GetTypeName();
 
 private:
-	glm::ivec2 _resolution;
+	glm::ivec2 resolution_;
 
-	int _refreshRate;
+	int refresh_rate_;
 };
 
 } //end of namespace bembel

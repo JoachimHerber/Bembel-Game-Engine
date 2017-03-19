@@ -12,16 +12,7 @@ namespace bembel {
 Viewport::Viewport()
 {}
 Viewport::Viewport(std::shared_ptr<View> view)
-	: _view(view)
-{}
-
-Viewport::Viewport(
-	std::shared_ptr<View> view, 
-	const glm::ivec2& pos, 
-	const glm::ivec2& size)
-	: _view(view)
-	, _position(pos)
-	, _size(size)
+	: view_(view)
 {}
 
 Viewport::~Viewport()
@@ -29,83 +20,85 @@ Viewport::~Viewport()
 
 const glm::ivec2& Viewport::GetPosition() const
 {
-	return _position;
+	return position_;
 }
-const glm::ivec2& Viewport::GetSize() const
+const glm::uvec2& Viewport::GetSize() const
 {
-	return _size;
+	return size_;
 }
 
 void Viewport::Enable()
 {
-	_enabled = true;
+	enabled_ = true;
 }
 void Viewport::Disable()
 {
-	_enabled = false;
+	enabled_ = false;
 }
 bool Viewport::IsEnabled()
 {
-	return _enabled;
+	return enabled_;
 }
 
 void Viewport::SetView(std::shared_ptr<View> view)
 {
-	_view = view;
+	view_ = view;
 }
 
 std::shared_ptr<Viewport::View> Viewport::GetView() const
 {
-	return _view;
+	return view_;
 }
 
-void Viewport::UpdatePosition(const glm::vec2& frameBufferSize)
+void Viewport::UpdatePosition(const glm::vec2& frame_buffer_size)
 {
-	_position = glm::ivec2(frameBufferSize*_relativPosition) + _positionOffset;
+	position_ = glm::ivec2(
+		frame_buffer_size*relativ_position_ + position_offset_);
 }
-void Viewport::UpdateSize(const glm::vec2& frameBufferSize)
+void Viewport::UpdateSize(const glm::vec2& frame_buffer_size)
 {
-	_size = glm::ivec2(frameBufferSize*_relativSize) + _sizeOffset;
+	size_ = glm::ivec2(
+		frame_buffer_size*relativ_size_ + size_offset_);
 }
 
 const glm::vec2& Viewport::GetRelativPosition() const
 {
-	return _relativPosition;
+	return relativ_position_;
 }
 
 void Viewport::SetRelativPosition(const glm::vec2& val)
 {
-	_relativPosition = val;
+	relativ_position_ = val;
 }
 
 const glm::vec2& Viewport::GetRelativSize() const
 {
-	return _relativSize;
+	return relativ_size_;
 }
 
 void Viewport::SetRelativSize(const glm::vec2& val)
 {
-	_relativSize = val;
+	relativ_size_ = val;
 }
 
 const glm::vec2& Viewport::GetPositionOffset() const
 {
-	return _positionOffset;
+	return position_offset_;
 }
 
 void Viewport::SetPositionOffset(const glm::vec2& val)
 {
-	_positionOffset = val;
+	position_offset_ = val;
 }
 
 const glm::vec2& Viewport::GetSizeOffset() const
 {
-	return _sizeOffset;
+	return size_offset_;
 }
 
 void Viewport::SetSizeOffset(const glm::vec2& val)
 {
-	_sizeOffset = val;
+	size_offset_ = val;
 }
 
 } //end of namespace bembel

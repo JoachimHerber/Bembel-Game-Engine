@@ -11,7 +11,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class Shader;
 class Texture;
@@ -25,7 +25,7 @@ namespace bembel {
 class BEMBEL_API TextureView : public Viewport::View
 {
 public:
-	using ShaderPtr  = std::shared_ptr<Shader>;
+	using ShaderPtr = std::shared_ptr<Shader>;
 	using TexturePtr = std::shared_ptr<Texture>;
 
 	TextureView(TexturePtr color);
@@ -42,13 +42,13 @@ public:
 	virtual void Draw() override;
 
 private:
-	TexturePtr _color;
+	TexturePtr texture_;
 
-	glm::vec2 _min;
-	glm::vec2 _max;
+	glm::vec2 min_;
+	glm::vec2 max_;
 
-	ShaderPtr _shader;
-	int       _uniform;
+	ShaderPtr shader_;
+	int       uniform_;
 };
 
 } //end of namespace bembel

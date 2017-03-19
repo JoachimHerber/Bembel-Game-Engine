@@ -12,104 +12,104 @@
 /*============================================================================*/
 namespace bembel {
 
-Material::Material( unsigned renderer, GLint size )
-	: _renderer( renderer )
+Material::Material(unsigned renderer, GLint size)
+	: renderer_(renderer)
 {
-	glGenBuffers( 1, &_uniformBufferObject );
-	glBindBufferBase( GL_UNIFORM_BUFFER, 0, _uniformBufferObject );
-	glBufferData( GL_UNIFORM_BUFFER, size, nullptr, GL_STATIC_DRAW );
+	glGenBuffers(1, &uniform_buffer_object_);
+	glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_buffer_object_);
+	glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_STATIC_DRAW);
 }
 
 Material::~Material()
 {
-	glDeleteBuffers( 1, &_uniformBufferObject );
+	glDeleteBuffers(1, &uniform_buffer_object_);
 }
 
 unsigned Material::GetRenderer() const
 {
-	return _renderer;
+	return renderer_;
 }
 
 GLuint Material::GetUniformBufferObject() const
 {
-	return _uniformBufferObject;
+	return uniform_buffer_object_;
 }
 
 const std::string& Material::GetTypeName()
 {
-	const static std::string typeName = "Material";
-	return typeName;
+	const static std::string type_name = "Material";
+	return type_name;
 }
 
 MaterialLoader::MaterialLoader(
-	AssetManager* assetMgr,
+	AssetManager* asset_manager,
 	ContainerType* container,
-	GraphicSystem* graphicSys )
-	: _graphicSys( graphicSys )
-	, _assetMgr( assetMgr )
-	, _container( container )
+	GraphicSystem* graphic_system)
+	: graphic_system_(graphic_system)
+	, asset_manager_(asset_manager)
+	, container_(container)
 {}
 
 MaterialLoader::~MaterialLoader()
 {}
 
-AssetHandle MaterialLoader::RequestAsset(const std::string& fileName )
+AssetHandle MaterialLoader::RequestAsset(const std::string& fileName)
 {
-	AssetHandle handle = _container->GetAssetHandle( fileName );
+	AssetHandle handle = container_->GetAssetHandle(fileName);
 
-	if( !_container->IsHandelValid( handle ) )
+	if( !container_->IsHandelValid(handle) )
 	{
 		// we have to load the asset
 		std::unique_ptr<Material> asset = nullptr;
-			//Material::LoadAsset( _assetMgr, fileName );
+		//Material::LoadAsset( _assetMgr, fileName );
 		if( !asset )
 			return AssetHandle();
 
-		handle = _container->AddAsset( std::move( asset ) );
-		_container->IncrementAssetRefCount( handle );
-		_container->RegisterAssetAlias( handle, fileName );
+		handle = container_->AddAsset(std::move(asset));
+		container_->IncrementAssetRefCount(handle);
+		container_->RegisterAssetAlias(handle, fileName);
 	}
 
-	_container->IncrementAssetRefCount( handle );
+	container_->IncrementAssetRefCount(handle);
 	return handle;
 }
 
-AssetHandle MaterialLoader::RequestAsset(const xml::Element* properties )
+AssetHandle MaterialLoader::RequestAsset(const xml::Element* properties)
 {
 	std::string name = "";
-	if( !xml::GetAttribute( properties, "name", name ) )
+	if( !xml::GetAttribute(properties, "name", name) )
 		return AssetHandle();
 
-	AssetHandle handle = _container->GetAssetHandle( name );
-	if( !_container->IsHandelValid( handle ) )
+	AssetHandle handle = container_->GetAssetHandle(name);
+	if( !container_->IsHandelValid(handle) )
 	{
-		std::string rendererName;
-		xml::GetAttribute( properties, "renderer", rendererName );
-		auto renderer = _graphicSys->GetRenderer( rendererName );
+		std::string renderer_name;
+		xml::GetAttribute(properties, "renderer", renderer_name);
+		auto renderer = graphic_system_->GetRenderer(renderer_name);
 		if( !renderer )
 			return AssetHandle();
 
 		// we have to load the asset
-		std::unique_ptr<Material> asset = renderer->CreateMaterial( properties );
+		std::unique_ptr<Material> asset = renderer->CreateMaterial(properties);
 		if( !asset )
 			return AssetHandle();
 
-		handle = _container->AddAsset( std::move( asset ) );
-		_container->RegisterAssetAlias( handle, name );
+		handle = container_->AddAsset(std::move(asset));
+		container_->RegisterAssetAlias(handle, name);
 	}
 
-	_container->IncrementAssetRefCount( handle );
+	container_->IncrementAssetRefCount(handle);
 	return handle;
 }
 
-bool MaterialLoader::ReleaseAsset( AssetHandle assetHandel )
+bool MaterialLoader::ReleaseAsset(AssetHandle asset_handel)
 {
-	if( _container->IsHandelValid( assetHandel ) )
+	if( container_->IsHandelValid(asset_handel) )
 	{
-		_container->DecrementAssetRefCount( assetHandel );
-		if( _container->GetAssetRefCount( assetHandel ) == 0 )
+		container_->DecrementAssetRefCount(asset_handel);
+		if( container_->GetAssetRefCount(asset_handel) == 0 )
 		{
-			_container->RemoveAsset( assetHandel );
+			container_->RemoveAsset(asset_handel);
 			return true;
 		}
 	}

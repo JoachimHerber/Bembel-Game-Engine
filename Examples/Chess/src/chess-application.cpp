@@ -21,14 +21,14 @@
 ChessApplication::ChessApplication()
 	: bembel::Application()
 {
-	_graphicSys     = _kernel->AddSystem<bembel::GraphicSystem>();
-	_interactionSys = _kernel->AddSystem<bembel::InteractionSystem>();
+	_graphicSys     = kernel_->AddSystem<bembel::GraphicSystem>();
+	_interactionSys = kernel_->AddSystem<bembel::InteractionSystem>();
 
 	_graphicSys->GetRendertingStageFactory()
 		.RegisterDefaultObjectGenerator<SelectionRenderingStage>(
 			"SelectionRenderingStage");
 
-	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 }
 
 ChessApplication::~ChessApplication()
@@ -36,12 +36,12 @@ ChessApplication::~ChessApplication()
 
 bool ChessApplication::Init()
 {
-	if (!_kernel->LoadSetting("config.xml"))
+	if (!kernel_->LoadSetting("config.xml"))
 		return false;
 	auto pipline = _graphicSys->GetRenderingPiplies()[0].get();
 
 	_cam = std::make_shared<CameraControle>(
-		_kernel->GetEventManager(), pipline->GetCamera());
+		kernel_->GetEventManager(), pipline->GetCamera());
 
 	InitGame();
 	_chessGame->ResetChessBoard();
@@ -50,14 +50,14 @@ bool ChessApplication::Init()
 	_cam->SetCameraOffset(glm::vec3( 8, 0.5f, 8));
 	_cam->EnableManualControle(true);
 
-	_kernel->InitSystems();
+	kernel_->InitSystems();
 	return true;
 }
 
 void ChessApplication::Cleanup()
 {
-	_kernel->ShutdownSystems();
-	_kernel->GetDisplayManager()->CloseOpenWindows();
+	kernel_->ShutdownSystems();
+	kernel_->GetDisplayManager()->CloseOpenWindows();
 }
 
 void ChessApplication::Update(double time)
@@ -74,8 +74,8 @@ void ChessApplication::HandleEvent(const bembel::WindowShouldCloseEvent& event)
 bool ChessApplication::InitGame()
 {
 	_chessGame = std::make_unique<ChessGame>( 
-		_kernel->GetAssetManager(),
-		_kernel->GetEventManager(),
+		kernel_->GetAssetManager(),
+		kernel_->GetEventManager(),
 		_graphicSys );
 	_chessGame->ResetChessBoard();
 

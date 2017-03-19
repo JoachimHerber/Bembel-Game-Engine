@@ -15,24 +15,24 @@
 InputExample::InputExample()
 	: bembel::Application()
 {
-	_kernel->AddSystem<bembel::InteractionSystem>();
+	kernel_->AddSystem<bembel::InteractionSystem>();
 
-	_kernel->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 
-	_kernel->GetEventManager()->AddHandler<bembel::KeyPressEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::KeyRepeatEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::KeyReleaseEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::TextInputEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::MouseButtonPressEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::MouseButtonRepeatEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::MouseButtonReleaseEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::CursorMovedEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::CursorEnteredEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::CursorLeftEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::ScrollEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::KeyPressEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::KeyRepeatEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::KeyReleaseEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::TextInputEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::MouseButtonPressEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::MouseButtonRepeatEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::MouseButtonReleaseEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::CursorMovedEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::CursorEnteredEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::CursorLeftEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::ScrollEvent>(this);
 
-	_kernel->GetEventManager()->AddHandler<bembel::ButtonPressEvent>(this);
-	_kernel->GetEventManager()->AddHandler<bembel::ButtonReleaseEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::ButtonPressEvent>(this);
+	kernel_->GetEventManager()->AddHandler<bembel::ButtonReleaseEvent>(this);
 }
 
 InputExample::~InputExample()
@@ -41,16 +41,16 @@ InputExample::~InputExample()
 
 bool InputExample::Init()
 {
-	auto window = _kernel->GetDisplayManager()->CreateWindow();
+	auto window = kernel_->GetDisplayManager()->CreateWindow();
 	window->Open("Input Example");
-	_kernel->InitSystems();
+	kernel_->InitSystems();
 	return true;
 }
 
 void InputExample::Cleanup()
 {
-	_kernel->ShutdownSystems();
-	_kernel->GetDisplayManager()->CloseOpenWindows();
+	kernel_->ShutdownSystems();
+	kernel_->GetDisplayManager()->CloseOpenWindows();
 }
 
 void InputExample::Update(double time)

@@ -38,13 +38,13 @@ public:
 	std::string GetDescription() const;
 
 private:
-	Logger* _logger;
+	Logger* logger_;
 
-	std::string  _file;
-	std::string  _function;
-	unsigned int _line;
+	std::string  file_;
+	std::string  function_;
+	unsigned int line_;
 
-	std::stringstream _buffer;
+	std::stringstream buffer_;
 
 	friend class Logger;
 };
@@ -58,12 +58,12 @@ namespace bembel {
 template <typename T>
 inline LogMessage& LogMessage::operator<<(const T& value)
 {
-	_buffer << value;
+	buffer_ << value;
 	return *this;
 }
-inline LogMessage& LogMessage::operator<<(std::ostream& (*fn)(std::ostream&))
+inline LogMessage& LogMessage::operator<<(std::ostream& (*function)(std::ostream&))
 {
-	_buffer << fn;
+	buffer_ << function;
 	return *this;
 }
 

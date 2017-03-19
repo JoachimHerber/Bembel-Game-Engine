@@ -24,9 +24,9 @@ struct BEMBEL_API PositionComponent
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(
-		PositionComponent&, 
-		const xml::Element*, 
-		AssetManager*);
+		AssetManager*,
+		const xml::Element*,
+		PositionComponent* );
 };
 
 } //end of namespace bembel

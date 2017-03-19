@@ -12,19 +12,18 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 Application::Application()
-	: _kernel(std::make_unique<Kernel>())
-{
-}
+	: kernel_(std::make_unique<Kernel>())
+{}
 
 Application::~Application()
 {}
 
 bool Application::Run()
 {
-	if (!Init())
+	if( !Init() )
 		return false;
 
 	MainLoop();
@@ -36,15 +35,15 @@ bool Application::Run()
 
 void Application::Quit()
 {
-	_quite = true;
+	quite_ = true;
 }
 
 void Application::MainLoop()
 {
 	auto time = std::chrono::high_resolution_clock::now();
 
-	_quite = false;
-	while(!_quite)
+	quite_ = false;
+	while( !quite_ )
 	{
 		auto now = std::chrono::high_resolution_clock::now();
 		std::chrono::milliseconds ms =
@@ -52,10 +51,10 @@ void Application::MainLoop()
 
 		double timeSinceLastUpdate = 0.001*(ms.count());
 
-		_kernel->PollEvents();
+		kernel_->PollEvents();
 		Update(timeSinceLastUpdate);
-		_kernel->UpdateSystems(timeSinceLastUpdate);
-		_kernel->GetDisplayManager()->UpdateWindows();
+		kernel_->UpdateSystems(timeSinceLastUpdate);
+		kernel_->GetDisplayManager()->UpdateWindows();
 
 		time = now;
 	}

@@ -17,14 +17,15 @@
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
-RenderingPipeline::RenderingPipeline(GraphicSystem* graphicSys)
-	: _grapicSys(graphicSys)
-	, _resolution(800,600)
-	, _enabled(true)
-	, _initalized(false)
-	, _camera(std::make_shared<Camera>())
+RenderingPipeline::RenderingPipeline(GraphicSystem* grapic_system)
+	: grapic_system_(grapic_system)
+	, resolution_(800, 600)
+	, enabled_(true)
+	, initalized_(false)
+	, scene_(nullptr)
+	, camera_(std::make_shared<Camera>())
 {}
 
 RenderingPipeline::~RenderingPipeline()
@@ -32,59 +33,59 @@ RenderingPipeline::~RenderingPipeline()
 
 GraphicSystem* RenderingPipeline::GetGraphicSystem() const
 {
-	return _grapicSys;
+	return grapic_system_;
 }
 
 void RenderingPipeline::Enable()
 {
-	_enabled = true;
+	enabled_ = true;
 }
 void RenderingPipeline::Disable()
 {
-	_enabled = false;
+	enabled_ = false;
 }
 bool RenderingPipeline::IsEnabled()
 {
-	return _enabled;
+	return enabled_;
 }
 
 void RenderingPipeline::SetResulution(const glm::ivec2& value)
 {
-	if (_resolution == value)
+	if( resolution_ == value )
 		return;
 
-	_resolution = value;
-	if (_initalized)
+	resolution_ = value;
+	if( initalized_ )
 	{
-		for (auto& it : _textures)
+		for( auto& it : textures_ )
 			it.second->SetSize(value);
 	}
 }
 
 const glm::ivec2& RenderingPipeline::GetResulution() const
 {
-	return _resolution;
+	return resolution_;
 }
 
 void RenderingPipeline::Init()
 {
-	for (auto& it : _textures)
-		it.second->Init(_resolution);
+	for( auto& it : textures_ )
+		it.second->Init(resolution_);
 
-	for (auto& stage : _stages)
+	for( auto& stage : stages_ )
 		stage->Init();
 
-	for (auto& view : _views)
+	for( auto& view : views_ )
 		view->Init();
 }
 
 bool RenderingPipeline::Configure(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return false;
 
-	xml::GetAttribute(properties, "horizontal_resolution", _resolution.x);
-	xml::GetAttribute(properties, "vertical_resolution", _resolution.y);
+	xml::GetAttribute(properties, "horizontal_resolution", resolution_.x);
+	xml::GetAttribute(properties, "vertical_resolution", resolution_.y);
 
 	InitTextures(properties->FirstChildElement("Textures"));
 	InitStages(properties->FirstChildElement("RenderingStages"));
@@ -95,106 +96,107 @@ bool RenderingPipeline::Configure(const xml::Element* properties)
 
 void RenderingPipeline::Cleanup()
 {
-	for (auto& view : _views)
+	for( auto& view : views_ )
 		view->Cleanup();
 
-	for (auto& stage : _stages)
+	for( auto& stage : stages_ )
 		stage->Cleanup();
 
-	for (auto& it : _textures)
+	for( auto& it : textures_ )
 		it.second->Cleanup();
 }
 
 void RenderingPipeline::SetScene(ScenePtr scene)
 {
-	_scene = scene;
+	scene_ = scene;
 
-	for (auto& stage : _stages)
-		stage->SetScene(_scene);
+	for( auto& stage : stages_ )
+		stage->SetScene(scene_);
 }
 
 std::shared_ptr<Scene> RenderingPipeline::GetScene() const
 {
-	return _scene;
+	return scene_;
 }
 
 std::shared_ptr<Camera> RenderingPipeline::GetCamera() const
 {
-	return _camera;
+	return camera_;
 }
 
 std::shared_ptr<Texture> RenderingPipeline::GetTexture(
 	const std::string& name) const
 {
-	auto it = _textures.find(name);
-	if (it != _textures.end())
+	auto it = textures_.find(name);
+	if( it != textures_.end() )
 		return it->second;
 
 	return nullptr;
 }
 std::shared_ptr<Texture> RenderingPipeline::CreateTexture(
-	const std::string& name, 
+	const std::string& name,
 	GLenum format)
 {
-	if (_textures.find(name) != _textures.end())
+	if( textures_.find(name) != textures_.end() )
 		return nullptr; // texture already exists
 
 	auto texture = std::make_shared<Texture>(GL_TEXTURE_2D, format);
-	if (_initalized)
-		texture->Init(_resolution);
+	if( initalized_ )
+		texture->Init(resolution_);
 
-	_textures.emplace(name, texture);
+	textures_.emplace(name, texture);
 	return texture;
 }
 
-std::shared_ptr<Texture> RenderingPipeline::CreateTexture(const xml::Element* properties)
+std::shared_ptr<Texture> RenderingPipeline::CreateTexture(
+	const xml::Element* properties)
 {
 	std::string name, format, target;
-	if (!xml::GetAttribute(properties, "name", name))
+	if( !xml::GetAttribute(properties, "name", name) )
 		return nullptr;
 
 	xml::GetAttribute(properties, "format", format);
-	
+
 	return CreateTexture(name, StringToTextureFormat(format));
 }
 
 RenderingPipeline::ViewPtr RenderingPipeline::CreateView(
-	const std::string& textureName)
+	const std::string& texture_name)
 {
-	TexturePtr texture = GetTexture(textureName);
-	if (!texture)
+	TexturePtr texture = GetTexture(texture_name);
+	if( !texture )
 		return nullptr;
 
-	_views.push_back(std::make_shared<TextureView>(texture));
-	if (_initalized)
-		_views.back()->Init();
+	views_.push_back(std::make_shared<TextureView>(texture));
+	if( initalized_ )
+		views_.back()->Init();
 
-	return _views.back();
+	return views_.back();
 }
 
 void RenderingPipeline::Update()
 {
-	glViewport(0, 0, _resolution.x, _resolution.y);
-	for (auto stage : _stages)
+	glViewport(0, 0, resolution_.x, resolution_.y);
+	for( auto stage : stages_ )
 		stage->DoRendering();
 }
 
 void RenderingPipeline::AddRenderingStage(RenderingStagePtr stage)
 {
-	_stages.push_back(stage);
+	stages_.push_back(stage);
 }
 
 std::vector<std::shared_ptr<TextureView>>& RenderingPipeline::GetViews()
 {
-	return _views;
+	return views_;
 }
 
 void RenderingPipeline::InitTextures(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
-	for (auto textureProperties : xml::IterateChildElements(properties, "Texture"))
+	for( auto textureProperties : xml::IterateChildElements(properties, "Texture") )
 	{
 		CreateTexture(textureProperties);
 	}
@@ -202,25 +204,25 @@ void RenderingPipeline::InitTextures(const xml::Element* properties)
 
 void RenderingPipeline::InitStages(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
-	for (auto stageProperties : xml::IterateChildElements(properties))
+	for( auto stageProperties : xml::IterateChildElements(properties) )
 	{
 		RenderingStagePtr stage =
-			_grapicSys->GetRendertingStageFactory().CreateObject(
+			grapic_system_->GetRendertingStageFactory().CreateObject(
 				stageProperties->Value(), stageProperties, this);
-		if (stage)
-			_stages.push_back(stage);
+		if( stage )
+			stages_.push_back(stage);
 	}
 }
 
 void RenderingPipeline::InitViews(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
-	for (auto viewProperties : xml::IterateChildElements(properties, "View"))
+	for( auto viewProperties : xml::IterateChildElements(properties, "View") )
 	{
 		std::string texture;
 		xml::GetAttribute(viewProperties, "texture", texture);
@@ -237,14 +239,14 @@ void RenderingPipeline::InitViews(const xml::Element* properties)
 
 void RenderingPipeline::InitCamera(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
 	glm::vec3 pos;
 	xml::GetAttribute(properties, "Position", "x", pos.x);
 	xml::GetAttribute(properties, "Position", "y", pos.y);
 	xml::GetAttribute(properties, "Position", "z", pos.z);
-	_camera->SetPosition(pos);
+	camera_->SetPosition(pos);
 
 	float fov = 60, ar = (4/3), near = 0.1f, far = 1000.0f;
 	xml::GetAttribute(properties, "Projection", "fild_of_view", fov);
@@ -252,7 +254,7 @@ void RenderingPipeline::InitCamera(const xml::Element* properties)
 	xml::GetAttribute(properties, "Projection", "near", near);
 	xml::GetAttribute(properties, "Projection", "far", far);
 	fov *= 3.14159265359f/180.0f;
-	_camera->SetUpProjection(fov, ar, near, far);
+	camera_->SetUpProjection(fov, ar, near, far);
 }
 
 GLenum RenderingPipeline::StringToTextureFormat(const std::string& format)
@@ -274,7 +276,7 @@ GLenum RenderingPipeline::StringToTextureFormat(const std::string& format)
 		{"GL_RGB32F", GL_RGB32F}
 	};
 	auto it = mapping.find(format);
-	if (it != mapping.end())
+	if( it != mapping.end() )
 		return it->second;
 
 	return GL_RGBA;

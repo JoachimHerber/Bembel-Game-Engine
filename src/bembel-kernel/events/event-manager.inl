@@ -34,13 +34,13 @@ inline EventChannel<EventType>* EventManager::GetChannel()
 {
 	unsigned typeID = EventType::GetEventTypeID();
 
-	if(typeID >= _channels.size())
-		_channels.resize(typeID+1);
+	if(typeID >= channels_.size())
+		channels_.resize(typeID+1);
 
-	if(!_channels[typeID])
-		_channels[typeID] = new EventChannel<EventType>();
+	if(!channels_[typeID])
+		channels_[typeID] = new EventChannel<EventType>();
 
-	return static_cast<EventChannel<EventType>*>(_channels[typeID]);
+	return static_cast<EventChannel<EventType>*>(channels_[typeID]);
 }
 
 } //end of namespace bembel

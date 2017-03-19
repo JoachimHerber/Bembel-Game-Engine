@@ -14,7 +14,8 @@
 /*============================================================================*/
 namespace bembel {
 
-const static std::string RenderingPipelineResultViewVert = R"(
+namespace {
+const static std::string kRenderingPipelineResultViewVert = R"(
 #version 330
 uniform vec4 uArea;
 
@@ -29,7 +30,7 @@ void main()
 	texCoord    = g_texCoords[gl_VertexID]*uArea.zw + uArea.xy;
 }
 )";
-const static std::string RenderingPipelineResultViewFrag = R"(
+const static std::string kRenderingPipelineResultViewFrag = R"(
 #version 330
 uniform sampler2D uColor;
 
@@ -42,11 +43,12 @@ void main()
 	fragColor = texture(uColor, texCoord);
 }
 )";
+} // anon namespace
 
-TextureView::TextureView(TexturePtr color)
-	: _color(color)
-	, _min(0,0)
-	, _max(1,1)
+TextureView::TextureView(TexturePtr texture)
+	: texture_(texture)
+	, min_(0, 0)
+	, max_(1, 1)
 {}
 
 TextureView::~TextureView()
@@ -55,36 +57,36 @@ TextureView::~TextureView()
 void TextureView::SetViewArea(
 	const glm::vec2& min, const glm::vec2& max)
 {
-	_min = min;
-	_max = max;
+	min_ = min;
+	max_ = max;
 }
 
 void TextureView::Init()
 {
-	_shader = std::make_shared<Shader>();
-	_shader->AttachShader(GL_VERTEX_SHADER,   RenderingPipelineResultViewVert);
-	_shader->AttachShader(GL_FRAGMENT_SHADER, RenderingPipelineResultViewFrag);
-	_shader->Link();
+	shader_ = std::make_shared<Shader>();
+	shader_->AttachShader(GL_VERTEX_SHADER, kRenderingPipelineResultViewVert);
+	shader_->AttachShader(GL_FRAGMENT_SHADER, kRenderingPipelineResultViewFrag);
+	shader_->Link();
 
-	_shader->Use();
-	glUniform1i(_shader->GetUniformLocation("uColor"), 0);
-	_uniform = _shader->GetUniformLocation("uArea");
+	shader_->Use();
+	glUniform1i(shader_->GetUniformLocation("uColor"), 0);
+	uniform_ = shader_->GetUniformLocation("uArea");
 	glUseProgram(0);
 }
 
 void TextureView::Cleanup()
 {
-	_shader.reset();
+	shader_.reset();
 }
 
 void TextureView::Draw()
 {
-	_shader->Use();
-	glUniform4f(_uniform, _min.x, _min.y, _max.x-_min.x, _max.y-_min.y);
+	shader_->Use();
+	glUniform4f(uniform_, min_.x, min_.y, max_.x-min_.x, max_.y-min_.y);
 
-	_color->Bind();
+	texture_->Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	_color->Release();
+	texture_->Release();
 
 	glUseProgram(0);
 }
@@ -92,12 +94,12 @@ void TextureView::Draw()
 
 const glm::vec2& TextureView::GetViewAreaMin() const
 {
-	return _min;
+	return min_;
 }
 
 const glm::vec2& TextureView::GetViewAreaMax() const
 {
-	return _max;
+	return max_;
 }
 
 } //end of namespace bembel

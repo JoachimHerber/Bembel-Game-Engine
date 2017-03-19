@@ -19,7 +19,7 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class BEMBEL_API GeometryModel
 {
@@ -33,7 +33,7 @@ public:
 	struct MaterialMapping
 	{
 		AssetHandle material;
-		std::string subMesh;
+		std::string sub_mesh;
 	};
 
 	AssetHandle                         GetMesh();
@@ -42,22 +42,24 @@ public:
 	const static std::string& GetTypeName();
 
 	static std::unique_ptr<GeometryModel> LoadAsset(
-		AssetManager* assetMgr, const std::string& fileName );
+		AssetManager* asset_manager, const std::string& file_name);
 	static std::unique_ptr<GeometryModel> LoadAsset(
-		AssetManager* assetMgr, const xml::Element* properties );
+		AssetManager* asset_manager, const xml::Element* properties);
 
-	static void DeleteAsset( AssetManager* assetMgr, std::unique_ptr<GeometryModel> );
+	static void DeleteAsset(
+		AssetManager* asset_manager, 
+		std::unique_ptr<GeometryModel> model);
 
 private:
 	static std::unique_ptr<GeometryModel> CreateGeometryModel(
-		AssetManager* assetMgr, const xml::Element* properties );
+		AssetManager* asset_manager, const xml::Element* properties);
 
 private:
-	AssetHandle                  _mesh;
-	std::vector<MaterialMapping> _materialMapping;
+	AssetHandle                  mesh_;
+	std::vector<MaterialMapping> material_mapping_;
 };
 
-using GeometryModelContainer    = AssetContainer<GeometryModel>;
+using GeometryModelContainer = AssetContainer<GeometryModel>;
 using GeometryModelContainerPtr = std::shared_ptr<GeometryModelContainer>;
 
 

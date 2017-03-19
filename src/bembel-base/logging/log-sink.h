@@ -24,9 +24,9 @@ class BEMBEL_API LogSink
 public:
 	LogSink();
 	virtual ~LogSink();
-	
+
 	virtual void WriteMessage(const LogMessage&) = 0;
-	
+
 private:
 };
 

@@ -9,14 +9,13 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
-Texture::Texture(GLenum target, GLenum format )
-	: _target(target)
-	, _format(format)
-	, _handle(0)
-{
-}
+Texture::Texture(GLenum target, GLenum format)
+	: target_(target)
+	, format_(format)
+	, handle_(0)
+{}
 
 Texture::~Texture()
 {
@@ -24,135 +23,135 @@ Texture::~Texture()
 }
 
 void Texture::Init(
-	GLenum minFilter,
-	GLenum magFilter,
-	GLenum warpS,
-	GLenum warpT)
+	GLenum min_filter,
+	GLenum mag_filter,
+	GLenum warp_s,
+	GLenum warp_t)
 {
-	glGenTextures(1, &_handle);
-	glBindTexture(_target, _handle);
-	glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
-	glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(magFilter));
-	glTexParameteri(_target, GL_TEXTURE_WRAP_S, static_cast<GLint>(warpS));
-	glTexParameteri(_target, GL_TEXTURE_WRAP_T, static_cast<GLint>(warpT));
-	glBindTexture(_target, 0);
+	glGenTextures(1, &handle_);
+	glBindTexture(target_, handle_);
+	glTexParameteri(target_, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(min_filter));
+	glTexParameteri(target_, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mag_filter));
+	glTexParameteri(target_, GL_TEXTURE_WRAP_S, static_cast<GLint>(warp_s));
+	glTexParameteri(target_, GL_TEXTURE_WRAP_T, static_cast<GLint>(warp_t));
+	glBindTexture(target_, 0);
 }
 void Texture::Init(
 	const glm::uvec2& size,
-	GLenum minFilter,
-	GLenum magFilter,
-	GLenum warpS,
-	GLenum warpT)
+	GLenum min_filter,
+	GLenum mag_filter,
+	GLenum warp_s,
+	GLenum warp_t)
 {
-	glGenTextures(1, &_handle);
-	glBindTexture(_target, _handle);
-	glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
-	glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(magFilter));
-	glTexParameteri(_target, GL_TEXTURE_WRAP_S, static_cast<GLint>(warpS));
-	glTexParameteri(_target, GL_TEXTURE_WRAP_T, static_cast<GLint>(warpT));
-	
-	if (_format == GL_DEPTH_COMPONENT ||
-		_format == GL_DEPTH_COMPONENT16||
-		_format == GL_DEPTH_COMPONENT24||
-		_format == GL_DEPTH_COMPONENT32)
+	glGenTextures(1, &handle_);
+	glBindTexture(target_, handle_);
+	glTexParameteri(target_, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(min_filter));
+	glTexParameteri(target_, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mag_filter));
+	glTexParameteri(target_, GL_TEXTURE_WRAP_S, static_cast<GLint>(warp_s));
+	glTexParameteri(target_, GL_TEXTURE_WRAP_T, static_cast<GLint>(warp_t));
+
+	if( format_ == GL_DEPTH_COMPONENT ||
+		format_ == GL_DEPTH_COMPONENT16||
+		format_ == GL_DEPTH_COMPONENT24||
+		format_ == GL_DEPTH_COMPONENT32 )
 	{
 		glTexImage2D(
-			_target, 0, static_cast<GLint>(_format),
+			target_, 0, static_cast<GLint>(format_),
 			size.x, size.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 	}
 	else
 	{
 		glTexImage2D(
-			_target, 0, static_cast<GLint>(_format),
+			target_, 0, static_cast<GLint>(format_),
 			size.x, size.y, 0, GL_RGBA, GL_FLOAT, nullptr);
 	}
-	glBindTexture(_target, 0);
+	glBindTexture(target_, 0);
 }
 void Texture::Init(
 	const Image& image,
-	GLenum minFilter, 
-	GLenum magFilter,
-	GLenum warpS,
-	GLenum warpT)
+	GLenum min_filter,
+	GLenum mag_filter,
+	GLenum warp_s,
+	GLenum warp_t)
 {
-	glGenTextures(1, &_handle);
-	glBindTexture(_target, _handle);
-	glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
-	glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(magFilter));
-	glTexParameteri(_target, GL_TEXTURE_WRAP_S, static_cast<GLint>(warpS));
-	glTexParameteri(_target, GL_TEXTURE_WRAP_T, static_cast<GLint>(warpT));
+	glGenTextures(1, &handle_);
+	glBindTexture(target_, handle_);
+	glTexParameteri(target_, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(min_filter));
+	glTexParameteri(target_, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mag_filter));
+	glTexParameteri(target_, GL_TEXTURE_WRAP_S, static_cast<GLint>(warp_s));
+	glTexParameteri(target_, GL_TEXTURE_WRAP_T, static_cast<GLint>(warp_t));
 	glTexImage2D(
-		_target, 0, static_cast<GLint>(_format),
+		target_, 0, static_cast<GLint>(format_),
 		image.GetWidth(), image.GetHeight(), 0,
 		image.GetChannels() == 4 ? GL_RGBA : GL_RGB,
 		GL_UNSIGNED_BYTE, image.GetData()
-		);
-	glBindTexture(_target, 0);
+	);
+	glBindTexture(target_, 0);
 }
 
 void Texture::Cleanup()
 {
-	if(_handle != 0)
-		glDeleteTextures(1, &_handle);
-	_handle = 0;
+	if( handle_ != 0 )
+		glDeleteTextures(1, &handle_);
+	handle_ = 0;
 }
 void Texture::Bind() const
 {
-	glBindTexture(_target, _handle);
+	glBindTexture(target_, handle_);
 }
 void Texture::Release() const
 {
-	glBindTexture(_target, 0);
+	glBindTexture(target_, 0);
 }
 
 bool Texture::SetSize(const glm::ivec2& size)
 {
-	if (_handle == 0)
+	if( handle_ == 0 )
 		return false;
 
-	glBindTexture(_target, _handle);
+	glBindTexture(target_, handle_);
 	glTexImage2D(
-		_target, 0, static_cast<GLint>(_format),
+		target_, 0, static_cast<GLint>(format_),
 		size.x, size.y, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-	glBindTexture(_target, 0);
+	glBindTexture(target_, 0);
 	return true;
 }
 
 bool Texture::SetData(const Image& image, GLint mipMapLevel)
 {
-	if (_handle == 0)
+	if( handle_ == 0 )
 		return false;
 
-	glBindTexture(_target, _handle);
+	glBindTexture(target_, handle_);
 	glTexImage2D(
-		_target, mipMapLevel, static_cast<GLint>(_format),
+		target_, mipMapLevel, static_cast<GLint>(format_),
 		image.GetWidth(), image.GetHeight(), 0,
 		image.GetChannels() == 4 ? GL_RGBA : GL_RGB,
 		GL_UNSIGNED_BYTE, image.GetData());
-	glBindTexture(_target, 0);
+	glBindTexture(target_, 0);
 	return true;
 }
 
 GLuint Texture::GetTextureHandle() const
 {
-	return _handle;
+	return handle_;
 }
 
 GLenum Texture::GetTextureFormat() const
 {
-	return _format;
+	return format_;
 }
 
 GLenum Texture::GetTextureTarget() const
 {
-	return _target;
+	return target_;
 }
 
 const std::string& Texture::GetTypeName()
 {
-	const static std::string typeName = "Texture";
-	return typeName;
+	const static std::string type_name = "Texture";
+	return type_name;
 }
 
 // Texture* Texture::LoadeAsset(const AssetDescription& asset, AssetManager*)

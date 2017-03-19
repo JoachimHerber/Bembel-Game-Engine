@@ -11,59 +11,60 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 Shader::Shader()
-	: _programHandle(glCreateProgram())
+	: program_handle_(glCreateProgram())
 {}
 
 Shader::~Shader()
 {
-	glDeleteProgram(_programHandle);
-	for (auto it : _shaderHandles)
+	glDeleteProgram(program_handle_);
+	for( auto it : shader_handles_ )
 		glDeleteShader(it);
 }
 
 bool Shader::AttachShader(GLenum type, const std::string& source)
 {
-	GLint shaderHandle = glCreateShader(type);
+	GLint shader_handle = glCreateShader(type);
 
 	const char* c_str = source.c_str();
 	const int   length = static_cast<int>(source.length());
 
-	glShaderSource(shaderHandle, 1, &c_str, &length);
-	glCompileShader(shaderHandle);
+	glShaderSource(shader_handle, 1, &c_str, &length);
+	glCompileShader(shader_handle);
 
 	int status;
-	glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &status);
-	if (status != int(GL_TRUE))
+	glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &status);
+	if( status != int(GL_TRUE) )
 	{
-		char errorMessage[4096];
+		char error_message[4096];
 		GLsizei size;
 		glGetShaderInfoLog(
-			shaderHandle, 4096, &size, errorMessage);
+			shader_handle, 4096, &size, error_message);
 
 		BEMBEL_LOG_ERROR()
 			<< "Can't compile Shader" << std::endl
-			<< errorMessage << std::endl;
+			<< error_message << std::endl;
 
-		glDeleteShader(shaderHandle);
+		glDeleteShader(shader_handle);
 		return false;
 	}
 
-	glAttachShader(_programHandle, shaderHandle);
-	_shaderHandles.push_back(shaderHandle);
+	glAttachShader(program_handle_, shader_handle);
+	shader_handles_.push_back(shader_handle);
 	return true;
 }
 
-bool Shader::AttachShaderFromFile(GLenum type, const std::string& fileName)
+bool Shader::AttachShaderFromFile(GLenum type, const std::string& file_name)
 {
-	std::fstream file(fileName.c_str(), std::ios_base::in | std::ios_base::binary);
-	if (!file.is_open())
+	std::fstream file(
+		file_name.c_str(), std::ios_base::in | std::ios_base::binary);
+	if( !file.is_open() )
 	{
 		BEMBEL_LOG_ERROR()
 			<< "unable to find shader file "
-			<< "'" << fileName << "'"
+			<< "'" << file_name << "'"
 			<< std::endl;
 		return nullptr;
 	}
@@ -84,71 +85,72 @@ bool Shader::AttachShaderFromFile(GLenum type, const std::string& fileName)
 
 void Shader::BindAttribLocation(const std::string& name, unsigned int index)
 {
-	glBindAttribLocation(_programHandle, index, name.c_str());
+	glBindAttribLocation(program_handle_, index, name.c_str());
 }
 
 void Shader::BindFragDataLocation(const std::string& name, unsigned int index)
 {
-	glBindFragDataLocation(_programHandle, index, name.c_str());
+	glBindFragDataLocation(program_handle_, index, name.c_str());
 }
 
 bool Shader::Link()
 {
-	if (_shaderHandles.empty())
+	if( shader_handles_.empty() )
 		return false;
 
-	glLinkProgram(_programHandle);
+	glLinkProgram(program_handle_);
 
 	int status;
 	glGetProgramiv(
-		_programHandle,
+		program_handle_,
 		GL_LINK_STATUS,
 		&status
-		);
+	);
 
-	if (status == int(GL_FALSE))
+	if( status == int(GL_FALSE) )
 	{
-		GLint maxLength = 0;
-		glGetProgramiv(_programHandle, GL_INFO_LOG_LENGTH, &maxLength);
+		GLint max_length = 0;
+		glGetProgramiv(program_handle_, GL_INFO_LOG_LENGTH, &max_length);
 
-		std::string errorMessage;
-		errorMessage.resize(maxLength);
+		std::string error_message;
+		error_message.resize(max_length);
 		GLsizei size;
-		glGetProgramInfoLog(_programHandle, maxLength, &maxLength, &errorMessage[0]);
+		glGetProgramInfoLog(
+			program_handle_, max_length, &max_length, &error_message[0]);
 
 		BEMBEL_LOG_ERROR()
 			<< "Can't link ShaderProgram" << std::endl
-			<< errorMessage << std::endl;
+			<< error_message << std::endl;
 
-		_readyToUse = false;
+		ready_to_use_ = false;
 		return false;
 	}
 
-	_readyToUse = true;
+	ready_to_use_ = true;
 	return true;
 }
 
 bool Shader::Use()
 {
-	if (!_readyToUse)
+	if( !ready_to_use_ )
 		return false;
-	
-	glUseProgram(_programHandle);
+
+	glUseProgram(program_handle_);
 	return true;
 }
 
 GLint Shader::GetUniformLocation(const std::string& name) const
 {
-	auto it = _uniormLocations.find(name);
-	if (it != _uniormLocations.end())
+	auto it = uniorm_locations_.find(name);
+	if( it != uniorm_locations_.end() )
 		return it->second;
 
-	GLint location = glGetUniformLocation(_programHandle, name.c_str());
+	GLint location = glGetUniformLocation(program_handle_, name.c_str());
 
-	if (location >= 0)
+	if( location >= 0 )
 	{
 		// add location to the map for faster lookup in the future.
-		_uniormLocations.emplace(name, location);
+		uniorm_locations_.emplace(name, location);
 	}
 
 	return location;
@@ -156,14 +158,14 @@ GLint Shader::GetUniformLocation(const std::string& name) const
 
 GLuint Shader::GetUniformBlockIndex(const std::string& name) const
 {
-	return  glGetUniformBlockIndex(_programHandle, name.c_str());
+	return  glGetUniformBlockIndex(program_handle_, name.c_str());
 }
 
-GLint Shader::GetUniformBlockDataSize( GLuint index ) const
+GLint Shader::GetUniformBlockDataSize(GLuint index) const
 {
 	GLint size;
-	glGetActiveUniformBlockiv( 
-		_programHandle, index, GL_UNIFORM_BLOCK_DATA_SIZE, &size );
+	glGetActiveUniformBlockiv(
+		program_handle_, index, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
 	return size;
 }
 

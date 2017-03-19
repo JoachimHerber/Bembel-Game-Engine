@@ -40,17 +40,17 @@ public:
 
 
 private:
-	glm::vec3 _position;
-	glm::quat _oriantation;
+	glm::vec3 position_;
+	glm::quat oriantation_;
 
-	glm::mat4 _viewMatix;
-	glm::mat4 _projMatrix;
+	glm::mat4 view_matrix_;
+	glm::mat4 proj_matrix_;
 
-	glm::mat4 _inverseViewMatix;
-	glm::mat4 _inverseProjMatrix;
+	glm::mat4 inverse_view_matrix_;
+	glm::mat4 inverse_proj_matrix_;
 
 	// clipping planes in order: left, right, bottom, top, near, far
-	std::array<glm::vec4, 6> _viewFrustum;
+	std::array<glm::vec4, 6> view_frustum_;
 };
 
 } //end of namespace bembel

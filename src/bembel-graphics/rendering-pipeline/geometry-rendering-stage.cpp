@@ -21,7 +21,7 @@ namespace bembel {
 
 GeometryRenderingStage::GeometryRenderingStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, _fbo(std::make_unique<FrameBufferObject>())
+	, fbo_(std::make_unique<FrameBufferObject>())
 {}
 
 GeometryRenderingStage::~GeometryRenderingStage()
@@ -29,86 +29,85 @@ GeometryRenderingStage::~GeometryRenderingStage()
 
 void GeometryRenderingStage::SetDepthOutputTexture(const std::string& texture)
 {
-	_fbo->SetDepthAttechment(_pipline->GetTexture(texture));
+	fbo_->SetDepthAttechment(pipline_->GetTexture(texture));
 }
 
 void GeometryRenderingStage::SetColorOutputTexture(
 	unsigned index, const std::string& texture)
 {
-	_fbo->SetColorAttechment(index, _pipline->GetTexture(texture));
+	fbo_->SetColorAttechment(index, pipline_->GetTexture(texture));
 }
 
 void GeometryRenderingStage::Init()
 {
-	_fbo->Init();
+	fbo_->Init();
 }
 
 void GeometryRenderingStage::Cleanup()
 {
-	_fbo->CleanUp();
+	fbo_->CleanUp();
 }
 
 void GeometryRenderingStage::DoRendering()
 {
-	if (!_scene)
+	if( !scene_ )
 		return;
 
- 	_fbo->BeginRenderToTexture();
+	fbo_->BeginRenderToTexture();
 
 	glEnable(GL_CULL_FACE);
- 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
-
 
 	glClearColor(0.0, 0.0, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	auto cam = _pipline->GetCamera();
+	auto cam = pipline_->GetCamera();
 
-	const auto& entitis   = _scene->GetEntitys();
-// 	const auto& posComp = _positionComponents->GetComponents();
-// 	const auto& geometrys = _geometryComponents->GetComponents();
-	
-	auto& renderQueue = _pipline->GetGraphicSystem()->GetGeometryRenderQueue();
+	const auto& entitis = scene_->GetEntitys();
+	// 	const auto& posComp = _positionComponents->GetComponents();
+	// 	const auto& geometrys = _geometryComponents->GetComponents();
+
+	auto& renderQueue = pipline_->GetGraphicSystem()->GetGeometryRenderQueue();
 	renderQueue.ClearRendarData();
 
-	for (Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
+	for( Scene::EntityID entity = 0; entity < entitis.size(); ++entity )
 	{
-		if ((entitis[entity] & _geometryComponents->GetComponentMask()) == 0)
+		if( (entitis[entity] & geometry_components_->GetComponentMask()) == 0 )
 			continue;
 
 		glm::mat4 transform(
-			1, 0, 0, 0, 
-			0, 1, 0, 0, 
-			0, 0, 1, 0, 
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
 			0, 0, 0, 1);
-		if (entitis[entity] & _positionComponents->GetComponentMask())
+		if( entitis[entity] & position_components_->GetComponentMask() )
 		{
 			transform = glm::translate(
-				transform, _positionComponents->GetComponent(entity)->position);
+				transform, position_components_->GetComponent(entity)->position);
 		}
 
-		GeometryComponent* geom = _geometryComponents->GetComponent(entity);
+		GeometryComponent* geom = geometry_components_->GetComponent(entity);
 		renderQueue.AddGeometryObject(geom->model, transform);
 	}
 
 	renderQueue.SortRenderData();
-	for ( auto& renderer :_pipline->GetGraphicSystem()->GetRenderer())
+	for( auto& renderer :pipline_->GetGraphicSystem()->GetRenderer() )
 	{
 		renderer->Render(
 			cam->GetProjectionMatrix(),
 			cam->GetViewMatrix(),
 			renderQueue.GetRenderData());
 	}
- 	_fbo->EndRenderToTexture();
+	fbo_->EndRenderToTexture();
 }
 
 void GeometryRenderingStage::SetScene(ScenePtr scene)
 {
-	_scene = scene;
+	scene_ = scene;
 
-	_geometryComponents = scene->RequestComponentContainer<GeometryComponent>();
-	_positionComponents = scene->RequestComponentContainer<PositionComponent>();
+	geometry_components_ = scene->RequestComponentContainer<GeometryComponent>();
+	position_components_ = scene->RequestComponentContainer<PositionComponent>();
 }
 
 std::unique_ptr<GeometryRenderingStage> GeometryRenderingStage::CreateInstance(
@@ -117,17 +116,17 @@ std::unique_ptr<GeometryRenderingStage> GeometryRenderingStage::CreateInstance(
 {
 	auto stage = std::make_unique<GeometryRenderingStage>(pipline);
 
-	std::string textureName;
-	if (xml::GetAttribute(properties, "DepthOutput", "texture", textureName))
-		stage->SetDepthOutputTexture(textureName);
+	std::string texture_name;
+	if( xml::GetAttribute(properties, "DepthOutput", "texture", texture_name) )
+		stage->SetDepthOutputTexture(texture_name);
 
-	for (auto colorOutput : xml::IterateChildElements(properties, "ColorOutput"))
+	for( auto colorOutput : xml::IterateChildElements(properties, "ColorOutput") )
 	{
 		unsigned attachment;
-		if (xml::GetAttribute(colorOutput, "texture", textureName) &&
-			xml::GetAttribute(colorOutput, "attachment", attachment))
+		if( xml::GetAttribute(colorOutput, "texture", texture_name) &&
+			xml::GetAttribute(colorOutput, "attachment", attachment) )
 		{
-			stage->SetColorOutputTexture(attachment, textureName);
+			stage->SetColorOutputTexture(attachment, texture_name);
 		}
 	}
 

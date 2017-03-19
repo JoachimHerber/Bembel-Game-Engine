@@ -39,10 +39,10 @@ protected:
 	virtual void Update(double timeDelta) = 0;
 
 protected:
-	std::unique_ptr<Kernel> _kernel;
+	std::unique_ptr<Kernel> kernel_;
 
 private:
-	bool _quite;
+	bool quite_;
 };
 
 } //end of namespace bembel

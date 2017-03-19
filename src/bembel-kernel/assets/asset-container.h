@@ -16,7 +16,7 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class AssetContainerBase
 {
@@ -26,7 +26,7 @@ public:
 	virtual ~AssetContainerBase()
 	{};
 
-	virtual bool IsHandelValid( AssetHandle handle ) = 0;
+	virtual bool IsHandelValid(AssetHandle handle) = 0;
 
 	virtual int GetAssetRefCount(AssetHandle handle) = 0;
 	virtual void IncrementAssetRefCount(AssetHandle) = 0;
@@ -44,9 +44,9 @@ public:
 
 	/**
 	 * Adds an asset container to the container.
-	 * @param[in] asset 
+	 * @param[in] asset
 	 *	The asset that should be added to the container.
-	 * @return 
+	 * @return
 	 *	A handle that can be used to retrieve the asset.
 	 */
 	AssetHandle AddAsset(AssetPtr asset);
@@ -100,7 +100,7 @@ public:
 	/**
 	 * Returns the asset specified by the handle or a dummy asset if the specified handle is infalid;
 	 */
-	AssetType* GetAsset(AssetHandle handle, bool returnDummyIfHandleInvalid = true);
+	AssetType* GetAsset(AssetHandle handle, bool return_dummy_if_handle_invalid = true);
 
 	/**
 	* Return the reference count for the asset specified by the handle.
@@ -118,12 +118,12 @@ public:
 	void DecrementAssetRefCount(AssetHandle handle) override;
 
 	/**
-	 * Fills the specified vector with handles to all assets contained in this container. 
+	 * Fills the specified vector with handles to all assets contained in this container.
 	 */
 	void GetAssets(std::vector<AssetHandle>& asset);
 
 	/**
-	 * Fills the specified vector with handles to all assets contained 
+	 * Fills the specified vector with handles to all assets contained
 	 * in this container for which the reference count is zero.
 	 */
 	void GetUnusedAssets(std::vector<AssetHandle>& asset);
@@ -139,21 +139,18 @@ protected:
 	{
 		AssetPtr asset;
 		uint32_t generation;
-		uint32_t refCount;
+		uint32_t reference_count;
 	};
 
-	uint16_t _assetTypeId;
+	uint16_t asset_type_id_;
 
-	std::map<std::string, AssetHandle> _assetAliasses;
+	std::map<std::string, AssetHandle> asset_aliasses_;
 
-	std::vector<AssetData> _assets;
-	std::stack<unsigned>   _unusedIds;
+	std::vector<AssetData> assets_;
+	std::stack<unsigned>   unused_ids_;
 
-	AssetHandle _dummyAsset;
+	AssetHandle dummy_asset_;
 };
-
-template<typename T>
-using AssetContainerPtr = std::shared_ptr<AssetContainer<T>>;
 
 } //end of namespace bembel
 /*============================================================================*/

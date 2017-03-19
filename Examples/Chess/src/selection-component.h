@@ -28,9 +28,9 @@ struct SelectionComponent
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(
-		SelectionComponent&,
+		bembel::AssetManager*,
 		const bembel::xml::Element*,
-		bembel::AssetManager*);
+		SelectionComponent*);
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

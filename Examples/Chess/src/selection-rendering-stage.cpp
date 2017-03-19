@@ -60,11 +60,11 @@ void SelectionRenderingStage::SetShader(ShaderPtr shader)
 
 void SelectionRenderingStage::SetDepthOutputTexture(const std::string& texture)
 {
-	_fbo->SetDepthAttechment(_pipline->GetTexture(texture));
+	_fbo->SetDepthAttechment(pipline_->GetTexture(texture));
 }
 void SelectionRenderingStage::SetColorOutputTexture(const std::string& texture)
 {
-	_fbo->SetColorAttechment(0, _pipline->GetTexture(texture));
+	_fbo->SetColorAttechment(0, pipline_->GetTexture(texture));
 }
 void SelectionRenderingStage::Init()
 {
@@ -82,8 +82,8 @@ void SelectionRenderingStage::DoRendering()
  		return;
  
  	_fbo->BeginRenderToTexture();
-	glm::mat4 proj = _pipline->GetCamera()->GetProjectionMatrix();
-	glm::mat4 view = _pipline->GetCamera()->GetViewMatrix();
+	glm::mat4 proj = pipline_->GetCamera()->GetProjectionMatrix();
+	glm::mat4 view = pipline_->GetCamera()->GetViewMatrix();
 
  	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -142,7 +142,7 @@ void SelectionRenderingStage::DoRendering()
 		for (auto& mapping : it.model->GetMateialMapping())
 		{
 			unsigned first, count;
-			if (currentMesh->GetSubMesh(mapping.subMesh, first, count))
+			if (currentMesh->GetSubMesh(mapping.sub_mesh, first, count))
 			{
 				glDrawElements(
 					GL_TRIANGLES,
@@ -216,7 +216,7 @@ std::shared_ptr<bembel::Shader> SelectionRenderingStage::CreateShader(
 void SelectionRenderingStage::GetHiglightedObjects(
 	std::vector<GeometryObject>& objects)
 {
-	glm::vec3 camPos = _pipline->GetCamera()->GetPosition();
+	glm::vec3 camPos = pipline_->GetCamera()->GetPosition();
 
 	const auto& entitis = _scene->GetEntitys();
 

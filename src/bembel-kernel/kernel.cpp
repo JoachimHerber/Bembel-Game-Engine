@@ -21,8 +21,8 @@
 namespace bembel{
 
 Kernel::Kernel()
-	: _eventMgr(std::make_unique<EventManager>())
-	, _assetMgr(std::make_unique<AssetManager>())
+	: event_manager_(std::make_unique<EventManager>())
+	, asset_manager_(std::make_unique<AssetManager>())
 {
 	if( glfwInit() == GL_FALSE )
 	{
@@ -30,50 +30,50 @@ Kernel::Kernel()
 		throw std::exception();
 	}
 
-	_displayMgr = std::make_unique<DisplayManager>(this);
+	display_manager_ = std::make_unique<DisplayManager>(this);
 }
 
 Kernel::~Kernel()
 {
-	_displayMgr.reset();
+	display_manager_.reset();
 
 	glfwTerminate();
 }
 
 EventManager* Kernel::GetEventManager() const
 {
-	return _eventMgr.get();
+	return event_manager_.get();
 }
 
 AssetManager* Kernel::GetAssetManager() const
 {
-	return _assetMgr.get();
+	return asset_manager_.get();
 }
 
 DisplayManager* Kernel::GetDisplayManager() const
 {
-	return _displayMgr.get();
+	return display_manager_.get();
 }
 
 bool Kernel::RemoveSystem(const std::string& name)
 {
-	auto it = _systemMapping.find(name);
-	if (it == _systemMapping.end())
+	auto it = system_mapping_.find(name);
+	if (it == system_mapping_.end())
 	{
 		BEMBEL_LOG_WARNING() << "Unknown system '" << name << "'." << std::endl;
 		return false;
 	}
 
-	_systems[it->second].reset();
-	_systemMapping.erase(it);
+	systems_[it->second].reset();
+	system_mapping_.erase(it);
 	return true;
 }
 
 System* Kernel::GetSystem(const std::string& name)
 {
-	auto it = _systemMapping.find(name);
-	if (it != _systemMapping.end())
-		return _systems[it->second].get();
+	auto it = system_mapping_.find(name);
+	if (it != system_mapping_.end())
+		return systems_[it->second].get();
 
 	BEMBEL_LOG_WARNING() << "Unknown system '" << name << "'." << std::endl;
 	return nullptr;
@@ -81,7 +81,7 @@ System* Kernel::GetSystem(const std::string& name)
 
 bool Kernel::InitSystems()
 {
-	for (auto& system : _systems)
+	for (auto& system : systems_)
 	{
 		if (!system->Init())
 			return false;
@@ -89,23 +89,23 @@ bool Kernel::InitSystems()
 	return true;
 }
 
-void Kernel::UpdateSystems(double timeSinceLastUpdate)
+void Kernel::UpdateSystems(double time_since_last_update)
 {
-	for (auto& system : _systems)
-		system->Update(timeSinceLastUpdate);
+	for (auto& system : systems_)
+		system->Update(time_since_last_update);
 }
 void Kernel::ShutdownSystems()
 {
-	for (auto& system : _systems)
+	for (auto& system : systems_)
 		system->Shutdown();
 }
-bool Kernel::LoadSetting(const std::string& configFileName)
+bool Kernel::LoadSetting(const std::string& config_file_name)
 {
 	xml::Document doc;
-	if (doc.LoadFile(configFileName.c_str()) != tinyxml2::XML_SUCCESS)
+	if (doc.LoadFile(config_file_name.c_str()) != tinyxml2::XML_SUCCESS)
 	{
 		BEMBEL_LOG_ERROR()
-			<< "Failed to lode file '" << configFileName << "'\n"
+			<< "Failed to lode file '" << config_file_name << "'\n"
 			<< doc.ErrorName() << std::endl;
 		return false;
 	}
@@ -116,17 +116,17 @@ bool Kernel::LoadSetting(const std::string& configFileName)
 
 	const xml::Element* display = root->FirstChildElement("Display");
 	if (display)
-		_displayMgr->CreateWindows(display);
+		display_manager_->CreateWindows(display);
 
 	const xml::Element* systems = root->FirstChildElement("Systems");
 	if (systems)
 	{
-		for (auto& system : _systems)
+		for (auto& system : systems_)
 		{
-			const xml::Element* systemConfig =
+			const xml::Element* system_config =
 				systems->FirstChildElement(system->GetName().c_str());
 
-			if (!system->Configure(systemConfig))
+			if (!system->Configure(system_config))
 				return false;
 		}
 	}

@@ -14,8 +14,8 @@
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
-namespace bembel{
-namespace conversion{
+namespace bembel {
+namespace conversion {
 
 BEMBEL_API bool FromString(const std::string&, glm::vec2&);
 BEMBEL_API bool FromString(const std::string&, glm::vec3&);
@@ -31,7 +31,7 @@ bool FromString(const std::string& str, T& value)
 	std::istringstream ss(str);
 	ss >> value;
 	char c;
-	if (ss.fail() || ss.bad() || ss.get(c))
+	if( ss.fail() || ss.bad() || ss.get(c) )
 		return false;
 	return true;
 }

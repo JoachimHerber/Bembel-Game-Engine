@@ -40,13 +40,13 @@ private:
 
 	struct HandlerAdapter
 	{	
-		void*                eventHandler;
-		ForwardEventFunction forwardEvent;
+		void*                event_handler;
+		ForwardEventFunction forward_event_function;
 	};
 
-	std::vector<HandlerAdapter> _handler;
+	std::vector<HandlerAdapter> event_handler_;
 
-	std::mutex _mutex;
+	std::mutex mutex_;
 };
 
 } //end of namespace bembel

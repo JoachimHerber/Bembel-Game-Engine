@@ -9,115 +9,121 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 int WindowDisplayMode::GetWidth() const
 {
-	return _width;
+	return width_;
 }
 void WindowDisplayMode::SetWidth(int value)
 {
-	_width = value;
+	width_ = value;
 }
 
 int WindowDisplayMode::GetHeight() const
 {
-	return _height;
+	return height_;
 }
 void WindowDisplayMode::SetHeight(int value)
 {
-	_height = value;
+	height_ = value;
 }
 
 bool WindowDisplayMode::GetIsResizable() const
 {
-	return _resizable;
+	return resizable_;
 }
 void WindowDisplayMode::SetIsResizable(bool value)
 {
-	_resizable = value;
+	resizable_ = value;
 }
 
 GLFWwindow* WindowDisplayMode::CreatWindow(
-	const std::string& title, 
-	GLFWwindow* sharedContext)
+	const std::string& title,
+	GLFWwindow* shared_context)
 {
 	glfwDefaultWindowHints();
 
-	glfwWindowHint(GLFW_RESIZABLE, _resizable);
+	glfwWindowHint(GLFW_RESIZABLE, resizable_);
 
-	GLFWwindow* window =  glfwCreateWindow(
-		_width, _height, title.c_str(), nullptr, sharedContext);
+	GLFWwindow* window = glfwCreateWindow(
+		width_, height_, title.c_str(), nullptr, shared_context);
 
-	if(_limitSize)
-		glfwSetWindowSizeLimits(window, _minSize.x, _minSize.y, _maxSize.x, _maxSize.y);
+	if( limit_size_ )
+	{
+		glfwSetWindowSizeLimits(
+			window, min_size_.x, min_size_.y, max_size_.x, max_size_.y);
+	}
 
-	if (_aspectRatioNumer!=0 && _aspectRatioDenom !=0)
-		glfwSetWindowAspectRatio(window, _aspectRatioNumer, _aspectRatioDenom);
+	if( aspect_ratio_numer_!=0 && aspect_ratio_denom_ !=0 )
+	{
+		glfwSetWindowAspectRatio(
+			window, aspect_ratio_numer_, aspect_ratio_denom_);
+	}
 
 	return window;
 }
 
-std::unique_ptr<WindowDisplayMode> 
-	WindowDisplayMode::CreateInstance(const xml::Element* properties)
+std::unique_ptr<WindowDisplayMode>
+WindowDisplayMode::CreateInstance(const xml::Element* properties)
 {
 	auto mode = std::make_unique<WindowDisplayMode>();
-	
-	xml::GetAttribute(properties, "Size", "width",  mode->_width);
-	xml::GetAttribute(properties, "Size", "height", mode->_height);
-	xml::GetAttribute(properties, "resizable", mode->_resizable);
-	if( xml::GetAttribute(properties, "SizeLimit", "min_width",  mode->_minSize.x) &&
-	    xml::GetAttribute(properties, "SizeLimit", "min_height", mode->_minSize.y) &&
-	    xml::GetAttribute(properties,  "SizeLimit", "max_width",  mode->_minSize.x) &&
-	    xml::GetAttribute(properties,  "SizeLimit", "max_height", mode->_minSize.y) )
+
+	xml::GetAttribute(properties, "Size", "width", mode->width_);
+	xml::GetAttribute(properties, "Size", "height", mode->height_);
+	xml::GetAttribute(properties, "resizable", mode->resizable_);
+	if( xml::GetAttribute(properties, "SizeLimit", "min_width", mode->min_size_.x) &&
+		xml::GetAttribute(properties, "SizeLimit", "min_height", mode->min_size_.y) &&
+		xml::GetAttribute(properties, "SizeLimit", "max_width", mode->min_size_.x) &&
+		xml::GetAttribute(properties, "SizeLimit", "max_height", mode->min_size_.y) )
 	{
-		mode->_limitSize = true;
+		mode->limit_size_ = true;
 	}
-	xml::GetAttribute(properties, "AspectRatio", "numerator", mode->_aspectRatioNumer);
-	xml::GetAttribute(properties, "AspectRatio", "denominator", mode->_aspectRatioDenom);
+	xml::GetAttribute(properties, "AspectRatio", "numerator", mode->aspect_ratio_numer_);
+	xml::GetAttribute(properties, "AspectRatio", "denominator", mode->aspect_ratio_denom_);
 
 	return std::move(mode);
 }
 
 const std::string& WindowDisplayMode::GetTypeName()
 {
-	const static std::string typeName = "WindowDisplayMode";
-	return typeName;
+	const static std::string type_name = "WindowDisplayMode";
+	return type_name;
 }
 
 FullscreenDisplayMode::FullscreenDisplayMode()
 {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-	_resolution.x = mode->width;
-	_resolution.y = mode->height;
+	resolution_.x = mode->width;
+	resolution_.y = mode->height;
 
-	_refreshRate = mode->refreshRate;
+	refresh_rate_ = mode->refreshRate;
 }
 
 glm::ivec2 FullscreenDisplayMode::GetResolution() const
 {
-	return _resolution;
+	return resolution_;
 }
 
 void FullscreenDisplayMode::SetResolution(glm::ivec2 val)
 {
-	_resolution = val;
+	resolution_ = val;
 }
 
 int FullscreenDisplayMode::GetRefreshRate() const
 {
-	return _refreshRate;
+	return refresh_rate_;
 }
 
 void FullscreenDisplayMode::SetRefreshRate(int val)
 {
-	_refreshRate = val;
+	refresh_rate_ = val;
 }
 
 GLFWwindow* FullscreenDisplayMode::CreatWindow(
 	const std::string& title,
-	GLFWwindow* sharedContext)
+	GLFWwindow* shared_context)
 {
 	glfwDefaultWindowHints();
 
@@ -125,19 +131,19 @@ GLFWwindow* FullscreenDisplayMode::CreatWindow(
 	glfwWindowHint(GLFW_GREEN_BITS, 8);
 	glfwWindowHint(GLFW_BLUE_BITS, 8);
 	glfwWindowHint(GLFW_ALPHA_BITS, 8);
-	glfwWindowHint(GLFW_REFRESH_RATE, _refreshRate);
+	glfwWindowHint(GLFW_REFRESH_RATE, refresh_rate_);
 
 	return glfwCreateWindow(
-		_resolution.x,
-		_resolution.y, 
-		title.c_str(), 
-		glfwGetPrimaryMonitor(), 
-		sharedContext
+		resolution_.x,
+		resolution_.y,
+		title.c_str(),
+		glfwGetPrimaryMonitor(),
+		shared_context
 	);
 }
 
-std::unique_ptr<FullscreenDisplayMode> 
-	FullscreenDisplayMode::CreateInstance(const xml::Element* properties)
+std::unique_ptr<FullscreenDisplayMode>
+FullscreenDisplayMode::CreateInstance(const xml::Element* properties)
 {
 	auto mode = std::make_unique<FullscreenDisplayMode>();
 
@@ -146,8 +152,8 @@ std::unique_ptr<FullscreenDisplayMode>
 
 const std::string& FullscreenDisplayMode::GetTypeName()
 {
-	const static std::string typeName = "FullscreenDisplayMode";
-	return typeName;
+	const static std::string type_name = "FullscreenDisplayMode";
+	return type_name;
 }
 
 } //end of namespace bembel

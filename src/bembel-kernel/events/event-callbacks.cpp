@@ -14,8 +14,8 @@
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
 /*============================================================================*/
-namespace bembel{
-namespace glfw_callbacks{
+namespace bembel {
+namespace glfw_callbacks {
 Window* GetWindow(GLFWwindow* glfw)
 {
 	return static_cast<Window*>(glfwGetWindowUserPointer(glfw));
@@ -23,139 +23,157 @@ Window* GetWindow(GLFWwindow* glfw)
 
 void WindowPositionCallback(GLFWwindow* glfw, int x, int y)
 {
-	auto window   = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto window = GetWindow(glfw);
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(WindowMovedEvent{window, glm::vec2(x, y)});
+	event_manager->Broadcast(WindowMovedEvent{window, glm::vec2(x, y)});
 }
 void WindowSizeCallback(GLFWwindow* glfw, int w, int h)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(WindowResizeEvent{window, glm::vec2(w, h)});
+	event_manager->Broadcast(WindowResizeEvent{window, glm::vec2(w, h)});
 }
 void WindowCloseCallback(GLFWwindow* glfw)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(WindowShouldCloseEvent{window});
+	event_manager->Broadcast(WindowShouldCloseEvent{window});
 }
 void WindowRefreshCallback(GLFWwindow* glfw)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 	// currently unused
 }
 void WindowFocusCallback(GLFWwindow* glfw, int focused)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	if (focused)
-		eventMgr->Broadcast(WindowGainedFocusEvent{window});
+	if( focused )
+		event_manager->Broadcast(WindowGainedFocusEvent{window});
 	else
-		eventMgr->Broadcast(WindowLostFocusEvent{window});
+		event_manager->Broadcast(WindowLostFocusEvent{window});
 }
 void WindowIconifyCallback(GLFWwindow* glfw, int iconified)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	if (iconified)
-		eventMgr->Broadcast(WindowIconifyedEvent{window});
+	if( iconified )
+		event_manager->Broadcast(WindowIconifyedEvent{window});
 	else
-		eventMgr->Broadcast(WindowRestoredEvent{window});
+		event_manager->Broadcast(WindowRestoredEvent{window});
 }
 
 void FramebufferSizeCallback(GLFWwindow* glfw, int w, int h)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(FrameBufferResizeEvent{window, glm::vec2(w, h)});
+	event_manager->Broadcast(FrameBufferResizeEvent{window, glm::vec2(w, h)});
 }
 
 void KeyCallback(GLFWwindow* glfw, int keyID, int scancode, int action, int mods)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
-	if (action == GLFW_PRESS)
-		eventMgr->Broadcast(KeyPressEvent{window, keyID, scancode, mods});
-	else if (action == GLFW_REPEAT)
-		eventMgr->Broadcast(KeyRepeatEvent{window, keyID, scancode, mods});
-	else if (action == GLFW_RELEASE)
-		eventMgr->Broadcast(KeyReleaseEvent{window, keyID, scancode, mods});
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
+
+	if( action == GLFW_PRESS )
+		event_manager->Broadcast(KeyPressEvent{window, keyID, scancode, mods});
+	else if( action == GLFW_REPEAT )
+		event_manager->Broadcast(KeyRepeatEvent{window, keyID, scancode, mods});
+	else if( action == GLFW_RELEASE )
+		event_manager->Broadcast(KeyReleaseEvent{window, keyID, scancode, mods});
 }
 
 void CharCallback(GLFWwindow* glfw, unsigned int c)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(TextInputEvent{window, c});
+	event_manager->Broadcast(TextInputEvent{window, c});
 }
 void CharModsCallback(GLFWwindow* glfw, unsigned int c, int mods)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 	// currently unused
 }
 
 void MouseButtonCallback(GLFWwindow* glfw, int buttonID, int action, int mods)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	if (action == GLFW_PRESS)
-		eventMgr->Broadcast(MouseButtonPressEvent{window, buttonID, mods});
-	else if (action == GLFW_REPEAT)
-		eventMgr->Broadcast(MouseButtonRepeatEvent{window, buttonID, mods});
-	else if (action == GLFW_RELEASE)
-		eventMgr->Broadcast(MouseButtonReleaseEvent{window, buttonID, mods});
+	if( action == GLFW_PRESS )
+		event_manager->Broadcast(MouseButtonPressEvent{window, buttonID, mods});
+	else if( action == GLFW_REPEAT )
+		event_manager->Broadcast(MouseButtonRepeatEvent{window, buttonID, mods});
+	else if( action == GLFW_RELEASE )
+		event_manager->Broadcast(MouseButtonReleaseEvent{window, buttonID, mods});
 }
 
 void CursorPositionCallback(GLFWwindow* glfw, double x, double y)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(CursorMovedEvent{window, glm::vec2(x, y)});
+	event_manager->Broadcast(CursorMovedEvent{window, glm::vec2(x, y)});
 }
 void CursorEnterCallback(GLFWwindow* glfw, int entered)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	if (entered)
-		eventMgr->Broadcast(CursorEnteredEvent{window});
+	if( entered )
+		event_manager->Broadcast(CursorEnteredEvent{window});
 	else
-		eventMgr->Broadcast(CursorLeftEvent{window});
+		event_manager->Broadcast(CursorLeftEvent{window});
 }
 
 void ScrollCallback(GLFWwindow* glfw, double x, double y)
 {
 	auto window = GetWindow(glfw);
-	auto eventMgr = window->GetDisplayManager()->GetKernel()->GetEventManager();
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
 
-	eventMgr->Broadcast(ScrollEvent{window, x, y});
+	event_manager->Broadcast(ScrollEvent{window, x, y});
 }
 
 void DropCallback(GLFWwindow* glfw, int count, const char** files)
 {
+	auto window = GetWindow(glfw);
+	auto kernel = window->GetDisplayManager()->GetKernel();
+	auto event_manager = kernel->GetEventManager();
+
 	FileDropEvent event;
 	event.window = GetWindow(glfw);
-	for (int i = 0; i<count; ++i)
+	for( int i = 0; i<count; ++i )
 		event.files.push_back(files[i]);
-
-	event.window->GetDisplayManager()->GetKernel()->GetEventManager()->Broadcast(event);
+	event_manager->Broadcast(event);
 }
 
 void MonitorCallback(GLFWmonitor* glfw, int)
 {
-// 	Window*       window = GetWindow(glfw);
-// 	EventManager* eventMgr = window->GetKernel()->GetEventManager();
+	// 	Window*       window = GetWindow(glfw);
+	// 	EventManager* eventMgr = window->GetKernel()->GetEventManager();
 }
 
 } //end of namespace glfw_callbacks

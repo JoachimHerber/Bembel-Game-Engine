@@ -11,42 +11,42 @@
 namespace bembel {
 
 LogMessage::LogMessage(
-		Logger* logger, 
-		const std::string& file, 
-		unsigned int line)
-	: _logger(logger)
-	, _file(file)
-	, _line(line)
+	Logger* logger,
+	const std::string& file,
+	unsigned int line)
+	: logger_(logger)
+	, file_(file)
+	, line_(line)
 {}
 
 LogMessage::LogMessage(LogMessage&& other)
-	: _logger(std::move(other._logger))
-	, _file(std::move(other._file))
-	, _function(std::move(other._function))
-	, _line(std::move(other._line))
-	, _buffer(std::move(other._buffer))
+	: logger_(std::move(other.logger_))
+	, file_(std::move(other.file_))
+	, function_(std::move(other.function_))
+	, line_(std::move(other.line_))
+	, buffer_(std::move(other.buffer_))
 {
-	other._logger = nullptr;
+	other.logger_ = nullptr;
 }
 
 LogMessage::~LogMessage()
 {
-	_logger->Flush(*this);
+	logger_->Flush(*this);
 }
 
 const std::string& LogMessage::GetFile() const
 {
-	return _file;
+	return file_;
 }
 
 unsigned int LogMessage::GetLine() const
 {
-	return _line;
+	return line_;
 }
 
 std::string LogMessage::GetDescription() const
 {
-	return _buffer.str();
+	return buffer_.str();
 }
 
 } //end of namespace bembel

@@ -31,9 +31,9 @@ public:
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(
-		GeometryComponent&,
-		const xml::Element*,
-		AssetManager*);
+		AssetManager* asset_manager,
+		const xml::Element* properties,
+		GeometryComponent* geometry_component);
 };
 
 } //end of namespace bembel

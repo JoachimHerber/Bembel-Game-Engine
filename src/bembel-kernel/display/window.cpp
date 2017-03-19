@@ -16,13 +16,13 @@
 /*============================================================================*/
 /* IMPLEMENTATION			                                                  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
-Window::Window(DisplayManager* displaySys, unsigned id)
-	: _displaySys(displaySys)
-	, _windowImp(nullptr)
-	, _displayMode(std::make_shared<WindowDisplayMode>())
-	, _windowID(id)
+Window::Window(DisplayManager* display_system, unsigned id)
+	: display_system_(display_system)
+	, window_imp_(nullptr)
+	, display_mode_(std::make_shared<WindowDisplayMode>())
+	, window_id_(id)
 {}
 
 Window::~Window()
@@ -32,114 +32,115 @@ Window::~Window()
 
 void Window::Open(const std::string& titel)
 {
-	if (_windowImp)
+	if( window_imp_ )
 		return; // window already opend;
 
-	_windowImp = _displayMode->CreatWindow(titel, nullptr);
+	window_imp_ = display_mode_->CreatWindow(titel, nullptr);
 	glbinding::Binding::initialize();
 
-	_displaySys->OnWindowOpend(this);
+	display_system_->OnWindowOpend(this);
 
 	MakeContextCurent();
 	glEnable(GL_FRAMEBUFFER_SRGB);
 }
+
 void Window::Close()
 {
-	if (!_windowImp)
+	if( !window_imp_ )
 		return; // window is not opend;
 
-	_displaySys->OnWindowClosed(this);
+	display_system_->OnWindowClosed(this);
 
-	glfwDestroyWindow(_windowImp);
-	_windowImp = nullptr;
+	glfwDestroyWindow(window_imp_);
+	window_imp_ = nullptr;
 }
 
 unsigned Window::GetWindowID() const
 {
-	return _windowID;
+	return window_id_;
 }
 
 DisplayManager* Window::GetDisplayManager() const
 {
-	return _displaySys;
+	return display_system_;
 }
 
 GLFWwindow* Window::GetGlfwWindow() const
 {
-	return _windowImp;
+	return window_imp_;
 }
 
 bool Window::GetShouldClose() const
 {
-	if (!_windowImp)
+	if( !window_imp_ )
 		return false;
 
-	return int(GL_TRUE) == glfwWindowShouldClose(_windowImp);
+	return int(GL_TRUE) == glfwWindowShouldClose(window_imp_);
 }
 
-bool Window::SetShouldClose(bool bShouldClose)
+bool Window::SetShouldClose(bool should_close)
 {
-	if (!_windowImp)
+	if( !window_imp_ )
 		return false;
 
-	glfwSetWindowShouldClose(_windowImp, bShouldClose);
+	glfwSetWindowShouldClose(window_imp_, should_close);
 	return true;
 }
 
 glm::ivec2 Window::GetWindowSize() const
 {
 	glm::ivec2 size;
-	glfwGetWindowSize(_windowImp, &size.x, &size.y);
+	glfwGetWindowSize(window_imp_, &size.x, &size.y);
 	return size;
 }
 
 glm::ivec2 Window::GetFrameBufferSize() const
 {
 	glm::ivec2 size;
-	glfwGetFramebufferSize(_windowImp, &size.x, &size.y);
+	glfwGetFramebufferSize(window_imp_, &size.x, &size.y);
 	return size;
 }
 
 bool Window::SetIconify(bool b)
 {
-	if (b)
-		glfwIconifyWindow(_windowImp);
+	if( b )
+		glfwIconifyWindow(window_imp_);
 	else
-		glfwRestoreWindow(_windowImp);
+		glfwRestoreWindow(window_imp_);
 
 	return true;
 }
 
 bool Window::SetVisible(bool b)
 {
-	if (b)
-		glfwShowWindow(_windowImp);
+	if( b )
+		glfwShowWindow(window_imp_);
 	else
-		glfwHideWindow(_windowImp);
+		glfwHideWindow(window_imp_);
 	return true;
 }
 
 std::shared_ptr<DisplayModeBase> Window::GetDisplayMode() const
 {
-	return _displayMode;
+	return display_mode_;
 }
 
 void Window::SetDisplayMode(std::shared_ptr<DisplayModeBase> val)
 {
-	_displayMode = val;
+	display_mode_ = val;
 }
 
 void Window::Init(const xml::Element* properties)
 {
-	if (!properties)
+	if( !properties )
 		return;
 
 	std::string mode;
 	auto* dispMode = properties->FirstChildElement("DisplayMode");
-	if (xml::GetAttribute(dispMode, "mode", mode) )
+	if( xml::GetAttribute(dispMode, "mode", mode) )
 	{
-		_displayMode = 
-			_displaySys->GetDisplayModeFactory().CreateObject(mode, dispMode);
+		display_mode_ =
+			display_system_->GetDisplayModeFactory().CreateObject(mode, dispMode);
 	}
 
 	std::string title = "Bembel";
@@ -149,18 +150,18 @@ void Window::Init(const xml::Element* properties)
 
 bool Window::IsOpend()
 {
-	return _windowImp != nullptr;
+	return window_imp_ != nullptr;
 }
 
 void Window::MakeContextCurent()
 {
-	glfwMakeContextCurrent(_windowImp);
+	glfwMakeContextCurrent(window_imp_);
 	glbinding::Binding::useCurrentContext();
 }
 
 void Window::SwapBuffers()
 {
-	glfwSwapBuffers(_windowImp);
+	glfwSwapBuffers(window_imp_);
 }
 
 } //end of namespace bembel

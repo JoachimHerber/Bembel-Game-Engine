@@ -16,15 +16,15 @@ const std::string& SelectionComponent::GetComponentTypeName()
 }
 
 bool SelectionComponent::InitComponent(
-	SelectionComponent& comp,
+	bembel::AssetManager*,
 	const bembel::xml::Element* elem,
-	bembel::AssetManager*)
+	SelectionComponent* comp)
 {
 	bool b;
 	if ( bembel::xml::GetAttribute(elem, "selectable", b) && b)
-		comp.state = SELECTABLE;
+		comp->state = SELECTABLE;
 	else
-		comp.state = UNSELECTABLE;
+		comp->state = UNSELECTABLE;
 
 	return true;
 }

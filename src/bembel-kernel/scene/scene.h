@@ -18,7 +18,7 @@
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class ComponentContainerBase;
 class AssetManager;
@@ -32,15 +32,18 @@ namespace bembel {
 class BEMBEL_API Scene
 {
 public:
-	using EntityID        = size_t;
+	using EntityID = size_t;
 	using ComponentTypeID = size_t;
-	using ComponentMask   = unsigned long long;
+	using ComponentMask = unsigned long long;
 
-	enum{ INVALID_ENTITY = ~EntityID(0) };
+	enum
+	{
+		INVALID_ENTITY = ~EntityID(0)
+	};
 
 	Scene(AssetManager*);
 	Scene(const Scene&) = delete;
-	Scene& operator=( const Scene& ) = delete;
+	Scene& operator=(const Scene&) = delete;
 	~Scene();
 
 	template<class ComponentType>
@@ -53,128 +56,128 @@ public:
 	EntityID CreateEntity(const xml::Element*);
 	bool DeleteEntity(EntityID);
 
-	bool LoadScene(const std::string& fileName);
+	bool LoadScene(const std::string& file_name);
 
 	template<class ComponentType>
 	ComponentType* CreateComponent(EntityID id);
-	
+
 	template<class ComponentType>
 	ComponentType* GetComponent(EntityID id);
 
 	const std::vector<ComponentMask>& GetEntitys() const;
 
 	template<typename AssetType>
-	AssetHandle GetAssetHandle( const std::string& name );
+	AssetHandle GetAssetHandle(const std::string& name);
 
 	template<typename AssetType>
-	AssetType* GetAsset( AssetHandle handle, bool returnDummyIfHandleInvalid = true );
+	AssetType* GetAsset(AssetHandle handle, bool return_dummy_if_handle_invalid = true);
 
 	bool LoadAssets(const std::string& file);
 
 private:
-	void LoadAsset( const xml::Element* );
+	void LoadAsset(const xml::Element*);
 
 private:
 	using ContainerPtr = std::unique_ptr<ComponentContainerBase>;
 
-	std::vector<ComponentMask> _entities;
-	std::stack<EntityID>       _unusedEntityIds;
+	std::vector<ComponentMask> entities_;
+	std::stack<EntityID>       unused_entity_ids_;
 
-	std::map<std::string, ComponentTypeID> _componentTypeMap;
-	std::vector<ContainerPtr>              _container;
+	std::map<std::string, ComponentTypeID> component_type_map_;
+	std::vector<ContainerPtr>              container_;
 
-	AssetManager* _assteManager;
+	AssetManager* asste_manager_;
 
-	std::set<AssetHandle> _assets;
+	std::set<AssetHandle> assets_;
 };
 
 } //end of namespace bembel
 /*============================================================================*/
 /* INLINE IMPLEMENTATIONS													  */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 template<class ComponentType>
 inline typename ComponentType::ContainerType* Scene::RequestComponentContainer()
 {
-	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
-	if (it != _componentTypeMap.end())
+	auto it = component_type_map_.find(ComponentType::GetComponentTypeName());
+	if( it != component_type_map_.end() )
 	{
 		return static_cast<ComponentType::ContainerType*>(
-			_container[it->second].get());
+			container_[it->second].get());
 	}
-		
-	auto container = 
-		std::make_unique<ComponentType::ContainerType>(_container.size());
+
+	auto container =
+		std::make_unique<ComponentType::ContainerType>(container_.size());
 	auto container_pointer = container.get();
 
-	_componentTypeMap.emplace(
-		ComponentType::GetComponentTypeName(), _container.size());
-	_container.push_back(std::move(container));
+	component_type_map_.emplace(
+		ComponentType::GetComponentTypeName(), container_.size());
+	container_.push_back(std::move(container));
 	return container_pointer;
 }
 
 template<class ComponentType>
 inline void Scene::RegisterComponentType()
 {
-	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
-	if (it != _componentTypeMap.end())
+	auto it = component_type_map_.find(ComponentType::GetComponentTypeName());
+	if( it != component_type_map_.end() )
 		return;
 
 	auto container =
-		std::make_unique<ComponentType::ContainerType>(_container.size());
+		std::make_unique<ComponentType::ContainerType>(container_.size());
 
-	_componentTypeMap.emplace(
-		ComponentType::GetComponentTypeName(), _container.size());
-	_container.push_back(std::move(container));
+	component_type_map_.emplace(
+		ComponentType::GetComponentTypeName(), container_.size());
+	container_.push_back(std::move(container));
 }
 
 template<class ComponentType>
 ComponentType* Scene::CreateComponent(EntityID id)
 {
-	if (id >= _entities.size())
+	if( id >= entities_.size() )
 		return nullptr;
 
-	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
-	if (it == _componentTypeMap.end())
+	auto it = component_type_map_.find(ComponentType::GetComponentTypeName());
+	if( it == component_type_map_.end() )
 		return nullptr;
 
 	auto container = static_cast<ComponentType::ContainerType*>(
-		_container[it->second].get());
+		container_[it->second].get());
 
-	_entities[id] |= container->GetComponentMask();
+	entities_[id] |= container->GetComponentMask();
 	return container->CreateComponent(id);
 }
 
 template<class ComponentType>
 ComponentType* Scene::GetComponent(EntityID id)
 {
-	if (id >= _entities.size())
+	if( id >= entities_.size() )
 		return nullptr; // invalided entity id
 
-	auto it = _componentTypeMap.find(ComponentType::GetComponentTypeName());
-	if (it == _componentTypeMap.end())
+	auto it = component_type_map_.find(ComponentType::GetComponentTypeName());
+	if( it == component_type_map_.end() )
 		return nullptr; // component type does not exist
 
 	auto container = static_cast<ComponentType::ContainerType*>(
-		_container[it->second].get());
+		container_[it->second].get());
 
-	if ((_entities[id] & container->GetComponentMask()) == 0)
+	if( (entities_[id] & container->GetComponentMask()) == 0 )
 		return nullptr; // entity doesn't have a component of the requested type
 
 	return container->GetComponent(id);
 }
 
 template<typename AssetType>
-inline AssetHandle Scene::GetAssetHandle( const std::string & name )
+inline AssetHandle Scene::GetAssetHandle(const std::string & name)
 {
-	return _assteManager->GetAssetHandle<AssetType>( name );
+	return asste_manager_->GetAssetHandle<AssetType>(name);
 }
 
 template<typename AssetType>
-inline AssetType* Scene::GetAsset( AssetHandle handle, bool returnDummyIfHandleInvalid )
+inline AssetType* Scene::GetAsset(AssetHandle handle, bool returnDummyIfHandleInvalid)
 {
-	return _assteManager->GetAsset<AssetType>( handle, returnDummyIfHandleInvalid );
+	return asste_manager_->GetAsset<AssetType>(handle, returnDummyIfHandleInvalid);
 }
 
 } //end of namespace bembel

@@ -1,7 +1,7 @@
 /*============================================================================*/
 /* INLINE IMPLEMENTETION                                                      */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 template<typename ObjectType, typename ... TArgs>
 inline TFactory<ObjectType, TArgs ...>::TFactory()
@@ -13,20 +13,20 @@ inline TFactory<ObjectType, TArgs ...>::~TFactory()
 
 template<typename ObjectType, typename ... TArgs>
 inline void TFactory<ObjectType, TArgs ...>::RegisterObjectGenerator(
-	const std::string& type, ObjectGeneratorPtr generator)
+	const std::string& type, std::unique_ptr<ObjectGeneratorBase> generator)
 {
-	_generators.emplace(type, generator);
+	generators_.emplace(type, std::move(generator));
 }
 
 template<typename ObjectType, typename ... TArgs>
-inline std::unique_ptr<ObjectType> 
+inline std::unique_ptr<ObjectType>
 TFactory<ObjectType, TArgs ...>::CreateObject(
 	const std::string& type,
 	TArgs ... args) const
 {
-	auto it = _generators.find(type);
+	auto it = generators_.find(type);
 
-	if (it == _generators.end())
+	if( it == generators_.end() )
 		return nullptr;
 
 	return it->second->CreateObject(args ...);
@@ -34,7 +34,7 @@ TFactory<ObjectType, TArgs ...>::CreateObject(
 
 template<typename ObjectType, typename ... TArgs>
 template<typename T>
-inline std::unique_ptr<ObjectType> 
+inline std::unique_ptr<ObjectType>
 TFactory<ObjectType, TArgs ...>::DefaultObjectGenerator<T>::CreateObject(
 	TArgs ... args)
 {
@@ -46,8 +46,8 @@ template<typename T>
 inline void TFactory<ObjectType, TArgs ...>::RegisterDefaultObjectGenerator(
 	const std::string& type)
 {
-	_generators.emplace(
-		type, std::make_shared<DefaultObjectGenerator<T>>());
+	generators_.emplace(
+		type, std::make_unique<DefaultObjectGenerator<T>>());
 }
 
 } //end of namespace bembel
