@@ -28,9 +28,6 @@
 /*============================================================================*/
 namespace bembel {
 
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(InitGraphicResourcesEvent);
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(CleanuptGraphicResourcesEvent);
-
 GraphicSystem::GraphicSystem(Kernel* kernel)
 	: System(kernel, "Graphics")
 	, geometry_render_queue_(kernel->GetAssetManager())

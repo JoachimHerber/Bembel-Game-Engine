@@ -103,13 +103,13 @@ void CameraControle::Update( double dTime )
 
 void CameraControle::HandleEvent( const bembel::MouseButtonPressEvent& event )
 {
-	if( event.buttonID == GLFW_MOUSE_BUTTON_RIGHT )
+	if( event.button_id == GLFW_MOUSE_BUTTON_RIGHT )
 		_move = true;
 }
 
 void CameraControle::HandleEvent( const bembel::MouseButtonReleaseEvent& event )
 {
-	if( event.buttonID == GLFW_MOUSE_BUTTON_RIGHT )
+	if( event.button_id == GLFW_MOUSE_BUTTON_RIGHT )
 		_move = false;
 }
 

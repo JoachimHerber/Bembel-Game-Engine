@@ -42,16 +42,12 @@ struct BEMBEL_API ButtonPressEvent
 {
 	// the button that was pressed
 	Button* button;
-
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
 };
 
 struct BEMBEL_API ButtonReleaseEvent
 {
 	// the button that has been released
 	Button* button;
-
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
 };
 
 } //end of namespace bembel

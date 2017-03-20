@@ -63,7 +63,7 @@ void SelectionPointer::HandleEvent( const bembel::CursorMovedEvent& event )
 
 void SelectionPointer::HandleEvent( const bembel::MouseButtonPressEvent& event )
 {
-	if( event.buttonID == GLFW_MOUSE_BUTTON_LEFT )
+	if( event.button_id == GLFW_MOUSE_BUTTON_LEFT )
 		_select.Emit();
 }
 

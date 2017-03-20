@@ -63,17 +63,17 @@ void InputExample::HandleEvent(const bembel::WindowShouldCloseEvent& event)
 
 void InputExample::HandleEvent(const bembel::KeyPressEvent& event)
 {
-	std::cout << "[Key Pressed] " << event.keyID << "|" << event.scancode << std::endl;
+	std::cout << "[Key Pressed] " << event.key_id << "|" << event.scancode << std::endl;
 }
 
 void InputExample::HandleEvent(const bembel::KeyRepeatEvent& event)
 {
-	std::cout << "[Key Repeated] " << event.keyID << "|" << event.scancode << std::endl;
+	std::cout << "[Key Repeated] " << event.key_id << "|" << event.scancode << std::endl;
 }
 
 void InputExample::HandleEvent(const bembel::KeyReleaseEvent& event)
 {
-	std::cout << "[Key Released] " << event.keyID << "|" << event.scancode << std::endl;
+	std::cout << "[Key Released] " << event.key_id << "|" << event.scancode << std::endl;
 }
 
 void InputExample::HandleEvent(const bembel::TextInputEvent& event)
@@ -83,17 +83,17 @@ void InputExample::HandleEvent(const bembel::TextInputEvent& event)
 
 void InputExample::HandleEvent(const bembel::MouseButtonPressEvent& event)
 {
-	std::cout << "[Mouse Button Pressed] " << event.buttonID  << std::endl;
+	std::cout << "[Mouse Button Pressed] " << event.button_id  << std::endl;
 }
 
 void InputExample::HandleEvent(const bembel::MouseButtonRepeatEvent& event)
 {
-	std::cout << "[Mouse Button Repeated] " << event.buttonID  << std::endl;
+	std::cout << "[Mouse Button Repeated] " << event.button_id  << std::endl;
 }
 
 void InputExample::HandleEvent(const bembel::MouseButtonReleaseEvent& event)
 {
-	std::cout << "[Mouse Button Released] " << event.buttonID  << std::endl;
+	std::cout << "[Mouse Button Released] " << event.button_id  << std::endl;
 }
 
 void InputExample::HandleEvent(const bembel::CursorMovedEvent& event)

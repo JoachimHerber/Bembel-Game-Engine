@@ -80,14 +80,10 @@ private:
 };
 
 struct InitGraphicResourcesEvent
-{
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
+{};
 
 struct CleanuptGraphicResourcesEvent
-{
-	BEMBEL_EVENT_INTERVACE_DECLADRATION
-};
+{};
 
 } //end of namespace bembel
 /*============================================================================*/

@@ -44,28 +44,28 @@ Mouse::~Mouse()
 	_eventMgr->RemoveHandler<MouseButtonReleaseEvent>(this);
 }
 
-Button* Mouse::GetButton(int buttonID)
+Button* Mouse::GetButton(int button_id)
 {
-	if (buttonID < 0 || static_cast<size_t>(buttonID) >= _buttons.size())
+	if (button_id < 0 || static_cast<size_t>(button_id) >= _buttons.size())
 	{
 		BEMBEL_LOG_ERROR()
-			<< "Mouse button " << buttonID << " not supported";
+			<< "Mouse button " << button_id << " not supported";
 		return nullptr;
 	}
 
-	return _buttons[buttonID].get();
+	return _buttons[button_id].get();
 }
 
 void Mouse::HandleEvent(const MouseButtonPressEvent& event)
 {
-	auto button = GetButton(event.buttonID);
+	auto button = GetButton(event.button_id);
 	_eventMgr->Broadcast(ButtonPressEvent{button});
 	button->SetIsPressed(true);
 }
 
 void Mouse::HandleEvent(const MouseButtonReleaseEvent& event)
 {
-	auto button = GetButton(event.buttonID);
+	auto button = GetButton(event.button_id);
 	_eventMgr->Broadcast(ButtonReleaseEvent{button});
 	button->SetIsPressed(false);
 }

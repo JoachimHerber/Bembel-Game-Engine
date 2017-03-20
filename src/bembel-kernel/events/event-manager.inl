@@ -32,15 +32,12 @@ inline bool EventManager::AddHandler(EventHandlerType* handler)
 template <typename EventType>
 inline EventChannel<EventType>* EventManager::GetChannel()
 {
-	unsigned typeID = EventType::GetEventTypeID();
+	auto& channel = channels_[typeid(EventType)];
 
-	if(typeID >= channels_.size())
-		channels_.resize(typeID+1);
+	if( !channel )
+		channel = std::make_unique<EventChannel<EventType>>();
 
-	if(!channels_[typeID])
-		channels_[typeID] = new EventChannel<EventType>();
-
-	return static_cast<EventChannel<EventType>*>(channels_[typeID]);
+	return static_cast<EventChannel<EventType>*>(channel.get());
 }
 
 } //end of namespace bembel

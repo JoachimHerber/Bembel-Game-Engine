@@ -26,13 +26,13 @@ public:
 	Keyboard& operator= ( const Keyboard& ) = delete;
 	~Keyboard();
 
-	Button* GetKey(int keyID, int scancode = -1);
+	Button* GetKey(int key_id, int scancode = -1);
 
 	void HandleEvent(const KeyPressEvent&);
 	void HandleEvent(const KeyReleaseEvent&);
 
 private:
-	void InitKey( int keyID, const std::string& name );
+	void InitKey( int key_id, const std::string& name );
 
 private:
 	std::vector<std::unique_ptr<Button>>   _keys;

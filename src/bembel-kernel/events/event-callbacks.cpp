@@ -84,18 +84,18 @@ void FramebufferSizeCallback(GLFWwindow* glfw, int w, int h)
 	event_manager->Broadcast(FrameBufferResizeEvent{window, glm::vec2(w, h)});
 }
 
-void KeyCallback(GLFWwindow* glfw, int keyID, int scancode, int action, int mods)
+void KeyCallback(GLFWwindow* glfw, int key_id, int scancode, int action, int mods)
 {
 	auto window = GetWindow(glfw);
 	auto kernel = window->GetDisplayManager()->GetKernel();
 	auto event_manager = kernel->GetEventManager();
 
 	if( action == GLFW_PRESS )
-		event_manager->Broadcast(KeyPressEvent{window, keyID, scancode, mods});
+		event_manager->Broadcast(KeyPressEvent{window, key_id, scancode, mods});
 	else if( action == GLFW_REPEAT )
-		event_manager->Broadcast(KeyRepeatEvent{window, keyID, scancode, mods});
+		event_manager->Broadcast(KeyRepeatEvent{window, key_id, scancode, mods});
 	else if( action == GLFW_RELEASE )
-		event_manager->Broadcast(KeyReleaseEvent{window, keyID, scancode, mods});
+		event_manager->Broadcast(KeyReleaseEvent{window, key_id, scancode, mods});
 }
 
 void CharCallback(GLFWwindow* glfw, unsigned int c)
@@ -114,18 +114,18 @@ void CharModsCallback(GLFWwindow* glfw, unsigned int c, int mods)
 	// currently unused
 }
 
-void MouseButtonCallback(GLFWwindow* glfw, int buttonID, int action, int mods)
+void MouseButtonCallback(GLFWwindow* glfw, int button_id, int action, int mods)
 {
 	auto window = GetWindow(glfw);
 	auto kernel = window->GetDisplayManager()->GetKernel();
 	auto event_manager = kernel->GetEventManager();
 
 	if( action == GLFW_PRESS )
-		event_manager->Broadcast(MouseButtonPressEvent{window, buttonID, mods});
+		event_manager->Broadcast(MouseButtonPressEvent{window, button_id, mods});
 	else if( action == GLFW_REPEAT )
-		event_manager->Broadcast(MouseButtonRepeatEvent{window, buttonID, mods});
+		event_manager->Broadcast(MouseButtonRepeatEvent{window, button_id, mods});
 	else if( action == GLFW_RELEASE )
-		event_manager->Broadcast(MouseButtonReleaseEvent{window, buttonID, mods});
+		event_manager->Broadcast(MouseButtonReleaseEvent{window, button_id, mods});
 }
 
 void CursorPositionCallback(GLFWwindow* glfw, double x, double y)

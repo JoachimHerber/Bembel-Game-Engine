@@ -96,12 +96,12 @@ Keyboard::~Keyboard()
 	_eventMgr->RemoveHandler<KeyReleaseEvent>(this);
 }
 
-Button* Keyboard::GetKey(int keyID, int scancode)
+Button* Keyboard::GetKey(int key_id, int scancode)
 {
-	if (keyID != GLFW_KEY_UNKNOWN)
+	if (key_id != GLFW_KEY_UNKNOWN)
 		scancode = 0;
 
-	auto key = std::make_pair(keyID, scancode);
+	auto key = std::make_pair(key_id, scancode);
 	auto it = _keyMapping.find(key);
 
 	if (it != _keyMapping.end())
@@ -109,7 +109,7 @@ Button* Keyboard::GetKey(int keyID, int scancode)
 
 	unsigned index = _keys.size();
 
-	const char* keyName = glfwGetKeyName(keyID, scancode);
+	const char* keyName = glfwGetKeyName(key_id, scancode);
 	if (keyName != nullptr)
 	{
 		_keys.push_back(std::make_unique<Button>(keyName));
@@ -127,21 +127,21 @@ Button* Keyboard::GetKey(int keyID, int scancode)
 
 void Keyboard::HandleEvent(const KeyPressEvent& event)
 {
-	auto key = GetKey(event.keyID, event.scancode);
+	auto key = GetKey(event.key_id, event.scancode);
 	_eventMgr->Broadcast(ButtonPressEvent{key});
 	key->SetIsPressed(true);
 }
 
 void Keyboard::HandleEvent(const KeyReleaseEvent& event)
 {
-	auto key = GetKey(event.keyID, event.scancode);
+	auto key = GetKey(event.key_id, event.scancode);
 	_eventMgr->Broadcast(ButtonReleaseEvent{key});
 	key->SetIsPressed(false);
 }
 
-void Keyboard::InitKey( int keyID, const std::string & name )
+void Keyboard::InitKey( int key_id, const std::string & name )
 {
-	auto key = std::make_pair( keyID, 0 );
+	auto key = std::make_pair( key_id, 0 );
 	auto it = _keyMapping.find( key );
 
 	unsigned index = _keys.size();

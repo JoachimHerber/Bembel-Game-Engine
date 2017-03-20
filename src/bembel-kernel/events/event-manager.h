@@ -9,6 +9,9 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
+#include <typeindex>
+#include <typeinfo>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -19,6 +22,8 @@ class BEMBEL_API EventManager final
 {
 public:
 	EventManager();
+	EventManager(const EventManager&) = delete;
+	EventManager& operator=(const EventManager&) = delete;
 	~EventManager();
 
 	template <typename EventType, typename EventHandlerType>
@@ -32,25 +37,10 @@ public:
 	template <typename EventType>
 	EventChannel<EventType>* GetChannel();
 
-	static unsigned GetNextFreeEventTypeID();
-
 private:
-	std::vector<EventChannelBase*> channels_;
-
-	static unsigned next_unused_event_type_id_;
+	using EventChannelPointer = std::unique_ptr<EventChannelBase>;
+	std::unordered_map<std::type_index, EventChannelPointer> channels_;
 };
-
-using EventManagerPtr = std::shared_ptr<EventManager>;
-
-#define BEMBEL_EVENT_INTERVACE_DECLADRATION \
-public:\
-	static unsigned GetEventTypeID();\
-private:\
-	static unsigned event_type_id_;
-
-#define BEMBEL_EVENT_INTERVACE_IMPLEMENTATION( _CLASS ) \
-unsigned _CLASS::event_type_id_  = EventManager::GetNextFreeEventTypeID();\
-unsigned _CLASS::GetEventTypeID(){return event_type_id_;}
 
 } //end of namespace bembel
 /*============================================================================*/

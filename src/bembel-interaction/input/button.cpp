@@ -49,9 +49,6 @@ Signal<>& Button::GetReleaseSignal()
 	return _releaseSignal;
 }
 
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(ButtonPressEvent);
-BEMBEL_EVENT_INTERVACE_IMPLEMENTATION(ButtonReleaseEvent);
-
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
