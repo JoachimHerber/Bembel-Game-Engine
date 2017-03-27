@@ -114,6 +114,10 @@ bool Kernel::LoadSetting(const std::string& config_file_name)
 	if (!root)
 		return false;
 
+	const xml::Element* asset_dirs = root->FirstChildElement("AssetDirectories");
+	if( asset_dirs )
+		asset_manager_->GetAssetLocator().Init(asset_dirs);
+
 	const xml::Element* display = root->FirstChildElement("Display");
 	if (display)
 		display_manager_->CreateWindows(display);
@@ -139,7 +143,7 @@ void Kernel::PollEvents()
 	glfwPollEvents();
 }
 
-} //end of namespace JHL
+} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

@@ -33,27 +33,18 @@ namespace bembel {
 class BEMBEL_API GeometryRenderingStage : public RenderingStage
 {
 public:
-	using TexturePtr = std::shared_ptr<Texture>;
-
 	GeometryRenderingStage(RenderingPipeline* pipline);
 	~GeometryRenderingStage();
 
-	void SetDepthOutputTexture(const std::string&);
-	void SetColorOutputTexture(unsigned index, const std::string&);
-
-	virtual void Init() override;
-	virtual void Cleanup() override;
 	virtual void DoRendering() override;
 
-	void SetScene(ScenePtr) override;
+	void SetScene(Scene*) override;
 
 	static std::unique_ptr<GeometryRenderingStage>
 		CreateInstance(const xml::Element*, RenderingPipeline*);
 
 private:
-	std::unique_ptr<FrameBufferObject> fbo_;
-
-	ScenePtr                          scene_;
+	Scene*                            scene_;
 	GeometryComponent::ContainerType* geometry_components_;
 	PositionComponent::ContainerType* position_components_;
 };

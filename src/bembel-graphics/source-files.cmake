@@ -16,6 +16,7 @@ set( DirFiles
 	rendering-pipeline/rendering-pipeline.h
 	rendering-pipeline/rendering-pipeline.cpp
 	rendering-pipeline/rendering-stage.h
+	rendering-pipeline/rendering-stage.cpp
 	rendering-pipeline/geometry-rendering-stage.h
 	rendering-pipeline/geometry-rendering-stage.cpp
 	rendering-pipeline/deferred-lighting-stage.h

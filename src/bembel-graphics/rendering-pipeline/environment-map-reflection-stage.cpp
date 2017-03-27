@@ -17,7 +17,6 @@ namespace bembel {
 
 EnvironmentMapReflectionStage::EnvironmentMapReflectionStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, fbo_(std::make_unique<FrameBufferObject>())
 {}
 
 EnvironmentMapReflectionStage::~EnvironmentMapReflectionStage()
@@ -49,7 +48,7 @@ bool EnvironmentMapReflectionStage::InitEnvironmentMap(
 	const std::string& back,
 	const std::string& front)
 {
-	environment_map_ = std::make_shared<Texture>(
+	environment_map_ = std::make_unique<Texture>(
 		GL_TEXTURE_CUBE_MAP, GL_RGBA);
 	environment_map_->Bind();
 
@@ -74,31 +73,14 @@ bool EnvironmentMapReflectionStage::InitEnvironmentMap(
 	return true;
 }
 
-void EnvironmentMapReflectionStage::SetShader(ShaderPtr shader)
+void EnvironmentMapReflectionStage::SetShader(AssetHandle shader)
 {
-	shader_ = shader;
+	shader_program_ = shader;
 }
 
 void EnvironmentMapReflectionStage::SetOutputTexture(const std::string& texture)
 {
 	fbo_->SetColorAttechment(0, pipline_->GetTexture(texture));
-}
-
-void EnvironmentMapReflectionStage::SetInputTextures(const std::vector<std::string>& textures)
-{
-	input_textures_.clear();
-	input_textur_names_.clear();
-	for( const std::string& texture_name : textures )
-	{
-		auto texture = pipline_->GetTexture(texture_name);
-		if( !texture )
-			continue;
-
-		input_textures_.push_back(texture);
-		input_textur_names_.push_back(texture_name);
-	}
-
-	SetTextureSamplerUniforms(shader_.get());
 }
 
 void EnvironmentMapReflectionStage::Init()
@@ -113,7 +95,8 @@ void EnvironmentMapReflectionStage::Cleanup()
 
 void EnvironmentMapReflectionStage::DoRendering()
 {
-	if( !shader_ )
+	auto program = GetAssetManager()->GetAsset<ShaderProgram>(shader_program_);
+	if( !program )
 		return;
 
 	fbo_->BeginRenderToTexture();
@@ -123,7 +106,7 @@ void EnvironmentMapReflectionStage::DoRendering()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE);
 
-	shader_->Use();
+	program->Use();
 
 	glm::mat4 proj = pipline_->GetCamera()->GetProjectionMatrix();
 	glm::mat4 view = pipline_->GetCamera()->GetViewMatrix();
@@ -131,17 +114,22 @@ void EnvironmentMapReflectionStage::DoRendering()
 	glm::mat4 invView = glm::inverse(view);
 
 	glUniformMatrix4fv(
-		shader_->GetUniformLocation("uInverseProjectionMatrix"),
+		program->GetUniformLocation("uInverseProjectionMatrix"),
 		1, GL_FALSE, &invProj[0][0]);
 	glUniformMatrix4fv(
-		shader_->GetUniformLocation("uInverseViewMatrix"),
+		program->GetUniformLocation("uInverseViewMatrix"),
 		1, GL_FALSE, &invView[0][0]);
 
-	BindTextures();
+	BindInputTextures();
+
+	glActiveTexture(GL_TEXTURE0 + textures_.size());
+	environment_map_->Bind();
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	ReleaseTextures();
+	environment_map_->Release();
+
+	ReleaseInputTextures();
 
 	glDisable(GL_BLEND);
 	fbo_->EndRenderToTexture();
@@ -150,10 +138,12 @@ void EnvironmentMapReflectionStage::DoRendering()
 std::unique_ptr<EnvironmentMapReflectionStage> EnvironmentMapReflectionStage::CreateInstance(
 	const xml::Element* properties, RenderingPipeline* pipline)
 {
-	auto shader = CreateShader(properties->FirstChildElement("Shader"));
+	auto program = 
+		pipline->GetAssetManager()->RequestAsset<ShaderProgram>(
+			properties->FirstChildElement("Shader"));
 
 	auto stage = std::make_unique<EnvironmentMapReflectionStage>(pipline);
-	stage->SetShader(shader);
+	stage->SetShader(program);
 
 	const xml::Element* env_map = properties->FirstChildElement("EnvironmentMap");
 	std::string left, right, bottom, top, back, front;
@@ -182,94 +172,6 @@ std::unique_ptr<EnvironmentMapReflectionStage> EnvironmentMapReflectionStage::Cr
 	return std::move(stage);
 }
 
-void EnvironmentMapReflectionStage::SetTextureSamplerUniforms(Shader* shader)
-{
-	if( shader == nullptr )
-		return;
-	if( input_textur_names_.empty() )
-		return;
-
-	const static std::vector<std::string> allowed_prefixes =
-	{"u", "uTex", "uTexture", "uSampler"};
-	const static std::vector<std::string> allowed_postfixes =
-	{"", "Buffer", "Texture" "Sampler"};
-
-	shader->Use();
-	// search for uniform with name 'u{textureName}'
-	for( size_t n = 0; n<input_textur_names_.size(); ++n )
-	{
-		std::string uniformName = input_textur_names_[n];
-		uniformName[0] = std::toupper(uniformName[0]);
-
-		for( const std::string& prefix : allowed_prefixes )
-		{
-			for( const std::string& postfix : allowed_postfixes )
-			{
-				int localtion = shader->GetUniformLocation(prefix + uniformName + postfix);
-				if( localtion >= 0 )
-					glUniform1i(localtion, n+1);
-			}
-		}
-	}
-	glUseProgram(0);
-}
-
-void EnvironmentMapReflectionStage::BindTextures()
-{
-	glActiveTexture(GL_TEXTURE0);
-	environment_map_->Bind();
-
-	for( size_t n = 0; n<input_textures_.size(); ++n )
-	{
-		if( input_textures_[n] )
-		{
-			glActiveTexture(GL_TEXTURE1 + n);
-			input_textures_[n]->Bind();
-		}
-	}
-}
-
-void EnvironmentMapReflectionStage::ReleaseTextures()
-{
-	glActiveTexture(GL_TEXTURE0);
-	environment_map_->Release();
-
-	for( size_t n = 0; n<input_textures_.size(); ++n )
-	{
-		if( input_textures_[n] )
-		{
-			glActiveTexture(GL_TEXTURE1 + n);
-			input_textures_[n]->Release();
-		}
-	}
-	glActiveTexture(GL_TEXTURE0);
-}
-
-std::shared_ptr<Shader> EnvironmentMapReflectionStage::CreateShader(
-	const xml::Element* properties)
-{
-	if( !properties )
-		return nullptr;
-
-	std::string file_name;
-
-	auto program = std::make_shared<Shader>();
-	for( auto shader : xml::IterateChildElements(properties, "VertexShader") )
-	{
-		if( xml::GetAttribute(shader, "file", file_name) )
-			program->AttachShaderFromFile(GL_VERTEX_SHADER, file_name);
-	}
-	for( auto shader : xml::IterateChildElements(properties, "FragmentShader") )
-	{
-		if( xml::GetAttribute(shader, "file", file_name) )
-			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, file_name);
-	}
-
-	if( !program->Link() )
-		return nullptr;
-
-	return program;
-}
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

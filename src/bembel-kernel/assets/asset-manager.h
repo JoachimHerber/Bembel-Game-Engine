@@ -30,24 +30,54 @@ public:
 	AssetManager();
 	~AssetManager();
 
+	/**
+	 * Adds an asset.
+	 * The added asset will be managed by the asset manager and its
+	 * refernence count will be initalised to 1.
+	 */
+	template<typename AssetType>
+	AssetHandle AddAsset(
+		std::unique_ptr<AssetType> asset, const std::string& name = "");
+
+	/**
+	 * Request an asset.
+	 * The requested asset will be loaded if it isn't loaded already.
+	 * Requesting an asset will increse the reference count of the asset.
+	 */
 	template<typename AssetType>
 	AssetHandle RequestAsset(const std::string& file_name);
 	template<typename AssetType>
 	AssetHandle RequestAsset(const xml::Element* properties);
-
 	AssetHandle RequestAsset(
 		const std::string& asset_type_name,
 		const std::string& file_name);
-	AssetHandle RequestAsset(const std::string& asset_type_name,
+	AssetHandle RequestAsset(
+		const std::string& asset_type_name,
 		const xml::Element* properties);
 
-	bool ReleaseAsset(AssetHandle asset_handel);
+	/**
+	 * Releses an asset.
+	 * This metode will reduce the reference count of the asset and delete
+	 * the asset once its reference count reches zero.
+	 */
+	bool ReleaseAsset(AssetHandle asset_handle);
 
-	bool IsHandelValid(AssetHandle asset_handel);
+	/**
+	 * @return true if the asset_handle is valide.
+	 */
+	bool IsHandelValid(AssetHandle asset_handle);
 
+	/**
+	 * Queries a handle for a named asset.
+	 * Does not modify the reference count of the asset.
+	 * @return a handle to the asset with the request name if it exist.
+	 */
 	template<typename AssetType>
 	AssetHandle GetAssetHandle(const std::string& name);
 
+	/**
+	 * returns a pointer to the specified asset or a pointer to a dummy asset.
+	 */
 	template<typename AssetType>
 	AssetType* GetAsset(AssetHandle handle, bool return_dummy_if_handle_invalid = true);
 
@@ -55,6 +85,8 @@ public:
 	bool RegisterAssetType(TArgs ... args);
 	template<typename AssetType, typename AssetLoaderType, typename ... TArgs>
 	bool RegisterAssetType(TArgs ... args);
+
+	AssetLocator& GetAssetLocator();
 
 private:
 	template<typename AssetType>
@@ -65,6 +97,8 @@ private:
 
 	std::vector<std::shared_ptr<AssetContainerBase>> asset_container_;
 	std::vector<std::shared_ptr<AssetLoaderBase>>    asset_loader_;
+
+	AssetLocator asset_locator_;
 };
 
 } //end of namespace bembel

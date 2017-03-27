@@ -16,6 +16,23 @@ AssetManager::GetAssetContainer()
 }
 
 template<typename AssetType>
+inline AssetHandle AssetManager::AddAsset(
+	std::unique_ptr<AssetType> asset,
+	const std::string& name )
+{
+	auto container = GetAssetContainer<AssetType>();
+	if( container )
+	{
+		auto handle = container->AddAsset(std::move(asset));
+		container->IncrementAssetRefCount(handle);
+		if(!name.empty())
+			container->RegisterAssetAlias(handle, name);
+		return handle;
+	}
+	return AssetHandle();
+}
+
+template<typename AssetType>
 inline AssetHandle AssetManager::RequestAsset(const std::string& file_name)
 {
 	return RequestAsset(AssetType::GetTypeName(), file_name);

@@ -39,6 +39,8 @@ public:
 	using RendertingStageFactory = TFactory<RenderingStage, const xml::Element*, RenderingPipeline*>;
 
 	GraphicSystem(Kernel*);
+	GraphicSystem(const GraphicSystem&) = delete;
+	GraphicSystem& operator=(const GraphicSystem&) = delete;
 	~GraphicSystem();
 
 	Viewport*                       CreateViewPort(unsigned windowID = 0);

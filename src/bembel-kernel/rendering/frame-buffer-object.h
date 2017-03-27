@@ -26,8 +26,6 @@ namespace bembel {
 class BEMBEL_API FrameBufferObject
 {
 public:
-	using TexturePtr = std::shared_ptr<Texture>;
-
 	FrameBufferObject();
 	~FrameBufferObject();
 
@@ -35,8 +33,8 @@ public:
 	void CleanUp();
 
 	void RemoveAllAttechments();
-	void SetDepthAttechment(TexturePtr texture, GLint level = 0);
-	void SetColorAttechment(unsigned index, TexturePtr texture, GLint level = 0);
+	void SetDepthAttechment(Texture* texture, GLint level = 0);
+	void SetColorAttechment(unsigned index, Texture* texture, GLint level = 0);
 
 	void BeginRenderToTexture();
 	void EndRenderToTexture();
@@ -46,8 +44,8 @@ private:
 
 	struct Attechment
 	{
-		TexturePtr texture;
-		GLint      level;
+		Texture* texture;
+		GLint    level;
 	};
 
 	Attechment              depth_attechment_;

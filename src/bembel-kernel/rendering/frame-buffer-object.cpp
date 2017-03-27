@@ -12,6 +12,7 @@ namespace bembel {
 
 FrameBufferObject::FrameBufferObject()
 	: handle_(0)
+	, depth_attechment_{nullptr, 0}
 {}
 
 FrameBufferObject::~FrameBufferObject()
@@ -64,7 +65,7 @@ void FrameBufferObject::RemoveAllAttechments()
 		SetColorAttechment(n, nullptr);
 }
 
-void FrameBufferObject::SetDepthAttechment(TexturePtr texture, GLint level /*= 0*/)
+void FrameBufferObject::SetDepthAttechment(Texture* texture, GLint level /*= 0*/)
 {
 	depth_attechment_.texture = texture;
 	depth_attechment_.level = level;
@@ -82,7 +83,7 @@ void FrameBufferObject::SetDepthAttechment(TexturePtr texture, GLint level /*= 0
 	}
 }
 
-void FrameBufferObject::SetColorAttechment(unsigned index, TexturePtr texture, GLint level /*= 0*/)
+void FrameBufferObject::SetColorAttechment(unsigned index, Texture* texture, GLint level /*= 0*/)
 {
 	while( color_attechments_.size() <= index )
 		color_attechments_.push_back(Attechment{nullptr, 0});

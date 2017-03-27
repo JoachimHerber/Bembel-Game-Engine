@@ -56,13 +56,9 @@ std::unique_ptr<GeometryModel> GeometryModel::LoadAsset(
 	return CreateGeometryModel(asset_manager, root);
 }
 
-std::unique_ptr<GeometryModel> GeometryModel::LoadAsset(
+std::unique_ptr<GeometryModel> GeometryModel::CreateAsset(
 	AssetManager* asset_manager, const xml::Element* properties)
 {
-	std::string file_name;
-	if( xml::GetAttribute(properties, "file_name", file_name) )
-		return LoadAsset(asset_manager, file_name);
-
 	return CreateGeometryModel(asset_manager, properties);
 }
 

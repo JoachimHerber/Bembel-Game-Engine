@@ -12,13 +12,13 @@
 
 namespace bembel {
 
-AssetFileLocator::AssetFileLocator()
+AssetLocator::AssetLocator()
 {}
 
-AssetFileLocator::~AssetFileLocator()
+AssetLocator::~AssetLocator()
 {}
 
-bool AssetFileLocator::Init(xml::Element* properties)
+bool AssetLocator::Init(const xml::Element* properties)
 {
 	for( auto it : xml::IterateChildElements(properties, "AssetDirectory") )
 	{
@@ -32,13 +32,13 @@ bool AssetFileLocator::Init(xml::Element* properties)
 	return true;
 }
 
-void AssetFileLocator::AddAssetDirectory(
+void AssetLocator::AddAssetDirectory(
 	const std::string& assetTypeName, const std::string& directory)
 {
 	type_specivic_asset_directories_[assetTypeName].push_back(directory);
 }
 
-void AssetFileLocator::AddGenericAssetDirectory(
+void AssetLocator::AddGenericAssetDirectory(
 	const std::string& directory)
 {
 	generic_asset_directories_.push_back(directory);
@@ -66,7 +66,7 @@ bool LocateFile(
 }
 }
 
-bool AssetFileLocator::FindAssetLocation(
+bool AssetLocator::FindAssetLocation(
 	const std::string& assetTypeName,
 	const std::string& fileName,
 	std::string * fullFilePath)

@@ -13,8 +13,9 @@
 /*============================================================================*/
 namespace bembel {
 
-class Shader;
 class Texture;
+class AssetManager;
+class ShaderProgram;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -25,10 +26,7 @@ namespace bembel {
 class BEMBEL_API TextureView : public Viewport::View
 {
 public:
-	using ShaderPtr = std::shared_ptr<Shader>;
-	using TexturePtr = std::shared_ptr<Texture>;
-
-	TextureView(TexturePtr color);
+	TextureView(AssetManager*, Texture* color);
 	~TextureView();
 
 	const glm::vec2& GetViewAreaMin() const;
@@ -42,13 +40,14 @@ public:
 	virtual void Draw() override;
 
 private:
-	TexturePtr texture_;
+	AssetManager* asset_manager_;
+	Texture* texture_;
 
 	glm::vec2 min_;
 	glm::vec2 max_;
 
-	ShaderPtr shader_;
-	int       uniform_;
+	ShaderProgram* shader_;
+	int            uniform_;
 };
 
 } //end of namespace bembel

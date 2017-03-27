@@ -12,19 +12,58 @@
 #include <vector>
 #include <unordered_map>
 
+#include <bembel-kernel/assets/serial-asset-loader.hpp>
+#include <bembel-kernel/assets/asset-handle.h>
+
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-class BEMBEL_API Shader final
+class BEMBEL_API Shader
 {
 public:
-	Shader();
-	~Shader();
+	using DefaultLoaderType = SerialAssetLoader<Shader>;
 
-	bool AttachShader(GLenum type, const std::string& source);
-	bool AttachShaderFromFile(GLenum type, const std::string& file_name);
+public:
+	Shader(GLuint handle);
+	virtual ~Shader();
+
+	bool Init(const std::string& source);
+		
+	GLuint GetHandle() const;
+
+	const static std::string& GetTypeName();
+
+	static std::unique_ptr<Shader> LoadAsset(
+		AssetManager* asset_manager, const std::string& path);
+	static std::unique_ptr<Shader> CreateAsset(
+		AssetManager* asset_manager, const xml::Element* properties);
+
+	static void DeleteAsset(AssetManager*, std::unique_ptr<Shader>)
+	{}
+
+	static std::unique_ptr<Shader> CreateShader(
+		std::unique_ptr<Shader> properties);
+	static std::unique_ptr<Shader> CreateShader(
+		GLenum type, const std::string& source);
+
+private:
+	GLuint handle_;
+};
+
+class BEMBEL_API ShaderProgram final
+{
+public:
+	using DefaultLoaderType = SerialAssetLoader<ShaderProgram>;
+
+public:
+	ShaderProgram();
+	ShaderProgram(const ShaderProgram&) = delete;
+	ShaderProgram& operator& (const ShaderProgram&) = delete;
+	~ShaderProgram();
+
+	bool AttachShader(AssetManager* asset_manager, AssetHandle handle);
 
 	void BindAttribLocation(const std::string& name, unsigned int index);
 	void BindFragDataLocation(const std::string& name, unsigned int index);
@@ -37,9 +76,18 @@ public:
 
 	bool Use();
 
+	const static std::string& GetTypeName();
+
+	static std::unique_ptr<ShaderProgram> LoadAsset(
+		AssetManager* asset_manager, const std::string& path);
+	static std::unique_ptr<ShaderProgram> CreateAsset(
+		AssetManager* asset_manager, const xml::Element* properties);
+
+	static void DeleteAsset(AssetManager*, std::unique_ptr<ShaderProgram>);
+
 private:
-	GLuint              program_handle_;
-	std::vector<GLuint> shader_handles_;
+	GLuint                   program_handle_;
+	std::vector<AssetHandle> shader_handles_;
 
 	bool ready_to_use_ = false;
 

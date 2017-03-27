@@ -101,7 +101,7 @@ inline SystemType* Kernel::AddSystem(Args&& ... args)
 	return system_pointer;
 }
 
-} //end of namespace bembe
+} //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */
 /*============================================================================*/

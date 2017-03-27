@@ -29,6 +29,7 @@ class Texture;
 class GeometryRendererBase;
 class GraphicSystem;
 class RenderingStage;
+class AssetManager;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -38,17 +39,14 @@ namespace bembel {
 
 class BEMBEL_API RenderingPipeline final
 {
-public:
-	using ScenePtr = std::shared_ptr<Scene>;
-	using CameraPtr = std::shared_ptr<Camera>;
-	using TexturePtr = std::shared_ptr<Texture>;
-	using RenderingStagePtr = std::shared_ptr<RenderingStage>;
-	using ViewPtr = std::shared_ptr<TextureView>;
-
+public:;
 	RenderingPipeline(GraphicSystem*);
+	RenderingPipeline(const RenderingPipeline&) = delete;
+	RenderingPipeline& operator=(const RenderingPipeline&) = delete;
 	~RenderingPipeline();
 
 	GraphicSystem* GetGraphicSystem() const;
+	AssetManager*  GetAssetManager() const;
 
 	void SetResulution(const glm::ivec2& value);
 	const glm::ivec2& GetResulution() const;
@@ -62,22 +60,20 @@ public:
 	void Init();
 	void Cleanup();
 
-	void SetScene(ScenePtr);
-	ScenePtr GetScene() const;
+	void SetScene(std::shared_ptr<Scene>);
+	std::shared_ptr<Scene> GetScene() const;
 
-	CameraPtr GetCamera() const;
+	std::shared_ptr<Camera> GetCamera() const;
 
-	TexturePtr GetTexture(const std::string& name) const;
-	TexturePtr CreateTexture(const xml::Element*);
-	TexturePtr CreateTexture(const std::string& name, GLenum format);
-
-	void AddRenderingStage(RenderingStagePtr);
+	Texture* GetTexture(const std::string& name) const;
+	bool CreateTexture(const xml::Element*);
+	bool CreateTexture(const std::string& name, GLenum format);
 
 	template<typename StageType>
 	StageType* AddRenderingStage();
 
-	ViewPtr CreateView(const std::string& textureName);
-	std::vector<ViewPtr>& GetViews();
+	TextureView* CreateView(const std::string& texture_name);
+	const std::vector<std::shared_ptr<TextureView>>& GetViews() const;
 
 	void Update();
 
@@ -96,13 +92,13 @@ private:
 	bool       enabled_;
 	bool       initalized_;
 
-	ScenePtr  scene_;
-	CameraPtr camera_;
+	std::shared_ptr<Scene>  scene_;
+	std::shared_ptr<Camera> camera_;
 
-	std::map<std::string, TexturePtr> textures_;
-	std::vector<RenderingStagePtr>    stages_;
+	std::map<std::string, std::unique_ptr<Texture>> textures_;
+	std::vector<std::unique_ptr<RenderingStage>>    render_stages_;
 
-	std::vector<ViewPtr> views_;
+	std::vector<std::shared_ptr<TextureView>> views_;
 };
 
 template<typename StageType>

@@ -59,7 +59,7 @@ inline std::unique_ptr<AssetType>
 AssetContainer<AssetType>::RemoveAsset(
 	AssetHandle handle, bool force)
 {
-	if( IsHandelValid(handle) )
+	if( !IsHandelValid(handle) )
 		return nullptr; // invalid handle
 
 	if( assets_[handle.index].reference_count > 0 )

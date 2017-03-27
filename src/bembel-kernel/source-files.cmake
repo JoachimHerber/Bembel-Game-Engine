@@ -19,9 +19,7 @@ set( DirFiles
 	events/event-callbacks.h
 	events/event-callbacks.cpp
 	events/display-events.h
-	events/display-events.cpp
 	events/input-events.h
-	events/input-events.cpp
 	
 	display/display-manager.h
 	display/display-manager.cpp

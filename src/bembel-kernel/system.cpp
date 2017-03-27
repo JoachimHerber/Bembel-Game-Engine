@@ -3,6 +3,7 @@
 /*============================================================================*/
 
 #include "system.h"
+#include "kernel.h"
 
 #include <bembel-base/logging/logger.h>
 
@@ -28,6 +29,11 @@ Kernel* System::GetKernel() const
 	return kernel_;
 }
 
+AssetManager * System::GetAssetManager() const
+{
+	return kernel_->GetAssetManager();
+}
+
 bool System::Configure(const xml::Element*)
 {
 	return true;
@@ -39,8 +45,7 @@ bool System::Init()
 }
 
 void System::Shutdown()
-{
-}
+{}
 
 } //end of namespace bembel
 /*============================================================================*/

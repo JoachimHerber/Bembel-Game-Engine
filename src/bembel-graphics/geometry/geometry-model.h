@@ -43,7 +43,7 @@ public:
 
 	static std::unique_ptr<GeometryModel> LoadAsset(
 		AssetManager* asset_manager, const std::string& file_name);
-	static std::unique_ptr<GeometryModel> LoadAsset(
+	static std::unique_ptr<GeometryModel> CreateAsset(
 		AssetManager* asset_manager, const xml::Element* properties);
 
 	static void DeleteAsset(

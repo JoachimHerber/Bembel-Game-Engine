@@ -1,5 +1,5 @@
-#ifndef BEMBEL_KERNEL_ASSETS_ASSETFILELOCATOR_H_
-#define BEMBEL_KERNEL_ASSETS_ASSETFILELOCATOR_H_
+#ifndef BEMBEL_KERNEL_ASSETS_ASSETLOCATOR_H_
+#define BEMBEL_KERNEL_ASSETS_ASSETLOCATOR_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
@@ -18,14 +18,14 @@
 /*============================================================================*/
 namespace bembel {
 
-class BEMBEL_API AssetFileLocator final
+class BEMBEL_API AssetLocator final
 {
 public:
 public:
-	AssetFileLocator();
-	~AssetFileLocator();
+	AssetLocator();
+	~AssetLocator();
 
-	bool Init(xml::Element* properties);
+	bool Init(const xml::Element* properties);
 
 	template <typename AssetType>
 	void AddAssetDirectory(const std::string& directory);
@@ -56,13 +56,13 @@ private:
 namespace bembel {
 
 template<typename AssetType>
-inline void AssetFileLocator::AddAssetDirectory(const std::string& directory)
+inline void AssetLocator::AddAssetDirectory(const std::string& directory)
 {
 	return AddAssetDirectory(AssetType::GetTypeName(), directory);
 }
 
 template<typename AssetType>
-inline bool AssetFileLocator::FindAssetLocation(
+inline bool AssetLocator::FindAssetLocation(
 	const std::string& file_name, std::string* full_file_path)
 {
 	return FindAssetLocation(

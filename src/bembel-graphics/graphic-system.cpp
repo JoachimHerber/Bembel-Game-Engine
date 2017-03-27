@@ -22,6 +22,7 @@
 #include <bembel-kernel/display/window.h>
 #include <bembel-kernel/events/display-events.h>
 #include <bembel-kernel/assets/asset-manager.h>
+#include <bembel-kernel/rendering/shader.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -35,6 +36,8 @@ GraphicSystem::GraphicSystem(Kernel* kernel)
 	kernel_->GetAssetManager()->RegisterAssetType<Material>(this);
 	kernel_->GetAssetManager()->RegisterAssetType<GeometryMesh>();
 	kernel_->GetAssetManager()->RegisterAssetType<GeometryModel>();
+	kernel_->GetAssetManager()->RegisterAssetType<Shader>();
+	kernel_->GetAssetManager()->RegisterAssetType<ShaderProgram>();
 
 	kernel_->GetEventManager()->AddHandler<WindowUpdateEvent>(this);
 	kernel_->GetEventManager()->AddHandler<FrameBufferResizeEvent>(this);
@@ -205,9 +208,10 @@ void GraphicSystem::ConfigureRenderer(const xml::Element* properties)
 
 	for( auto rendererProperties : xml::IterateChildElements(properties) )
 	{
-		RendererPtr renderer =
-			DefaultGeometryRenderer::CreateRenderer(
-				rendererProperties, renderer_.size());
+		RendererPtr renderer = DefaultGeometryRenderer::CreateRenderer(
+			rendererProperties,
+			kernel_->GetAssetManager(),
+			renderer_.size());
 
 		if( renderer )
 		{

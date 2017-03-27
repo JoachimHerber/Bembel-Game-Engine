@@ -24,9 +24,8 @@
 SelectionRenderingStage::SelectionRenderingStage(
 	bembel::RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, _fbo(std::make_unique<bembel::FrameBufferObject>())
 {
-	_noise = std::make_shared<bembel::Texture>(GL_TEXTURE_3D, GL_R8 );
+	_noise = std::make_unique<bembel::Texture>(GL_TEXTURE_3D, GL_R8 );
 
 	unsigned char data[32*32*32]; 
 	std::random_device rd;
@@ -53,35 +52,36 @@ SelectionRenderingStage::SelectionRenderingStage(
 SelectionRenderingStage::~SelectionRenderingStage()
 {}
 
-void SelectionRenderingStage::SetShader(ShaderPtr shader)
+void SelectionRenderingStage::SetShader(bembel::AssetHandle shader)
 {
 	_shader = shader;
 }
 
 void SelectionRenderingStage::SetDepthOutputTexture(const std::string& texture)
 {
-	_fbo->SetDepthAttechment(pipline_->GetTexture(texture));
+	fbo_->SetDepthAttechment(pipline_->GetTexture(texture));
 }
 void SelectionRenderingStage::SetColorOutputTexture(const std::string& texture)
 {
-	_fbo->SetColorAttechment(0, pipline_->GetTexture(texture));
+	fbo_->SetColorAttechment(0, pipline_->GetTexture(texture));
 }
 void SelectionRenderingStage::Init()
 {
-	_fbo->Init();
+	fbo_->Init();
 }
 
 void SelectionRenderingStage::Cleanup()
 {
-	_fbo->CleanUp();
+	fbo_->CleanUp();
 }
 
 void SelectionRenderingStage::DoRendering()
 {
-	if (!_shader)
+	auto program = GetAssetManager()->GetAsset<bembel::ShaderProgram>(_shader);
+	if (!program )
  		return;
  
- 	_fbo->BeginRenderToTexture();
+ 	fbo_->BeginRenderToTexture();
 	glm::mat4 proj = pipline_->GetCamera()->GetProjectionMatrix();
 	glm::mat4 view = pipline_->GetCamera()->GetViewMatrix();
 
@@ -90,11 +90,11 @@ void SelectionRenderingStage::DoRendering()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
  
- 	_shader->Use(); 
+	program->Use();
 	_noise->Bind();
  
  	glUniformMatrix4fv(
- 		_shader->GetUniformLocation("uProjectionMatrix"),
+		program->GetUniformLocation("uProjectionMatrix"),
  		1, GL_FALSE, &proj[0][0]);
 
 	auto now = std::chrono::high_resolution_clock::now();
@@ -103,7 +103,7 @@ void SelectionRenderingStage::DoRendering()
 
 	float time = 0.001f*(ms.count());
 
-	glUniform1f( _shader->GetUniformLocation( "uTime" ), time );
+	glUniform1f(program->GetUniformLocation( "uTime" ), time );
 
 	std::vector<GeometryObject> geometry;
 
@@ -118,13 +118,13 @@ void SelectionRenderingStage::DoRendering()
 	{
 		glm::mat4 modelView = view*glm::translate(glm::mat4(), it.position);
 
-		glUniform1i(_shader->GetUniformLocation("uState"), it.state);
+		glUniform1i(program->GetUniformLocation("uState"), it.state);
 
 		glUniformMatrix4fv(
-			_shader->GetUniformLocation("uModleViewMatrix"),
+			program->GetUniformLocation("uModleViewMatrix"),
 			1, GL_FALSE, &modelView[0][0]);
 		glUniformMatrix4fv(
-			_shader->GetUniformLocation("uNormalMatrix"),
+			program->GetUniformLocation("uNormalMatrix"),
 			1, GL_FALSE, &modelView[0][0]);
 
 		auto mesh = _scene->GetAsset<bembel::GeometryMesh>(
@@ -156,11 +156,11 @@ void SelectionRenderingStage::DoRendering()
  	}
 
 	_noise->Release();
- 	_fbo->EndRenderToTexture();
+ 	fbo_->EndRenderToTexture();
 	glDisable(GL_BLEND);
 }
 
-void SelectionRenderingStage::SetScene(ScenePtr scene)
+void SelectionRenderingStage::SetScene(bembel::Scene* scene)
 {
 	_scene = scene;
 	_positionComponents  = scene->RequestComponentContainer<bembel::PositionComponent>();
@@ -172,7 +172,9 @@ std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance
 	const bembel::xml::Element* properties,
 	bembel::RenderingPipeline* pipline)
 {
-	auto shader = CreateShader(properties->FirstChildElement("Shader"));
+	auto asset_manager = pipline->GetAssetManager();
+	auto shader = asset_manager->RequestAsset<bembel::ShaderProgram>(
+		properties->FirstChildElement("Shader"));
 
 	auto stage = std::make_unique<SelectionRenderingStage>(pipline);
 
@@ -185,32 +187,6 @@ std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance
 		stage->SetDepthOutputTexture(textureName);
 
 	return std::move(stage);
-}
-
-std::shared_ptr<bembel::Shader> SelectionRenderingStage::CreateShader(
-	const bembel::xml::Element* properties)
-{
-	if (!properties)
-		return nullptr;
-
-	std::string filename;
-
-	auto program = std::make_shared<bembel::Shader>();
-	for (auto shader : bembel::xml::IterateChildElements(properties, "VertexShader"))
-	{
-		if ( bembel::xml::GetAttribute(shader, "file", filename))
-			program->AttachShaderFromFile(GL_VERTEX_SHADER, filename);
-	}
-	for (auto shader : bembel::xml::IterateChildElements(properties, "FragmentShader"))
-	{
-		if ( bembel::xml::GetAttribute(shader, "file", filename))
-			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, filename);
-	}
-
-	if (!program->Link())
-		return nullptr;
-
-	return program;
 }
 
 void SelectionRenderingStage::GetHiglightedObjects(

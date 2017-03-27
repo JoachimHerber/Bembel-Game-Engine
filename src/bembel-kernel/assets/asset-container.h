@@ -139,7 +139,7 @@ protected:
 	{
 		AssetPtr asset;
 		uint32_t generation;
-		uint32_t reference_count;
+		int32_t reference_count;
 	};
 
 	uint16_t asset_type_id_;

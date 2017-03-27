@@ -13,13 +13,14 @@
 #include <vector>
 
 #include <bembel-base/xml.h>
+#include <bembel-kernel/assets/asset-handle.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
 namespace bembel {
 
-class Shader;
+class ShaderProgram;
 class Texture;
 class FrameBufferObject;
 
@@ -32,9 +33,6 @@ namespace bembel {
 class BEMBEL_API EnvironmentMapReflectionStage : public RenderingStage
 {
 public:
-	using TexturePtr = std::shared_ptr<Texture>;
-	using ShaderPtr = std::shared_ptr<Shader>;
-
 	EnvironmentMapReflectionStage(RenderingPipeline* pipline);
 	~EnvironmentMapReflectionStage();
 
@@ -46,10 +44,9 @@ public:
 		const std::string& back,
 		const std::string& front);
 
-	void SetShader(ShaderPtr);
+	void SetShader(AssetHandle);
 
 	void SetOutputTexture(const std::string&);
-	void SetInputTextures(const std::vector<std::string>&);
 
 	virtual void Init() override;
 	virtual void Cleanup() override;
@@ -59,20 +56,9 @@ public:
 		CreateInstance(const xml::Element*, RenderingPipeline*);
 
 private:
-	static ShaderPtr CreateShader(const xml::Element*);
-	void SetTextureSamplerUniforms(Shader* shader);
+	std::unique_ptr<Texture> environment_map_;
 
-	void BindTextures();
-	void ReleaseTextures();
-
-private:
-	std::unique_ptr<FrameBufferObject> fbo_;
-
-	TexturePtr environment_map_;
-	ShaderPtr  shader_;
-
-	std::vector<TexturePtr>  input_textures_;
-	std::vector<std::string> input_textur_names_;
+	AssetHandle  shader_program_;
 };
 
 } //end of namespace bembel

@@ -16,6 +16,7 @@
 namespace bembel{
 
 class Kernel;
+class AssetManager;
 
 } //end of namespace bembel
 /*============================================================================*/
@@ -30,7 +31,8 @@ public:
 	virtual ~System();
 	
 	const std::string& GetName() const;
-	Kernel*  GetKernel() const;
+	Kernel*            GetKernel() const;
+	AssetManager*      GetAssetManager() const;
 
 	virtual bool Configure(const xml::Element*);
 

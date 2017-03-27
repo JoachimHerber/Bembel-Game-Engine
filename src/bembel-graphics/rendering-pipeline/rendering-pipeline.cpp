@@ -10,6 +10,7 @@
 #include "../graphic-system.h"
 #include "../geometry/geometry-renderer.h"
 
+#include <bembel-kernel/kernel.h>
 #include <bembel-kernel/rendering/texture.h>
 #include <bembel-kernel/rendering/shader.h>
 #include <bembel-kernel/rendering/frame-buffer-object.h>
@@ -34,6 +35,11 @@ RenderingPipeline::~RenderingPipeline()
 GraphicSystem* RenderingPipeline::GetGraphicSystem() const
 {
 	return grapic_system_;
+}
+
+AssetManager* RenderingPipeline::GetAssetManager() const
+{
+	return grapic_system_->GetAssetManager();
 }
 
 void RenderingPipeline::Enable()
@@ -72,7 +78,7 @@ void RenderingPipeline::Init()
 	for( auto& it : textures_ )
 		it.second->Init(resolution_);
 
-	for( auto& stage : stages_ )
+	for( auto& stage : render_stages_ )
 		stage->Init();
 
 	for( auto& view : views_ )
@@ -99,19 +105,19 @@ void RenderingPipeline::Cleanup()
 	for( auto& view : views_ )
 		view->Cleanup();
 
-	for( auto& stage : stages_ )
+	for( auto& stage : render_stages_ )
 		stage->Cleanup();
 
 	for( auto& it : textures_ )
 		it.second->Cleanup();
 }
 
-void RenderingPipeline::SetScene(ScenePtr scene)
+void RenderingPipeline::SetScene(std::shared_ptr<Scene> scene)
 {
 	scene_ = scene;
 
-	for( auto& stage : stages_ )
-		stage->SetScene(scene_);
+	for( auto& stage : render_stages_ )
+		stage->SetScene(scene_.get());
 }
 
 std::shared_ptr<Scene> RenderingPipeline::GetScene() const
@@ -124,31 +130,31 @@ std::shared_ptr<Camera> RenderingPipeline::GetCamera() const
 	return camera_;
 }
 
-std::shared_ptr<Texture> RenderingPipeline::GetTexture(
-	const std::string& name) const
+Texture* RenderingPipeline::GetTexture(const std::string& name) const
 {
 	auto it = textures_.find(name);
 	if( it != textures_.end() )
-		return it->second;
+		return it->second.get();
 
 	return nullptr;
 }
-std::shared_ptr<Texture> RenderingPipeline::CreateTexture(
+
+bool RenderingPipeline::CreateTexture(
 	const std::string& name,
 	GLenum format)
 {
 	if( textures_.find(name) != textures_.end() )
-		return nullptr; // texture already exists
+		return false; // texture already exists
 
-	auto texture = std::make_shared<Texture>(GL_TEXTURE_2D, format);
+	auto texture = std::make_unique<Texture>(GL_TEXTURE_2D, format);
 	if( initalized_ )
 		texture->Init(resolution_);
 
-	textures_.emplace(name, texture);
-	return texture;
+	textures_.emplace(name, std::move(texture));
+	return true;
 }
 
-std::shared_ptr<Texture> RenderingPipeline::CreateTexture(
+bool RenderingPipeline::CreateTexture(
 	const xml::Element* properties)
 {
 	std::string name, format, target;
@@ -160,33 +166,30 @@ std::shared_ptr<Texture> RenderingPipeline::CreateTexture(
 	return CreateTexture(name, StringToTextureFormat(format));
 }
 
-RenderingPipeline::ViewPtr RenderingPipeline::CreateView(
+TextureView*  RenderingPipeline::CreateView(
 	const std::string& texture_name)
 {
-	TexturePtr texture = GetTexture(texture_name);
+	Texture* texture = GetTexture(texture_name);
 	if( !texture )
 		return nullptr;
 
-	views_.push_back(std::make_shared<TextureView>(texture));
+	views_.push_back(std::make_shared<TextureView>(
+		grapic_system_->GetKernel()->GetAssetManager(),texture));
 	if( initalized_ )
 		views_.back()->Init();
 
-	return views_.back();
+	return views_.back().get();
 }
 
 void RenderingPipeline::Update()
 {
 	glViewport(0, 0, resolution_.x, resolution_.y);
-	for( auto stage : stages_ )
+	for( auto& stage : render_stages_ )
 		stage->DoRendering();
 }
 
-void RenderingPipeline::AddRenderingStage(RenderingStagePtr stage)
-{
-	stages_.push_back(stage);
-}
-
-std::vector<std::shared_ptr<TextureView>>& RenderingPipeline::GetViews()
+const std::vector<std::shared_ptr<TextureView>>& 
+RenderingPipeline::GetViews() const
 {
 	return views_;
 }
@@ -209,11 +212,11 @@ void RenderingPipeline::InitStages(const xml::Element* properties)
 
 	for( auto stageProperties : xml::IterateChildElements(properties) )
 	{
-		RenderingStagePtr stage =
-			grapic_system_->GetRendertingStageFactory().CreateObject(
+		auto stage = grapic_system_->GetRendertingStageFactory().CreateObject(
 				stageProperties->Value(), stageProperties, this);
+
 		if( stage )
-			stages_.push_back(stage);
+			render_stages_.push_back(std::move(stage));
 	}
 }
 

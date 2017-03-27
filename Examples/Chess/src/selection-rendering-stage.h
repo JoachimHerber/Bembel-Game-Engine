@@ -24,7 +24,7 @@
 /*============================================================================*/
 namespace bembel{
 
-class Shader;
+class ShaderProgram;
 class Texture;
 class FrameBufferObject;
 class SelectionManager;
@@ -37,13 +37,10 @@ class GeometryModel;
 class SelectionRenderingStage : public bembel::RenderingStage
 {
 public:
-	using TexturePtr = std::shared_ptr<bembel::Texture>;
-	using ShaderPtr  = std::shared_ptr<bembel::Shader>;
-
 	SelectionRenderingStage( bembel::RenderingPipeline* pipline);
 	~SelectionRenderingStage();
 
-	void SetShader(ShaderPtr);
+	void SetShader(bembel::AssetHandle);
 
 	void SetDepthOutputTexture(const std::string&);
 	void SetColorOutputTexture(const std::string&);
@@ -52,14 +49,12 @@ public:
 	virtual void Cleanup() override;
 	virtual void DoRendering() override;
 
-	void SetScene(ScenePtr) override;
+	void SetScene(bembel::Scene*) override;
 
 	static std::unique_ptr<SelectionRenderingStage>
 		CreateInstance(const bembel::xml::Element*, bembel::RenderingPipeline*);
 
 private:
-	static ShaderPtr CreateShader(const bembel::xml::Element*);
-
 	struct GeometryObject
 	{
 		glm::vec3              position;
@@ -70,12 +65,11 @@ private:
 	void GetHiglightedObjects(std::vector<GeometryObject>& );
 
 private:
-	std::unique_ptr<bembel::FrameBufferObject> _fbo;
+	bembel::AssetHandle _shader;
 
-	ShaderPtr  _shader;
-	TexturePtr _noise;
+	std::unique_ptr<bembel::Texture> _noise;
 
-	ScenePtr                                   _scene;
+	bembel::Scene*                             _scene;
 	bembel::PositionComponent::ContainerType*  _positionComponents;
 	bembel::GeometryComponent::ContainerType*  _geometryComponents;
 	SelectionComponent::ContainerType*         _selectionComponents;

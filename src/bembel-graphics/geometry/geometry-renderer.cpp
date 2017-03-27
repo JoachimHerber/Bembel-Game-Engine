@@ -18,21 +18,26 @@
 /*============================================================================*/
 namespace bembel {
 
-DefaultGeometryRenderer::DefaultGeometryRenderer(unsigned id)
-	: GeometryRendererBase(id)
+DefaultGeometryRenderer::DefaultGeometryRenderer(
+	AssetManager* asset_manager, unsigned id)
+	: GeometryRendererBase(asset_manager, id)
 {}
 
 DefaultGeometryRenderer::~DefaultGeometryRenderer()
 {}
 
-void DefaultGeometryRenderer::SetShader(std::shared_ptr<Shader> shader)
+bool DefaultGeometryRenderer::SetShader(AssetHandle shader)
 {
+	auto shader_pointer = asset_manager_->GetAsset<ShaderProgram>(shader);
+	if( shader_pointer == nullptr )
+		return false;
+
 	shader_ = shader;
 
 	material_uniform_block_index_ =
-		shader_->GetUniformBlockIndex("Material");
+		shader_pointer->GetUniformBlockIndex("Material");
 	material_uniform_buffer_size_ =
-		shader_->GetUniformBlockDataSize(material_uniform_block_index_);
+		shader_pointer->GetUniformBlockDataSize(material_uniform_block_index_);
 }
 
 void DefaultGeometryRenderer::Render(
@@ -41,13 +46,16 @@ void DefaultGeometryRenderer::Render(
 	const std::vector<GeometryRenderData>& data)
 {
 
-	if( !shader_ )
+	auto shader_pointer = asset_manager_->GetAsset<ShaderProgram>(shader_);
+
+	if( !shader_pointer )
 		return;
 
-	shader_->Use(),
-		glUniformMatrix4fv(
-			shader_->GetUniformLocation("uProjectionMatrix"),
-			1, GL_FALSE, &proj[0][0]);
+	shader_pointer->Use();
+
+	glUniformMatrix4fv(
+		shader_pointer->GetUniformLocation("uProjectionMatrix"),
+		1, GL_FALSE, &proj[0][0]);
 
 	GeometryMesh* currentMesh = nullptr;
 	Material*     currentMaterial = nullptr;
@@ -71,10 +79,10 @@ void DefaultGeometryRenderer::Render(
 		glm::mat4 modleView = view*it.transform;
 
 		glUniformMatrix4fv(
-			shader_->GetUniformLocation("uModleViewMatrix"),
+			shader_pointer->GetUniformLocation("uModleViewMatrix"),
 			1, GL_FALSE, &(modleView[0][0]));
 		glUniformMatrix4fv(
-			shader_->GetUniformLocation("uNormalMatrix"),
+			shader_pointer->GetUniformLocation("uNormalMatrix"),
 			1, GL_FALSE, &(modleView[0][0]));
 
 		glLoadIdentity();
@@ -125,25 +133,14 @@ std::unique_ptr<Material> DefaultGeometryRenderer::CreateMaterial(
 
 std::unique_ptr<DefaultGeometryRenderer>
 DefaultGeometryRenderer::CreateRenderer(
-	const xml::Element* properties, unsigned id)
+	const xml::Element* properties, AssetManager* asset_manager, unsigned id)
 {
-	std::string filename;
-
-	auto program = std::make_shared<Shader>();
-	for( auto shader : xml::IterateChildElements(properties, "VertexShader") )
+	auto program = asset_manager->RequestAsset<ShaderProgram>(
+		properties->FirstChildElement("ShaderProgram"));
+	if( asset_manager->IsHandelValid(program) )
 	{
-		if( xml::GetAttribute(shader, "file", filename) )
-			program->AttachShaderFromFile(GL_VERTEX_SHADER, filename);
-	}
-	for( auto shader : xml::IterateChildElements(properties, "FragmentShader") )
-	{
-		if( xml::GetAttribute(shader, "file", filename) )
-			program->AttachShaderFromFile(GL_FRAGMENT_SHADER, filename);
-	}
-
-	if( program->Link() )
-	{
-		auto renderer = std::make_unique<DefaultGeometryRenderer>(id);
+		auto renderer = std::make_unique<DefaultGeometryRenderer>(
+			asset_manager,id);
 		renderer->SetShader(program);
 		return std::move(renderer);
 	}

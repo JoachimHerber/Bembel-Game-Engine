@@ -43,18 +43,6 @@ const std::string& GeometryMesh::GetTypeName()
 	return type_name;
 }
 
-std::unique_ptr<GeometryMesh> GeometryMesh::LoadAsset(
-	AssetManager* asset_manager, const xml::Element* properties)
-{
-	std::string file_name;
-	if( xml::GetAttribute(properties, "file_name", file_name) )
-		return LoadAsset(asset_manager, file_name);
-
-	return nullptr;
-}
-
-void GeometryMesh::DeleteAsset(AssetManager*, std::unique_ptr<GeometryMesh>)
-{}
 
 std::unique_ptr<GeometryMesh> GeometryMesh::LoadAsset(
 	AssetManager*, const std::string& file_name)
@@ -78,6 +66,15 @@ std::unique_ptr<GeometryMesh> GeometryMesh::LoadAsset(
 	}
 	return CreateGeometryMesh(root);
 }
+
+std::unique_ptr<GeometryMesh> GeometryMesh::CreateAsset(
+	AssetManager* asset_manager, const xml::Element* properties)
+{
+	return CreateGeometryMesh(properties);
+}
+
+void GeometryMesh::DeleteAsset(AssetManager*, std::unique_ptr<GeometryMesh>)
+{}
 
 std::unique_ptr<GeometryMesh> GeometryMesh::CreateGeometryMesh(
 	const xml::Element* properties)

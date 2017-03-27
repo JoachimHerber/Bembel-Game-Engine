@@ -21,7 +21,7 @@
 namespace bembel {
 
 class AssetManager;
-class Shader;
+class ShaderProgram;
 class GeometryMesh;
 class Material;
 
@@ -43,7 +43,9 @@ struct GeometryRenderData
 class BEMBEL_API GeometryRendererBase
 {
 public:
-	GeometryRendererBase(unsigned id) : id_(id)
+	GeometryRendererBase(AssetManager* asset_manager, unsigned id)
+		: asset_manager_{asset_manager}
+		, id_{id}
 	{};
 	virtual ~GeometryRendererBase()
 	{};
@@ -61,16 +63,17 @@ public:
 	virtual std::unique_ptr<Material> CreateMaterial(const xml::Element* propertiey) = 0;
 
 protected:
+	AssetManager* asset_manager_;
 	const unsigned id_;
 };
 
 class BEMBEL_API DefaultGeometryRenderer : public GeometryRendererBase
 {
 public:
-	DefaultGeometryRenderer(unsigned id);
+	DefaultGeometryRenderer(AssetManager* asset_manager, unsigned id);
 	~DefaultGeometryRenderer();
 
-	void SetShader(std::shared_ptr<Shader>);
+	bool SetShader(AssetHandle);
 
 	virtual void Render(
 		const glm::mat4& proj,
@@ -81,14 +84,13 @@ public:
 		const xml::Element* propertiey) override;
 
 	static std::unique_ptr<DefaultGeometryRenderer>
-		CreateRenderer(const xml::Element*, unsigned id);
+		CreateRenderer(const xml::Element*, AssetManager*, unsigned id);
 
 private:
-	std::shared_ptr<Shader> shader_;
+	AssetHandle shader_;
 
 	GLuint material_uniform_block_index_;
 	GLuint material_uniform_buffer_size_;
-
 };
 
 } //end of namespace bembel

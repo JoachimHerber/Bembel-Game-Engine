@@ -7,14 +7,18 @@
 #include "bembel-config.h"
 
 #include <memory>
+#include <vector>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-namespace bembel{
+namespace bembel {
 
 class RenderingPipeline;
+class AssetManager;
 class Scene;
+class Texture;
+class FrameBufferObject;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -25,23 +29,33 @@ namespace bembel {
 class BEMBEL_API RenderingStage
 {
 public:
-	RenderingStage(RenderingPipeline* pipline)
-		: pipline_(pipline)
-	{}
-	virtual ~RenderingStage()
-	{}
+	RenderingStage(RenderingPipeline* pipline);
+	virtual ~RenderingStage();
 
-	using ScenePtr = std::shared_ptr<Scene>;
-	virtual void SetScene(ScenePtr)
-	{}
+	virtual void SetScene(Scene*);
 
-	virtual void Init() = 0;
-	virtual void Cleanup() = 0;
+	virtual void Init();
+	virtual void Cleanup();
 
 	virtual void DoRendering() = 0;
 
 protected:
+	AssetManager* GetAssetManager() const;
+
+	void SetInputTextures(const std::vector<std::string>&);
+
+	void SetDepthOutputTexture(const std::string&);
+	void SetColorOutputTexture(unsigned index, const std::string&);
+
+	void BindInputTextures();
+	void ReleaseInputTextures();
+
+protected:
 	RenderingPipeline* pipline_;
+
+	std::vector<Texture*>              textures_;
+	std::unique_ptr<FrameBufferObject> fbo_;
+
 };
 
 } //end of namespace bembel

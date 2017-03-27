@@ -54,6 +54,11 @@ bool AssetManager::IsHandelValid(AssetHandle asset_handel)
 	return asset_container_[asset_handel.type_id]->IsHandelValid(asset_handel);
 }
 
+AssetLocator & AssetManager::GetAssetLocator()
+{
+	return asset_locator_;
+}
+
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

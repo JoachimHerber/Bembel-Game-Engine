@@ -21,32 +21,10 @@ namespace bembel {
 
 GeometryRenderingStage::GeometryRenderingStage(RenderingPipeline* pipline)
 	: RenderingStage(pipline)
-	, fbo_(std::make_unique<FrameBufferObject>())
 {}
 
 GeometryRenderingStage::~GeometryRenderingStage()
 {}
-
-void GeometryRenderingStage::SetDepthOutputTexture(const std::string& texture)
-{
-	fbo_->SetDepthAttechment(pipline_->GetTexture(texture));
-}
-
-void GeometryRenderingStage::SetColorOutputTexture(
-	unsigned index, const std::string& texture)
-{
-	fbo_->SetColorAttechment(index, pipline_->GetTexture(texture));
-}
-
-void GeometryRenderingStage::Init()
-{
-	fbo_->Init();
-}
-
-void GeometryRenderingStage::Cleanup()
-{
-	fbo_->CleanUp();
-}
 
 void GeometryRenderingStage::DoRendering()
 {
@@ -102,7 +80,7 @@ void GeometryRenderingStage::DoRendering()
 	fbo_->EndRenderToTexture();
 }
 
-void GeometryRenderingStage::SetScene(ScenePtr scene)
+void GeometryRenderingStage::SetScene(Scene* scene)
 {
 	scene_ = scene;
 

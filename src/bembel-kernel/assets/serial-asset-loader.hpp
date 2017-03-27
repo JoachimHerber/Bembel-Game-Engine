@@ -8,6 +8,7 @@
 
 #include "asset-loader.h"
 #include "asset-manager.h"
+#include "asset-locator.h"
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */

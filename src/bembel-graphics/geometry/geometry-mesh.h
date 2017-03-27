@@ -34,7 +34,7 @@ public:
 
 	static std::unique_ptr<GeometryMesh> LoadAsset(
 		AssetManager* asset_manager, const std::string& file_name);
-	static std::unique_ptr<GeometryMesh> LoadAsset(
+	static std::unique_ptr<GeometryMesh> CreateAsset(
 		AssetManager* asset_manager, const xml::Element* properties);
 
 	static void DeleteAsset(

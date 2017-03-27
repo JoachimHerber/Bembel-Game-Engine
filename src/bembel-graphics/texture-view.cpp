@@ -45,8 +45,9 @@ void main()
 )";
 } // anon namespace
 
-TextureView::TextureView(TexturePtr texture)
-	: texture_(texture)
+TextureView::TextureView(AssetManager* asset_manager, Texture* texture)
+	: asset_manager_{asset_manager}
+	, texture_(texture)
 	, min_(0, 0)
 	, max_(1, 1)
 {}
@@ -63,9 +64,18 @@ void TextureView::SetViewArea(
 
 void TextureView::Init()
 {
-	shader_ = std::make_shared<Shader>();
-	shader_->AttachShader(GL_VERTEX_SHADER, kRenderingPipelineResultViewVert);
-	shader_->AttachShader(GL_FRAGMENT_SHADER, kRenderingPipelineResultViewFrag);
+	shader_ = new ShaderProgram();
+	shader_->AttachShader(
+		asset_manager_,
+		asset_manager_->AddAsset<Shader>(Shader::CreateShader(
+			GL_VERTEX_SHADER, kRenderingPipelineResultViewVert
+	)));
+
+	shader_->AttachShader(
+		asset_manager_, 
+		asset_manager_->AddAsset<Shader>(Shader::CreateShader(
+			GL_FRAGMENT_SHADER, kRenderingPipelineResultViewFrag
+	)));
 	shader_->Link();
 
 	shader_->Use();
@@ -76,7 +86,8 @@ void TextureView::Init()
 
 void TextureView::Cleanup()
 {
-	shader_.reset();
+	delete shader_;
+	shader_ = nullptr;
 }
 
 void TextureView::Draw()
