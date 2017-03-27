@@ -5,6 +5,7 @@
 /*============================================================================*/
 
 #include "bembel-config.h"
+#include "bembel-open-gl.h"
 #include "viewport.h"
 
 #include <glm/glm.hpp>
@@ -15,7 +16,7 @@ namespace bembel {
 
 class Texture;
 class AssetManager;
-class ShaderProgram;
+class FrameBufferObject;
 
 }//end of namespace bembel
 /*============================================================================*/
@@ -29,25 +30,26 @@ public:
 	TextureView(AssetManager*, Texture* color);
 	~TextureView();
 
-	const glm::vec2& GetViewAreaMin() const;
-	const glm::vec2& GetViewAreaMax() const;
-
-	void SetViewArea(const glm::vec2& min, const glm::vec2& max);
+	void SetViewArea(const glm::ivec2& pos, const glm::uvec2& size);
+	glm::ivec2 GetViewAreaPosition() const;
+	glm::uvec2 GetViewAreaSize() const;
 
 	void Init();
 	void Cleanup();
 
-	virtual void Draw() override;
+	virtual void Draw(
+		const glm::ivec2& viewport_position,
+		const glm::uvec2& viewport_size
+	) override;
 
 private:
 	AssetManager* asset_manager_;
 	Texture* texture_;
 
-	glm::vec2 min_;
-	glm::vec2 max_;
+	glm::ivec2 view_area_pos_;
+	glm::uvec2 view_area_size_;
 
-	ShaderProgram* shader_;
-	int            uniform_;
+	std::unique_ptr<FrameBufferObject> fbo_;
 };
 
 } //end of namespace bembel

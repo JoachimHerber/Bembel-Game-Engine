@@ -31,7 +31,7 @@ bool LoadCubeMapSide(GLenum target, const std::string& file)
 
 	glTexImage2D(
 		target, 0,
-		static_cast<GLint>(GL_SRGB8),
+		static_cast<GLint>(GL_RGB8),
 		image.GetWidth(), image.GetHeight(), 0,
 		image.GetChannels() == 4 ? GL_RGBA : GL_RGB,
 		GL_UNSIGNED_BYTE, image.GetData());

@@ -26,7 +26,10 @@ public:
 		virtual ~View()
 		{}
 
-		virtual void Draw() = 0;
+		virtual void Draw(
+			const glm::ivec2& viewport_position,
+			const glm::uvec2& viewport_size
+		) = 0;
 	};
 
 	Viewport();

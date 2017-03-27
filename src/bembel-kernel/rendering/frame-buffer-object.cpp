@@ -127,6 +127,23 @@ void FrameBufferObject::EndRenderToTexture()
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 }
 
+void FrameBufferObject::BlitToBackBuffer(
+	const glm::ivec2& source_min,
+	const glm::ivec2& source_max,
+	const glm::ivec2& target_min,
+	const glm::ivec2& target_max)
+{
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER, handle_);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+	glBlitFramebufferEXT(
+		source_min.x, source_min.y, source_max.x, source_max.y,
+		target_min.x, target_min.y, target_max.x, target_max.y,
+		GL_COLOR_BUFFER_BIT, GL_LINEAR
+	); 	
+	glBindFramebufferEXT(GL_READ_FRAMEBUFFER, 0);
+}
+
 } //end of namespace bembel
 /*============================================================================*/
 /* END OF FILE                                                                */

@@ -176,14 +176,7 @@ void GraphicSystem::HandleEvent(const WindowUpdateEvent& event)
 		auto view = viewport->GetView();
 		if( !view )
 			continue;
-
-		glViewport(
-			viewport->GetPosition().x,
-			viewport->GetPosition().y,
-			viewport->GetSize().x,
-			viewport->GetSize().y
-		);
-		view->Draw();
+		view->Draw(viewport->GetPosition(), viewport->GetSize());
 	}
 }
 

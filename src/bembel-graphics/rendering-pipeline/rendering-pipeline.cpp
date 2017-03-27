@@ -236,7 +236,10 @@ void RenderingPipeline::InitViews(const xml::Element* properties)
 		xml::GetAttribute(viewProperties, "right", r);
 		xml::GetAttribute(viewProperties, "bottom", b);
 		xml::GetAttribute(viewProperties, "top", t);
-		view->SetViewArea(glm::vec2(l, b), glm::vec2(r, t));
+		view->SetViewArea(
+			glm::vec2(resolution_)*glm::vec2(l, b),
+			glm::vec2(resolution_)*glm::vec2(r-l, t-b)
+		);
 	}
 }
 
@@ -276,7 +279,10 @@ GLenum RenderingPipeline::StringToTextureFormat(const std::string& format)
 		{"GL_RGB8", GL_RGB8},
 		{"GL_RGB16", GL_RGB16},
 		{"GL_RGB16F", GL_RGB16F},
-		{"GL_RGB32F", GL_RGB32F}
+		{"GL_RGB32F", GL_RGB32F},
+
+		{"GL_SRGB8", GL_SRGB8},
+		{"GL_SRGB8_ALPHA8", GL_SRGB8_ALPHA8},
 	};
 	auto it = mapping.find(format);
 	if( it != mapping.end() )

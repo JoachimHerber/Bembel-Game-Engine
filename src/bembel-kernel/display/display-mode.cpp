@@ -45,6 +45,7 @@ GLFWwindow* WindowDisplayMode::CreatWindow(
 	glfwDefaultWindowHints();
 
 	glfwWindowHint(GLFW_RESIZABLE, resizable_);
+	glfwWindowHint(GLFW_SRGB_CAPABLE, true);
 
 	GLFWwindow* window = glfwCreateWindow(
 		width_, height_, title.c_str(), nullptr, shared_context);

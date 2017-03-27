@@ -10,6 +10,8 @@
 #include <memory>
 #include <vector>
 
+#include <glm/glm.hpp>
+
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
@@ -38,6 +40,13 @@ public:
 
 	void BeginRenderToTexture();
 	void EndRenderToTexture();
+
+	void BlitToBackBuffer(
+		const glm::ivec2& source_min,
+		const glm::ivec2& source_max,
+		const glm::ivec2& target_min,
+		const glm::ivec2& target_max
+	);
 
 private:
 	GLuint handle_;

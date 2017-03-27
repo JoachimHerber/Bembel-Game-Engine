@@ -102,8 +102,10 @@ void SelectionPointer::UpdateRay(
 			if( view != it.get() )
 				continue; // not the view we are looking for
 
-			glm::vec2 tc = it->GetViewAreaMin() +
-				pos * (it->GetViewAreaMax() - it->GetViewAreaMin());
+			glm::vec2 tc = 
+				glm::vec2(it->GetViewAreaPosition()) +
+				glm::vec2(it->GetViewAreaSize())* pos;
+			tc /= res;
 
 			auto cam = pipline->GetCamera();
 

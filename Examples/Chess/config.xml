@@ -19,7 +19,7 @@
 				</GeometryRenderer>
 			</Renderer>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="900" vertical_resolution="900">
+				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="1024">
 					<Textures>
 						<Texture name="depth"        format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
 						<Texture name="light"        format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
