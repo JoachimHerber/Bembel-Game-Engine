@@ -61,10 +61,10 @@ private:
 	GLuint vbo_;
 	unsigned buffer_size_;
 
-	Scene*                               scene_;
-	DirLightProperties::ContainerType*   dir_light_container_;
-	PointLightProperties::ContainerType* point_light_container_;
-	PositionComponent::ContainerType*    position_container_;
+	Scene*                               scene_ = nullptr;
+	DirLightProperties::ContainerType*   dir_light_container_ = nullptr;
+	PointLightProperties::ContainerType* point_light_container_ = nullptr;
+	PositionComponent::ContainerType*    position_container_ = nullptr;
 };
 
 } //end of namespace bembel

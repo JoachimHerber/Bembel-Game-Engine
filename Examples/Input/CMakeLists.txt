@@ -11,5 +11,5 @@ source_group( "src" FILES ${ProjectSources} )
 add_executable( InputExample ${ProjectSources} )
 target_link_libraries( InputExample Bembel ${EXTERNAL_LIBRARIES})
 set_target_properties( InputExample PROPERTIES FOLDER "examples" )
-bembel_configure_application( InputExample "examples/input")
+bembel_configure_application( InputExample "examples")
 

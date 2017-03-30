@@ -3,6 +3,7 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 include( cmake_utils )
 
 project( BembelGameEngine )
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
@@ -42,5 +43,6 @@ if( WIN32 )
 endif( WIN32 )
 
 bembel_conditional_add_sub_project(Input "examples/input" "a simple example that show how to handle input in the bembel game engine")
+bembel_conditional_add_sub_project(rendering "examples/rendering" "rendering example application")
 bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
 

@@ -19,7 +19,7 @@
 				</GeometryRenderer>
 			</Renderer>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="720">
+				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="1024">
 					<Textures>
 						<Texture name="depth"        format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
 						<Texture name="light"        format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
@@ -60,15 +60,13 @@
 							<Input texture="reflectivity" />
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
-						<SelectionRenderingStage>
-							<Shader file_name="selection.shader-program" />
-							<ColorOutput texture="light"/>
-							<DepthOutput texture="depth"/>
-						</SelectionRenderingStage>
 					</RenderingStages>
 					
 					<Views>	
 						<View texture="light"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="albedo"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="normal"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="reflectivity" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
@@ -77,8 +75,17 @@
 				</RenderingPipeline>
 			</RenderingPipelines>
 			<Viewports>
-				<Viewport position="0 0" size="1 1">
+				<Viewport position="0 0" size="0.75 1">
 					<PipelineResultView pipeline="0" view="0"/>
+				</Viewport>
+				<Viewport position="0.75 0.00000" size="0.25 0.33333">
+					<PipelineResultView pipeline="0" view="1"/>
+				</Viewport>
+				<Viewport position="0.75 0.33333" size="0.25 0.33334">
+					<PipelineResultView pipeline="0" view="2"/>
+				</Viewport>
+				<Viewport position="0.75 0.66667" size="0.25 0.33333">
+					<PipelineResultView pipeline="0" view="3"/>
 				</Viewport>
 			</Viewports>
 		</Graphics>

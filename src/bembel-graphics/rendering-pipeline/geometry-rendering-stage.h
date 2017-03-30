@@ -44,9 +44,9 @@ public:
 		CreateInstance(const xml::Element*, RenderingPipeline*);
 
 private:
-	Scene*                            scene_;
-	GeometryComponent::ContainerType* geometry_components_;
-	PositionComponent::ContainerType* position_components_;
+	Scene*                            scene_ = nullptr;
+	GeometryComponent::ContainerType* geometry_components_ = nullptr;
+	PositionComponent::ContainerType* position_components_ = nullptr;
 };
 
 } //end of namespace bembel

@@ -47,5 +47,5 @@ endforeach()
 add_executable( ChessApp ${ProjectSources} )
 target_link_libraries( ChessApp Bembel ${EXTERNAL_LIBRARIES})
 set_target_properties( ChessApp PROPERTIES FOLDER "examples" )
-bembel_configure_application( ChessApp "examples/chess")
+bembel_configure_application( ChessApp "examples")
 

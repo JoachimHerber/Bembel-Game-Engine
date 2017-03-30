@@ -36,7 +36,7 @@ ChessApplication::~ChessApplication()
 
 bool ChessApplication::Init()
 {
-	if (!kernel_->LoadSetting("config.xml"))
+	if (!kernel_->LoadSetting("chess/config.xml"))
 		return false;
 	auto pipline = _graphicSys->GetRenderingPiplies()[0].get();
 

@@ -219,7 +219,14 @@ std::unique_ptr<ShaderProgram> ShaderProgram::LoadAsset(
 			<< std::endl;
 		return nullptr;
 	}
-	return CreateAsset(asset_manager, root);
+	auto pragram = CreateAsset(asset_manager, root);
+	if( !pragram )
+	{
+		BEMBEL_LOG_ERROR()
+			<< "Failed to create shader program from file '" << file_name << "'"
+			<< std::endl;
+	}
+	return std::move(pragram);
 }
 
 std::unique_ptr<ShaderProgram> ShaderProgram::CreateAsset(
@@ -236,7 +243,9 @@ std::unique_ptr<ShaderProgram> ShaderProgram::CreateAsset(
 	}
 
 	if( !programm->Link() )
+	{
 		return nullptr;
+	}
 
 	return std::move(programm);
 }

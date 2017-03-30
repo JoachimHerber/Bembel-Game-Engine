@@ -89,6 +89,12 @@ bool Scene::LoadScene(const std::string& file_name)
 	if( !root )
 		return false;
 
+	const xml::Element* assets = root->FirstChildElement("Assets");
+	for( auto asset : xml::IterateChildElements(assets) )
+	{
+		LoadAsset(asset);
+	}
+
 	const xml::Element* entities = root->FirstChildElement("Entities");
 	for( auto entity : xml::IterateChildElements(entities, "Entity") )
 	{
