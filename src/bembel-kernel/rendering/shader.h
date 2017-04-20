@@ -70,7 +70,14 @@ public:
 
 	GLint  GetUniformLocation(const std::string& name) const;
 	GLuint GetUniformBlockIndex(const std::string& name) const;
-	GLint  GetUniformBlockDataSize(GLuint) const;
+	GLint  GetUniformBlockDataSize(GLuint block_index) const;
+	GLint  GetUniformBlockActiveUniforms(GLuint block_index) const;
+	void   GetUniformBlockActiveUniformIndices(
+		GLuint block_index, std::vector<GLint>* indices) const;
+
+	GLint GetActiveUniformOffset(GLuint uniform_index) const;
+	void  GetActiveUniform(
+		GLuint uniform_index, GLint* size, GLenum* type, std::string* name) const;
 
 	bool Link();
 

@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 
 #include <glm/glm.hpp>
 
@@ -73,7 +74,7 @@ public:
 	DefaultGeometryRenderer(AssetManager* asset_manager, unsigned id);
 	~DefaultGeometryRenderer();
 
-	bool SetShader(AssetHandle);
+	bool SetShader(AssetHandle program_handle);
 
 	virtual void Render(
 		const glm::mat4& proj,
@@ -91,6 +92,14 @@ private:
 
 	GLuint material_uniform_block_index_;
 	GLuint material_uniform_buffer_size_;
+
+	struct MaterialParam
+	{
+		GLint offset;
+		GLint size;
+		GLenum type;
+	};
+	std::map<std::string, MaterialParam> material_params_;
 };
 
 } //end of namespace bembel

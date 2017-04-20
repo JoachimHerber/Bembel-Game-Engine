@@ -10,14 +10,15 @@ uniform mat4 uNormalMatrix;
 uniform mat4 uModleViewMatrix;
 uniform mat4 uProjectionMatrix;
  
-out vec3 vNormal;
-out vec2 vTexCoord;
- 
+out DATA {
+	vec3 normal;
+	vec2 tex_coord;
+} vert_data;
  
 void main()
 {
- 	vNormal   = normalize((uNormalMatrix*vec4(aNormal,0)).xyz);
-	vTexCoord = aTexCoord;
+ 	vert_data.normal    = normalize((uNormalMatrix*vec4(aNormal,0)).xyz);
+	vert_data.tex_coord = aTexCoord;
  
  	gl_Position = 
  		uProjectionMatrix*uModleViewMatrix*vec4(aPosition,1);
@@ -27,17 +28,21 @@ void main()
 	<Shader type="GL_FRAGMENT_SHADER">
 #version 330
  
-in vec3 vNormal;
-in vec2 vTexCoord;
+in DATA {
+	vec3 normal;
+	vec2 tex_coord;
+} frag_data;
+
 
 layout(std140) uniform Material
 {
-	vec4 uAlbedo;
-	vec4 uEmission;
-	vec4 uReflectivity;
-	float uRoughness;
-};
- 
+	vec3 albedo;
+	vec3 emission;
+	vec3 reflectivity;
+	float roughness;
+} material;
+
+
 layout(location = 0) out vec3 oEmission;
 layout(location = 1) out vec3 oAlbedo;
 layout(location = 2) out vec3 oReflectivity;
@@ -50,10 +55,10 @@ vec3 EncodeNormal (vec3 n)
 
 void main()
 {
- 	oEmission     = uEmission.rgb;
- 	oAlbedo       = uAlbedo.rgb;
- 	oReflectivity  = uReflectivity.rgb;
- 	oNormal       = vec4(EncodeNormal(normalize(vNormal)), uRoughness);
+ 	oEmission    = material.albedo;
+ 	oAlbedo      = material.emission;
+ 	oReflectivity = material.reflectivity;
+ 	oNormal      = vec4(EncodeNormal(normalize(frag_data.normal)), material.roughness);
 }
 	</Shader>
 </ShaderProgram>

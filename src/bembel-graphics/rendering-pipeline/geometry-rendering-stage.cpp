@@ -43,8 +43,8 @@ void GeometryRenderingStage::DoRendering()
 	auto cam = pipline_->GetCamera();
 
 	const auto& entitis = scene_->GetEntitys();
-	// 	const auto& posComp = _positionComponents->GetComponents();
-	// 	const auto& geometrys = _geometryComponents->GetComponents();
+	const std::vector<PositionComponent>& position_components = position_components_->GetComponents();
+	const std::vector<GeometryComponent>& geometry_components = geometry_components_->GetComponents();
 
 	auto& renderQueue = pipline_->GetGraphicSystem()->GetGeometryRenderQueue();
 	renderQueue.ClearRendarData();
@@ -62,11 +62,11 @@ void GeometryRenderingStage::DoRendering()
 		if( entitis[entity] & position_components_->GetComponentMask() )
 		{
 			transform = glm::translate(
-				transform, position_components_->GetComponent(entity)->position);
+				transform, position_components[entity].position);
 		}
 
-		GeometryComponent* geom = geometry_components_->GetComponent(entity);
-		renderQueue.AddGeometryObject(geom->model, transform);
+		const GeometryComponent& geom = geometry_components[entity];
+		renderQueue.AddGeometryObject(geom.model, transform);
 	}
 
 	renderQueue.SortRenderData();

@@ -38,6 +38,23 @@ bool DefaultGeometryRenderer::SetShader(AssetHandle shader)
 		shader_pointer->GetUniformBlockIndex("Material");
 	material_uniform_buffer_size_ =
 		shader_pointer->GetUniformBlockDataSize(material_uniform_block_index_);
+
+	std::vector<GLint> active_uniform_indices;
+	shader_pointer->GetUniformBlockActiveUniformIndices(
+		material_uniform_block_index_, &active_uniform_indices);
+
+	for( GLint uniform_index : active_uniform_indices )
+	{
+		MaterialParam param;
+		param.offset = shader_pointer->GetActiveUniformOffset(uniform_index);
+		std::string name;
+		GLint size;
+		shader_pointer->GetActiveUniform(uniform_index, &param.size, &param.type, &name);
+
+		material_params_[name] = param;
+		std::string param_name = name.substr(name.find_last_of(".") + 1);
+		material_params_[param_name] = param;
+	}
 }
 
 void DefaultGeometryRenderer::Render(
@@ -106,26 +123,57 @@ std::unique_ptr<Material> DefaultGeometryRenderer::CreateMaterial(
 	auto mat = std::make_unique<Material>(
 		GetRendererID(), material_uniform_buffer_size_);
 
-	glm::vec3 albedo = {0.9f, 0.9f, 0.1f};
-	glm::vec3 emission = {0.0f, 0.0f, 0.0f};
-	glm::vec3 reflectivity = {0.2f, 0.2f, 0.2f};
-	float     roughness = {0.5f};
-	xml::GetAttribute(properties, "albedo", albedo);
-	xml::GetAttribute(properties, "emission", emission);
-	xml::GetAttribute(properties, "reflectivity", reflectivity);
-	xml::GetAttribute(properties, "roughness", roughness);
+	std::vector<GLbyte> data;
+	data.resize(material_uniform_buffer_size_);
+	for( auto& it : material_params_ )
+	{
+		MaterialParam& param = it.second;
+		switch( param.type )
+		{
+		case GL_FLOAT:
+		{
+			float value;
+			if(xml::GetAttribute(properties, it.first, value))
+				memcpy(&data[0] + param.offset, &value, sizeof(value));
+		}
+		break;
+		case GL_FLOAT_VEC2:
+		{
+			glm::vec2 value;
+			if( xml::GetAttribute(properties, it.first, value) )
+				memcpy(&data[0] + param.offset, &value, sizeof(value));
+		}
+		break;
+		case GL_FLOAT_VEC3:
+		{
+			glm::vec3 value;
+			if( xml::GetAttribute(properties, it.first, value) )
+				memcpy(&data[0] + param.offset, &value, sizeof(value));
+		}
+		break;
+		case GL_FLOAT_VEC4:
+		{
+			glm::vec4 value;
+			if( xml::GetAttribute(properties, it.first, value) )
+				memcpy(&data[0] + param.offset, &value, sizeof(value));
+		}
+		break;
+		default:
+			break;
+		}
+	}
 
-	float matData[] = {
-		albedo.r, albedo.g, albedo.b, 1.0f,
-		emission.r, emission.g, emission.b,  1.0f,
-		reflectivity.r, reflectivity.g, reflectivity.b, 1.0f,
-		roughness};
+	//glm::vec3 albedo = {0.9f, 0.9f, 0.1f};
+	//glm::vec3 emission = {0.0f, 0.0f, 0.0f};
+	//glm::vec3 reflectivity = {0.2f, 0.2f, 0.2f};
+	//float     roughness = {0.5f};
+	//xml::GetAttribute(properties, "albedo", albedo);
+	//xml::GetAttribute(properties, "emission", emission);
+	//xml::GetAttribute(properties, "reflectivity", reflectivity);
+	//xml::GetAttribute(properties, "roughness", roughness);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, mat->GetUniformBufferObject());
-	glBufferSubData(
-		GL_UNIFORM_BUFFER, 0,
-		13*sizeof(float), &matData
-	);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, material_uniform_buffer_size_, &data[0]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	return std::move(mat);
@@ -141,8 +189,8 @@ DefaultGeometryRenderer::CreateRenderer(
 	{
 		auto renderer = std::make_unique<DefaultGeometryRenderer>(
 			asset_manager,id);
-		renderer->SetShader(program);
-		return std::move(renderer);
+		if( renderer->SetShader(program))
+			return std::move(renderer);
 	}
 	return nullptr;
 }

@@ -283,15 +283,59 @@ GLuint ShaderProgram::GetUniformBlockIndex(const std::string& name) const
 	return  glGetUniformBlockIndex(program_handle_, name.c_str());
 }
 
-GLint ShaderProgram::GetUniformBlockDataSize(GLuint index) const
+GLint ShaderProgram::GetUniformBlockDataSize(GLuint block_index) const
 {
 	GLint size;
 	glGetActiveUniformBlockiv(
-		program_handle_, index, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+		program_handle_, block_index, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
 	return size;
+}
+GLint ShaderProgram::GetUniformBlockActiveUniforms(GLuint block_index) const
+{
+	GLint active_uniforms;
+	glGetActiveUniformBlockiv(
+		program_handle_, block_index, 
+		GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &active_uniforms);
+	return active_uniforms;
+}
+
+void ShaderProgram::GetUniformBlockActiveUniformIndices(
+	GLuint block_index, std::vector<GLint>* indices) const
+{
+	indices->resize(GetUniformBlockActiveUniforms(block_index));
+	GLint active_uniforms;
+	glGetActiveUniformBlockiv(
+		program_handle_, block_index,
+		GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, &(*indices)[0]);
+
+}
+
+GLint ShaderProgram::GetActiveUniformOffset(GLuint uniform_index) const
+{
+	GLint offset;
+	glGetActiveUniformsiv(
+		program_handle_, 1,
+		&uniform_index, GL_UNIFORM_OFFSET, &offset);
+	return offset;
+}
+
+void ShaderProgram::GetActiveUniform(
+	GLuint uniform_index, GLint* size, GLenum* type, std::string* name) const
+{
+	GLint name_length;
+
+	glGetActiveUniformsiv(
+		program_handle_, 1,
+		&uniform_index, GL_UNIFORM_NAME_LENGTH, &name_length);
+	GLchar* buffer = new GLchar[name_length];
+	glGetActiveUniform(
+		program_handle_, uniform_index, name_length, nullptr, size, type, buffer);
+
+	*name = buffer;
+	delete[] buffer;
 }
 
 } //end of namespace bembel
-  /*============================================================================*/
-  /* END OF FILE                                                                */
-  /*============================================================================*/
+/*============================================================================*/
+/* END OF FILE                                                                */
+/*============================================================================*/

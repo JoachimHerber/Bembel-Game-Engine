@@ -44,7 +44,7 @@
 							<Input texture="reflectivity" />
 							<Input texture="normal" />
 						</DeferredLightingStage>
-						<EnvironmentMapReflectionStage>
+						<!--<EnvironmentMapReflectionStage>
 							<EnvironmentMap
 								left   = "assets/skybox/X-.png"
 								right  = "assets/skybox/X+.png"
@@ -59,7 +59,7 @@
 							<Input texture="albedo" />
 							<Input texture="reflectivity" />
 							<Input texture="normal" />
-						</EnvironmentMapReflectionStage>
+						</EnvironmentMapReflectionStage>-->
 					</RenderingStages>
 					
 					<Views>	
