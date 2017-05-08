@@ -7,6 +7,8 @@
 #include "bembel-open-gl.h"
 #include "bembel-config.h"
 
+#include <vector>
+
 #include <glm/glm.hpp>
 
 #include <bembel-kernel/assets/asset-manager.h>
@@ -39,12 +41,17 @@ public:
 	unsigned GetRenderer() const;
 	GLuint GetUniformBufferObject() const;
 
+	const std::vector<AssetHandle>& GetTextures() const;
+	void SetTextures(const std::vector<AssetHandle>& textures);
+
 	const static std::string& GetTypeName();
 
 private:
 	unsigned renderer_ = 0;
 
 	GLuint uniform_buffer_object_;
+
+	std::vector<AssetHandle> textures_;
 }; 
 
 class BEMBEL_API MaterialLoader final : public AssetLoaderBase

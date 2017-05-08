@@ -35,6 +35,16 @@ GLuint Material::GetUniformBufferObject() const
 	return uniform_buffer_object_;
 }
 
+const std::vector<AssetHandle>& Material::GetTextures() const
+{
+	return textures_;
+}
+
+void Material::SetTextures(const std::vector<AssetHandle>& textures)
+{
+	textures_ = textures;
+}
+
 const std::string& Material::GetTypeName()
 {
 	const static std::string type_name = "Material";
@@ -90,7 +100,8 @@ AssetHandle MaterialLoader::RequestAsset(const xml::Element* properties)
 			return AssetHandle();
 
 		// we have to load the asset
-		std::unique_ptr<Material> asset = renderer->CreateMaterial(properties);
+		std::unique_ptr<Material> asset = 
+			renderer->CreateMaterial(asset_manager_, properties);
 		if( !asset )
 			return AssetHandle();
 
@@ -109,41 +120,15 @@ bool MaterialLoader::ReleaseAsset(AssetHandle asset_handel)
 		container_->DecrementAssetRefCount(asset_handel);
 		if( container_->GetAssetRefCount(asset_handel) == 0 )
 		{
-			container_->RemoveAsset(asset_handel);
+			auto mat = container_->RemoveAsset(asset_handel);
+			for( auto& it : mat->GetTextures() )
+				asset_manager_->ReleaseAsset(it);
+
 			return true;
 		}
 	}
 	return false;
 }
-
-/*
-AssetHandle MaterialLoader::RequestAsset(
-	const xml::Element* properties )
-{
-	std::string name = "", rendererName = "";
-	if( !xml::GetAttribute( properties, "name", name ) ||
-		_container->HasAsset( name ) )
-	{
-		// all assets must have a unique name
-		return false;
-	}
-
-	xml::GetAttribute( properties, "renderer", rendererName );
-
-	auto renderer = _graphicSys->GetRenderer( rendererName );
-	if( !renderer )
-		return false;
-
-	auto mat = renderer->CreateMaterial( properties );
-
-	AssetHandle handle = _container->AddAsset( std::move( mat ) );
-	if( !_container->IsHandelValid( handle ) )
-		return false;
-
-	_container->RegisterAssetAlias( handle, name );
-	return true;
-}
-*/
 
 void MaterialLoader::Update()
 {}

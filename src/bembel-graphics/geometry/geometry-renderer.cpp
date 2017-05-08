@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 
 #include <bembel-kernel/rendering/shader.h>
+#include <bembel-kernel/rendering/texture.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -25,6 +26,13 @@ DefaultGeometryRenderer::DefaultGeometryRenderer(
 
 DefaultGeometryRenderer::~DefaultGeometryRenderer()
 {}
+
+void DefaultGeometryRenderer::AddRequiredTexture(
+	const std::string & texture_name,
+	const std::string & uniform_sampler_name)
+{
+	required_textures_.push_back({texture_name, uniform_sampler_name});
+}
 
 bool DefaultGeometryRenderer::SetShader(AssetHandle shader)
 {
@@ -55,6 +63,17 @@ bool DefaultGeometryRenderer::SetShader(AssetHandle shader)
 		std::string param_name = name.substr(name.find_last_of(".") + 1);
 		material_params_[param_name] = param;
 	}
+
+	shader_pointer->Use();
+	GLuint sampler_location = 0;
+	for( const auto& it : required_textures_ )
+	{
+		glUniform1i(
+			shader_pointer->GetUniformLocation(it.uniform_sampler_name),
+			sampler_location);
+		++sampler_location;
+	}
+
 }
 
 void DefaultGeometryRenderer::Render(
@@ -62,7 +81,6 @@ void DefaultGeometryRenderer::Render(
 	const glm::mat4& view,
 	const std::vector<GeometryRenderData>& data)
 {
-
 	auto shader_pointer = asset_manager_->GetAsset<ShaderProgram>(shader_);
 
 	if( !shader_pointer )
@@ -91,6 +109,15 @@ void DefaultGeometryRenderer::Render(
 			currentMaterial = it.material;
 			glBindBufferBase(
 				GL_UNIFORM_BUFFER, 0, currentMaterial->GetUniformBufferObject());
+
+			GLenum active_texture = GL_TEXTURE0;
+			for(auto it : currentMaterial->GetTextures())
+			{
+				glActiveTexture(active_texture);
+				auto texture = asset_manager_->GetAsset<Texture>(it);
+				texture->Bind();
+				active_texture = active_texture + 1;
+			}
 		}
 
 		glm::mat4 modleView = view*it.transform;
@@ -117,60 +144,76 @@ void DefaultGeometryRenderer::Render(
 }
 
 
+namespace {
+template<typename T>
+bool ReadMaterialParam(
+	const xml::Element* properties,
+	const std::string& param_name,
+	GLbyte* dest)
+{
+	T value;
+	if( xml::GetAttribute(properties, param_name, value) )
+	{
+		memcpy(dest, &value, sizeof(value));
+		return true;
+	}
+	return false;
+}
+}//anon namespace
+
+bool DefaultGeometryRenderer::ReadMaterialParameter(
+	const xml::Element* properties,
+	const std::string& param_name,
+	const MaterialParam& param,
+	GLbyte* buffer)
+{
+	switch( param.type )
+	{
+	case GL_FLOAT:
+		return ReadMaterialParam<float>(properties, param_name, buffer + param.offset);
+	case GL_FLOAT_VEC2:
+		return ReadMaterialParam<glm::vec2>(properties, param_name, buffer + param.offset);
+	case GL_FLOAT_VEC3:
+		return ReadMaterialParam<glm::vec3>(properties, param_name, buffer + param.offset);
+	case GL_FLOAT_VEC4:
+		return ReadMaterialParam<glm::vec4>(properties, param_name, buffer + param.offset);
+	}
+	return false;
+}
+
 std::unique_ptr<Material> DefaultGeometryRenderer::CreateMaterial(
+	AssetManager* asset_manager,
 	const xml::Element* properties)
 {
 	auto mat = std::make_unique<Material>(
 		GetRendererID(), material_uniform_buffer_size_);
 
+	std::vector<AssetHandle> textures;
+	for( auto& it : required_textures_ )
+	{
+		auto texture = properties->FirstChildElement(it.texture_name.c_str());
+		if( texture == nullptr )
+		{
+			BEMBEL_LOG_ERROR() << "Material does not secify a '"<< it.texture_name <<"' texture.";
+			return nullptr;
+		}
+		
+		auto texture_hndl_ = asset_manager->RequestAsset<Texture>(texture);
+		if(!asset_manager->IsHandelValid(texture_hndl_))
+		{
+			BEMBEL_LOG_ERROR() << "Can't find reqired '"<< it.texture_name <<"' texture for material.";
+			return nullptr;
+		}
+		textures.push_back(texture_hndl_);
+	}
+	mat->SetTextures(textures);
+
 	std::vector<GLbyte> data;
 	data.resize(material_uniform_buffer_size_);
 	for( auto& it : material_params_ )
 	{
-		MaterialParam& param = it.second;
-		switch( param.type )
-		{
-		case GL_FLOAT:
-		{
-			float value;
-			if(xml::GetAttribute(properties, it.first, value))
-				memcpy(&data[0] + param.offset, &value, sizeof(value));
-		}
-		break;
-		case GL_FLOAT_VEC2:
-		{
-			glm::vec2 value;
-			if( xml::GetAttribute(properties, it.first, value) )
-				memcpy(&data[0] + param.offset, &value, sizeof(value));
-		}
-		break;
-		case GL_FLOAT_VEC3:
-		{
-			glm::vec3 value;
-			if( xml::GetAttribute(properties, it.first, value) )
-				memcpy(&data[0] + param.offset, &value, sizeof(value));
-		}
-		break;
-		case GL_FLOAT_VEC4:
-		{
-			glm::vec4 value;
-			if( xml::GetAttribute(properties, it.first, value) )
-				memcpy(&data[0] + param.offset, &value, sizeof(value));
-		}
-		break;
-		default:
-			break;
-		}
+		ReadMaterialParameter(properties, it.first, it.second, &data[0]);
 	}
-
-	//glm::vec3 albedo = {0.9f, 0.9f, 0.1f};
-	//glm::vec3 emission = {0.0f, 0.0f, 0.0f};
-	//glm::vec3 reflectivity = {0.2f, 0.2f, 0.2f};
-	//float     roughness = {0.5f};
-	//xml::GetAttribute(properties, "albedo", albedo);
-	//xml::GetAttribute(properties, "emission", emission);
-	//xml::GetAttribute(properties, "reflectivity", reflectivity);
-	//xml::GetAttribute(properties, "roughness", roughness);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, mat->GetUniformBufferObject());
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, material_uniform_buffer_size_, &data[0]);
@@ -188,8 +231,18 @@ DefaultGeometryRenderer::CreateRenderer(
 	if( asset_manager->IsHandelValid(program) )
 	{
 		auto renderer = std::make_unique<DefaultGeometryRenderer>(
-			asset_manager,id);
-		if( renderer->SetShader(program))
+			asset_manager, id);
+
+		for( auto it : xml::IterateChildElements(properties, "RequiredTexture") )
+		{
+			std::string  texture_name, sampler_uniform;
+			xml::GetAttribute(it, "texturen_name", texture_name);
+			xml::GetAttribute(it, "sampler_uniform_name", sampler_uniform);
+
+			renderer->AddRequiredTexture(texture_name, sampler_uniform);
+		}
+
+		if( renderer->SetShader(program) )
 			return std::move(renderer);
 	}
 	return nullptr;

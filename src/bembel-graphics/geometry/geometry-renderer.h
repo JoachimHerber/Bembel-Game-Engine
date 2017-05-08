@@ -61,7 +61,8 @@ public:
 		const glm::mat4& view,
 		const std::vector<GeometryRenderData>& data) = 0;
 
-	virtual std::unique_ptr<Material> CreateMaterial(const xml::Element* propertiey) = 0;
+	virtual std::unique_ptr<Material> CreateMaterial(
+		AssetManager* asset_manager, const xml::Element* propertiey) = 0;
 
 protected:
 	AssetManager* asset_manager_;
@@ -74,6 +75,10 @@ public:
 	DefaultGeometryRenderer(AssetManager* asset_manager, unsigned id);
 	~DefaultGeometryRenderer();
 
+	void AddRequiredTexture(
+		const std::string& texture_name, 
+		const std::string& uniform_sampler_name);
+
 	bool SetShader(AssetHandle program_handle);
 
 	virtual void Render(
@@ -82,10 +87,25 @@ public:
 		const std::vector<GeometryRenderData>& data) override;
 
 	virtual std::unique_ptr<Material> CreateMaterial(
+		AssetManager* asset_manager,
 		const xml::Element* propertiey) override;
 
 	static std::unique_ptr<DefaultGeometryRenderer>
 		CreateRenderer(const xml::Element*, AssetManager*, unsigned id);
+
+private:
+	struct MaterialParam
+	{
+		GLint offset;
+		GLint size;
+		GLenum type;
+	};
+
+	bool ReadMaterialParameter(
+		const xml::Element* properties,
+		const std::string& param_name,
+		const MaterialParam& param, 
+		GLbyte* buffer);
 
 private:
 	AssetHandle shader_;
@@ -93,13 +113,14 @@ private:
 	GLuint material_uniform_block_index_;
 	GLuint material_uniform_buffer_size_;
 
-	struct MaterialParam
-	{
-		GLint offset;
-		GLint size;
-		GLenum type;
-	};
 	std::map<std::string, MaterialParam> material_params_;
+
+	struct RequiredTexture
+	{
+		std::string texture_name;
+		std::string uniform_sampler_name;
+	};
+	std::vector<RequiredTexture> required_textures_;
 };
 
 } //end of namespace bembel
