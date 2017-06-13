@@ -1,4 +1,8 @@
 <Bembel>
+	<AssetDirectories>
+		<AssetDirectory directory="assets"/>
+		<AssetDirectory directory="assets/shader"/>
+	</AssetDirectories>
 	<Display>
 		<Window title="Rendering Test">
 			<DisplayMode mode = "Windowed">
@@ -9,40 +13,35 @@
 	</Display>
 	<Systems>
 		<Graphics>
+			<Renderer>
+				<GeometryRenderer name="default" >
+					<ShaderProgram file_name="default-geom-render.shader-program" />
+				</GeometryRenderer>
+			</Renderer>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="900" vertical_resolution="900">
+				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="720">
 					<Textures>
-						<Texture name="depth"        format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
-						<Texture name="light"        format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
-						<Texture name="albedo"       format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="reflectivity" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="normal"       format="GL_RGBA16"            target="GL_TEXTURE_2D"/>
+						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
+						<Texture name="albedo"   format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="material" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="normal"   format="GL_RGB16"             target="GL_TEXTURE_2D"/>
 					</Textures>
 					<RenderingStages>
 						<DeferredGeometryStage>
 							<DepthOutput texture="depth"/>
-							<ColorOutput texture="light"        attachment="0"/>
-							<ColorOutput texture="albedo"       attachment="1"/>
-							<ColorOutput texture="reflectivity" attachment="2"/>
-							<ColorOutput texture="normal"       attachment="3"/>
+							<ColorOutput texture="light"    attachment="0"/>
+							<ColorOutput texture="albedo"   attachment="1"/>
+							<ColorOutput texture="material" attachment="2"/>
+							<ColorOutput texture="normal"   attachment="3"/>
 						</DeferredGeometryStage>
 						<DeferredLightingStage>
-							<DirectionalLightProgram>
-								<VertexShader file="shaders/directional_light.vert"/>
-								<FragmentShader file="shaders/directional_light.frag"/>
-								<FragmentShader file="shaders/read_geom_data.glsl"/>
-								<FragmentShader file="shaders/cook_torrance.glsl"/>
-							</DirectionalLightProgram>
-							<PointLightShaderProgram>
-								<VertexShader file="shaders/point_light.vert"/>
-								<FragmentShader file="shaders/point_light.frag"/>
-								<FragmentShader file="shaders/read_geom_data.glsl"/>
-								<FragmentShader file="shaders/cook_torrance.glsl"/>
-							</PointLightShaderProgram>
+							<DirectionalLightProgram file_name="dir-light.shader-program" />
+							<PointLightShaderProgram file_name="point-light.shader-program" />
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
-							<Input texture="reflectivity" />
+							<Input texture="material" />
 							<Input texture="normal" />
 						</DeferredLightingStage>
 						<EnvironmentMapReflectionStage>
@@ -54,56 +53,32 @@
 								back   = "assets/skybox/Z+.png"
 								front  = "assets/skybox/Z-.png"
 							/>
-							<Shader>
-								<VertexShader   file="shaders/environment_map_reflection.vert"/>
-								<FragmentShader file="shaders/environment_map_reflection.frag"/>
-							</Shader>
+							<Shader file_name="environment-map-reflections.shader-program" />
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
-							<Input texture="reflectivity" />
+							<Input texture="material" />
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
 						<SelectionRenderingStage>
-							<Shader>
-								<VertexShader   file="shaders/selection.vert"/>
-								<FragmentShader file="shaders/selection.frag"/>
-							</Shader>
+							<Shader file_name="selection.shader-program" />
 							<ColorOutput texture="light"/>
 							<DepthOutput texture="depth"/>
 						</SelectionRenderingStage>
 					</RenderingStages>
-					<Renderer>
-						<!-- <TestRenderer /> -->
-						<GeometryRenderer>
-							<VertexShader file="shaders/render_geometry.vert" />
-							<FragmentShader file="shaders/render_geometry.frag" />
-						</GeometryRenderer>
-					</Renderer>
+					
 					<Views>	
 						<View texture="light"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="albedo"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="normal"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-						<View texture="reflectivity" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
-						<Projection fild_of_view="60" aspect_ration="1" near="0.1" far="100.0" />
+						<Projection fild_of_view="75" aspect_ration="1" near="0.1" far="100.0" />
 					</Camera>
 				</RenderingPipeline>
 			</RenderingPipelines>
 			<Viewports>
-				<Viewport position="0 0" size="0.75 1">
+				<Viewport position="0 0" size="1 1">
 					<PipelineResultView pipeline="0" view="0"/>
-				</Viewport>
-				<Viewport position="0.75 0.00000" size="0.25 0.33333">
-					<PipelineResultView pipeline="0" view="1"/>
-				</Viewport>
-				<Viewport position="0.75 0.33333" size="0.25 0.33334">
-					<PipelineResultView pipeline="0" view="2"/>
-				</Viewport>
-				<Viewport position="0.75 0.66667" size="0.25 0.33333">
-					<PipelineResultView pipeline="0" view="3"/>
 				</Viewport>
 			</Viewports>
 		</Graphics>

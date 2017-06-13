@@ -3,6 +3,7 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 include( cmake_utils )
 
 project( BembelGameEngine )
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
@@ -12,14 +13,14 @@ bembel_find_external_dependencies()
 
 set( CMAKE_CONFIGURAION_TYPES "Debug;Release" )
 
-include( "src/BembelBase/_SourceFiles.cmake" )
-include( "src/BembelKernel/_SourceFiles.cmake" )
-include( "src/BembelGraphics/_SourceFiles.cmake" )
-include( "src/Bembelnteraction/_SourceFiles.cmake" )
+include( "src/bembel-base/source-files.cmake" )
+include( "src/bembel-kernel/source-files.cmake" )
+include( "src/bembel-graphics/source-files.cmake" )
+include( "src/bembel-interaction/source-files.cmake" )
 
 include_directories( "${CMAKE_SOURCE_DIR}/src" )
-include_directories( "${CMAKE_SOURCE_DIR}/dependences" )
-include_directories( "${CMAKE_SOURCE_DIR}/dependences/glm" )
+include_directories( "${CMAKE_SOURCE_DIR}/dependencies" )
+include_directories( "${CMAKE_SOURCE_DIR}/dependencies/glm" )
 include_directories( "${EXTERNAL_INCLUDE_DIRS}" )
 
 add_library( Bembel SHARED ${ProjectSources} )
@@ -41,6 +42,7 @@ if( WIN32 )
 	endif()
 endif( WIN32 )
 
-bembel_conditional_add_sub_project(Chess "Examples/Chess" "build chess example application")
-bembel_conditional_add_sub_project(Input "Examples/Input" "build a simple example for input handling in the bembel game engine")
+bembel_conditional_add_sub_project(Input "examples/input" "a simple example that show how to handle input in the bembel game engine")
+bembel_conditional_add_sub_project(rendering "examples/rendering" "rendering example application")
+bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
 

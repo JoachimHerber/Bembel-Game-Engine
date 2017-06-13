@@ -3,7 +3,7 @@
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
-#include "ChessApplication.h"
+#include "chess-application.h"
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -11,7 +11,7 @@
 
 int main ()
 {
-	bembel::ChessApplication app;
+	ChessApplication app;
 	app.Run();
 }
 

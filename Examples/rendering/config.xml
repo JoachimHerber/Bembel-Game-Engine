@@ -1,0 +1,93 @@
+<Bembel>
+	<AssetDirectories>
+		<AssetDirectory directory="assets"/>
+		<AssetDirectory directory="assets/shader"/>
+	</AssetDirectories>
+	<Display>
+		<Window title="Rendering Test">
+			<DisplayMode mode = "Windowed">
+				<Size width="800" height="600" />
+				<AspectRatio numerator="4" denominator="3" />
+			</DisplayMode>
+		</Window>
+	</Display>
+	<Systems>
+		<Graphics>
+			<Renderer>
+				<GeometryRenderer name="default" >
+					<ShaderProgram file_name="default-geom-render.shader-program" />
+				</GeometryRenderer>
+			</Renderer>
+			<RenderingPipelines>
+				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="1024">
+					<Textures>
+						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
+						<Texture name="albedo"   format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="material" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="normal"   format="GL_RGB16"             target="GL_TEXTURE_2D"/>
+					</Textures>
+					<RenderingStages>
+						<DeferredGeometryStage>
+							<DepthOutput texture="depth"/>
+							<ColorOutput texture="light"    attachment="0"/>
+							<ColorOutput texture="albedo"   attachment="1"/>
+							<ColorOutput texture="material" attachment="2"/>
+							<ColorOutput texture="normal"   attachment="3"/>
+						</DeferredGeometryStage>
+						<DeferredLightingStage>
+							<DirectionalLightProgram file_name="dir-light.shader-program" />
+							<PointLightShaderProgram file_name="point-light.shader-program" />
+							<Output texture="light"/>
+							<Input texture="depth" />
+							<Input texture="albedo" />
+							<Input texture="material" />
+							<Input texture="normal" />
+						</DeferredLightingStage>
+						<!--<EnvironmentMapReflectionStage>
+							<EnvironmentMap
+								left   = "assets/skybox/X-.png"
+								right  = "assets/skybox/X+.png"
+								bottom = "assets/skybox/Y-.png"
+								top    = "assets/skybox/Y+.png"
+								back   = "assets/skybox/Z+.png"
+								front  = "assets/skybox/Z-.png"
+							/>
+							<Shader file_name="environment-map-reflections.shader-program" />
+							<Output texture="light"/>
+							<Input texture="depth" />
+							<Input texture="albedo" />
+							<Input texture="reflectivity" />
+							<Input texture="normal" />
+						</EnvironmentMapReflectionStage>-->
+					</RenderingStages>
+					
+					<Views>	
+						<View texture="light"    left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="albedo"   left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="normal"   left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="material" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+					</Views>
+					<Camera>
+						<Position x="0" y="0" z="0" />
+						<Projection fild_of_view="75" aspect_ration="1" near="0.1" far="100.0" />
+					</Camera>
+				</RenderingPipeline>
+			</RenderingPipelines>
+			<Viewports>
+				<Viewport position="0 0" size="0.75 1">
+					<PipelineResultView pipeline="0" view="0"/>
+				</Viewport>
+				<Viewport position="0.75 0.00000" size="0.25 0.33333">
+					<PipelineResultView pipeline="0" view="1"/>
+				</Viewport>
+				<Viewport position="0.75 0.33333" size="0.25 0.33334">
+					<PipelineResultView pipeline="0" view="2"/>
+				</Viewport>
+				<Viewport position="0.75 0.66667" size="0.25 0.33333">
+					<PipelineResultView pipeline="0" view="3"/>
+				</Viewport>
+			</Viewports>
+		</Graphics>
+	</Systems>
+</Bembel>
