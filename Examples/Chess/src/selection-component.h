@@ -23,7 +23,7 @@ struct SelectionComponent
 	} state;
 
 
-	using ContainerType = bembel::DenseComponentContainer<SelectionComponent>;
+	using ContainerType = bembel::ComponentArray<SelectionComponent>;
 	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();

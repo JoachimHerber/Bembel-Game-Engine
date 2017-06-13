@@ -20,14 +20,14 @@ inline Scene::ComponentTypeID ComponentContainerBase::GetComponentMask()
 }
 
 template<class ComponentType>
-inline ComponentType* SparseComponentContainer<ComponentType>::CreateComponent(
+inline ComponentType* ComponentMap<ComponentType>::CreateComponent(
 	Scene::EntityID entity)
 {
 	return &components_[entity];
 }
 
 template<class ComponentType>
-inline bool SparseComponentContainer<ComponentType>::CreateComponent(
+inline bool ComponentMap<ComponentType>::CreateComponent(
 	Scene::EntityID entity,
 	const xml::Element* properties,
 	AssetManager* asset_manager)
@@ -42,7 +42,7 @@ inline bool SparseComponentContainer<ComponentType>::CreateComponent(
 }
 
 template<class ComponentType>
-inline bool SparseComponentContainer<ComponentType>::DeleteComponent(
+inline bool ComponentMap<ComponentType>::DeleteComponent(
 	Scene::EntityID entity)
 {
 	auto it = components_.find(entity);
@@ -56,13 +56,13 @@ inline bool SparseComponentContainer<ComponentType>::DeleteComponent(
 
 template<class ComponentType>
 inline std::map<Scene::EntityID, ComponentType>&
-SparseComponentContainer<ComponentType>::GetComponents()
+ComponentMap<ComponentType>::GetComponents()
 {
 	return components_;
 }
 
 template<class ComponentType>
-inline ComponentType* SparseComponentContainer<ComponentType>::GetComponent(
+inline ComponentType* ComponentMap<ComponentType>::GetComponent(
 	Scene::EntityID entity)
 {
 	auto it = components_.find(entity);
@@ -73,7 +73,7 @@ inline ComponentType* SparseComponentContainer<ComponentType>::GetComponent(
 }
 
 template<class ComponentType>
-inline ComponentType* DenseComponentContainer<ComponentType>::CreateComponent(
+inline ComponentType* ComponentArray<ComponentType>::CreateComponent(
 	Scene::EntityID entity)
 {
 	if( entity >= components_.size() )
@@ -82,7 +82,7 @@ inline ComponentType* DenseComponentContainer<ComponentType>::CreateComponent(
 	return &components_[entity];
 }
 template<class ComponentType>
-inline bool DenseComponentContainer<ComponentType>::CreateComponent(
+inline bool ComponentArray<ComponentType>::CreateComponent(
 	Scene::EntityID entity,
 	const xml::Element* properties,
 	AssetManager* asset_manager)
@@ -100,7 +100,7 @@ inline bool DenseComponentContainer<ComponentType>::CreateComponent(
 }
 
 template<class ComponentType>
-inline bool DenseComponentContainer<ComponentType>::DeleteComponent(
+inline bool ComponentArray<ComponentType>::DeleteComponent(
 	Scene::EntityID entity)
 {
 	return true;
@@ -108,13 +108,13 @@ inline bool DenseComponentContainer<ComponentType>::DeleteComponent(
 
 template<class ComponentType>
 inline std::vector<ComponentType>&
-DenseComponentContainer<ComponentType>::GetComponents()
+ComponentArray<ComponentType>::GetComponents()
 {
 	return components_;
 }
 
 template<class ComponentType>
-inline ComponentType* DenseComponentContainer<ComponentType>::GetComponent(
+inline ComponentType* ComponentArray<ComponentType>::GetComponent(
 	Scene::EntityID entity)
 {
 	assert(entity < components_.size());

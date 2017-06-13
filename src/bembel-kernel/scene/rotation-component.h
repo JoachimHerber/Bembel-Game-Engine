@@ -21,7 +21,7 @@ struct BEMBEL_API RotationComponent
 {
 	glm::quat rotation;
 
-	using ContainerType = DenseComponentContainer<RotationComponent>;
+	using ContainerType = ComponentArray<RotationComponent>;
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(

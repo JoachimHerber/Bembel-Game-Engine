@@ -27,7 +27,7 @@ public:
 	// the ID of the renderer that should be used for rendering the geometry
 	unsigned    renderer;
 
-	using ContainerType = DenseComponentContainer<GeometryComponent>;
+	using ContainerType = ComponentArray<GeometryComponent>;
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(

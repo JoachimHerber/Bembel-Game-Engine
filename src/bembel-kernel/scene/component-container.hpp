@@ -39,14 +39,14 @@ private:
 };
 
 template<class ComponentType>
-class SparseComponentContainer : public ComponentContainerBase
+class ComponentMap : public ComponentContainerBase
 {
 public:
-	SparseComponentContainer(
+	ComponentMap(
 		Scene::ComponentTypeID id)
 		: ComponentContainerBase(id)
 	{}
-	virtual ~SparseComponentContainer()
+	virtual ~ComponentMap()
 	{}
 
 	ComponentType* CreateComponent(Scene::EntityID);
@@ -61,14 +61,14 @@ private:
 };
 
 template<class ComponentType>
-class DenseComponentContainer : public ComponentContainerBase
+class ComponentArray : public ComponentContainerBase
 {
 public:
-	DenseComponentContainer(
+	ComponentArray(
 		Scene::ComponentTypeID id)
 		: ComponentContainerBase(id)
 	{}
-	virtual ~DenseComponentContainer()
+	virtual ~ComponentArray()
 	{}
 
 	ComponentType* CreateComponent(Scene::EntityID);

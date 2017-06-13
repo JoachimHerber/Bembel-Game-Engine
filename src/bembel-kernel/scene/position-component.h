@@ -20,7 +20,7 @@ struct BEMBEL_API PositionComponent
 {
 	glm::vec3 position;
 
-	using ContainerType = DenseComponentContainer<PositionComponent>;
+	using ContainerType = ComponentArray<PositionComponent>;
 
 	static const std::string& GetComponentTypeName();
 	static bool InitComponent(

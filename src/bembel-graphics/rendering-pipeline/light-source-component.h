@@ -26,7 +26,7 @@ public:
 	float bulb_radius;
 	float cutoff_radius;
 
-	using ContainerType = SparseComponentContainer<PointLightProperties>;
+	using ContainerType = ComponentMap<PointLightProperties>;
 	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
@@ -42,7 +42,7 @@ public:
 	glm::vec3 color;
 	glm::vec3 direction;
 
-	using ContainerType = SparseComponentContainer<DirLightProperties>;
+	using ContainerType = ComponentMap<DirLightProperties>;
 	using ContainerPtr = std::shared_ptr<ContainerType>;
 
 	static const std::string& GetComponentTypeName();
