@@ -47,9 +47,9 @@ private:
 	glm::vec2 _cursorPos;
 	glm::vec2 _prevPos;
 
-	float _pitch = 0;
+	float _pitch = -0.3;
 	float _yaw   = 0;
-	float _dist  = 1.0f;
+	float _dist  = 10.0f;
 
 	glm::vec3 _offset;
 };

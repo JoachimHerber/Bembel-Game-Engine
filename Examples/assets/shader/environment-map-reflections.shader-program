@@ -13,7 +13,6 @@ void main()
 	vTexCoord    = g_texCoords[gl_VertexID];
 }
 </Shader>
-<Shader file_name="cook-torrance.shader" />
 <Shader file_name="read-geom-data.shader" />
 <Shader type="GL_FRAGMENT_SHADER">
 #version 330
@@ -37,7 +36,11 @@ struct Material
   vec3  specular_color;
 };
 bool GetGeomData(vec2 texCoord, out vec4 position, out vec3 normal, out Material mat);
-vec3 BRDF(vec3 n, vec3 l, vec3 v, Material mat);
+
+vec3 Fresnel(float cos_theta, vec3 F0)
+{
+	return mix(vec3(pow(1.0 - cos_theta, 5.0)), vec3(1.0), F0); 
+}
 
 void main()
 {
@@ -47,11 +50,14 @@ void main()
 	if(GetGeomData(vTexCoord, position, normal, mat))
 	{
 		vec3 v = normalize(-position.xyz);
-		vec3 r = normalize(-reflect(v, normal));
+		vec3 l = normalize(-reflect(v, normal));
 		
-		float cos_omega = clamp(dot(normal,r),0,1);
-		oColor = BRDF(normal, v, r, mat)*cos_omega*textureLod(uEnvironmentMap, 
-			(uInverseViewMatrix*vec4(r,0)).xyz, 8*mat.roughness).rgb;
+		float cos_theta = max(dot(normal, l),0);
+	
+		vec3  F = Fresnel(cos_theta, mat.specular_color);
+	
+		oColor = cos_theta*F*textureLod(uEnvironmentMap, 
+			(uInverseViewMatrix*vec4(l,0)).xyz, 8*mat.roughness).rgb;
 	}
 	else
 	{

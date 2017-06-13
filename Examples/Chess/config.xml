@@ -21,19 +21,19 @@
 			<RenderingPipelines>
 				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="720">
 					<Textures>
-						<Texture name="depth"        format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
-						<Texture name="light"        format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
-						<Texture name="albedo"       format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="reflectivity" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="normal"       format="GL_RGBA16"            target="GL_TEXTURE_2D"/>
+						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
+						<Texture name="albedo"   format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="material" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+						<Texture name="normal"   format="GL_RGB16"             target="GL_TEXTURE_2D"/>
 					</Textures>
 					<RenderingStages>
 						<DeferredGeometryStage>
 							<DepthOutput texture="depth"/>
-							<ColorOutput texture="light"        attachment="0"/>
-							<ColorOutput texture="albedo"       attachment="1"/>
-							<ColorOutput texture="reflectivity" attachment="2"/>
-							<ColorOutput texture="normal"       attachment="3"/>
+							<ColorOutput texture="light"    attachment="0"/>
+							<ColorOutput texture="albedo"   attachment="1"/>
+							<ColorOutput texture="material" attachment="2"/>
+							<ColorOutput texture="normal"   attachment="3"/>
 						</DeferredGeometryStage>
 						<DeferredLightingStage>
 							<DirectionalLightProgram file_name="dir-light.shader-program" />
@@ -41,7 +41,7 @@
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
-							<Input texture="reflectivity" />
+							<Input texture="material" />
 							<Input texture="normal" />
 						</DeferredLightingStage>
 						<EnvironmentMapReflectionStage>
@@ -57,7 +57,7 @@
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
-							<Input texture="reflectivity" />
+							<Input texture="material" />
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
 						<SelectionRenderingStage>
