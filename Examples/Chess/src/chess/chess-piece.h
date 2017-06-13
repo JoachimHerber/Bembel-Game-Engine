@@ -50,7 +50,7 @@ public:
 
 	const std::vector<MoveSet::Move>& GetPossibleMoves() const;
 private:
-	bembel::Scene* _scene;
+	bembel::Scene* scene_;
 
 	ChessPieceType* _type;
 	ChessPieceType* _originalType;

@@ -15,6 +15,7 @@
 
 #include <bembel-kernel/assets/asset-manager.h>
 #include <bembel-kernel/scene/position-component.h>
+#include <bembel-kernel/scene/rotation-component.h>
 #include <bembel-graphics/geometry/geometry-model.h>
 #include <bembel-graphics/geometry/geometry-component.h>
 #include <bembel-graphics/rendering-pipeline/light-source-component.h>
@@ -26,19 +27,20 @@ ChessGame::ChessGame(
 	bembel::AssetManager* assetMgr, 
 	bembel::EventManager* eventMgr, 
 	bembel::GraphicSystem* graphicSys )
-	: _scene(std::make_shared<bembel::Scene>(assetMgr))
-	, _selectionPointer( std::make_unique<SelectionPointer>( eventMgr, graphicSys, _scene.get() ) )
+	: scene_(std::make_shared<bembel::Scene>(assetMgr))
+	, _selectionPointer( std::make_unique<SelectionPointer>( eventMgr, graphicSys, scene_.get() ) )
 	, _player{Player{this,"white"}, Player{this,"black"}}
 {
-	_scene->RegisterComponentType<bembel::PositionComponent>();
-	_scene->RegisterComponentType<bembel::DirLightProperties>();
-	_scene->RegisterComponentType<bembel::GeometryComponent>();
-	_scene->RegisterComponentType<SelectionComponent>();
+	scene_->RegisterComponentType<bembel::PositionComponent>();
+	scene_->RegisterComponentType<bembel::RotationComponent>();
+	scene_->RegisterComponentType<bembel::DirLightProperties>();
+	scene_->RegisterComponentType<bembel::GeometryComponent>();
+	scene_->RegisterComponentType<SelectionComponent>();
 
-	_scene->LoadAssets("assets/assets.xml");
+	scene_->LoadAssets("assets/assets.xml");
 
-	auto entity = _scene->CreateEntity();
-	auto light = _scene->CreateComponent<bembel::DirLightProperties>(entity);
+	auto entity = scene_->CreateEntity();
+	auto light = scene_->CreateComponent<bembel::DirLightProperties>(entity);
 	light->direction = glm::normalize(glm::vec3(-0.3, -1, -0.2));
 	light->color = 5.0f*glm::vec3(1, 1, 1);
 
@@ -53,7 +55,7 @@ ChessGame::~ChessGame()
 
 std::shared_ptr<bembel::Scene> ChessGame::GetScene() const
 {
-	return _scene;
+	return scene_;
 }
 
 ChessBoard & ChessGame::GetChessBoard()
@@ -109,7 +111,7 @@ SelectionComponent* ChessGame::GetBoardTileSelectionComponent( const glm::ivec2&
 	if( pos.x < 0 || pos.x >= 8 || pos.y < 0 || pos.y >= 8 )
 		return nullptr;
 
-	return _scene->GetComponent<SelectionComponent>( _tiles[pos.x][pos.y]);
+	return scene_->GetComponent<SelectionComponent>( _tiles[pos.x][pos.y]);
 }
 
 void ChessGame::Update( double time )
@@ -139,22 +141,22 @@ void ChessGame::SetNextState( GameState* state )
 void ChessGame::InitTiles()
 {
 	auto whiteTile =
-		_scene->GetAssetHandle<bembel::GeometryModel>("white.tile");
+		scene_->GetAssetHandle<bembel::GeometryModel>("white.tile");
 	auto blackTile =
-		_scene->GetAssetHandle<bembel::GeometryModel>("black.tile");
+		scene_->GetAssetHandle<bembel::GeometryModel>("black.tile");
 
 	for (unsigned u = 0; u < 8; ++u)
 	{
 		for (unsigned v = 0; v < 8; ++v)
 		{
-			auto tile = _scene->CreateEntity();
+			auto tile = scene_->CreateEntity();
 			_tiles[u][v] = tile;
 
-			auto posComp = _scene->CreateComponent<bembel::PositionComponent>(tile);
+			auto posComp = scene_->CreateComponent<bembel::PositionComponent>(tile);
 			posComp->position = glm::vec3(2.0f*u, 0, 2.0f*v);
-			auto geomComt = _scene->CreateComponent<bembel::GeometryComponent>(tile);
+			auto geomComt = scene_->CreateComponent<bembel::GeometryComponent>(tile);
 			geomComt->model = ((u+v)%2 != 0 ? whiteTile : blackTile);
-			auto selectComp = _scene->CreateComponent<SelectionComponent>(tile);
+			auto selectComp = scene_->CreateComponent<SelectionComponent>(tile);
 			selectComp->state = SelectionComponent::UNSELECTABLE;
 		}
 	}
@@ -287,7 +289,7 @@ void ChessGame::AddChessPiece(
 	unsigned owner )
 {
 	_chessPieces.push_back( std::make_unique<ChessPiece>(
-		_chessPieceTypes[type].get(), _scene.get(), owner, pos ));
+		_chessPieceTypes[type].get(), scene_.get(), owner, pos ));
 }
 
 std::unique_ptr<ChessPieceType> ChessGame::CreateChessPieceType(
@@ -295,9 +297,9 @@ std::unique_ptr<ChessPieceType> ChessGame::CreateChessPieceType(
 {
 	auto type = std::make_unique<ChessPieceType>();
 
-	type->GetModles()[0] = _scene->GetAssetHandle<bembel::GeometryModel>(
+	type->GetModles()[0] = scene_->GetAssetHandle<bembel::GeometryModel>(
 		_player[0].GetName() + "." + modleSufix );
-	type->GetModles()[1] = _scene->GetAssetHandle<bembel::GeometryModel>(
+	type->GetModles()[1] = scene_->GetAssetHandle<bembel::GeometryModel>(
 		_player[1].GetName() + "." + modleSufix );
 
 	return std::move(type);

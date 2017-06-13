@@ -44,6 +44,7 @@ void GeometryRenderingStage::DoRendering()
 
 	const auto& entitis = scene_->GetEntitys();
 	const std::vector<PositionComponent>& position_components = position_components_->GetComponents();
+	const std::vector<RotationComponent>& rotation_components = rotation_components_->GetComponents();
 	const std::vector<GeometryComponent>& geometry_components = geometry_components_->GetComponents();
 
 	auto& renderQueue = pipline_->GetGraphicSystem()->GetGeometryRenderQueue();
@@ -63,6 +64,10 @@ void GeometryRenderingStage::DoRendering()
 		{
 			transform = glm::translate(
 				transform, position_components[entity].position);
+		}
+		if( entitis[entity] & rotation_components_->GetComponentMask() )
+		{
+			transform = transform*glm::mat4_cast(rotation_components[entity].rotation);
 		}
 
 		const GeometryComponent& geom = geometry_components[entity];
@@ -86,6 +91,7 @@ void GeometryRenderingStage::SetScene(Scene* scene)
 
 	geometry_components_ = scene->RequestComponentContainer<GeometryComponent>();
 	position_components_ = scene->RequestComponentContainer<PositionComponent>();
+	rotation_components_ = scene->RequestComponentContainer<RotationComponent>();
 }
 
 std::unique_ptr<GeometryRenderingStage> GeometryRenderingStage::CreateInstance(

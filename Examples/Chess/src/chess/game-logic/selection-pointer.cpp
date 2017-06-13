@@ -20,7 +20,7 @@ SelectionPointer::SelectionPointer(
 	bembel::Scene* scene )
 	: _eventMgr( eventMge )
 	, _grapicSys( grapicSys )
-	, _scene( scene )
+	, scene_( scene )
 {
 	_eventMgr->AddHandler<bembel::CursorMovedEvent>( this );
 	_eventMgr->AddHandler<bembel::MouseButtonPressEvent>( this );
@@ -94,7 +94,7 @@ void SelectionPointer::UpdateRay(
 	for( const auto& pipline: _grapicSys->GetRenderingPiplies() )
 	{
 		const glm::vec2 res = pipline->GetResulution();
-		if( pipline->GetScene().get() != _scene )
+		if( pipline->GetScene().get() != scene_ )
 			continue; // rendering pipline is for an other scene
 
 		for( const auto& it : pipline->GetViews() )

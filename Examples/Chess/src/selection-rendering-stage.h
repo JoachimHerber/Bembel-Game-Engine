@@ -10,6 +10,7 @@
 
 #include <bembel-base/xml.h>
 #include <bembel-kernel/scene/position-component.h>
+#include <bembel-kernel/scene/rotation-component.h>
 #include <bembel-graphics/graphic-system.h>
 #include <bembel-graphics/geometry/geometry-component.h>
 #include <bembel-graphics/rendering-pipeline/rendering-stage.h>
@@ -58,6 +59,7 @@ private:
 	struct GeometryObject
 	{
 		glm::vec3              position;
+		glm::quat              rotation;
 		float                  dist;
 		bembel::GeometryModel* model;
 		unsigned               state;
@@ -65,16 +67,17 @@ private:
 	void GetHiglightedObjects(std::vector<GeometryObject>& );
 
 private:
-	bembel::AssetHandle _shader;
+	bembel::AssetHandle shader_;
 
-	std::unique_ptr<bembel::Texture> _noise;
+	std::unique_ptr<bembel::Texture> noise_;
 
-	bembel::Scene*                             _scene;
-	bembel::PositionComponent::ContainerType*  _positionComponents;
-	bembel::GeometryComponent::ContainerType*  _geometryComponents;
-	SelectionComponent::ContainerType*         _selectionComponents;
+	bembel::Scene*                             scene_;
+	bembel::PositionComponent::ContainerType*  position_components_;
+	bembel::RotationComponent::ContainerType*  rotation_components_;
+	bembel::GeometryComponent::ContainerType*  geometry_components_;
+	SelectionComponent::ContainerType*         selection_components_;
 
-	std::chrono::time_point<std::chrono::steady_clock> _starTime;
+	std::chrono::time_point<std::chrono::steady_clock> start_time_;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */

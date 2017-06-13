@@ -25,7 +25,7 @@ SelectionRenderingStage::SelectionRenderingStage(
 	bembel::RenderingPipeline* pipline)
 	: RenderingStage(pipline)
 {
-	_noise = std::make_unique<bembel::Texture>(GL_TEXTURE_3D, GL_R8 );
+	noise_ = std::make_unique<bembel::Texture>(GL_TEXTURE_3D, GL_R8 );
 
 	unsigned char data[32*32*32]; 
 	std::random_device rd;
@@ -34,8 +34,8 @@ SelectionRenderingStage::SelectionRenderingStage(
 	for( unsigned i = 0; i<32*32*32; ++i )
 		data[i] = dist( gen );
 
-	_noise->Init();
-	_noise->Bind();
+	noise_->Init();
+	noise_->Bind();
 
 	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, static_cast<GLint>(GL_REPEAT) );
 	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, static_cast<GLint>(GL_REPEAT) );
@@ -44,9 +44,9 @@ SelectionRenderingStage::SelectionRenderingStage(
 		GL_TEXTURE_3D, 0, static_cast<GLint>(GL_R8),
 		32, 32, 32, 0, GL_RED, GL_UNSIGNED_BYTE, data );
 
-	_noise->Release();
+	noise_->Release();
 
-	_starTime = std::chrono::high_resolution_clock::now();
+	start_time_ = std::chrono::high_resolution_clock::now();
 }
 
 SelectionRenderingStage::~SelectionRenderingStage()
@@ -54,7 +54,7 @@ SelectionRenderingStage::~SelectionRenderingStage()
 
 void SelectionRenderingStage::SetShader(bembel::AssetHandle shader)
 {
-	_shader = shader;
+	shader_ = shader;
 }
 
 void SelectionRenderingStage::SetDepthOutputTexture(const std::string& texture)
@@ -77,7 +77,7 @@ void SelectionRenderingStage::Cleanup()
 
 void SelectionRenderingStage::DoRendering()
 {
-	auto program = GetAssetManager()->GetAsset<bembel::ShaderProgram>(_shader);
+	auto program = GetAssetManager()->GetAsset<bembel::ShaderProgram>(shader_);
 	if (!program )
  		return;
  
@@ -91,7 +91,7 @@ void SelectionRenderingStage::DoRendering()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
  
 	program->Use();
-	_noise->Bind();
+	noise_->Bind();
  
  	glUniformMatrix4fv(
 		program->GetUniformLocation("uProjectionMatrix"),
@@ -99,7 +99,7 @@ void SelectionRenderingStage::DoRendering()
 
 	auto now = std::chrono::high_resolution_clock::now();
 	std::chrono::milliseconds ms =
-		std::chrono::duration_cast<std::chrono::milliseconds>(now - _starTime);
+		std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_);
 
 	float time = 0.001f*(ms.count());
 
@@ -116,7 +116,7 @@ void SelectionRenderingStage::DoRendering()
 	bembel::GeometryMesh* currentMesh = nullptr;
  	for (auto& it : geometry)
 	{
-		glm::mat4 modelView = view*glm::translate(glm::mat4(), it.position);
+		glm::mat4 modelView = view*glm::translate(glm::mat4(), it.position)*glm::mat4_cast(it.rotation);
 
 		glUniform1i(program->GetUniformLocation("uState"), it.state);
 
@@ -127,7 +127,7 @@ void SelectionRenderingStage::DoRendering()
 			program->GetUniformLocation("uNormalMatrix"),
 			1, GL_FALSE, &modelView[0][0]);
 
-		auto mesh = _scene->GetAsset<bembel::GeometryMesh>(
+		auto mesh = scene_->GetAsset<bembel::GeometryMesh>(
 			it.model->GetMesh());
 
 		if(mesh == nullptr)
@@ -155,17 +155,18 @@ void SelectionRenderingStage::DoRendering()
 
  	}
 
-	_noise->Release();
+	noise_->Release();
  	fbo_->EndRenderToTexture();
 	glDisable(GL_BLEND);
 }
 
 void SelectionRenderingStage::SetScene(bembel::Scene* scene)
 {
-	_scene = scene;
-	_positionComponents  = scene->RequestComponentContainer<bembel::PositionComponent>();
-	_selectionComponents = scene->RequestComponentContainer<SelectionComponent>();
-	_geometryComponents  = scene->RequestComponentContainer<bembel::GeometryComponent>();
+	scene_ = scene;
+	position_components_  = scene->RequestComponentContainer<bembel::PositionComponent>();
+	rotation_components_  = scene->RequestComponentContainer<bembel::RotationComponent>();
+	selection_components_ = scene->RequestComponentContainer<SelectionComponent>();
+	geometry_components_  = scene->RequestComponentContainer<bembel::GeometryComponent>();
 }
 
 std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance(
@@ -194,16 +195,17 @@ void SelectionRenderingStage::GetHiglightedObjects(
 {
 	glm::vec3 camPos = pipline_->GetCamera()->GetPosition();
 
-	const auto& entitis = _scene->GetEntitys();
+	const auto& entitis = scene_->GetEntitys();
 
-	auto& positions = _positionComponents->GetComponents();
-	auto& selection = _selectionComponents->GetComponents();
-	auto& geometry  = _geometryComponents->GetComponents();
+	auto& positions = position_components_->GetComponents();
+	auto& rotations = rotation_components_->GetComponents();
+	auto& selection = selection_components_->GetComponents();
+	auto& geometry  = geometry_components_->GetComponents();
 
 	bembel::Scene::ComponentMask mask =
-		_positionComponents->GetComponentMask() |
-		_selectionComponents->GetComponentMask() |
-		_geometryComponents->GetComponentMask();
+		position_components_->GetComponentMask() |
+		selection_components_->GetComponentMask() |
+		geometry_components_->GetComponentMask();
 
 	for ( bembel::Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
 	{
@@ -213,7 +215,7 @@ void SelectionRenderingStage::GetHiglightedObjects(
 		if (selection[entity].state == SelectionComponent::UNSELECTABLE)
 			continue;
 
-		auto model = _scene->GetAsset<bembel::GeometryModel>(
+		auto model = scene_->GetAsset<bembel::GeometryModel>(
 			geometry[entity].model);
 
 		if(model == nullptr)
@@ -221,8 +223,12 @@ void SelectionRenderingStage::GetHiglightedObjects(
 
 		float dist = glm::length(camPos - positions[entity].position);
 
+		glm::quat roatation;
+		if( entitis[entity] & rotation_components_->GetComponentMask() )
+			roatation = rotations[entity].rotation;
+
 		objects.push_back({
-			positions[entity].position,
+			positions[entity].position, roatation,
 			dist, model, unsigned(selection[entity].state - 1)
 		});
 	}

@@ -47,7 +47,7 @@ private:
 private:
 	bembel::EventManager*   _eventMgr;
 	bembel::GraphicSystem*  _grapicSys;
-	bembel::Scene*          _scene;
+	bembel::Scene*          scene_;
 
 	glm::vec3 _rayOrigin;
 	glm::vec3 _rayDirection;

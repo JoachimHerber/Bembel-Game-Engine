@@ -15,6 +15,7 @@
 
 #include <bembel-base/xml.h>
 #include <bembel-kernel/scene/position-component.h>
+#include <bembel-kernel/scene/rotation-component.h>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
@@ -47,6 +48,7 @@ private:
 	Scene*                            scene_ = nullptr;
 	GeometryComponent::ContainerType* geometry_components_ = nullptr;
 	PositionComponent::ContainerType* position_components_ = nullptr;
+	RotationComponent::ContainerType* rotation_components_ = nullptr;
 };
 
 } //end of namespace bembel

@@ -56,6 +56,8 @@ set( DirFiles
 	scene/component-container.inl
 	scene/position-component.h
 	scene/position-component.cpp
+	scene/rotation-component.h
+	scene/rotation-component.cpp
 	
 )
 

@@ -75,7 +75,7 @@ private:
 	void AddChessPiece( const glm::vec2& pos, unsigned type, unsigned owner );
 
 private:
-	std::shared_ptr<bembel::Scene> _scene;
+	std::shared_ptr<bembel::Scene> scene_;
 
 	std::unique_ptr<SelectionPointer> _selectionPointer;
 
