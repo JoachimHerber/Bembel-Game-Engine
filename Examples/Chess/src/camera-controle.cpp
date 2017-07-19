@@ -4,7 +4,7 @@
 
 #include "camera-controle.h"
 
-#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glfw/glfw3.h>
 #include <iostream>
 
@@ -97,7 +97,7 @@ void CameraControle::Update( double dTime )
 	glm::quat yaw = glm::angleAxis( _yaw, Y_AXIS );
 	_camera->SetOrientation( yaw*pitch );
 
-	glm::vec3 pos = _offset + _dist*glm::rotate( yaw*pitch, Z_AXIS );
+	glm::vec3 pos = _offset + _dist*glm::mat3_cast( yaw*pitch)*Z_AXIS;
 	_camera->SetPosition( pos );
 }
 

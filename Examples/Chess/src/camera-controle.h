@@ -51,7 +51,7 @@ private:
 	glm::vec2 _cursorPos;
 	glm::vec2 _prevPos;
 
-	float _pitch = -0.1;
+	float _pitch = -0.1f;
 	float _yaw   = 0;
 	float _dist  = 10.0f;
 
