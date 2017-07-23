@@ -36,6 +36,7 @@
 
 #include "xml.h"
 
+#include <functional>
 #include <string>
 #include <memory>
 #include <map>
@@ -54,28 +55,16 @@ public:
 	TFactory& operator=(const TFactory&) = delete;
 	~TFactory();
 
-	class ObjectGeneratorBase
-	{
-	public:
-		virtual std::unique_ptr<ObjectType>  CreateObject(TArgs ... args) = 0;
-	};
+	using ObjectGenerator = std::function<std::unique_ptr<ObjectType>(TArgs ...)>;
 
-	void RegisterObjectGenerator(const std::string& type, std::unique_ptr<ObjectGeneratorBase>);
-
-	std::unique_ptr<ObjectType> CreateObject(const std::string&, TArgs ... args) const;
-
-	template<typename T>
-	class DefaultObjectGenerator : public ObjectGeneratorBase
-	{
-	public:
-		virtual std::unique_ptr<ObjectType> CreateObject(TArgs ... args) override;
-	};
-
+	void RegisterObjectGenerator(const std::string& type, ObjectGenerator object_generator);
 	template<typename T>
 	void RegisterDefaultObjectGenerator(const std::string& type);
 
+	std::unique_ptr<ObjectType> CreateObject(const std::string& type, TArgs ... args) const;
+
 private:
-	std::map<std::string, std::unique_ptr<ObjectGeneratorBase>> generators_;
+	std::map<std::string, ObjectGenerator> generators_;
 };
 
 template<typename T>
