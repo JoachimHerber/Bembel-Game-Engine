@@ -14,7 +14,7 @@ A simple application that showcases how events can be used to react to user inpu
 A simple applications the demonstrates how some material parameters affect the appearance of the rendered geometry.
 ![screenshot](/Examples/rendering-example.png)
 
-## Cess Example
+## Chess Example
 A simple chess application that allowed user to select and move chess pieces on a chess board.
 Currently doesn’t check for victory conditions.
 ![screenshot](/Examples/chess-example.png)
