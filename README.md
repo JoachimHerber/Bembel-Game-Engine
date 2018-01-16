@@ -1,10 +1,26 @@
+# The Bembel-Game-Engine
 The Bembel-Game-Engine is a C++ game-engine that is developed as a hobby project.
 It is still in early development and missing some important features (e.g. support for physics simulations and animated meshes).
+The main components of Bembel-Game-Engine currently are the EventManager, the DisplayManager, the AssetManager, the InteractionSystem and the GraphicSystem.
 
-The Bembel-Game-Engine currently consist of a main library and some example applications.
+## EventManager
+The EventManager is responsible for managing event channels for different types of events.
+These event channels are the main method of communication for the different systems that are part of the Bembel-Game-Engine.
 
-# library
-...
+## DisplayManager
+
+## AssetManager
+
+## InteractionSystem
+The InteractionSystem is responsible for handling user input.
+It therefore pules imput evets an emittes the corresponding events througt the EventManager.
+Additionally it also provides functionality for queering the sate of keyboard or mouse buttons and for gaining access to signals for individual buttons. 
+
+
+## GraphicSystem
+The GraphicSystem is responsible for generating images.
+It therefore provides configurable rendering pipelines, which can be use to render a scene and to apply post processing effects to generated images.
+
 
 # Example applications
 ## Input Example
