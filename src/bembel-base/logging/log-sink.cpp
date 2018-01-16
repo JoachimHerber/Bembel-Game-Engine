@@ -3,7 +3,7 @@
 /* *                                                                        * */
 /* *    MIT License                                                         * */
 /* *                                                                        * */
-/* *   Copyright(c) 2017 Joachim Herber                                     * */
+/* *   Copyright(c) 2018 Joachim Herber                                     * */
 /* *                                                                        * */
 /* *   Permission is hereby granted, free of charge, to any person          * */
 /* *   obtaining copy of this software and associated documentation files   * */
