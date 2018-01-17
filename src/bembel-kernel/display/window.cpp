@@ -37,6 +37,10 @@
 #include "window.h"
 #include "display-manager.h"
 #include "display-mode.h"
+#include "cursor.h"
+
+#include <bembel-kernel/kernel.h>
+#include <bembel-kernel/events/event-manager.h>
 
 #include <cassert>
 
@@ -53,10 +57,15 @@ Window::Window(DisplayManager* display_system, unsigned id)
 	, window_imp_(nullptr)
 	, display_mode_(std::make_shared<WindowDisplayMode>())
 	, window_id_(id)
-{}
+{
+	auto event_mgr = GetDisplayManager()->GetKernel()->GetEventManager();
+	event_mgr->AddHandler<SetCursorEvent>(this);
+}
 
 Window::~Window()
 {
+	auto event_mgr = GetDisplayManager()->GetKernel()->GetEventManager();
+	event_mgr->RemoveHandler<SetCursorEvent>(this);
 	Close();
 }
 
@@ -192,6 +201,17 @@ void Window::MakeContextCurent()
 void Window::SwapBuffers()
 {
 	glfwSwapBuffers(window_imp_);
+}
+
+void Window::HandleEvent(const SetCursorEvent& event)
+{
+	if( event.window_id_ == window_id_ )
+	{
+		if( event.cursor != nullptr )
+			glfwSetCursor(window_imp_, event.cursor->GetCursor());
+		else
+			glfwSetCursor(window_imp_, NULL);
+	}
 }
 
 } //end of namespace bembel

@@ -27,6 +27,8 @@ set( DirFiles
 	display/display-mode.cpp
 	display/window.h
 	display/window.cpp
+	display/cursor.h
+	display/cursor.cpp
 	
 	assets/asset-manager.h
 	assets/asset-manager.cpp

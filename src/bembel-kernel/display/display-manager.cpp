@@ -35,9 +35,11 @@
 #include "display-manager.h"
 
 #include "window.h"
+#include "cursor.h"
 #include "../kernel.h"
 #include "../events/display-events.h"
 #include "../events/event-callbacks.h"
+#include "../assets/asset-manager.h"
 
 #include <glfw/glfw3.h>
 
@@ -55,6 +57,22 @@ DisplayManager::DisplayManager(Kernel* kernel)
 
 	display_mode_factory_.RegisterDefaultObjectGenerator<WindowDisplayMode>("Windowed");
 	display_mode_factory_.RegisterDefaultObjectGenerator<FullscreenDisplayMode>("Fullscreen");
+	
+	auto asset_mgr = kernel_->GetAssetManager();
+	asset_mgr->RegisterAssetType<Cursor>();
+
+	asset_mgr->AddAsset(std::make_unique<Cursor>(
+		glfwCreateStandardCursor(GLFW_ARROW_CURSOR)), "Arrow");
+	asset_mgr->AddAsset(std::make_unique<Cursor>(
+		glfwCreateStandardCursor(GLFW_IBEAM_CURSOR)), "IBeam");
+	asset_mgr->AddAsset(std::make_unique<Cursor>(
+		glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR)), "Crosshair");
+	asset_mgr->AddAsset(std::make_unique<Cursor>(
+		glfwCreateStandardCursor(GLFW_HAND_CURSOR)), "Hand");
+	asset_mgr->AddAsset(std::make_unique<Cursor>(
+		glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR)), "HResize");
+	asset_mgr->AddAsset(std::make_unique<Cursor>(
+		glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR)), "VResize");
 }
 
 DisplayManager::~DisplayManager()

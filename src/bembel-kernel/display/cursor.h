@@ -3,7 +3,7 @@
 /* *                                                                        * */
 /* *    MIT License                                                         * */
 /* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
+/* *   Copyright(c) 2017 Joachim Herber                                     * */
 /* *                                                                        * */
 /* *   Permission is hereby granted, free of charge, to any person          * */
 /* *   obtaining copy of this software and associated documentation files   * */
@@ -28,82 +28,54 @@
 /* ************************************************************************** */
 /******************************************************************************/
 
-#ifndef BEMBEL_KERNEL_DISPLAY_WINDOW_H_
-#define BEMBEL_KERNEL_DISPLAY_WINDOW_H_
+#ifndef BEMBEL_KERNEL_DISPLAY_CURSOR_H_
+#define BEMBEL_KERNEL_DISPLAY_CURSOR_H_
 /*============================================================================*/
 /* INCLUDES                                                                   */
 /*============================================================================*/
 
 #include "bembel-config.h"
 
-#include <string>
-#include <memory>
-#include <vector>
-#include <stack>
-#include <map>
-
-#include <glm/glm.hpp>
-
-#include <bembel-base/xml.h>
+#include <bembel-kernel/assets/serial-asset-loader.hpp>
 
 /*============================================================================*/
 /* FORWARD DECLARATIONS                                                       */
 /*============================================================================*/
-struct GLFWwindow;
+struct GLFWcursor;
 
-namespace bembel {
-class DisplayManager;
-class DisplayModeBase;
-struct SetCursorEvent;
-} //end of namespace bembel
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
 /*============================================================================*/
 namespace bembel {
 
-class BEMBEL_API Window
+class BEMBEL_API Cursor
 {
 public:
-	Window(DisplayManager*, unsigned);
-	~Window();
+	using DefaultLoaderType = SerialAssetLoader<Cursor>;
 
-	std::shared_ptr<DisplayModeBase> GetDisplayMode() const;
-	void SetDisplayMode(std::shared_ptr<DisplayModeBase> val);
+public:
+	Cursor(GLFWcursor*);
+	~Cursor();
 
-	void Init(const xml::Element* properties);
+	GLFWcursor* GetCursor();
 
-	void Open(const std::string& titel);
-	void Close();
+	const static std::string& GetTypeName();
 
-	unsigned GetWindowID() const;
+	static std::unique_ptr<Cursor> LoadAsset(
+		AssetManager* asset_manager, const std::string& path);
+	static std::unique_ptr<Cursor> CreateAsset(
+		AssetManager* asset_manager, const xml::Element* properties);
 
-	bool IsOpend();
-
-	glm::ivec2 GetWindowSize() const;
-	glm::ivec2 GetFrameBufferSize() const;
-
-	bool SetIconify(bool b);
-	bool SetVisible(bool b);
-
-	bool GetShouldClose() const;
-	bool SetShouldClose(bool should_close);
-
-	DisplayManager* GetDisplayManager() const;
-	GLFWwindow*    GetGlfwWindow() const;
-
-	void MakeContextCurent();
-	void SwapBuffers();
-
-	void HandleEvent(const SetCursorEvent& event);
+	static void DeleteAsset(AssetManager*, std::unique_ptr<Cursor>){}
 
 private:
-	DisplayManager* display_system_;
-	GLFWwindow*  window_imp_;
-	std::shared_ptr<DisplayModeBase> display_mode_;
+	GLFWcursor* cursor_imp_;
+};
 
+struct BEMBEL_API SetCursorEvent
+{
+	Cursor* const cursor;
 	unsigned window_id_;
-
-	friend class DisplayManager;
 };
 
 } //end of namespace bembel
