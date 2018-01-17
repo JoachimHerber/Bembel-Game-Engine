@@ -36,8 +36,12 @@
 #include <bembel-kernel/kernel.h>
 #include <bembel-kernel/display/window.h>
 #include <bembel-kernel/display/display-manager.h>
+#include <bembel-interaction/input/keyboard.h>
+#include <bembel-interaction/input/button.h>
 
 #include <iostream>
+
+#include <GLFW/glfw3.h>
 
 /*============================================================================*/
 /* IMPLEMENTATION        													  */
@@ -45,7 +49,7 @@
 InputExample::InputExample()
 	: bembel::Application()
 {
-	kernel_->AddSystem<bembel::InteractionSystem>();
+	interaction_sys_ = kernel_->AddSystem<bembel::InteractionSystem>();
 
 	kernel_->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
 
@@ -74,6 +78,21 @@ bool InputExample::Init()
 	auto window = kernel_->GetDisplayManager()->CreateWindow();
 	window->Open("Input Example");
 	kernel_->InitSystems();
+
+	auto keyboard = interaction_sys_->GetKeyboard();
+
+	keyboard->GetKey(GLFW_KEY_LEFT)->GetReleaseSignal().AddSlot(
+		this, &InputExample::PervCursor );
+	keyboard->GetKey(GLFW_KEY_RIGHT)->GetReleaseSignal().AddSlot(
+		this, &InputExample::PervCursor);
+
+	auto asset_mgr = kernel_->GetAssetManager();
+	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("Arrow"));
+	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("IBeam"));
+	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("Crosshair"));
+	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("Hand"));
+	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("HResize"));
+	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("VResize"));
 	return true;
 }
 
@@ -154,6 +173,26 @@ void InputExample::HandleEvent(const bembel::ButtonPressEvent& event)
 void InputExample::HandleEvent(const bembel::ButtonReleaseEvent& event)
 {
 	std::cout << "[ButtonRelease] " << event.button->GetName() << std::endl;
+}
+
+
+void InputExample::PervCursor()
+{
+	current_cursor_ = (current_cursor_ - 1) % cursor_.size();
+
+	auto asset_mgr = kernel_->GetAssetManager();
+	auto cursor = asset_mgr->GetAsset<bembel::Cursor>(cursor_[current_cursor_]);
+	auto event_mgr = kernel_->GetEventManager();
+	event_mgr->Broadcast(bembel::SetCursorEvent{cursor, 0});
+}
+void InputExample::NextCursor()
+{
+	current_cursor_ = (current_cursor_ + 1) % cursor_.size();
+
+	auto asset_mgr = kernel_->GetAssetManager();
+	auto cursor = asset_mgr->GetAsset<bembel::Cursor>(cursor_[current_cursor_]);
+	auto event_mgr = kernel_->GetEventManager();
+	event_mgr->Broadcast(bembel::SetCursorEvent{cursor, 0});
 }
 /*============================================================================*/
 /* END OF FILE                                                                */

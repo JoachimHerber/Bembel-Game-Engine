@@ -37,8 +37,12 @@
 #include <bembel-kernel/events/event-manager.h>
 #include <bembel-kernel/events/input-events.h>
 #include <bembel-kernel/events/display-events.h>
+#include <bembel-kernel/assets/asset-handle.h>
+#include <bembel-kernel/display/cursor.h>
 #include <bembel-interaction/input/button.h>
 #include <bembel-interaction/interaction-system.h>
+
+#include <vector>
 
 /*============================================================================*/
 /* CLASS DEFINITIONS                                                          */
@@ -72,7 +76,14 @@ public:
 	void HandleEvent(const bembel::ButtonPressEvent&);
 	void HandleEvent(const bembel::ButtonReleaseEvent&);
 
+	void PervCursor();
+	void NextCursor();
+
 private:
+	bembel::InteractionSystem* interaction_sys_;
+
+	std::vector<bembel::AssetHandle> cursor_;
+	unsigned int current_cursor_ = 0;
 };
 /*============================================================================*/
 /* END OF FILE                                                                */
