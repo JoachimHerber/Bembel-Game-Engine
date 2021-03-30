@@ -1,91 +1,45 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-#ifndef BEMBEL_INPUTEXAMPLE_H
+﻿#ifndef BEMBEL_INPUTEXAMPLE_H
 #define BEMBEL_INPUTEXAMPLE_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-#include <bembel-kernel/application.h>
-#include <bembel-kernel/events/event-manager.h>
-#include <bembel-kernel/events/input-events.h>
-#include <bembel-kernel/events/display-events.h>
-#include <bembel-kernel/assets/asset-handle.h>
-#include <bembel-kernel/display/cursor.h>
-#include <bembel-interaction/input/button.h>
-#include <bembel-interaction/interaction-system.h>
 
+#include <bembel/kernel/kernel.hpp>
 #include <vector>
 
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
-class InputExample : public bembel::Application
-{
-public:
-	InputExample();
-	~InputExample();
+namespace bembel {
 
-	virtual bool Init() override;
-	virtual void Cleanup() override;
+class InputExample : public kernel::Application {
+  public:
+    InputExample();
+    ~InputExample();
 
-	virtual void Update(double time) override;
+    virtual bool init() override;
+    virtual void cleanup() override;
 
-	void HandleEvent(const bembel::WindowShouldCloseEvent&);
+    virtual void update(double time) override;
 
+    void handleEvent(const kernel::WindowShouldCloseEvent&);
 
-	void HandleEvent(const bembel::KeyPressEvent&);
-	void HandleEvent(const bembel::KeyRepeatEvent&);
-	void HandleEvent(const bembel::KeyReleaseEvent&);
-	void HandleEvent(const bembel::TextInputEvent&);
-	void HandleEvent(const bembel::MouseButtonPressEvent&);
-	void HandleEvent(const bembel::MouseButtonRepeatEvent&);
-	void HandleEvent(const bembel::MouseButtonReleaseEvent&);
-	void HandleEvent(const bembel::CursorMovedEvent&);
-	void HandleEvent(const bembel::CursorEnteredEvent&);
-	void HandleEvent(const bembel::CursorLeftEvent&);
-	void HandleEvent(const bembel::ScrollEvent&);
+    void handleEvent(const kernel::KeyPressEvent&);
+    void handleEvent(const kernel::KeyRepeatEvent&);
+    void handleEvent(const kernel::KeyReleaseEvent&);
+    void handleEvent(const kernel::TextInputEvent&);
+    void handleEvent(const kernel::MouseButtonPressEvent&);
+    void handleEvent(const kernel::MouseButtonRepeatEvent&);
+    void handleEvent(const kernel::MouseButtonReleaseEvent&);
+    void handleEvent(const kernel::CursorMovedEvent&);
+    void handleEvent(const kernel::CursorEnteredEvent&);
+    void handleEvent(const kernel::CursorLeftEvent&);
+    void handleEvent(const kernel::ScrollEvent&);
 
-	void HandleEvent(const bembel::ButtonPressEvent&);
-	void HandleEvent(const bembel::ButtonReleaseEvent&);
+    void handleEvent(const kernel::InputDeviceButtonPressEvent&);
+    void handleEvent(const kernel::InputDeviceButtonReleaseEvent&);
 
-	void PervCursor();
-	void NextCursor();
+    void pervCursor();
+    void nextCursor();
 
-private:
-	bembel::InteractionSystem* interaction_sys_;
-
-	std::vector<bembel::AssetHandle> cursor_;
-	unsigned int current_cursor_ = 0;
+  private:
+    std::vector<kernel::AssetHandle> cursor;
+    unsigned int                     current_cursor = 0;
 };
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+
+} // namespace bembel
+#endif // include guards

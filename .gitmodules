@@ -7,3 +7,6 @@
 [submodule "dependencies/tinyxml2"]
 	path = dependencies/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
+[submodule "dependencies/json"]
+	path = dependencies/json
+	url = https://github.com/nlohmann/json.git

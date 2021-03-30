@@ -1,0 +1,13 @@
+target_sources(Bembel
+    PUBLIC
+        display-events.hpp
+        event-callbacks.hpp
+		event-channel.hpp
+		event-channel.inl
+		event-manager.hpp
+		event-manager.inl
+		input-events.hpp
+	PRIVATE
+        event-callbacks.cpp
+		CMakeLists.txt
+)

@@ -1,200 +1,134 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-#include "input-example.h"
-
-#include <bembel-kernel/kernel.h>
-#include <bembel-kernel/display/window.h>
-#include <bembel-kernel/display/display-manager.h>
-#include <bembel-interaction/input/keyboard.h>
-#include <bembel-interaction/input/button.h>
-
-#include <iostream>
+﻿#include "input-example.h"
 
 #include <GLFW/glfw3.h>
 
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
+#include <iostream>
+
+namespace bembel {
+
 InputExample::InputExample()
-	: bembel::Application()
-{
-	interaction_sys_ = kernel_->AddSystem<bembel::InteractionSystem>();
+: kernel::Application() {
+    kernel->getEventManager().addHandler<kernel::WindowShouldCloseEvent>(this);
 
-	kernel_->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+    kernel->getEventManager().addHandler<kernel::KeyPressEvent>(this);
+    kernel->getEventManager().addHandler<kernel::KeyRepeatEvent>(this);
+    kernel->getEventManager().addHandler<kernel::KeyReleaseEvent>(this);
+    kernel->getEventManager().addHandler<kernel::TextInputEvent>(this);
+    kernel->getEventManager().addHandler<kernel::MouseButtonPressEvent>(this);
+    kernel->getEventManager().addHandler<kernel::MouseButtonRepeatEvent>(this);
+    kernel->getEventManager().addHandler<kernel::MouseButtonReleaseEvent>(this);
+    kernel->getEventManager().addHandler<kernel::CursorMovedEvent>(this);
+    kernel->getEventManager().addHandler<kernel::CursorEnteredEvent>(this);
+    kernel->getEventManager().addHandler<kernel::CursorLeftEvent>(this);
+    kernel->getEventManager().addHandler<kernel::ScrollEvent>(this);
 
-	kernel_->GetEventManager()->AddHandler<bembel::KeyPressEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::KeyRepeatEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::KeyReleaseEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::TextInputEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::MouseButtonPressEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::MouseButtonRepeatEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::MouseButtonReleaseEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::CursorMovedEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::CursorEnteredEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::CursorLeftEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::ScrollEvent>(this);
-
-	kernel_->GetEventManager()->AddHandler<bembel::ButtonPressEvent>(this);
-	kernel_->GetEventManager()->AddHandler<bembel::ButtonReleaseEvent>(this);
+    kernel->getEventManager().addHandler<kernel::InputDeviceButtonPressEvent>(this);
+    kernel->getEventManager().addHandler<kernel::InputDeviceButtonReleaseEvent>(this);
 }
 
-InputExample::~InputExample()
-{}
-
-
-bool InputExample::Init()
-{
-	auto window = kernel_->GetDisplayManager()->CreateWindow();
-	window->Open("Input Example");
-	kernel_->InitSystems();
-
-	auto keyboard = interaction_sys_->GetKeyboard();
-
-	keyboard->GetKey(GLFW_KEY_LEFT)->GetReleaseSignal().AddSlot(
-		this, &InputExample::PervCursor );
-	keyboard->GetKey(GLFW_KEY_RIGHT)->GetReleaseSignal().AddSlot(
-		this, &InputExample::PervCursor);
-
-	auto asset_mgr = kernel_->GetAssetManager();
-	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("Arrow"));
-	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("IBeam"));
-	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("Crosshair"));
-	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("Hand"));
-	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("HResize"));
-	cursor_.push_back(asset_mgr->GetAssetHandle<bembel::Cursor>("VResize"));
-	return true;
+InputExample::~InputExample() {
 }
 
-void InputExample::Cleanup()
-{
-	kernel_->ShutdownSystems();
-	kernel_->GetDisplayManager()->CloseOpenWindows();
+bool InputExample::init() {
+    auto window = kernel->getDisplayManager().createWindow();
+    window->open("Input Example");
+    kernel->initSystems();
+
+    auto& keyboard = kernel->getInputManager().getKeyboard();
+
+    keyboard.getKey(GLFW_KEY_LEFT)->release_signal.addSlot(this, &InputExample::pervCursor);
+    keyboard.getKey(GLFW_KEY_RIGHT)->release_signal.addSlot(this, &InputExample::nextCursor);
+
+    auto& asset_mgr = kernel->getAssetManager();
+    cursor.push_back(asset_mgr.getAssetHandle<kernel::CursorIcon>("Arrow"));
+    cursor.push_back(asset_mgr.getAssetHandle<kernel::CursorIcon>("IBeam"));
+    cursor.push_back(asset_mgr.getAssetHandle<kernel::CursorIcon>("Crosshair"));
+    cursor.push_back(asset_mgr.getAssetHandle<kernel::CursorIcon>("Hand"));
+    cursor.push_back(asset_mgr.getAssetHandle<kernel::CursorIcon>("HResize"));
+    cursor.push_back(asset_mgr.getAssetHandle<kernel::CursorIcon>("VResize"));
+    return true;
 }
 
-void InputExample::Update(double time)
-{}
-
-void InputExample::HandleEvent(const bembel::WindowShouldCloseEvent& event)
-{
-	Quit();
+void InputExample::cleanup() {
+    kernel->shutdownSystems();
+    kernel->getDisplayManager().closeOpenWindows();
 }
 
-void InputExample::HandleEvent(const bembel::KeyPressEvent& event)
-{
-	std::cout << "[Key Pressed] " << event.key_id << "|" << event.scancode << std::endl;
+void InputExample::update(double time) {
 }
 
-void InputExample::HandleEvent(const bembel::KeyRepeatEvent& event)
-{
-	std::cout << "[Key Repeated] " << event.key_id << "|" << event.scancode << std::endl;
+void InputExample::handleEvent(const kernel::WindowShouldCloseEvent& event) {
+    quit();
 }
 
-void InputExample::HandleEvent(const bembel::KeyReleaseEvent& event)
-{
-	std::cout << "[Key Released] " << event.key_id << "|" << event.scancode << std::endl;
+void InputExample::handleEvent(const kernel::KeyPressEvent& event) {
+    std::cout << "[Key Pressed] " << event.key_id << "|" << event.scancode << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::TextInputEvent& event)
-{
-	std::cout << "[TextInput] '" << (unsigned char)(event.character) << "'" << std::endl;
+void InputExample::handleEvent(const kernel::KeyRepeatEvent& event) {
+    std::cout << "[Key Repeated] " << event.key_id << "|" << event.scancode << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::MouseButtonPressEvent& event)
-{
-	std::cout << "[Mouse Button Pressed] " << event.button_id  << std::endl;
+void InputExample::handleEvent(const kernel::KeyReleaseEvent& event) {
+    std::cout << "[Key Released] " << event.key_id << "|" << event.scancode << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::MouseButtonRepeatEvent& event)
-{
-	std::cout << "[Mouse Button Repeated] " << event.button_id  << std::endl;
+void InputExample::handleEvent(const kernel::TextInputEvent& event) {
+    std::cout << "[TextInput] '" << (unsigned char)(event.character) << "'" << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::MouseButtonReleaseEvent& event)
-{
-	std::cout << "[Mouse Button Released] " << event.button_id  << std::endl;
+void InputExample::handleEvent(const kernel::MouseButtonPressEvent& event) {
+    std::cout << "[Mouse Button Pressed] " << event.button_id << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::CursorMovedEvent& event)
-{
-	std::cout << "[Cursor Moved] (" << event.position.x << ";"<< event.position.y << ")" << std::endl;
+void InputExample::handleEvent(const kernel::MouseButtonRepeatEvent& event) {
+    std::cout << "[Mouse Button Repeated] " << event.button_id << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::CursorEnteredEvent& event)
-{
-	std::cout << "[Cursor Entered] window[" << event.window->GetWindowID() << "]" << std::endl;
+void InputExample::handleEvent(const kernel::MouseButtonReleaseEvent& event) {
+    std::cout << "[Mouse Button Released] " << event.button_id << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::CursorLeftEvent& event)
-{
-	std::cout << "[Cursor Left] window[" << event.window->GetWindowID() << "]" << std::endl;
+void InputExample::handleEvent(const kernel::CursorMovedEvent& event) {
+    std::cout << "[Cursor Moved] (" << event.position.x << ";" << event.position.y << ")"
+              << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::ScrollEvent& event)
-{
-	std::cout << "[Scroll] (" << event.x << ";"<< event.y << ")" << std::endl;
+void InputExample::handleEvent(const kernel::CursorEnteredEvent& event) {
+    std::cout << "[Cursor Entered] window[" << event.window->getWindowID() << "]" << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::ButtonPressEvent& event)
-{
-	std::cout << "[ButtonPress] " << event.button->GetName() << std::endl;
+void InputExample::handleEvent(const kernel::CursorLeftEvent& event) {
+    std::cout << "[Cursor Left] window[" << event.window->getWindowID() << "]" << std::endl;
 }
 
-void InputExample::HandleEvent(const bembel::ButtonReleaseEvent& event)
-{
-	std::cout << "[ButtonRelease] " << event.button->GetName() << std::endl;
+void InputExample::handleEvent(const kernel::ScrollEvent& event) {
+    std::cout << "[Scroll] (" << event.x << ";" << event.y << ")" << std::endl;
 }
 
-
-void InputExample::PervCursor()
-{
-	current_cursor_ = (current_cursor_ - 1) % cursor_.size();
-
-	auto asset_mgr = kernel_->GetAssetManager();
-	auto cursor = asset_mgr->GetAsset<bembel::Cursor>(cursor_[current_cursor_]);
-	auto event_mgr = kernel_->GetEventManager();
-	event_mgr->Broadcast(bembel::SetCursorEvent{cursor, 0});
+void InputExample::handleEvent(const kernel::InputDeviceButtonPressEvent& event) {
+    std::cout << "[ButtonPress] " << event.button->getName() << std::endl;
 }
-void InputExample::NextCursor()
-{
-	current_cursor_ = (current_cursor_ + 1) % cursor_.size();
 
-	auto asset_mgr = kernel_->GetAssetManager();
-	auto cursor = asset_mgr->GetAsset<bembel::Cursor>(cursor_[current_cursor_]);
-	auto event_mgr = kernel_->GetEventManager();
-	event_mgr->Broadcast(bembel::SetCursorEvent{cursor, 0});
+void InputExample::handleEvent(const kernel::InputDeviceButtonReleaseEvent& event) {
+    std::cout << "[ButtonRelease] " << event.button->getName() << std::endl;
 }
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
 
+void InputExample::pervCursor() {
+    current_cursor = (current_cursor - 1) % cursor.size();
+
+    auto& asset_mgr = kernel->getAssetManager();
+    auto  cursor    = asset_mgr.getAsset<kernel::CursorIcon>(this->cursor[current_cursor]);
+    auto& event_mgr = kernel->getEventManager();
+    event_mgr.broadcast(kernel::SetCursorIconEvent{cursor, 0});
+}
+void InputExample::nextCursor() {
+    current_cursor = (current_cursor + 1) % cursor.size();
+
+    auto& asset_mgr = kernel->getAssetManager();
+    auto  cursor    = asset_mgr.getAsset<kernel::CursorIcon>(this->cursor[current_cursor]);
+    auto& event_mgr = kernel->getEventManager();
+    event_mgr.broadcast(kernel::SetCursorIconEvent{cursor, 0});
+}
+
+} // namespace bembel

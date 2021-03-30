@@ -1,0 +1,13 @@
+target_sources(Bembel
+    PUBLIC
+        renderer.hpp
+        style.hpp
+		render-batch.hpp
+		widget-view.hpp
+	PRIVATE
+        renderer.cpp
+		style.cpp
+		render-batch.cpp
+		widget-view.cpp
+		CMakeLists.txt
+)

@@ -1,93 +1,38 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-#ifndef BEMBEL_SELECTIONCURSOR_H
+﻿#ifndef BEMBEL_SELECTIONCURSOR_H
 #define BEMBEL_SELECTIONCURSOR_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
 
-#include <bembel-open-gl.h>
-
-#include <bembel-graphics/viewport.h>
-#include <bembel-interaction/signal.hpp>
-#include <bembel-kernel/events/input-events.h>
-
+#include <bembel/bembel.hpp>
 #include <glm/glm.hpp>
 
-/*============================================================================*/
-/* FORWARD DECLARATIONS                                                       */
-/*============================================================================*/
-namespace bembel {
+class SelectionPointer {
+  public:
+    SelectionPointer(bembel::EventManager&, bembel::GraphicSystem&, bembel::Scene*);
+    ~SelectionPointer();
 
-class EventManager;
-class GraphicSystem;
-class Scene;
+    void handleEvent(const bembel::CursorMovedEvent& event);
+    void handleEvent(const bembel::MouseButtonPressEvent& event);
 
-}//end of namespace bembel
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
-class SelectionPointer
-{
-public:
-	SelectionPointer( bembel::EventManager*, bembel::GraphicSystem*, bembel::Scene* scene );
-	~SelectionPointer();
+    const glm::vec3& getRayOrigin() const;
+    const glm::vec3& getRayDirection() const;
 
-	void HandleEvent( const bembel::CursorMovedEvent& event );
-	void HandleEvent( const bembel::MouseButtonPressEvent& event );
+    const glm::ivec2& getSelectedTile() const;
 
-	const glm::vec3& GetRayOrigin()   const;
-	const glm::vec3& GetRayDirection() const;
+    bembel::base::Signal<>& getSelectSignal();
 
-	const glm::ivec2& GetSelectedTile() const;
+  private:
+    void updateRay(glm::vec2 pos);
 
-	bembel::Signal<>& GetSelectSignal();
+  private:
+    bembel::EventManager&  event_mgr;
+    bembel::GraphicSystem& grapic_sys;
+    bembel::Scene*         scene;
 
-private:
-	void UpdateRay( bembel::Viewport::View* view, const glm::vec2& pos );
+    glm::vec3 ray_origin;
+    glm::vec3 ray_direction;
 
-private:
-	bembel::EventManager*   _eventMgr;
-	bembel::GraphicSystem*  _grapicSys;
-	bembel::Scene*          scene_;
+    glm::ivec2 tile;
 
-	glm::vec3 _rayOrigin;
-	glm::vec3 _rayDirection;
-
-	glm::ivec2 _tile;
-
-	bembel::Signal<> _select;
+    bembel::Signal<> select;
 };
 
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+#endif // include guards

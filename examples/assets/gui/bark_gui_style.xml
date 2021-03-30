@@ -1,0 +1,35 @@
+<GuiSkin>
+	<TextureAtlas texture="gui_texture_atlas.png">
+        <Entry name="button_up_bl" min="0.0000 0.8750" max="0.0625 0.9375"/>
+        <Entry name="button_up_bc" min="0.0625 0.8750" max="0.0625 0.9375"/>
+        <Entry name="button_up_br" min="0.0625 0.8750" max="0.1250 0.9375"/>
+        <Entry name="button_up_cl" min="0.0000 0.9375" max="0.0625 0.9375"/>
+        <Entry name="button_up_cc" min="0.0625 0.9375" max="0.0625 0.9375"/>
+        <Entry name="button_up_cr" min="0.0625 0.9375" max="0.1250 0.9375"/>
+        <Entry name="button_up_tl" min="0.0000 0.9375" max="0.0625 1.0000"/>
+        <Entry name="button_up_tc" min="0.0625 0.9375" max="0.0625 1.0000"/>
+        <Entry name="button_up_tr" min="0.0625 0.9375" max="0.1250 1.0000"/>
+
+        <Entry name="button_down_bl" min="0.1250 0.8750" max="0.1875 0.9375"/>
+        <Entry name="button_down_bc" min="0.1875 0.8750" max="0.1875 0.9375"/>
+        <Entry name="button_down_br" min="0.1875 0.8750" max="0.2500 0.9375"/>
+        <Entry name="button_down_cl" min="0.1250 0.9375" max="0.1875 0.9375"/>
+        <Entry name="button_down_cc" min="0.1875 0.9375" max="0.1875 0.9375"/>
+        <Entry name="button_down_cr" min="0.1875 0.9375" max="0.2500 0.9375"/>
+        <Entry name="button_down_tl" min="0.1250 0.9375" max="0.1875 1.0000"/>
+        <Entry name="button_down_tc" min="0.1875 0.9375" max="0.1875 1.0000"/>
+        <Entry name="button_down_tr" min="0.1875 0.9375" max="0.2500 1.0000"/>
+
+        <Entry name="white" min="0.0625 0.9375" max="0.0625 0.9375"/>
+
+        <Entry name="border_bl" min="0.0000 0.7500" max="0.0625 0.8125"/>
+        <Entry name="border_bc" min="0.0625 0.7500" max="0.0625 0.8125"/>
+        <Entry name="border_br" min="0.0625 0.7500" max="0.1250 0.8125"/>
+        <Entry name="border_cl" min="0.0000 0.8125" max="0.0625 0.8125"/>
+        <Entry name="border_cc" min="0.0625 0.8125" max="0.0625 0.8125"/>
+        <Entry name="border_cr" min="0.0625 0.8125" max="0.1250 0.8125"/>
+        <Entry name="border_tl" min="0.0000 0.8125" max="0.0625 0.8750"/>
+        <Entry name="border_tc" min="0.0625 0.8125" max="0.0625 0.8750"/>
+        <Entry name="border_tr" min="0.0625 0.8125" max="0.1250 0.8750"/>
+    </TextureAtlas>
+</GuiSkin>

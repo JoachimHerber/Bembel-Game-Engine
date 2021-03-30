@@ -1,0 +1,8 @@
+<GUI>
+	<Renderer>
+		<ShaderProgram file_name="gui.shader-program" />
+		<GuiSkin file_name="gui.skin" />
+	</Renderer>
+	<Widgets>
+	</Widgets>
+</GUI>

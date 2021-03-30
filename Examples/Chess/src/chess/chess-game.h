@@ -1,130 +1,73 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-#ifndef BEMBEL_CHESSGAME_H
+﻿#ifndef BEMBEL_CHESSGAME_H
 #define BEMBEL_CHESSGAME_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
 
-#include <bembel-kernel/scene/scene.h>
+#include <array>
+#include <bembel/bembel.hpp>
+#include <memory>
+#include <vector>
 
 #include "player.h"
 
-#include <memory>
-#include <vector>
-#include <array>
-
-/*============================================================================*/
-/* FORWARD DECLARATIONS                                                       */
-/*============================================================================*/
-
+#pragma region ForwardDeclarations
 class SelectionComponent;
-class SelectionPointer;
 class GameState;
 class ChessPieceType;
-
-namespace bembel{
-
-class EventManager;
-class GraphicSystem;
-
-}//end of namespace bembel
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
+class SelectionPointer;
+#pragma endregion ForwardDeclarations
 
 using ChessBoard = std::array<std::array<ChessPiece*, 8>, 8>;
 
-class ChessGame
-{
-public:
-	ChessGame( bembel::AssetManager*, bembel::EventManager*, bembel::GraphicSystem*);
-	~ChessGame();
+class ChessGame {
+  public:
+    ChessGame(
+        bembel::kernel::AssetManager&,
+        bembel::kernel::EventManager&,
+        bembel::graphics::GraphicSystem&);
+    ~ChessGame();
 
-	std::shared_ptr<bembel::Scene> GetScene() const;
+    std::shared_ptr<bembel::kernel::Scene> getScene() const;
 
-	ChessBoard& GetChessBoard();
-	const ChessBoard& GetChessBoard() const;
+    ChessBoard&       getChessBoard();
+    const ChessBoard& getChessBoard() const;
 
-	const std::array<Player, 2>& GetPlayer() const;
+    const std::array<Player, 2>& getPlayers() const;
 
-	enum
-	{
-		PAWN = 0,
-		ROOK,
-		KNIGHT,
-		BISHOP,
-		QUEEN,
-		KING
-	};
+    enum { PAWN = 0, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 
-	void ResetChessBoard();
-	void UpdatePossibleMoves();
+    void resetChessBoard();
+    void updatePossibleMoves();
 
-	SelectionComponent* GetBoardTileSelectionComponent(const glm::ivec2&);
+    SelectionComponent* getBoardTileSelectionComponent(const glm::ivec2&);
 
-	void Update( double time );
-	void SetNextState( GameState* state );
+    void update(double time);
+    void setNextState(GameState* state);
 
-private:
+  private:
+    void initTiles();
+    void initChessPieceTypes();
+    void initChessPices();
+    void initStates();
 
-	void InitTiles();
-	void InitChessPieceTypes();
-	void InitChessPices();
-	void InitStates();
+    std::unique_ptr<ChessPieceType> createChessPieceType(const std::string&);
+    void addChessPiece(const glm::vec2& pos, unsigned type, unsigned owner);
 
-	std::unique_ptr<ChessPieceType> CreateChessPieceType( const std::string& );
-	void AddChessPiece( const glm::vec2& pos, unsigned type, unsigned owner );
+  private:
+    std::shared_ptr<bembel::kernel::Scene> scene;
 
-private:
-	std::shared_ptr<bembel::Scene> scene_;
+    std::unique_ptr<SelectionPointer> selection_pointer;
 
-	std::unique_ptr<SelectionPointer> _selectionPointer;
+    std::array<Player, 2> players;
 
-	std::array<Player, 2> _player;
+    std::vector<std::unique_ptr<ChessPieceType>> chess_piece_types;
+    std::vector<std::unique_ptr<ChessPiece>>     chess_pieces;
 
-	std::vector<std::unique_ptr<ChessPieceType>> _chessPieceTypes;
-	std::vector<std::unique_ptr<ChessPiece>>     _chessPieces;
-	
-	ChessBoard _board;
+    ChessBoard board;
 
-	std::array<std::array<bembel::Scene::EntityID, 8>, 8> _tiles;
+    std::array<std::array<bembel::kernel::Scene::EntityID, 8>, 8> tiles;
 
-	std::vector<std::unique_ptr<GameState>> _states;
+    std::vector<std::unique_ptr<GameState>> states;
 
-	GameState* _currentState = nullptr;
-	GameState* _nextState = nullptr;
+    GameState* current_state = nullptr;
+    GameState* next_state    = nullptr;
 };
-
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+#endif // include guards

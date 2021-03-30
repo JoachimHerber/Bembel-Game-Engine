@@ -4,11 +4,13 @@
 		<AssetDirectory directory="assets/shader"/>
 	</AssetDirectories>
 	<Display>
-		<Window title="Rendering Test">
+		<Window title="Chess">
 			<DisplayMode mode = "Windowed">
 				<Size width="800" height="600" />
-				<AspectRatio numerator="4" denominator="3" />
 			</DisplayMode>
+			<Viewports>
+				<Viewport relativ_position="0 0" relativ_size="1 1" />
+			</Viewports>
 		</Window>
 	</Display>
 	<Systems>
@@ -57,7 +59,7 @@
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
-							<Input texture="material" />
+							<Input texture="reflectivity" />
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
 						<SelectionRenderingStage>
@@ -66,9 +68,8 @@
 							<DepthOutput texture="depth"/>
 						</SelectionRenderingStage>
 					</RenderingStages>
-					
 					<Views>	
-						<View texture="light"        left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+						<View texture="light" window="0" viewport="0"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
@@ -76,11 +77,6 @@
 					</Camera>
 				</RenderingPipeline>
 			</RenderingPipelines>
-			<Viewports>
-				<Viewport position="0 0" size="1 1">
-					<PipelineResultView pipeline="0" view="0"/>
-				</Viewport>
-			</Viewports>
 		</Graphics>
 	</Systems>
 </Bembel>

@@ -1,0 +1,47 @@
+{
+  "renderer": {
+    "shader_program": "gui.shader-program",
+    "gui_skin": "gui.skin"
+  },
+  "widgets": [
+    {
+      "type": "Window",
+      "size": {
+        "x": 600,
+        "y": 400
+      },
+      "view": "debug",
+      "tile_bar": {},
+      "window_area": {
+        "widget_layout": "vertical",
+        "widget_allingment": "center",
+        "child_widgets": [
+          {
+            "type": "Button",
+            "size": {
+              "x": 200,
+              "y": 42
+            },
+            "name": "Button_1"
+          },
+          {
+            "type": "Button",
+            "size": {
+              "x": 200,
+              "y": 42
+            },
+            "name": "Button_2"
+          },
+          {
+            "type": "Button",
+            "size": {
+              "x": 200,
+              "y": 42
+            },
+            "name": "Button_3"
+          }
+        ]
+      }
+    }
+  ]
+}

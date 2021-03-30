@@ -1,101 +1,56 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-#ifndef BEMBEL_CHESSPIECE_H
+﻿#ifndef BEMBEL_CHESSPIECE_H
 #define BEMBEL_CHESSPIECE_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
 
-#include <bembel-kernel/scene/scene.h>
-
-#include "moves/move-set.h"
-#include "chess-game.h"
-
+#include <bembel/bembel.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 
-/*============================================================================*/
-/* FORWARD DECLARATIONS                                                       */
-/*============================================================================*/
+#include "chess-game.h"
+#include "moves/move-set.h"
+
 class ChessPieceType;
-namespace bembel{
 
-class Scene;
+class ChessPiece {
+ public:
+  ChessPiece(
+    ChessPieceType*, bembel::kernel::Scene*, unsigned, const glm::ivec2&);
 
-}//end of namespace bembel
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
-class ChessPiece
-{
-public:
-	ChessPiece(ChessPieceType*, bembel::Scene*, unsigned,  const glm::ivec2&);
+  void promote(ChessPieceType*);
 
-	void Promote(ChessPieceType*);
+  ChessPieceType* getType() const;
+  bembel::kernel::Scene* getScene() const;
+  unsigned getOwner() const;
 
-	ChessPieceType* GetType() const;
-	bembel::Scene*  GetScene() const;
-	unsigned        GetOwner() const;
+  const glm::ivec2& getPositon() const;
+  void setPosition(const glm::ivec2& pos);
 
-	const glm::ivec2& GetPositon() const;
-	void SetPosition(const glm::ivec2& pos);
+  bembel::kernel::Scene::EntityID getEntity();
 
-	bembel::Scene::EntityID GetEntity();
+  bool isAlive() const;
+  void kill();
+  void reset();
 
-	bool IsAlive() const;
-	void Kill();
-	void Reset();
+  bool hasMoved() const;
 
-	bool HasMoved() const;
+  void updatePossibleMoves(const ChessBoard&);
 
-	void UpdatePossibleMoves(const ChessBoard&);
+  const std::vector<MoveSet::Move>& getPossibleMoves() const;
 
-	const std::vector<MoveSet::Move>& GetPossibleMoves() const;
-private:
-	bembel::Scene* scene_;
+ private:
+  bembel::kernel::Scene* scene;
 
-	ChessPieceType* _type;
-	ChessPieceType* _originalType;
-	unsigned        _owner;
-	glm::ivec2      _position;
-	glm::ivec2      _startPositon;
+  ChessPieceType* type;
+  ChessPieceType* original_type;
+  unsigned owner;
 
-	bool            _isAlive;
-	bool			_hasMoved;
+  glm::ivec2 positon;
+  glm::ivec2 start_positon;
 
-	bembel::Scene::EntityID _entity;
+  bool is_alive;
+  bool has_moved;
 
-	std::vector<MoveSet::Move> _possibleMoves;
+  bembel::kernel::Scene::EntityID entity;
+
+  std::vector<MoveSet::Move> possible_moves;
 };
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+#endif // include guards

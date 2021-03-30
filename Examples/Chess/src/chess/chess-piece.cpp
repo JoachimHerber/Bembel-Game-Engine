@@ -1,165 +1,108 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-
+﻿
 #include "chess-piece.h"
+
+#include "../selection-component.h"
 #include "chess-piece-type.h"
 #include "player.h"
 
-#include "../selection-component.h"
+using namespace bembel::kernel;
+using namespace bembel::base;
+using namespace bembel::graphics;
 
-#include <bembel-kernel/scene/scene.h>
-#include <bembel-kernel/scene/position-component.h>
-#include <bembel-kernel/scene/rotation-component.h>
-#include <bembel-graphics/geometry/geometry-component.h>
-
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
 ChessPiece::ChessPiece(
-	ChessPieceType* type,
-	bembel::Scene* scene,
-	unsigned owner,
-	const glm::ivec2& startPos)
-	: scene_(scene)
-	, _type(type)
-	, _originalType(type)
-	, _owner(owner)
-	, _position(startPos)
-	, _startPositon(startPos)
-	, _isAlive(false)
-	, _entity( bembel::Scene::INVALID_ENTITY)
-{
-	_entity = scene_->CreateEntity();
+  ChessPieceType* type,
+  Scene* scene,
+  unsigned owner,
+  const glm::ivec2& start_pos)
+: scene(scene)
+, type(type)
+, original_type(type)
+, owner(owner)
+, start_positon(start_pos)
+, positon(start_pos)
+, is_alive(false)
+, entity(scene->createEntity()) {
+  this->scene->createComponent<PositionComponent>(this->entity)->position =
+    2.0f * glm::vec3(start_pos.x, 0, start_pos.y);
 
-	auto posComp = scene_->CreateComponent<bembel::PositionComponent>(_entity);
-	posComp->position = 2.0f*glm::vec3(_position.x, 0, _position.y);
+  scene->createComponent<RotationComponent>(this->entity)->rotation =
+    glm::angleAxis(glm::radians(owner == 0 ? 180.f : 1.0f), glm::vec3(0, 1, 0));
 
-	auto rotComp = scene_->CreateComponent<bembel::RotationComponent>(_entity);
-	rotComp->rotation = glm::angleAxis(glm::radians(_owner == 0 ? 180.f : 1.0f), glm::vec3(0,1,0));
+  scene->createComponent<GeometryComponent>(this->entity)->model =
+    type->getModles()[owner];
 
-	auto geomComp = scene_->CreateComponent<bembel::GeometryComponent>(_entity);
-	geomComp->model = _type->GetModles()[_owner];
-
-	auto selectComp = scene_->CreateComponent<SelectionComponent>(_entity);
-	selectComp->state = SelectionComponent::UNSELECTABLE;
-	//selectComp->stat = SelectionComponent::SELECTABLE;
+  scene->createComponent<SelectionComponent>(this->entity)->state =
+    SelectionComponent::State::UNSELECTABLE;
+  // selectComp->stat = SelectionComponent::SELECTABLE;
 }
 
-void ChessPiece::Promote(ChessPieceType* type)
-{
-	_type = type;
-	auto geomComp = scene_->GetComponent<bembel::GeometryComponent>(_entity);
-	geomComp->model = _type->GetModles()[_owner];
+void ChessPiece::promote(ChessPieceType* type) {
+  this->type = type;
+  this->scene->getComponent<GeometryComponent>(this->entity)->model =
+    type->getModles()[this->owner];
 }
 
-ChessPieceType* ChessPiece::GetType() const
-{
-	return _type;
+ChessPieceType* ChessPiece::getType() const {
+  return this->type;
 }
 
-bembel::Scene * ChessPiece::GetScene() const
-{
-	return scene_;
+Scene* ChessPiece::getScene() const {
+  return this->scene;
 }
 
-unsigned ChessPiece::GetOwner() const
-{
-	return _owner;
+unsigned ChessPiece::getOwner() const {
+  return this->owner;
 }
 
-const glm::ivec2& ChessPiece::GetPositon() const
-{
-	return _position;
+const glm::ivec2& ChessPiece::getPositon() const {
+  return this->positon;
 }
 
-void ChessPiece::SetPosition(const glm::ivec2& pos)
-{
-	_hasMoved = true;
-	_position = pos;
+void ChessPiece::setPosition(const glm::ivec2& pos) {
+  this->has_moved = true;
+  this->positon   = pos;
 
-	auto posComp = scene_->GetComponent<bembel::PositionComponent>(_entity);
-	posComp->position = 2.0f*glm::vec3(_position.x, 0, _position.y);
+  this->scene->getComponent<PositionComponent>(this->entity)->position =
+    2.0f * glm::vec3(pos.x, 0, pos.y);
 }
 
-bembel::Scene::EntityID ChessPiece::GetEntity()
-{
-	return _entity;
+Scene::EntityID ChessPiece::getEntity() {
+  return this->entity;
 }
 
-bool ChessPiece::IsAlive() const
-{
-	return _isAlive;
+bool ChessPiece::isAlive() const {
+  return this->is_alive;
 }
 
-void ChessPiece::Kill()
-{
-	auto posComp = scene_->GetComponent<bembel::PositionComponent>( _entity );
-	posComp->position = 2.0f*glm::vec3( _position.x, -1000, _position.y );
-	_isAlive = true; 
+void ChessPiece::kill() {
+  auto posComp = this->scene->getComponent<PositionComponent>(this->entity);
+  posComp->position.y -= -1000;
+  this->is_alive = true;
 }
 
-void ChessPiece::Reset()
-{
-	SetPosition(_startPositon);
-	_isAlive = true;
-	_hasMoved = false;
+void ChessPiece::reset() {
+  this->setPosition(this->start_positon);
+  this->is_alive  = true;
+  this->has_moved = false;
 
-	_type = _originalType;
+  this->type = this->original_type;
 
-	auto geomComp = scene_->GetComponent<bembel::GeometryComponent>(_entity);
-	geomComp->model = _type->GetModles()[_owner];
+  this->scene->getComponent<GeometryComponent>(this->entity)->model =
+    this->type->getModles()[this->owner];
 }
 
-bool ChessPiece::HasMoved() const
-{
-	return _hasMoved;
+bool ChessPiece::hasMoved() const {
+  return this->has_moved;
 }
 
-void ChessPiece::UpdatePossibleMoves(const ChessBoard& board)
-{
-	_possibleMoves.clear();
-	if (_isAlive)
-	{
-		_type->GetMoveSet().GetAvailableMoves(
-			this, board, _possibleMoves);
-	}
+void ChessPiece::updatePossibleMoves(const ChessBoard& board) {
+  this->possible_moves.clear();
+  if(this->is_alive) {
+    this->type->getMoveSet().getAvailableMoves(
+      this, board, this->possible_moves);
+  }
 }
 
-const std::vector<MoveSet::Move>& ChessPiece::GetPossibleMoves() const
-{
-	return _possibleMoves;
+const std::vector<MoveSet::Move>& ChessPiece::getPossibleMoves() const {
+  return this->possible_moves;
 }
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/

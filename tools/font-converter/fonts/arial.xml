@@ -1,0 +1,1634 @@
+<Font texture_atlas="arial">
+    <Glyphs>
+        <Glyph unicode_index="0">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="1">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="2">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="3">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="4">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="5">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="6">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="7">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="9">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="10">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="11">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="12">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="13">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="14">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="15">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="16">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="17">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="18">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="19">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="20">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="21">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="22">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="23">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="24">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="25">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="26">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="27">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="28">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="29">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="30">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="31">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="32">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.16438356" right="0.16438356" bottom="-0.16438356" top="0.16438356"/>
+            <TexCoords left="0.068359382" right="0.091796882" bottom="0.75" top="0.7734375"/>
+        </Glyph>
+        <Glyph unicode_index="33">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.07844606" right="0.35920778" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.81054688" right="0.84082031" bottom="0.734375" top="0.80859375"/>
+        </Glyph>
+        <Glyph unicode_index="34">
+            <Advance value="0.35498047"/>
+            <Extents left="-0.11848512" right="0.47248903" bottom="0.29801878" top="0.88020384"/>
+            <TexCoords left="0.95703125" right="0.99902344" bottom="0.80859375" top="0.84960938"/>
+        </Glyph>
+        <Glyph unicode_index="35">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15412965" right="0.70784056" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.29101563" right="0.3515625" bottom="0.38574219" top="0.46191406"/>
+        </Glyph>
+        <Glyph unicode_index="36">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12873903" right="0.67366087" bottom="-0.2674109" top="0.94612181"/>
+            <TexCoords left="0.22558594" right="0.28222656" bottom="0.57910156" top="0.66503906"/>
+        </Glyph>
+        <Glyph unicode_index="37">
+            <Advance value="0.88916016"/>
+            <Extents left="-0.10627809" right="0.99202025" bottom="-0.19075075" top="0.89241087"/>
+            <TexCoords left="0.23339844" right="0.31152344" bottom="0.075195313" top="0.15234375"/>
+        </Glyph>
+        <Glyph unicode_index="38">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.12141481" right="0.8084265" bottom="-0.18098512" top="0.89241087"/>
+            <TexCoords left="0.65136719" right="0.71679688" bottom="0.16015625" top="0.23632813"/>
+        </Glyph>
+        <Glyph unicode_index="39">
+            <Advance value="0.19091797"/>
+            <Extents left="-0.12043825" right="0.30842653" bottom="0.29801878" top="0.88020384"/>
+            <TexCoords left="0.78027344" right="0.81054688" bottom="0.87890625" top="0.91992188"/>
+        </Glyph>
+        <Glyph unicode_index="40">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.10383669" right="0.46125856" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.57714844" right="0.6171875" bottom="0.78710938" top="0.87695313"/>
+        </Glyph>
+        <Glyph unicode_index="41">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.10383669" right="0.46125856" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.57714844" right="0.6171875" bottom="0.87695313" top="0.96679688"/>
+        </Glyph>
+        <Glyph unicode_index="42">
+            <Advance value="0.38916016"/>
+            <Extents left="-0.13313356" right="0.51838744" bottom="0.25895628" top="0.89241087"/>
+            <TexCoords left="0.81054688" right="0.85644531" bottom="0.80859375" top="0.85351563"/>
+        </Glyph>
+        <Glyph unicode_index="43">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.1087195" right="0.69270384" bottom="-0.0486609" top="0.75325072"/>
+            <TexCoords left="0.83984375" right="0.89648438" bottom="0.31054688" top="0.3671875"/>
+        </Glyph>
+        <Glyph unicode_index="44">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.081375748" right="0.3533484" bottom="-0.30598512" top="0.26448122"/>
+            <TexCoords left="0.78027344" right="0.81054688" bottom="0.91992188" top="0.95996094"/>
+        </Glyph>
+        <Glyph unicode_index="45">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.13264528" right="0.46614137" bottom="0.05046019" top="0.46760622"/>
+            <TexCoords left="0.41015625" right="0.45214844" bottom="0.97070313" top="1"/>
+        </Glyph>
+        <Glyph unicode_index="46">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.073563248" right="0.35530153" bottom="-0.16438356" top="0.26448122"/>
+            <TexCoords left="0.78027344" right="0.81054688" bottom="0.95996094" top="0.99023438"/>
+        </Glyph>
+        <Glyph unicode_index="47">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.16438356" right="0.44221559" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.62011719" right="0.66308594" bottom="0.84667969" top="0.92285156"/>
+        </Glyph>
+        <Glyph unicode_index="48">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12287965" right="0.67268431" bottom="-0.17659061" top="0.88313353"/>
+            <TexCoords left="0.91992188" right="0.9765625" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="49">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.055496842" right="0.53694212" bottom="-0.16438356" top="0.88313353"/>
+            <TexCoords left="0.73828125" right="0.78027344" bottom="0.734375" top="0.80859375"/>
+        </Glyph>
+        <Glyph unicode_index="50">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13508669" right="0.6678015" bottom="-0.16438356" top="0.88313353"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.89648438" top="0.97070313"/>
+        </Glyph>
+        <Glyph unicode_index="51">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12239137" right="0.67512572" bottom="-0.17707887" top="0.88313353"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.44628906" top="0.52148438"/>
+        </Glyph>
+        <Glyph unicode_index="52">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15168825" right="0.67219603" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.29101563" right="0.34960938" bottom="0.83886719" top="0.91308594"/>
+        </Glyph>
+        <Glyph unicode_index="53">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12287965" right="0.68049681" bottom="-0.17659061" top="0.87043822"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.74804688" top="0.82226563"/>
+        </Glyph>
+        <Glyph unicode_index="54">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.1267859" right="0.67463744" bottom="-0.17659061" top="0.88313353"/>
+            <TexCoords left="0.80664063" right="0.86328125" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="55">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.11702028" right="0.67512572" bottom="-0.16438356" top="0.8709265"/>
+            <TexCoords left="0.5234375" right="0.57910156" bottom="0.44628906" top="0.51953125"/>
+        </Glyph>
+        <Glyph unicode_index="56">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12385622" right="0.67659056" bottom="-0.17659061" top="0.88313353"/>
+            <TexCoords left="0.86328125" right="0.91992188" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="57">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12287965" right="0.67659056" bottom="-0.17659061" top="0.88313353"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.52148438" top="0.59667969"/>
+        </Glyph>
+        <Glyph unicode_index="58">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.074051529" right="0.35481325" bottom="-0.16438356" top="0.68293822"/>
+            <TexCoords left="0.66503906" right="0.6953125" bottom="0.93164063" top="0.99121094"/>
+        </Glyph>
+        <Glyph unicode_index="59">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.081375748" right="0.3533484" bottom="-0.30598512" top="0.68293822"/>
+            <TexCoords left="0.78027344" right="0.81054688" bottom="0.80859375" top="0.87890625"/>
+        </Glyph>
+        <Glyph unicode_index="60">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.10969606" right="0.69319212" bottom="-0.054032002" top="0.75959837"/>
+            <TexCoords left="0.66894531" right="0.72558594" bottom="0.31054688" top="0.36816406"/>
+        </Glyph>
+        <Glyph unicode_index="61">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.1087195" right="0.69270384" bottom="0.039229721" top="0.66731322"/>
+            <TexCoords left="0.75097656" right="0.80761719" bottom="0.66894531" top="0.71289063"/>
+        </Glyph>
+        <Glyph unicode_index="62">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.10969606" right="0.69319212" bottom="-0.054032002" top="0.75959837"/>
+            <TexCoords left="0.78320313" right="0.83984375" bottom="0.31054688" top="0.36816406"/>
+        </Glyph>
+        <Glyph unicode_index="63">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12043825" right="0.67024291" bottom="-0.16438356" top="0.89241087"/>
+            <TexCoords left="0.46679688" right="0.52246094" bottom="0.59570313" top="0.67089844"/>
+        </Glyph>
+        <Glyph unicode_index="64">
+            <Advance value="1.0151367"/>
+            <Extents left="-0.11018434" right="1.1433874" bottom="-0.37483278" top="0.89338744"/>
+            <TexCoords left="0" right="0.088867188" bottom="0.096679688" top="0.18652344"/>
+        </Glyph>
+        <Glyph unicode_index="65">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.50878906" right="0.57910156" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="66">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.091141373" right="0.77815306" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.85449219" right="0.91601563" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="67">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.11457887" right="0.84700072" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.36425781" right="0.43261719" bottom="0.16015625" top="0.23632813"/>
+        </Glyph>
+        <Glyph unicode_index="68">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.087235123" right="0.83332884" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.71679688" right="0.78222656" bottom="0.16015625" top="0.234375"/>
+        </Glyph>
+        <Glyph unicode_index="69">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.085281998" right="0.77766478" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.91601563" right="0.9765625" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="70">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.08235231" right="0.72932494" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.35253906" right="0.41015625" bottom="0.82226563" top="0.89648438"/>
+        </Glyph>
+        <Glyph unicode_index="71">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.1111609" right="0.87971556" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.22558594" right="0.29589844" bottom="0.16015625" top="0.23632813"/>
+        </Glyph>
+        <Glyph unicode_index="72">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.084305443" right="0.80598509" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.54492188" right="0.60742188" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="73">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.071121842" right="0.35237184" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.88574219" right="0.91503906" bottom="0.734375" top="0.80859375"/>
+        </Glyph>
+        <Glyph unicode_index="74">
+            <Advance value="0.5"/>
+            <Extents left="-0.13752809" right="0.58674681" bottom="-0.17659061" top="0.88020384"/>
+            <TexCoords left="0.62207031" right="0.67285156" bottom="0.52050781" top="0.59570313"/>
+        </Glyph>
+        <Glyph unicode_index="75">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.091141373" right="0.82942259" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.78222656" right="0.84765625" bottom="0.16015625" top="0.234375"/>
+        </Glyph>
+        <Glyph unicode_index="76">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.091141373" right="0.68489134" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.57910156" right="0.63378906" bottom="0.44628906" top="0.52050781"/>
+        </Glyph>
+        <Glyph unicode_index="77">
+            <Advance value="0.83300781"/>
+            <Extents left="-0.09016481" right="0.92170775" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.4375" right="0.50878906" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="78">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.088211693" right="0.80452025" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.48144531" right="0.54492188" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="79">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.11604372" right="0.89729369" bottom="-0.17659061" top="0.89289916"/>
+            <TexCoords left="0.75292969" right="0.82421875" bottom="0.075195313" top="0.15136719"/>
+        </Glyph>
+        <Glyph unicode_index="80">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.087235123" right="0.78791869" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.73144531" right="0.79296875" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="81">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.12141481" right="0.90559447" bottom="-0.22004762" top="0.89289916"/>
+            <TexCoords left="0.5390625" right="0.61132813" bottom="0.075195313" top="0.15429688"/>
+        </Glyph>
+        <Glyph unicode_index="82">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.085770279" right="0.87385619" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.50195313" right="0.5703125" bottom="0.16015625" top="0.234375"/>
+        </Glyph>
+        <Glyph unicode_index="83">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.11946169" right="0.77912962" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.84765625" right="0.91113281" bottom="0.16015625" top="0.23632813"/>
+        </Glyph>
+        <Glyph unicode_index="84">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.14094606" right="0.75520384" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.22558594" right="0.2890625" bottom="0.90625" top="0.98046875"/>
+        </Glyph>
+        <Glyph unicode_index="85">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.085770279" right="0.80598509" bottom="-0.17659061" top="0.88020384"/>
+            <TexCoords left="0.91113281" right="0.97460938" bottom="0.16015625" top="0.23535156"/>
+        </Glyph>
+        <Glyph unicode_index="86">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.15998903" right="0.82356322" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.85839844" right="0.92773438" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="87">
+            <Advance value="0.94384766"/>
+            <Extents left="-0.15217653" right="1.0970007" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0" right="0.088867188" bottom="0.26074219" top="0.33496094"/>
+        </Glyph>
+        <Glyph unicode_index="88">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.15998903" right="0.82502806" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.7890625" right="0.85839844" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="89">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.16145387" right="0.82356322" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.71972656" right="0.7890625" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="90">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.14436403" right="0.75032103" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.41796875" right="0.48144531" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="91">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.096512467" right="0.42610231" bottom="-0.36311403" top="0.88020384"/>
+            <TexCoords left="0.66503906" right="0.70214844" bottom="0.66894531" top="0.75683594"/>
+        </Glyph>
+        <Glyph unicode_index="92">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.16438356" right="0.44221559" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.62011719" right="0.66308594" bottom="0.77050781" top="0.84667969"/>
+        </Glyph>
+        <Glyph unicode_index="93">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.14534059" right="0.37727419" bottom="-0.36311403" top="0.88020384"/>
+            <TexCoords left="0.66503906" right="0.70214844" bottom="0.75683594" top="0.84472656"/>
+        </Glyph>
+        <Glyph unicode_index="94">
+            <Advance value="0.46923828"/>
+            <Extents left="-0.13801637" right="0.60725462" bottom="0.1725305" top="0.89241087"/>
+            <TexCoords left="0.93066406" right="0.98339844" bottom="0.60742188" top="0.65820313"/>
+        </Glyph>
+        <Glyph unicode_index="95">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.17952028" right="0.73176634" bottom="-0.36311403" top="0.02912965"/>
+            <TexCoords left="0.91113281" right="0.97558594" bottom="0.85351563" top="0.88085938"/>
+        </Glyph>
+        <Glyph unicode_index="96">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.12092653" right="0.39143434" bottom="0.41862425" top="0.88411009"/>
+            <TexCoords left="0.81054688" right="0.84667969" bottom="0.90234375" top="0.93457031"/>
+        </Glyph>
+        <Glyph unicode_index="97">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.69465697"/>
+            <TexCoords left="0.84375" right="0.90039063" bottom="0.52050781" top="0.58203125"/>
+        </Glyph>
+        <Glyph unicode_index="98">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098953873" right="0.67952025" bottom="-0.17610231" top="0.88020384"/>
+            <TexCoords left="0.52246094" right="0.57714844" bottom="0.52050781" top="0.59570313"/>
+        </Glyph>
+        <Glyph unicode_index="99">
+            <Advance value="0.5"/>
+            <Extents left="-0.12532106" right="0.65510619" bottom="-0.17610231" top="0.69465697"/>
+            <TexCoords left="0.9453125" right="1" bottom="0.52050781" top="0.58203125"/>
+        </Glyph>
+        <Glyph unicode_index="100">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13020387" right="0.64827025" bottom="-0.17610231" top="0.88020384"/>
+            <TexCoords left="0.46679688" right="0.52148438" bottom="0.89648438" top="0.97167969"/>
+        </Glyph>
+        <Glyph unicode_index="101">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12776247" right="0.67903197" bottom="-0.17610231" top="0.69465697"/>
+            <TexCoords left="0.78710938" right="0.84375" bottom="0.52050781" top="0.58203125"/>
+        </Glyph>
+        <Glyph unicode_index="102">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.15510622" right="0.47688356" bottom="-0.16438356" top="0.89241087"/>
+            <TexCoords left="0.90039063" right="0.9453125" bottom="0.52050781" top="0.59570313"/>
+        </Glyph>
+        <Glyph unicode_index="103">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.132157" right="0.65364134" bottom="-0.37483278" top="0.69465697"/>
+            <TexCoords left="0.41015625" right="0.46582031" bottom="0.671875" top="0.74804688"/>
+        </Glyph>
+        <Glyph unicode_index="104">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098465592" right="0.65266478" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.79882813" right="0.8515625" bottom="0.44628906" top="0.52050781"/>
+        </Glyph>
+        <Glyph unicode_index="105">
+            <Advance value="0.22216797"/>
+            <Extents left="-0.09797731" right="0.31868044" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.94433594" right="0.97363281" bottom="0.734375" top="0.80859375"/>
+        </Glyph>
+        <Glyph unicode_index="106">
+            <Advance value="0.22216797"/>
+            <Extents left="-0.210282" right="0.31770387" bottom="-0.37483278" top="0.88020384"/>
+            <TexCoords left="0.62011719" right="0.65722656" bottom="0.68164063" top="0.77050781"/>
+        </Glyph>
+        <Glyph unicode_index="107">
+            <Advance value="0.5"/>
+            <Extents left="-0.09797731" right="0.66047728" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.63378906" right="0.68749994" bottom="0.44628906" top="0.52050781"/>
+        </Glyph>
+        <Glyph unicode_index="108">
+            <Advance value="0.22216797"/>
+            <Extents left="-0.10041872" right="0.31623903" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.91503906" right="0.94433594" bottom="0.734375" top="0.80859375"/>
+        </Glyph>
+        <Glyph unicode_index="109">
+            <Advance value="0.83300781"/>
+            <Extents left="-0.098465592" right="0.93293822" bottom="-0.16438356" top="0.69465697"/>
+            <TexCoords left="0.35253906" right="0.42578125" bottom="0.31054688" top="0.37109375"/>
+        </Glyph>
+        <Glyph unicode_index="110">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098465592" right="0.65168822" bottom="-0.16438356" top="0.69465697"/>
+            <TexCoords left="0.89648438" right="0.94921875" bottom="0.31054688" top="0.37109375"/>
+        </Glyph>
+        <Glyph unicode_index="111">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13118044" right="0.6834265" bottom="-0.17610231" top="0.69465697"/>
+            <TexCoords left="0.72949219" right="0.78710938" bottom="0.52050781" top="0.58203125"/>
+        </Glyph>
+        <Glyph unicode_index="112">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098465592" right="0.68049681" bottom="-0.36311403" top="0.69465697"/>
+            <TexCoords left="0.46679688" right="0.52148438" bottom="0.74609375" top="0.82128906"/>
+        </Glyph>
+        <Glyph unicode_index="113">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12922731" right="0.64875853" bottom="-0.36311403" top="0.69465697"/>
+            <TexCoords left="0.46679688" right="0.52148438" bottom="0.82128906" top="0.89648438"/>
+        </Glyph>
+        <Glyph unicode_index="114">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.099442147" right="0.51106322" bottom="-0.16438356" top="0.69465697"/>
+            <TexCoords left="0.94921875" right="0.9921875" bottom="0.31054688" top="0.37109375"/>
+        </Glyph>
+        <Glyph unicode_index="115">
+            <Advance value="0.5"/>
+            <Extents left="-0.13362184" right="0.62580931" bottom="-0.17610231" top="0.69465697"/>
+            <TexCoords left="0.66503906" right="0.71875" bottom="0.60742188" top="0.66894531"/>
+        </Glyph>
+        <Glyph unicode_index="116">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.14680544" right="0.43489137" bottom="-0.1712195" top="0.86409056"/>
+            <TexCoords left="0.73828125" right="0.77929688" bottom="0.80859375" top="0.88183594"/>
+        </Glyph>
+        <Glyph unicode_index="117">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.10041872" right="0.64875853" bottom="-0.17610231" top="0.68293822"/>
+            <TexCoords left="0.71875" right="0.77148438" bottom="0.60742188" top="0.66796875"/>
+        </Glyph>
+        <Glyph unicode_index="118">
+            <Advance value="0.5"/>
+            <Extents left="-0.15168825" right="0.65266478" bottom="-0.16438356" top="0.68293822"/>
+            <TexCoords left="0.55664063" right="0.61328125" bottom="0.31054688" top="0.37011719"/>
+        </Glyph>
+        <Glyph unicode_index="119">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.16145387" right="0.878739" bottom="-0.16438356" top="0.68293822"/>
+            <TexCoords left="0.42578125" right="0.49902344" bottom="0.31054688" top="0.37011719"/>
+        </Glyph>
+        <Glyph unicode_index="120">
+            <Advance value="0.5"/>
+            <Extents left="-0.15705934" right="0.65705931" bottom="-0.16438356" top="0.68293822"/>
+            <TexCoords left="0.49902344" right="0.55664063" bottom="0.31054688" top="0.37011719"/>
+        </Glyph>
+        <Glyph unicode_index="121">
+            <Advance value="0.5"/>
+            <Extents left="-0.14827028" right="0.65559447" bottom="-0.37483278" top="0.68293822"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.59667969" top="0.671875"/>
+        </Glyph>
+        <Glyph unicode_index="122">
+            <Advance value="0.5"/>
+            <Extents left="-0.14485231" right="0.64289916" bottom="-0.16438356" top="0.68293822"/>
+            <TexCoords left="0.61328125" right="0.66894531" bottom="0.31054688" top="0.37011719"/>
+        </Glyph>
+        <Glyph unicode_index="123">
+            <Advance value="0.33398438"/>
+            <Extents left="-0.13655153" right="0.47493044" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.57714844" right="0.62011719" bottom="0.69726563" top="0.78710938"/>
+        </Glyph>
+        <Glyph unicode_index="124">
+            <Advance value="0.25976563"/>
+            <Extents left="-0.072586693" right="0.33284059" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.70214844" right="0.73046875" bottom="0.89550781" top="0.98535156"/>
+        </Glyph>
+        <Glyph unicode_index="125">
+            <Advance value="0.33398438"/>
+            <Extents left="-0.14143434" right="0.47004762" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.57714844" right="0.62011719" bottom="0.60742188" top="0.69726563"/>
+        </Glyph>
+        <Glyph unicode_index="126">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.12190309" right="0.70637572" bottom="0.1075891" top="0.59651244"/>
+            <TexCoords left="0.85644531" right="0.91503906" bottom="0.80859375" top="0.84277344"/>
+        </Glyph>
+        <Glyph unicode_index="127">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="128">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="129">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="130">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="131">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="132">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="133">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="134">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="135">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="136">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="137">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="138">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="139">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="140">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="141">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="142">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="143">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="144">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="145">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="146">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="147">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="148">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="149">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="150">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="151">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="152">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="153">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="154">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="155">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="156">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="157">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="158">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="159">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="160">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.16438356" right="0.16438356" bottom="-0.16438356" top="0.16438356"/>
+            <TexCoords left="0.068359382" right="0.091796882" bottom="0.75" top="0.7734375"/>
+        </Glyph>
+        <Glyph unicode_index="161">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.05110231" right="0.38655153" bottom="-0.36164919" top="0.68293822"/>
+            <TexCoords left="0.78027344" right="0.81054688" bottom="0.734375" top="0.80859375"/>
+        </Glyph>
+        <Glyph unicode_index="162">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.11213747" right="0.66926634" bottom="-0.36409059" top="0.88020384"/>
+            <TexCoords left="0.22558594" right="0.28125" bottom="0.49121094" top="0.57910156"/>
+        </Glyph>
+        <Glyph unicode_index="163">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15119997" right="0.69270384" bottom="-0.17805544" top="0.89241087"/>
+            <TexCoords left="0.29101563" right="0.35058594" bottom="0.53808594" top="0.61425781"/>
+        </Glyph>
+        <Glyph unicode_index="164">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.68049681" bottom="-0.04963747" top="0.75813353"/>
+            <TexCoords left="0.72558594" right="0.78320313" bottom="0.31054688" top="0.3671875"/>
+        </Glyph>
+        <Glyph unicode_index="165">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.1658484" right="0.71760619" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.60742188" right="0.66992188" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="166">
+            <Advance value="0.25976563"/>
+            <Extents left="-0.072586693" right="0.33284059" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.73828125" right="0.76660156" bottom="0.88183594" top="0.97167969"/>
+        </Glyph>
+        <Glyph unicode_index="167">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12483278" right="0.67463744" bottom="-0.37483278" top="0.89241087"/>
+            <TexCoords left="0.16210938" right="0.21875" bottom="0.77441406" top="0.86425781"/>
+        </Glyph>
+        <Glyph unicode_index="168">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.1345984" right="0.4680945" bottom="0.45573363" top="0.88459837"/>
+            <TexCoords left="0.57714844" right="0.61914063" bottom="0.96679688" top="0.99707031"/>
+        </Glyph>
+        <Glyph unicode_index="169">
+            <Advance value="0.73681641"/>
+            <Extents left="-0.16291872" right="0.90266478" bottom="-0.17317262" top="0.89241087"/>
+            <TexCoords left="0.28710938" right="0.36230469" bottom="0" top="0.075195313"/>
+        </Glyph>
+        <Glyph unicode_index="170">
+            <Advance value="0.37011719"/>
+            <Extents left="-0.14143434" right="0.51496947" bottom="0.19987425" top="0.89241087"/>
+            <TexCoords left="0.86425781" right="0.91015625" bottom="0.66894531" top="0.71777344"/>
+        </Glyph>
+        <Glyph unicode_index="171">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098953873" right="0.64827025" bottom="-0.12922731" top="0.64485228"/>
+            <TexCoords left="0.82519531" right="0.87792969" bottom="0.60742188" top="0.66210938"/>
+        </Glyph>
+        <Glyph unicode_index="172">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.1087195" right="0.69270384" bottom="0.04264769" top="0.66731322"/>
+            <TexCoords left="0.80761719" right="0.86425781" bottom="0.66894531" top="0.71289063"/>
+        </Glyph>
+        <Glyph unicode_index="173">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.13264528" right="0.46614137" bottom="0.05046019" top="0.46760622"/>
+            <TexCoords left="0.41015625" right="0.45214844" bottom="0.97070313" top="1"/>
+        </Glyph>
+        <Glyph unicode_index="174">
+            <Advance value="0.73681641"/>
+            <Extents left="-0.16291872" right="0.90266478" bottom="-0.17317262" top="0.89241087"/>
+            <TexCoords left="0.36230469" right="0.4375" bottom="0" top="0.075195313"/>
+        </Glyph>
+        <Glyph unicode_index="175">
+            <Advance value="0.55224609"/>
+            <Extents left="-0.17952028" right="0.73176634" bottom="0.60026491" top="0.99202025"/>
+            <TexCoords left="0.84667969" right="0.91113281" bottom="0.85351563" top="0.88085938"/>
+        </Glyph>
+        <Glyph unicode_index="176">
+            <Advance value="0.39990234"/>
+            <Extents left="-0.10188356" right="0.49787965" bottom="0.29264769" top="0.89241087"/>
+            <TexCoords left="0.91503906" right="0.95703125" bottom="0.80859375" top="0.85058594"/>
+        </Glyph>
+        <Glyph unicode_index="177">
+            <Advance value="0.54882813"/>
+            <Extents left="-0.12629762" right="0.67512572" bottom="-0.16438356" top="0.76448119"/>
+            <TexCoords left="0.67285156" right="0.72949219" bottom="0.52050781" top="0.5859375"/>
+        </Glyph>
+        <Glyph unicode_index="178">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.15217653" right="0.48078981" bottom="0.1935266" top="0.88899291"/>
+            <TexCoords left="0.84082031" right="0.88574219" bottom="0.734375" top="0.78320313"/>
+        </Glyph>
+        <Glyph unicode_index="179">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.14827028" right="0.47981325" bottom="0.18473753" top="0.88899291"/>
+            <TexCoords left="0.95605469" right="1" bottom="0.66894531" top="0.71875"/>
+        </Glyph>
+        <Glyph unicode_index="180">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.055985119" right="0.45295778" bottom="0.41862425" top="0.88411009"/>
+            <TexCoords left="0.81054688" right="0.84667969" bottom="0.93457031" top="0.96679688"/>
+        </Glyph>
+        <Glyph unicode_index="181">
+            <Advance value="0.57617188"/>
+            <Extents left="-0.08625856" right="0.66145384" bottom="-0.36311403" top="0.68293822"/>
+            <TexCoords left="0.74609375" right="0.79882813" bottom="0.44628906" top="0.52050781"/>
+        </Glyph>
+        <Glyph unicode_index="182">
+            <Advance value="0.53710938"/>
+            <Extents left="-0.16389528" right="0.70491087" bottom="-0.36311403" top="0.88020384"/>
+            <TexCoords left="0.16210938" right="0.22363281" bottom="0.3359375" top="0.42382813"/>
+        </Glyph>
+        <Glyph unicode_index="183">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.048172619" right="0.38069215" bottom="0.1466516" top="0.57551634"/>
+            <TexCoords left="0.81054688" right="0.84082031" bottom="0.96679688" top="0.99707031"/>
+        </Glyph>
+        <Glyph unicode_index="184">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.11213747" right="0.42805544" bottom="-0.36994997" top="0.17561403"/>
+            <TexCoords left="0.84667969" right="0.88476563" bottom="0.88085938" top="0.91894531"/>
+        </Glyph>
+        <Glyph unicode_index="185">
+            <Advance value="0.33300781"/>
+            <Extents left="-0.11213747" right="0.39680544" bottom="0.1935266" top="0.88899291"/>
+            <TexCoords left="0.81054688" right="0.84667969" bottom="0.85351563" top="0.90234375"/>
+        </Glyph>
+        <Glyph unicode_index="186">
+            <Advance value="0.36523438"/>
+            <Extents left="-0.1424109" right="0.50666869" bottom="0.19694456" top="0.89241087"/>
+            <TexCoords left="0.91015625" right="0.95605469" bottom="0.66894531" top="0.71777344"/>
+        </Glyph>
+        <Glyph unicode_index="187">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.096024193" right="0.65119994" bottom="-0.12922731" top="0.64485228"/>
+            <TexCoords left="0.87792969" right="0.93066406" bottom="0.60742188" top="0.66210938"/>
+        </Glyph>
+        <Glyph unicode_index="188">
+            <Advance value="0.83398438"/>
+            <Extents left="-0.11213747" right="0.98371947" bottom="-0.19221559" top="0.89241087"/>
+            <TexCoords left="0.38867188" right="0.46582031" bottom="0.075195313" top="0.15234375"/>
+        </Glyph>
+        <Glyph unicode_index="189">
+            <Advance value="0.83398438"/>
+            <Extents left="-0.11213747" right="0.98078978" bottom="-0.19221559" top="0.89241087"/>
+            <TexCoords left="0.31152344" right="0.38867188" bottom="0.075195313" top="0.15234375"/>
+        </Glyph>
+        <Glyph unicode_index="190">
+            <Advance value="0.83398438"/>
+            <Extents left="-0.14827028" right="0.98371947" bottom="-0.19221559" top="0.89241087"/>
+            <TexCoords left="0" right="0.080078132" bottom="0.67285156" top="0.75"/>
+        </Glyph>
+        <Glyph unicode_index="191">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.087235123" right="0.70295775" bottom="-0.37385622" top="0.68293822"/>
+            <TexCoords left="0.46679688" right="0.52246094" bottom="0.52050781" top="0.59570313"/>
+        </Glyph>
+        <Glyph unicode_index="192">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.075195313" top="0.16210938"/>
+        </Glyph>
+        <Glyph unicode_index="193">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.16210938" top="0.24902344"/>
+        </Glyph>
+        <Glyph unicode_index="194">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.24902344" top="0.3359375"/>
+        </Glyph>
+        <Glyph unicode_index="195">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="1.0369421"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.59375" top="0.67871094"/>
+        </Glyph>
+        <Glyph unicode_index="196">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="1.0242468"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.67871094" top="0.76269531"/>
+        </Glyph>
+        <Glyph unicode_index="197">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="1.0335242"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.50878906" top="0.59375"/>
+        </Glyph>
+        <Glyph unicode_index="198">
+            <Advance value="1"/>
+            <Extents left="-0.16389528" right="1.109696" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0" right="0.08984375" bottom="0.18652344" top="0.26074219"/>
+        </Glyph>
+        <Glyph unicode_index="199">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.11457887" right="0.84700072" bottom="-0.36994997" top="0.89241087"/>
+            <TexCoords left="0" right="0.068359382" bottom="0.75" top="0.83984375"/>
+        </Glyph>
+        <Glyph unicode_index="200">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.085281998" right="0.77766478" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.16210938" right="0.22265625" bottom="0.60058594" top="0.68749994"/>
+        </Glyph>
+        <Glyph unicode_index="201">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.085281998" right="0.77766478" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.16210938" right="0.22265625" bottom="0.68749994" top="0.77441406"/>
+        </Glyph>
+        <Glyph unicode_index="202">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.085281998" right="0.77766478" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.16210938" right="0.22265625" bottom="0.51367188" top="0.60058594"/>
+        </Glyph>
+        <Glyph unicode_index="203">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.085281998" right="0.77766478" bottom="-0.16438356" top="1.0242468"/>
+            <TexCoords left="0.16210938" right="0.22265625" bottom="0.86425781" top="0.94824219"/>
+        </Glyph>
+        <Glyph unicode_index="204">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.13801637" right="0.3743445" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.66503906" right="0.70117188" bottom="0.84472656" top="0.93164063"/>
+        </Glyph>
+        <Glyph unicode_index="205">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.095535897" right="0.413407" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.70214844" right="0.73828125" bottom="0.734375" top="0.82128906"/>
+        </Glyph>
+        <Glyph unicode_index="206">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.18000856" right="0.45784059" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.57714844" right="0.62207031" bottom="0.52050781" top="0.60742188"/>
+        </Glyph>
+        <Glyph unicode_index="207">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.16243044" right="0.44026247" bottom="-0.16438356" top="1.0242468"/>
+            <TexCoords left="0.95117188" right="0.99316406" bottom="0.075195313" top="0.15917969"/>
+        </Glyph>
+        <Glyph unicode_index="208">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.1658484" right="0.83332884" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.64941406" right="0.71972656" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="209">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.088211693" right="0.80452025" bottom="-0.16438356" top="1.0369421"/>
+            <TexCoords left="0.82421875" right="0.88769531" bottom="0.075195313" top="0.16015625"/>
+        </Glyph>
+        <Glyph unicode_index="210">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.11604372" right="0.89729369" bottom="-0.17659061" top="1.0608679"/>
+            <TexCoords left="0" right="0.071289063" bottom="0.58496094" top="0.67285156"/>
+        </Glyph>
+        <Glyph unicode_index="211">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.11604372" right="0.89729369" bottom="-0.17659061" top="1.0608679"/>
+            <TexCoords left="0" right="0.071289063" bottom="0.49707031" top="0.58496094"/>
+        </Glyph>
+        <Glyph unicode_index="212">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.11604372" right="0.89729369" bottom="-0.17659061" top="1.0608679"/>
+            <TexCoords left="0" right="0.071289063" bottom="0.40917969" top="0.49707031"/>
+        </Glyph>
+        <Glyph unicode_index="213">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.11604372" right="0.89729369" bottom="-0.17659061" top="1.0369421"/>
+            <TexCoords left="0" right="0.071289063" bottom="0.83984375" top="0.92578125"/>
+        </Glyph>
+        <Glyph unicode_index="214">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.11604372" right="0.89729369" bottom="-0.17659061" top="1.0242468"/>
+            <TexCoords left="0.16210938" right="0.23339844" bottom="0.075195313" top="0.16015625"/>
+        </Glyph>
+        <Glyph unicode_index="215">
+            <Advance value="0.58398438"/>
+            <Extents left="-0.085770279" right="0.66877806" bottom="-0.02375856" top="0.73078978"/>
+            <TexCoords left="0.77148438" right="0.82519531" bottom="0.60742188" top="0.66113281"/>
+        </Glyph>
+        <Glyph unicode_index="216">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.12385622" right="0.90510619" bottom="-0.19319215" top="0.90657103"/>
+            <TexCoords left="0.46582031" right="0.5390625" bottom="0.075195313" top="0.15332031"/>
+        </Glyph>
+        <Glyph unicode_index="217">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.085770279" right="0.80598509" bottom="-0.17659061" top="1.0608679"/>
+            <TexCoords left="0.091796882" right="0.15527344" bottom="0.84863281" top="0.93652344"/>
+        </Glyph>
+        <Glyph unicode_index="218">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.085770279" right="0.80598509" bottom="-0.17659061" top="1.0608679"/>
+            <TexCoords left="0.16210938" right="0.22558594" bottom="0.24804688" top="0.3359375"/>
+        </Glyph>
+        <Glyph unicode_index="219">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.085770279" right="0.80598509" bottom="-0.17659061" top="1.0608679"/>
+            <TexCoords left="0.16210938" right="0.22558594" bottom="0.16015625" top="0.24804688"/>
+        </Glyph>
+        <Glyph unicode_index="220">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.085770279" right="0.80598509" bottom="-0.17659061" top="1.0242468"/>
+            <TexCoords left="0.88769531" right="0.95117188" bottom="0.075195313" top="0.16015625"/>
+        </Glyph>
+        <Glyph unicode_index="221">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.16145387" right="0.82356322" bottom="-0.16438356" top="1.0608679"/>
+            <TexCoords left="0.091796882" right="0.16113281" bottom="0.421875" top="0.50878906"/>
+        </Glyph>
+        <Glyph unicode_index="222">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.087235123" right="0.78791869" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.79296875" right="0.85449219" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="223">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.089676529" right="0.74397337" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.29101563" right="0.34960938" bottom="0.68847656" top="0.76464844"/>
+        </Glyph>
+        <Glyph unicode_index="224">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.35253906" right="0.40917969" bottom="0.89648438" top="0.97167969"/>
+        </Glyph>
+        <Glyph unicode_index="225">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.46679688" right="0.5234375" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="226">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.75" right="0.80664063" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="227">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.87239134"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.82226563" top="0.89648438"/>
+        </Glyph>
+        <Glyph unicode_index="228">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.88459837"/>
+            <TexCoords left="0.41015625" right="0.46679688" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="229">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12825075" right="0.67805541" bottom="-0.17610231" top="0.90510619"/>
+            <TexCoords left="0.35253906" right="0.40917969" bottom="0.671875" top="0.74804688"/>
+        </Glyph>
+        <Glyph unicode_index="230">
+            <Advance value="0.88916016"/>
+            <Extents left="-0.13118044" right="1.0130163" bottom="-0.17610231" top="0.69465697"/>
+            <TexCoords left="0.5703125" right="0.65136719" bottom="0.16015625" top="0.22167969"/>
+        </Glyph>
+        <Glyph unicode_index="231">
+            <Advance value="0.5"/>
+            <Extents left="-0.12532106" right="0.65510619" bottom="-0.36018434" top="0.69465697"/>
+            <TexCoords left="0.46679688" right="0.52148438" bottom="0.67089844" top="0.74609375"/>
+        </Glyph>
+        <Glyph unicode_index="232">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12776247" right="0.67903197" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.69335938" right="0.75" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="233">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12776247" right="0.67903197" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.5234375" right="0.58007813" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="234">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12776247" right="0.67903197" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.63671875" right="0.69335938" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="235">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12776247" right="0.67903197" bottom="-0.17610231" top="0.88459837"/>
+            <TexCoords left="0.58007813" right="0.63671875" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="236">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.14729372" right="0.36506715" bottom="-0.16438356" top="0.88411009"/>
+            <TexCoords left="0.96191406" right="0.99804688" bottom="0.44628906" top="0.52050781"/>
+        </Glyph>
+        <Glyph unicode_index="237">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.072098397" right="0.4368445" bottom="-0.16438356" top="0.88411009"/>
+            <TexCoords left="0.70214844" right="0.73828125" bottom="0.82128906" top="0.89550781"/>
+        </Glyph>
+        <Glyph unicode_index="238">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.17268434" right="0.46516481" bottom="-0.16438356" top="0.88411009"/>
+            <TexCoords left="0.62011719" right="0.66503906" bottom="0.60742188" top="0.68164063"/>
+        </Glyph>
+        <Glyph unicode_index="239">
+            <Advance value="0.27783203"/>
+            <Extents left="-0.15998903" right="0.44270387" bottom="-0.16438356" top="0.88459837"/>
+            <TexCoords left="0.62011719" right="0.66210938" bottom="0.92285156" top="0.99707031"/>
+        </Glyph>
+        <Glyph unicode_index="240">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12873903" right="0.68049681" bottom="-0.17659061" top="0.88020384"/>
+            <TexCoords left="0.35253906" right="0.41015625" bottom="0.59667969" top="0.671875"/>
+        </Glyph>
+        <Glyph unicode_index="241">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098465592" right="0.65168822" bottom="-0.16438356" top="0.87239134"/>
+            <TexCoords left="0.8515625" right="0.90429688" bottom="0.44628906" top="0.51953125"/>
+        </Glyph>
+        <Glyph unicode_index="242">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13118044" right="0.6834265" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.29101563" right="0.34863281" bottom="0.91308594" top="0.98828125"/>
+        </Glyph>
+        <Glyph unicode_index="243">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13118044" right="0.6834265" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.35253906" right="0.41015625" bottom="0.52148438" top="0.59667969"/>
+        </Glyph>
+        <Glyph unicode_index="244">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13118044" right="0.6834265" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.35253906" right="0.41015625" bottom="0.37109375" top="0.44628906"/>
+        </Glyph>
+        <Glyph unicode_index="245">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13118044" right="0.6834265" bottom="-0.17610231" top="0.87239134"/>
+            <TexCoords left="0.35253906" right="0.41015625" bottom="0.74804688" top="0.82226563"/>
+        </Glyph>
+        <Glyph unicode_index="246">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.13118044" right="0.6834265" bottom="-0.17610231" top="0.88459837"/>
+            <TexCoords left="0.35253906" right="0.41015625" bottom="0.44628906" top="0.52148438"/>
+        </Glyph>
+        <Glyph unicode_index="247">
+            <Advance value="0.54882813"/>
+            <Extents left="-0.12629762" right="0.67512572" bottom="-0.0086218398" top="0.7146765"/>
+            <TexCoords left="0.16210938" right="0.21875" bottom="0.94824219" top="0.99902344"/>
+        </Glyph>
+        <Glyph unicode_index="248">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.10139528" right="0.71321166" bottom="-0.20295778" top="0.7146765"/>
+            <TexCoords left="0.90429688" right="0.96191406" bottom="0.44628906" top="0.51074219"/>
+        </Glyph>
+        <Glyph unicode_index="249">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.10041872" right="0.64875853" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.52246094" right="0.57519531" bottom="0.82128906" top="0.89648438"/>
+        </Glyph>
+        <Glyph unicode_index="250">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.10041872" right="0.64875853" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.52246094" right="0.57519531" bottom="0.67089844" top="0.74609375"/>
+        </Glyph>
+        <Glyph unicode_index="251">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.10041872" right="0.64875853" bottom="-0.17610231" top="0.88411009"/>
+            <TexCoords left="0.52246094" right="0.57519531" bottom="0.74609375" top="0.82128906"/>
+        </Glyph>
+        <Glyph unicode_index="252">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.10041872" right="0.64875853" bottom="-0.17610231" top="0.88459837"/>
+            <TexCoords left="0.52246094" right="0.57519531" bottom="0.89648438" top="0.97167969"/>
+        </Glyph>
+        <Glyph unicode_index="253">
+            <Advance value="0.5"/>
+            <Extents left="-0.14827028" right="0.65559447" bottom="-0.37483278" top="0.88411009"/>
+            <TexCoords left="0.22558594" right="0.28222656" bottom="0.40234375" top="0.49121094"/>
+        </Glyph>
+        <Glyph unicode_index="254">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.098465592" right="0.68049681" bottom="-0.36311403" top="0.88020384"/>
+            <TexCoords left="0.22558594" right="0.28027344" bottom="0.66503906" top="0.75292969"/>
+        </Glyph>
+        <Glyph unicode_index="255">
+            <Advance value="0.5"/>
+            <Extents left="-0.14827028" right="0.65559447" bottom="-0.37483278" top="0.88459837"/>
+            <TexCoords left="0.22558594" right="0.28222656" bottom="0.31347656" top="0.40234375"/>
+        </Glyph>
+        <Glyph unicode_index="8352">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.1580359" right="0.71418822" bottom="-0.16438356" top="0.89192259"/>
+            <TexCoords left="0.29101563" right="0.35253906" bottom="0.31054688" top="0.38574219"/>
+        </Glyph>
+        <Glyph unicode_index="8353">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.11457887" right="0.84700072" bottom="-0.21907106" top="0.92952025"/>
+            <TexCoords left="0.68457031" right="0.75292969" bottom="0.075195313" top="0.15625"/>
+        </Glyph>
+        <Glyph unicode_index="8354">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.11457887" right="0.84700072" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.29589844" right="0.36425781" bottom="0.16015625" top="0.23632813"/>
+        </Glyph>
+        <Glyph unicode_index="8355">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.16438356" right="0.67073119" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.29101563" right="0.34960938" bottom="0.76464844" top="0.83886719"/>
+        </Glyph>
+        <Glyph unicode_index="8356">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15119997" right="0.69270384" bottom="-0.17805544" top="0.89241087"/>
+            <TexCoords left="0.29101563" right="0.35058594" bottom="0.46191406" top="0.53808594"/>
+        </Glyph>
+        <Glyph unicode_index="8357">
+            <Advance value="0.83300781"/>
+            <Extents left="-0.098465592" right="0.93293822" bottom="-0.2595984" top="0.80940306"/>
+            <TexCoords left="0.61132813" right="0.68457031" bottom="0.075195313" top="0.15136719"/>
+        </Glyph>
+        <Glyph unicode_index="8358">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.14680544" right="0.863114" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0" right="0.071289063" bottom="0.92578125" top="1"/>
+        </Glyph>
+        <Glyph unicode_index="8359">
+            <Advance value="1.09375"/>
+            <Extents left="-0.13948122" right="1.2361609" bottom="-0.17707887" top="0.88020384"/>
+            <TexCoords left="0.18945313" right="0.28710938" bottom="0" top="0.075195313"/>
+        </Glyph>
+        <Glyph unicode_index="8360">
+            <Advance value="1.1640625"/>
+            <Extents left="-0.085770279" right="1.2898718" bottom="-0.17610231" top="0.88020384"/>
+            <TexCoords left="0.091796882" right="0.18945313" bottom="0" top="0.075195313"/>
+        </Glyph>
+        <Glyph unicode_index="8361">
+            <Advance value="0.94384766"/>
+            <Extents left="-0.15217653" right="1.0970007" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0" right="0.088867188" bottom="0.33496094" top="0.40917969"/>
+        </Glyph>
+        <Glyph unicode_index="8362">
+            <Advance value="0.81542969"/>
+            <Extents left="-0.088699967" right="0.90412962" bottom="-0.16438356" top="0.68244994"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.93652344" top="0.99609375"/>
+        </Glyph>
+        <Glyph unicode_index="8363">
+            <Advance value="0.51318359"/>
+            <Extents left="-0.08625856" right="0.60627806" bottom="-0.044266369" top="0.88020384"/>
+            <TexCoords left="0.70214844" right="0.75097656" bottom="0.66894531" top="0.734375"/>
+        </Glyph>
+        <Glyph unicode_index="8364">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.17805544" right="0.70491087" bottom="-0.17659061" top="0.89241087"/>
+            <TexCoords left="0.22558594" right="0.28808594" bottom="0.75292969" top="0.82910156"/>
+        </Glyph>
+        <Glyph unicode_index="8365">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.14924684" right="0.82942259" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.43261719" right="0.50195313" bottom="0.16015625" top="0.234375"/>
+        </Glyph>
+        <Glyph unicode_index="8366">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.14094606" right="0.75520384" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.29101563" right="0.35449219" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="8367">
+            <Advance value="1"/>
+            <Extents left="-0.14436403" right="1.1511999" bottom="-0.36311403" top="1.003739"/>
+            <TexCoords left="0" right="0.091796882" bottom="0" top="0.096679688"/>
+        </Glyph>
+        <Glyph unicode_index="8368">
+            <Advance value="0.52099609"/>
+            <Extents left="-0.16194215" right="0.67121947" bottom="-0.37483278" top="0.89289916"/>
+            <TexCoords left="0.16210938" right="0.22070313" bottom="0.42382813" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8369">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.15608278" right="0.82161009" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.92773438" right="0.99707031" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="8370">
+            <Advance value="0.77783203"/>
+            <Extents left="-0.1111609" right="0.87971556" bottom="-0.2674109" top="0.94612181"/>
+            <TexCoords left="0.091796882" right="0.16210938" bottom="0.3359375" top="0.421875"/>
+        </Glyph>
+        <Glyph unicode_index="8371">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1658484" right="0.83284056" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.57910156" right="0.64941406" bottom="0" top="0.07421875"/>
+        </Glyph>
+        <Glyph unicode_index="8372">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15705934" right="0.71321166" bottom="-0.17952028" top="0.90412962"/>
+            <TexCoords left="0.22558594" right="0.28710938" bottom="0.82910156" top="0.90625"/>
+        </Glyph>
+        <Glyph unicode_index="8373">
+            <Advance value="0.72216797"/>
+            <Extents left="-0.11457887" right="0.84700072" bottom="-0.2674109" top="0.94612181"/>
+            <TexCoords left="0.091796882" right="0.16015625" bottom="0.76269531" top="0.84863281"/>
+        </Glyph>
+        <Glyph unicode_index="8374">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.10286012" right="0.65461791" bottom="-0.1712195" top="0.89241087"/>
+            <TexCoords left="0.52246094" right="0.57617188" bottom="0.59570313" top="0.67089844"/>
+        </Glyph>
+        <Glyph unicode_index="8375">
+            <Advance value="0.66699219"/>
+            <Extents left="-0.1502234" right="0.77912962" bottom="-0.20149294" top="0.89241087"/>
+            <TexCoords left="0.22558594" right="0.29101563" bottom="0.23632813" top="0.31347656"/>
+        </Glyph>
+        <Glyph unicode_index="8376">
+            <Advance value="0.61083984"/>
+            <Extents left="-0.14094606" right="0.75520384" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.35449219" right="0.41796875" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="8377">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.12532106" right="0.68049681" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.46679688" right="0.5234375" bottom="0.44628906" top="0.52050781"/>
+        </Glyph>
+        <Glyph unicode_index="8378">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15705934" right="0.71321166" bottom="-0.17170778" top="0.88020384"/>
+            <TexCoords left="0.66992188" right="0.73144531" bottom="0.23632813" top="0.31054688"/>
+        </Glyph>
+        <Glyph unicode_index="8379">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8380">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8381">
+            <Advance value="0.55615234"/>
+            <Extents left="-0.15071169" right="0.70588744" bottom="-0.16438356" top="0.88020384"/>
+            <TexCoords left="0.29101563" right="0.3515625" bottom="0.61425781" top="0.68847656"/>
+        </Glyph>
+        <Glyph unicode_index="8382">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8383">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8384">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8385">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8386">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8387">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8388">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8389">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8390">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8391">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8392">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8393">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8394">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8395">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8396">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8397">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8398">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+        <Glyph unicode_index="8399">
+            <Advance value="0.75"/>
+            <Extents left="-0.03938356" right="0.78938353" bottom="-0.16438356" top="0.78938353"/>
+            <TexCoords left="0.68749994" right="0.74609375" bottom="0.44628906" top="0.51367188"/>
+        </Glyph>
+    </Glyphs>
+    <Kerning>
+        <Pair left="32" right="65" kerning="-0.055175781"/>
+        <Pair left="32" right="84" kerning="-0.01806641"/>
+        <Pair left="32" right="89" kerning="-0.01806641"/>
+        <Pair left="49" right="49" kerning="-0.07421875"/>
+        <Pair left="65" right="32" kerning="-0.055175781"/>
+        <Pair left="65" right="84" kerning="-0.07421875"/>
+        <Pair left="65" right="86" kerning="-0.07421875"/>
+        <Pair left="65" right="87" kerning="-0.037109379"/>
+        <Pair left="65" right="89" kerning="-0.07421875"/>
+        <Pair left="65" right="118" kerning="-0.01806641"/>
+        <Pair left="65" right="119" kerning="-0.01806641"/>
+        <Pair left="65" right="121" kerning="-0.01806641"/>
+        <Pair left="65" right="160" kerning="-0.055175781"/>
+        <Pair left="70" right="44" kerning="-0.11083984"/>
+        <Pair left="70" right="46" kerning="-0.11083984"/>
+        <Pair left="70" right="65" kerning="-0.055175781"/>
+        <Pair left="76" right="32" kerning="-0.037109379"/>
+        <Pair left="76" right="84" kerning="-0.07421875"/>
+        <Pair left="76" right="86" kerning="-0.07421875"/>
+        <Pair left="76" right="87" kerning="-0.07421875"/>
+        <Pair left="76" right="89" kerning="-0.07421875"/>
+        <Pair left="76" right="121" kerning="-0.037109379"/>
+        <Pair left="76" right="160" kerning="-0.037109379"/>
+        <Pair left="80" right="32" kerning="-0.01806641"/>
+        <Pair left="80" right="44" kerning="-0.12890625"/>
+        <Pair left="80" right="46" kerning="-0.12890625"/>
+        <Pair left="80" right="65" kerning="-0.07421875"/>
+        <Pair left="80" right="160" kerning="-0.01806641"/>
+        <Pair left="82" right="84" kerning="-0.01806641"/>
+        <Pair left="82" right="86" kerning="-0.01806641"/>
+        <Pair left="82" right="87" kerning="-0.01806641"/>
+        <Pair left="82" right="89" kerning="-0.01806641"/>
+        <Pair left="84" right="32" kerning="-0.01806641"/>
+        <Pair left="84" right="44" kerning="-0.11083984"/>
+        <Pair left="84" right="45" kerning="-0.055175781"/>
+        <Pair left="84" right="46" kerning="-0.11083984"/>
+        <Pair left="84" right="58" kerning="-0.11083984"/>
+        <Pair left="84" right="59" kerning="-0.11083984"/>
+        <Pair left="84" right="65" kerning="-0.07421875"/>
+        <Pair left="84" right="79" kerning="-0.01806641"/>
+        <Pair left="84" right="97" kerning="-0.11083984"/>
+        <Pair left="84" right="99" kerning="-0.11083984"/>
+        <Pair left="84" right="101" kerning="-0.11083984"/>
+        <Pair left="84" right="105" kerning="-0.037109379"/>
+        <Pair left="84" right="111" kerning="-0.11083984"/>
+        <Pair left="84" right="114" kerning="-0.037109379"/>
+        <Pair left="84" right="115" kerning="-0.11083984"/>
+        <Pair left="84" right="117" kerning="-0.037109379"/>
+        <Pair left="84" right="119" kerning="-0.055175781"/>
+        <Pair left="84" right="121" kerning="-0.055175781"/>
+        <Pair left="84" right="160" kerning="-0.01806641"/>
+        <Pair left="84" right="173" kerning="-0.055175781"/>
+        <Pair left="86" right="44" kerning="-0.091796882"/>
+        <Pair left="86" right="45" kerning="-0.055175781"/>
+        <Pair left="86" right="46" kerning="-0.091796882"/>
+        <Pair left="86" right="58" kerning="-0.037109379"/>
+        <Pair left="86" right="59" kerning="-0.037109379"/>
+        <Pair left="86" right="65" kerning="-0.07421875"/>
+        <Pair left="86" right="97" kerning="-0.07421875"/>
+        <Pair left="86" right="101" kerning="-0.055175781"/>
+        <Pair left="86" right="105" kerning="-0.01806641"/>
+        <Pair left="86" right="111" kerning="-0.055175781"/>
+        <Pair left="86" right="114" kerning="-0.037109379"/>
+        <Pair left="86" right="117" kerning="-0.037109379"/>
+        <Pair left="86" right="121" kerning="-0.037109379"/>
+        <Pair left="86" right="173" kerning="-0.055175781"/>
+        <Pair left="87" right="44" kerning="-0.055175781"/>
+        <Pair left="87" right="45" kerning="-0.01806641"/>
+        <Pair left="87" right="46" kerning="-0.055175781"/>
+        <Pair left="87" right="58" kerning="-0.01806641"/>
+        <Pair left="87" right="59" kerning="-0.01806641"/>
+        <Pair left="87" right="65" kerning="-0.037109379"/>
+        <Pair left="87" right="97" kerning="-0.037109379"/>
+        <Pair left="87" right="101" kerning="-0.01806641"/>
+        <Pair left="87" right="111" kerning="-0.01806641"/>
+        <Pair left="87" right="114" kerning="-0.01806641"/>
+        <Pair left="87" right="117" kerning="-0.01806641"/>
+        <Pair left="87" right="121" kerning="-0.0087890597"/>
+        <Pair left="87" right="173" kerning="-0.01806641"/>
+        <Pair left="89" right="32" kerning="-0.01806641"/>
+        <Pair left="89" right="44" kerning="-0.12890625"/>
+        <Pair left="89" right="45" kerning="-0.091796882"/>
+        <Pair left="89" right="46" kerning="-0.12890625"/>
+        <Pair left="89" right="58" kerning="-0.055175781"/>
+        <Pair left="89" right="59" kerning="-0.064941406"/>
+        <Pair left="89" right="65" kerning="-0.07421875"/>
+        <Pair left="89" right="97" kerning="-0.07421875"/>
+        <Pair left="89" right="101" kerning="-0.091796882"/>
+        <Pair left="89" right="105" kerning="-0.037109379"/>
+        <Pair left="89" right="111" kerning="-0.091796882"/>
+        <Pair left="89" right="112" kerning="-0.07421875"/>
+        <Pair left="89" right="113" kerning="-0.091796882"/>
+        <Pair left="89" right="117" kerning="-0.055175781"/>
+        <Pair left="89" right="118" kerning="-0.055175781"/>
+        <Pair left="89" right="160" kerning="-0.01806641"/>
+        <Pair left="89" right="173" kerning="-0.091796882"/>
+        <Pair left="102" right="102" kerning="-0.01806641"/>
+        <Pair left="114" right="44" kerning="-0.055175781"/>
+        <Pair left="114" right="46" kerning="-0.055175781"/>
+        <Pair left="118" right="44" kerning="-0.07421875"/>
+        <Pair left="118" right="46" kerning="-0.07421875"/>
+        <Pair left="119" right="44" kerning="-0.055175781"/>
+        <Pair left="119" right="46" kerning="-0.055175781"/>
+        <Pair left="121" right="44" kerning="-0.07421875"/>
+        <Pair left="121" right="46" kerning="-0.07421875"/>
+        <Pair left="160" right="65" kerning="-0.055175781"/>
+        <Pair left="160" right="84" kerning="-0.01806641"/>
+        <Pair left="160" right="89" kerning="-0.01806641"/>
+    </Kerning>
+</Font>

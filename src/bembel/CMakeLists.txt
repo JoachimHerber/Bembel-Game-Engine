@@ -1,0 +1,11 @@
+target_sources(Bembel
+    PUBLIC
+        pch.hpp
+        bembel.hpp
+	PRIVATE
+		CMakeLists.txt
+)
+add_subdirectory(base)
+add_subdirectory(kernel)
+add_subdirectory(graphics)
+add_subdirectory(gui)

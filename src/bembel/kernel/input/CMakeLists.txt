@@ -1,0 +1,16 @@
+target_sources(Bembel
+    PUBLIC
+        input-device-button.hpp
+		input-manager.hpp
+        input-device.hpp
+        keyboard.hpp
+		mouse.hpp
+	PRIVATE
+        input-device-button.cpp
+		input-manager.cpp
+        input-device.cpp
+		keyboard.cpp
+		mouse.cpp
+		CMakeLists.txt
+		CMakeLists.txt
+)

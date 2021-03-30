@@ -1,93 +1,50 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
+﻿#include "rendering-example.hpp"
 
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-#include "rendering-example.h"
+#include <bembel/graphics/rendering-pipeline/rendering-pipeline.hpp>
+#include <bembel/kernel/core/kernel.hpp>
+#include <bembel/kernel/display/display-manager.hpp>
 
-#include <bembel-kernel/kernel.h>
-#include <bembel-kernel/display/display-manager.h>
-#include <bembel-graphics/rendering-pipeline/rendering-pipeline.h>
+namespace bembel {
 
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
 RenderingExample::RenderingExample()
-	: bembel::Application()
-{
-	graphic_system_ = kernel_->AddSystem<bembel::GraphicSystem>();
-
-	kernel_->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+: kernel::Application() {
+    this->graphic_system = this->kernel->addSystem<graphics::GraphicSystem>();
+    this->kernel->getEventManager().addHandler<kernel::WindowShouldCloseEvent>(this);
 }
 
-RenderingExample::~RenderingExample()
-{}
-
-bool RenderingExample::Init()
-{
-	if (!kernel_->LoadSetting("rendering/config.xml"))
-		return false;
-	
-	cam_ = std::make_unique<CameraControle>(
-		kernel_->GetEventManager(), 
-		graphic_system_->GetRenderingPiplies()[0]->GetCamera()
-	);
-
-	scenes_.push_back( std::make_shared<bembel::Scene>(kernel_->GetAssetManager()));
-
-	graphic_system_->GetRenderingPiplies()[0]->SetScene(scenes_[0]);
-
-	scenes_[0]->LoadScene("scenes/material-test.scene");
-
-	kernel_->InitSystems();
-	return true;
+RenderingExample::~RenderingExample() {
 }
 
-void RenderingExample::Cleanup()
-{
-	kernel_->ShutdownSystems();
-	kernel_->GetDisplayManager()->CloseOpenWindows();
+bool RenderingExample::init() {
+    if(!this->kernel->loadSetting("rendering/config.xml")) return false;
+
+    this->camera = std::make_unique<CameraControle>(
+        this->kernel->getEventManager(),
+        this->graphic_system->getRenderingPipelines()[0]->getCamera());
+
+    this->scenes.push_back(std::make_shared<kernel::Scene>(this->kernel->getAssetManager()));
+    this->graphic_system->getRenderingPipelines()[0]->setScene(this->scenes[0]);
+
+    this->scenes[0]->loadScene("scenes/material-test.scene");
+
+    this->kernel->initSystems();
+    return true;
 }
 
-void RenderingExample::Update(double time)
-{
-	cam_->Update(time);
+void RenderingExample::cleanup() {
+    this->camera.reset();
+    this->scenes.clear();
+    this->kernel->shutdownSystems();
+    this->kernel->getAssetManager().deleteUnusedAssets();
+    this->kernel->getDisplayManager().closeOpenWindows();
 }
 
-void RenderingExample::HandleEvent(const bembel::WindowShouldCloseEvent& event)
-{
-	Quit();
+void RenderingExample::update(double time) {
+    this->camera->update(time);
 }
 
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
+void RenderingExample::handleEvent(const kernel::WindowShouldCloseEvent& event) {
+    quit();
+}
 
+} // namespace bembel

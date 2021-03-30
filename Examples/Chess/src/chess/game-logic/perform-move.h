@@ -1,78 +1,35 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-#ifndef BEMBEL_PERFORMMOVESTATE_H
+﻿#ifndef BEMBEL_PERFORMMOVESTATE_H
 #define BEMBEL_PERFORMMOVESTATE_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-
-#include "game-state.h"
-
-#include "../moves/move-set.h"
 
 #include <vector>
 
-/*============================================================================*/
-/* FORWARD DECLARATIONS                                                       */
-/*============================================================================*/
+#include "../moves/move-set.h"
+#include "game-state.h"
+
 class ChessPiece;
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
-class PerformMoveState : public GameState
-{
-public:
-	PerformMoveState(ChessGame*);
-	~PerformMoveState();
 
-	using Move = MoveSet::Move;
+class PerformMoveState : public GameState {
+ public:
+  PerformMoveState(ChessGame*);
+  ~PerformMoveState();
 
-	void Init( GameState*);
+  using Move = MoveSet::Move;
 
-	virtual void OnEnterState() override;
-	virtual void OnExitState() override;
+  void init(GameState*);
 
-	virtual void Update(double time) override;
+  virtual void onEnterState() override;
+  virtual void onExitState() override;
 
-	void SetMove(ChessPiece*, const Move&);
+  virtual void update(double time) override;
 
-private:
-	ChessPiece* _chessPiece;
-	Move        _move;
+  void setMove(ChessPiece*, const Move&);
 
-	GameState* _nextState = nullptr;
+ private:
+  ChessPiece* chess_piece;
+  Move move;
 
-	double _time;
+  GameState* next_state = nullptr;
+
+  double time;
 };
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+#endif // include guards

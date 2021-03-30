@@ -1,93 +1,49 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-#ifndef CAMERACONTROLE_H
+﻿#ifndef CAMERACONTROLE_H
 #define CAMERACONTROLE_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
 
-#include <bembel-kernel/events/event-manager.h>
-#include <bembel-kernel/events/input-events.h>
-#include <bembel-graphics/rendering-pipeline/camera.h>
-
+#include <bembel/bembel.hpp>
 #include <glm/glm.hpp>
-
 #include <memory>
 
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
-class CameraControle
-{
-public:
-	CameraControle( bembel::EventManager*, std::shared_ptr<bembel::Camera> camera);
-	~CameraControle();
+class CameraControle {
+  public:
+    CameraControle(bembel::kernel::EventManager&, std::shared_ptr<bembel::graphics::Camera> camera);
+    ~CameraControle();
 
-	void SetPitch(float);
-	void SetYaw(float);
-	void SetDist(float);
+    void setPitch(float);
+    void setYaw(float);
+    void setDist(float);
 
-	float GetPitch() const;
-	float GetYaw() const;
-	float GetDist() const;
+    float getPitch() const;
+    float getYaw() const;
+    float getDist() const;
 
-	void EnableManualControle(bool b);
+    void enableManualControle(bool b);
 
-	void SetCameraOffset(const glm::vec3&);
+    void setCameraOffset(const glm::vec3&);
 
-	void Update(double dTime);
+    void update(double dTime);
 
-	void HandleEvent(const bembel::MouseButtonPressEvent&);
-	void HandleEvent(const bembel::MouseButtonReleaseEvent&);
-	void HandleEvent(const bembel::CursorMovedEvent&);
-	void HandleEvent( const bembel::ScrollEvent& );
+    void handleEvent(const bembel::kernel::MouseButtonPressEvent&);
+    void handleEvent(const bembel::kernel::MouseButtonReleaseEvent&);
+    void handleEvent(const bembel::kernel::CursorMovedEvent&);
+    void handleEvent(const bembel::kernel::ScrollEvent&);
 
-private:
-	bembel::EventManager*           _eventMgr;
-	std::shared_ptr<bembel::Camera> _camera;
+  private:
+    bembel::kernel::EventManager&             event_mgr;
+    std::shared_ptr<bembel::graphics::Camera> camera;
 
-	bool _enabeld = false;
+    bool enabeld = false;
 
-	bool _move;
+    bool move;
 
-	glm::vec2 _cursorPos;
-	glm::vec2 _prevPos;
+    glm::vec2 cursor_pos;
+    glm::vec2 prev_pos;
 
-	float _pitch = -0.1f;
-	float _yaw   = 0;
-	float _dist  = 10.0f;
+    float pitch = -0.1f;
+    float yaw   = 0;
+    float dist  = 10.0f;
 
-	glm::vec3 _offset;
+    glm::vec3 offset;
 };
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+#endif // include guards

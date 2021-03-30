@@ -1,0 +1,18 @@
+<GUI>
+	<Renderer>
+		<ShaderProgram file_name="gui.shader-program" />
+		<GuiStyle file_name="dark_gui_style.xml" />
+	</Renderer>
+	<Widgets>
+		<Window size="600 400" view="debug">
+			<TileBar layout="linear" layout_alignment="left">
+				<Label size="100 32" text="Hallo Welt" alignment="left"/>
+			</TileBar>
+			<WindowArea layout="linear" layout_alignment="center">
+				<LabeledButton size="200 42" name="Button_1" label="Button 1" outline="1"/>
+				<LabeledButton size="200 42" name="Button_2" label="Button 2" outline="1"/>
+				<LabeledButton size="200 42" name="Button_3" label="Button 3"/>
+			</WindowArea>
+		</Window>
+	</Widgets>
+</GUI>

@@ -1,154 +1,104 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-
+﻿
 #include "select-move.h"
-#include "perform-move.h"
-#include "selection-pointer.h"
-
-#include "../chess-game.h"
-#include "../chess-piece.h"
-#include "../../selection-component.h"
-
-#include <bembel-kernel/scene/scene.h>
 
 #include <iostream>
 
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
-SelectMoveState::SelectMoveState( ChessGame* game, SelectionPointer* pointer )
-	: GameState( game )
-	, _pointer( pointer )
-{}
+#include "../../selection-component.h"
+#include "../chess-game.h"
+#include "../chess-piece.h"
+#include "perform-move.h"
+#include "selection-pointer.h"
 
-SelectMoveState::~SelectMoveState()
-{}
-
-void SelectMoveState::SetPerformMoveState( PerformMoveState* state )
-{
-	_performMove = state;
+SelectMoveState::SelectMoveState(ChessGame* game, SelectionPointer* pointer)
+: GameState(game)
+, pointer(pointer) {
 }
 
-void SelectMoveState::SetChessPiece( ChessPiece* piece )
-{
-	_chessPiece = piece;
+SelectMoveState::~SelectMoveState() {
 }
 
-void SelectMoveState::OnEnterState()
-{
-	if( _chessPiece )
-	{
-		auto entity = _chessPiece->GetEntity();
-		auto selectComp = _game->GetScene()->GetComponent<SelectionComponent>( entity );
-		selectComp->state = SelectionComponent::SELECTED;
-	}
-	_pointer->GetSelectSignal().AddSlot( this, &SelectMoveState::SelectedMove );
+void SelectMoveState::setPerformMoveState(PerformMoveState* state) {
+  this->perform_move = state;
 }
 
-void SelectMoveState::OnExitState()
-{
-	if( _chessPiece )
-	{
-		auto entity = _chessPiece->GetEntity();
-		auto selectComp = _game->GetScene()->GetComponent<SelectionComponent>( entity );
-		selectComp->state = SelectionComponent::UNSELECTABLE;
-
-		for( auto& it : _chessPiece->GetPossibleMoves() )
-		{
-			glm::ivec2 target = it.move->GetTargetPosition(
-				_chessPiece, it.param );
-
-			selectComp = _game->GetBoardTileSelectionComponent( target );
-			selectComp->state = SelectionComponent::UNSELECTABLE;
-		}
-	}
-	_pointer->GetSelectSignal().RemoveSlot( this, &SelectMoveState::SelectedMove );
+void SelectMoveState::setChessPiece(ChessPiece* piece) {
+  this->chess_piece = piece;
 }
 
-void SelectMoveState::Update( double time )
-{
-	glm::ivec2 tile = _pointer->GetSelectedTile();
-
-	if( tile.x >= 0 && tile.x < 8 && tile.y >= 0 && tile.y < 8 )
-	{
-		for( size_t n = 0; n < _chessPiece->GetPossibleMoves().size(); ++n )
-		{
-			auto& it = _chessPiece->GetPossibleMoves()[n];
-			glm::ivec2 target = it.move->GetTargetPosition( _chessPiece, it.param );
-
-			if( target == tile )
-			{
-				UpdateSelection( n );
-				return;
-			}
-		}
-	}
-	UpdateSelection( -1 );
+void SelectMoveState::onEnterState() {
+  if(this->chess_piece) {
+    auto entity = this->chess_piece->getEntity();
+    auto selectComp =
+      this->game->getScene()->getComponent<SelectionComponent>(entity);
+    selectComp->state = SelectionComponent::State::SELECTED;
+  }
+  this->pointer->getSelectSignal().addSlot(
+    this, &SelectMoveState::selectedMove);
 }
 
-void SelectMoveState::SelectedMove()
-{
-	if( _selctedMove >= 0 )
-	{
-		_performMove->SetMove( 
-			_chessPiece,
-			_chessPiece->GetPossibleMoves()[_selctedMove] );
-		NextState( _performMove );
-		_selctedMove = -1;
-	}
+void SelectMoveState::onExitState() {
+  if(this->chess_piece) {
+    auto entity = this->chess_piece->getEntity();
+    auto selectComp =
+      this->game->getScene()->getComponent<SelectionComponent>(entity);
+    selectComp->state = SelectionComponent::State::UNSELECTABLE;
+
+    for(auto& it : this->chess_piece->getPossibleMoves()) {
+      glm::ivec2 target =
+        it.move->getTargetPosition(this->chess_piece, it.param);
+
+      selectComp        = this->game->getBoardTileSelectionComponent(target);
+      selectComp->state = SelectionComponent::State::UNSELECTABLE;
+    }
+  }
+  this->pointer->getSelectSignal().removeSlot(
+    this, &SelectMoveState::selectedMove);
 }
 
-void SelectMoveState::UpdateSelection(int i)
-{
-	if( _selctedMove >= 0 )
-	{
-		auto& move = _chessPiece->GetPossibleMoves()[_selctedMove];
-		glm::ivec2 target = move.move->GetTargetPosition( _chessPiece, move.param );
+void SelectMoveState::update(double time) {
+  glm::ivec2 tile = this->pointer->getSelectedTile();
 
-		auto selectComp = _game->GetBoardTileSelectionComponent( target );
-		selectComp->state = SelectionComponent::SELECTABLE;
-	}
-	_selctedMove = i;
-	if( _selctedMove >= 0 )
-	{
-		auto& move = _chessPiece->GetPossibleMoves()[_selctedMove];
-		glm::ivec2 target = move.move->GetTargetPosition( _chessPiece, move.param );
+  if(tile.x >= 0 && tile.x < 8 && tile.y >= 0 && tile.y < 8) {
+    for(size_t n = 0; n < this->chess_piece->getPossibleMoves().size(); ++n) {
+      auto& it = this->chess_piece->getPossibleMoves()[n];
+      glm::ivec2 target =
+        it.move->getTargetPosition(this->chess_piece, it.param);
 
-		auto selectComp = _game->GetBoardTileSelectionComponent( target );
-		selectComp->state = SelectionComponent::FOCUSED;
-	}
+      if(target == tile) {
+        this->updateSelection(n);
+        return;
+      }
+    }
+  }
+  this->updateSelection(-1);
 }
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
+
+void SelectMoveState::selectedMove() {
+  if(this->selcted_move >= 0) {
+    this->perform_move->setMove(
+      this->chess_piece,
+      this->chess_piece->getPossibleMoves()[this->selcted_move]);
+    this->nextState(this->perform_move);
+    this->selcted_move = -1;
+  }
+}
+
+void SelectMoveState::updateSelection(int i) {
+  if(this->selcted_move >= 0) {
+    auto& move = this->chess_piece->getPossibleMoves()[this->selcted_move];
+    glm::ivec2 target =
+      move.move->getTargetPosition(this->chess_piece, move.param);
+
+    auto selectComp   = this->game->getBoardTileSelectionComponent(target);
+    selectComp->state = SelectionComponent::State::SELECTABLE;
+  }
+  this->selcted_move = i;
+  if(this->selcted_move >= 0) {
+    auto& move = this->chess_piece->getPossibleMoves()[this->selcted_move];
+    glm::ivec2 target =
+      move.move->getTargetPosition(this->chess_piece, move.param);
+
+    auto selectComp   = this->game->getBoardTileSelectionComponent(target);
+    selectComp->state = SelectionComponent::State::FOCUSED;
+  }
+}

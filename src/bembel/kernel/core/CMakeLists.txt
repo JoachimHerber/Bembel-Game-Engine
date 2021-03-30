@@ -1,0 +1,11 @@
+target_sources(Bembel
+    PUBLIC
+        application.hpp
+        kernel.hpp
+		system.hpp
+	PRIVATE
+        application.cpp
+		kernel.cpp
+		system.cpp
+		CMakeLists.txt
+)

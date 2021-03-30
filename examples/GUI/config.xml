@@ -1,0 +1,24 @@
+﻿<Bembel>
+  <AssetDirectories>
+    <AssetDirectory directory="assets"/>
+    <AssetDirectory directory="assets/gui"/>
+    <AssetDirectory directory="assets/shader"/>
+  </AssetDirectories>
+  <Display>
+    <Window title="GUI Test">
+      <DisplayMode mode = "Windowed">
+        <Size width="800" height="600" />
+        <AspectRatio numerator="4" denominator="3" />
+      </DisplayMode>
+	  <Viewports>
+		<Viewport relativ_position="0 0" relativ_size="1 1" />
+	  </Viewports>
+    </Window>
+  </Display>
+  <Systems>
+    <UserInterface>
+      <!--<GUI name="main" config_file="GUI/main_gui.xml"/>-->
+      <GUI name="main" window="0" viewport="0" config_file="GUI/main_gui.xml"/>
+    </UserInterface>
+  </Systems>
+</Bembel>

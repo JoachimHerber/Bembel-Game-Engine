@@ -1,117 +1,74 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-#include "chess-application.h"
-#include "selection-rendering-stage.h"
-
-#include <bembel-kernel/kernel.h>
-#include <bembel-kernel/display/display-manager.h>
-#include <bembel-graphics/rendering-pipeline/rendering-pipeline.h>
-#include <bembel-interaction/input/keyboard.h>
-
-#include <chrono>
-#include <random>
-#include <iostream>
+﻿#include "chess-application.h"
 
 #include <GLFW/glfw3.h>
 
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
+#include <chrono>
+#include <iostream>
+#include <random>
+
+#include "selection-rendering-stage.h"
+
+using namespace bembel;
+
 ChessApplication::ChessApplication()
-	: bembel::Application()
-{
-	_graphicSys     = kernel_->AddSystem<bembel::GraphicSystem>();
-	_interactionSys = kernel_->AddSystem<bembel::InteractionSystem>();
+: kernel::Application() {
+    this->graphic_system = this->kernel->addSystem<graphics::GraphicSystem>();
 
-	_graphicSys->GetRendertingStageFactory()
-		.RegisterDefaultObjectGenerator<SelectionRenderingStage>(
-			"SelectionRenderingStage");
+    this->graphic_system->getRendertingStageFactory()
+        .registerDefaultObjectGenerator<SelectionRenderingStage>("SelectionRenderingStage");
 
-	kernel_->GetEventManager()->AddHandler<bembel::WindowShouldCloseEvent>(this);
+    auto& event_mgr = this->kernel->getEventManager();
+    event_mgr.addHandler<kernel::WindowShouldCloseEvent>(this);
+    event_mgr.addHandler<kernel::FrameBufferResizeEvent>(this);
 }
 
-ChessApplication::~ChessApplication()
-{}
-
-bool ChessApplication::Init()
-{
-	if (!kernel_->LoadSetting("chess/config.xml"))
-		return false;
-	auto pipline = _graphicSys->GetRenderingPiplies()[0].get();
-
-	_cam = std::make_shared<CameraControle>(
-		kernel_->GetEventManager(), pipline->GetCamera());
-
-	InitGame();
-	_chessGame->ResetChessBoard();
-
-	pipline->SetScene(_chessGame->GetScene());
-	_cam->SetCameraOffset(glm::vec3( 8, 0.5f, 8));
-	_cam->EnableManualControle(true);
-
-	kernel_->InitSystems();
-	return true;
+ChessApplication::~ChessApplication() {
 }
 
-void ChessApplication::Cleanup()
-{
-	kernel_->ShutdownSystems();
-	kernel_->GetDisplayManager()->CloseOpenWindows();
+bool ChessApplication::init() {
+    BEMBEL_LOG_INFO() << "Loading Application Settings";
+    if(!this->kernel->loadSetting("chess/config.xml")) return false;
+    auto pipline = this->graphic_system->getRenderingPipelines()[0].get();
+
+    this->camera =
+        std::make_shared<CameraControle>(this->kernel->getEventManager(), pipline->getCamera());
+
+    BEMBEL_LOG_INFO() << "Initalizing Game";
+    this->chess_game = std::make_unique<ChessGame>(
+        this->kernel->getAssetManager(), this->kernel->getEventManager(), *(this->graphic_system));
+    this->chess_game->resetChessBoard();
+    this->chess_game->resetChessBoard();
+
+    BEMBEL_LOG_INFO() << "Initalizing Camera";
+    pipline->setScene(this->chess_game->getScene());
+    this->camera->setCameraOffset(glm::vec3(8, 0.5f, 8));
+    this->camera->enableManualControle(true);
+
+    BEMBEL_LOG_INFO() << "Initalizing Systems";
+    this->kernel->initSystems();
+    return true;
 }
 
-void ChessApplication::Update(double time)
-{
-	_cam->Update(time);
-	_chessGame->Update(time);
+void ChessApplication::cleanup() {
+    this->chess_game.reset();
+    this->kernel->shutdownSystems();
+    this->kernel->getAssetManager().deleteUnusedAssets();
+    this->kernel->getDisplayManager().closeOpenWindows();
 }
 
-void ChessApplication::HandleEvent(const bembel::WindowShouldCloseEvent& event)
-{
-	Quit();
+void ChessApplication::update(double time) {
+    this->camera->update(time);
+    this->chess_game->update(time);
 }
 
-bool ChessApplication::InitGame()
-{
-	_chessGame = std::make_unique<ChessGame>( 
-		kernel_->GetAssetManager(),
-		kernel_->GetEventManager(),
-		_graphicSys );
-	_chessGame->ResetChessBoard();
-
-	return true;
+void ChessApplication::handleEvent(const kernel::WindowShouldCloseEvent& event) {
+    this->quit();
 }
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
 
+void ChessApplication::handleEvent(const kernel::FrameBufferResizeEvent& event) {
+    auto pipline = this->graphic_system->getRenderingPipelines()[0].get();
+
+    pipline->setResulution(event.size);
+    pipline->getCamera()->setUpProjection(
+        60.0f * 3.14159265359f / 180.0f, event.size.x / event.size.y, 0.1f, 1000.0f);
+}

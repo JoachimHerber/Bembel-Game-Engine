@@ -1,0 +1,15 @@
+target_sources(Bembel
+    PUBLIC
+        cursor-icon.hpp
+        display-manager.hpp
+		display-mode.hpp
+		window.hpp
+	    viewport.hpp
+	PRIVATE
+        cursor-icon.cpp
+		display-manager.cpp
+		display-mode.cpp
+		window.cpp
+	    viewport.cpp
+		CMakeLists.txt
+)

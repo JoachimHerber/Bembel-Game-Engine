@@ -14,7 +14,7 @@
 		roughness = "0.05"
 		metallic  = "0.95"
 		f0        = "0.04"
-	/>
+	/>        
 	
 	<GeometryModel name="white.tile" mesh="chess.mesh.xml" >
 		<MaterialMapping material="white_chess_piece" submesh="tile" />

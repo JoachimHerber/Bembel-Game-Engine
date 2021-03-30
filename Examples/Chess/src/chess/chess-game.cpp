@@ -1,339 +1,254 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-
-#include "chess-game.h"
-#include "chess-piece.h"
-#include "chess-piece-type.h"
-#include "moves/initial-pawn-move.h"
-#include "game-logic/select-chess-piece.h"
-#include "game-logic/select-move.h"
-#include "game-logic/perform-move.h"
-#include "game-logic/selection-pointer.h"
+﻿#include "chess-game.h"
 
 #include "../selection-component.h"
+#include "chess-piece-type.h"
+#include "chess-piece.h"
+#include "game-logic/perform-move.h"
+#include "game-logic/select-chess-piece.h"
+#include "game-logic/select-move.h"
+#include "game-logic/selection-pointer.h"
+#include "moves/initial-pawn-move.h"
 
-#include <bembel-kernel/assets/asset-manager.h>
-#include <bembel-kernel/scene/position-component.h>
-#include <bembel-kernel/scene/rotation-component.h>
-#include <bembel-graphics/geometry/geometry-model.h>
-#include <bembel-graphics/geometry/geometry-component.h>
-#include <bembel-graphics/rendering-pipeline/light-source-component.h>
+using namespace bembel::kernel;
+using namespace bembel::graphics;
 
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
-ChessGame::ChessGame(
-	bembel::AssetManager* assetMgr, 
-	bembel::EventManager* eventMgr, 
-	bembel::GraphicSystem* graphicSys )
-	: scene_(std::make_shared<bembel::Scene>(assetMgr))
-	, _selectionPointer( std::make_unique<SelectionPointer>( eventMgr, graphicSys, scene_.get() ) )
-	, _player{Player{this,"white"}, Player{this,"black"}}
-{
-	scene_->RegisterComponentType<bembel::PositionComponent>();
-	scene_->RegisterComponentType<bembel::RotationComponent>();
-	scene_->RegisterComponentType<bembel::DirLightProperties>();
-	scene_->RegisterComponentType<bembel::GeometryComponent>();
-	scene_->RegisterComponentType<SelectionComponent>();
+ChessGame::ChessGame(AssetManager& assetMgr, EventManager& eventMgr, GraphicSystem& graphicSys)
+: scene{std::make_shared<Scene>(assetMgr)}
+, selection_pointer(std::make_unique<SelectionPointer>(eventMgr, graphicSys, scene.get()))
+, players{Player{this, "white"}, Player{this, "black"}} {
+    this->scene->registerComponentType<PositionComponent>();
+    this->scene->registerComponentType<RotationComponent>();
+    this->scene->registerComponentType<DirectionalLightSource>();
+    this->scene->registerComponentType<GeometryComponent>();
+    this->scene->registerComponentType<SelectionComponent>();
 
-	scene_->LoadAssets("assets/assets.xml");
+    this->scene->loadAssets("assets/assets.xml");
 
-	auto entity = scene_->CreateEntity();
-	auto light = scene_->CreateComponent<bembel::DirLightProperties>(entity);
-	light->direction = glm::normalize(glm::vec3(-0.3, -1, -0.2));
-	light->color = 5.0f*glm::vec3(1, 1, 1);
+    auto entity      = this->scene->createEntity();
+    auto light       = this->scene->createComponent<DirectionalLightSource>(entity);
+    light->direction = glm::normalize(glm::vec3(-0.3, -1, -0.2));
+    light->color     = 5.0f * glm::vec3(1, 1, 1);
 
-	InitTiles();
-	InitChessPieceTypes();
-	InitChessPices();
-	InitStates();
+    this->initTiles();
+    this->initChessPieceTypes();
+    this->initChessPices();
+    this->initStates();
 }
 
-ChessGame::~ChessGame()
-{}
-
-std::shared_ptr<bembel::Scene> ChessGame::GetScene() const
-{
-	return scene_;
+ChessGame::~ChessGame() {
 }
 
-ChessBoard & ChessGame::GetChessBoard()
-{
-	return _board;
+std::shared_ptr<Scene> ChessGame::getScene() const {
+    return this->scene;
 }
 
-const ChessBoard & ChessGame::GetChessBoard() const
-{
-	return _board;
+ChessBoard& ChessGame::getChessBoard() {
+    return this->board;
 }
 
-
-const std::array<Player, 2>& ChessGame::GetPlayer() const
-{
-	return _player;
+const ChessBoard& ChessGame::getChessBoard() const {
+    return this->board;
 }
 
-void ChessGame::ResetChessBoard()
-{
-	_player[0].ClearChessPieces();
-	_player[1].ClearChessPieces();
-	_player[0].ClearCaptureChessPieces();
-	_player[1].ClearCaptureChessPieces();
-
-	for( auto& it1: _board )
-	{
-		for( auto& it2: it1 )
-		{
-			it2 = nullptr;
-		}
-	}
-
-	for (auto& it : _chessPieces)
-	{
-		it->Reset();
-		_player[it->GetOwner()].AddChessPiece(it.get());
-
-		auto pos = it->GetPositon();
-		_board[pos.x][pos.y] = it.get();
-	}
-
+const std::array<Player, 2>& ChessGame::getPlayers() const {
+    return this->players;
 }
 
-void ChessGame::UpdatePossibleMoves()
-{
-	for (auto& it : _chessPieces)
-		it->UpdatePossibleMoves(_board);
+void ChessGame::resetChessBoard() {
+    this->players[0].clearChessPieces();
+    this->players[1].clearChessPieces();
+    this->players[0].clearCaptureChessPieces();
+    this->players[1].clearCaptureChessPieces();
+
+    for(auto& it1 : this->board) {
+        for(auto& it2 : it1) { it2 = nullptr; }
+    }
+
+    for(auto& it : this->chess_pieces) {
+        it->reset();
+        this->players[it->getOwner()].addChessPiece(it.get());
+
+        auto pos                  = it->getPositon();
+        this->board[pos.x][pos.y] = it.get();
+    }
 }
 
-SelectionComponent* ChessGame::GetBoardTileSelectionComponent( const glm::ivec2& pos )
-{
-	if( pos.x < 0 || pos.x >= 8 || pos.y < 0 || pos.y >= 8 )
-		return nullptr;
-
-	return scene_->GetComponent<SelectionComponent>( _tiles[pos.x][pos.y]);
+void ChessGame::updatePossibleMoves() {
+    for(auto& it : this->chess_pieces) it->updatePossibleMoves(this->board);
 }
 
-void ChessGame::Update( double time )
-{
-	if( _nextState != nullptr )
-	{
-		if( _currentState != nullptr )
-			_currentState->OnExitState();
+SelectionComponent* ChessGame::getBoardTileSelectionComponent(const glm::ivec2& pos) {
+    if(pos.x < 0 || pos.x >= 8 || pos.y < 0 || pos.y >= 8) return nullptr;
 
-		_currentState = _nextState;
-		_nextState = nullptr;
-
-		_currentState->OnEnterState();
-	}
-
-	if( _currentState != nullptr )
-	{
-		_currentState->Update( time );
-	}
+    return this->scene->getComponent<SelectionComponent>(this->tiles[pos.x][pos.y]);
 }
 
-void ChessGame::SetNextState( GameState* state )
-{
-	_nextState = state;
+void ChessGame::update(double time) {
+    if(this->next_state != nullptr) {
+        if(this->current_state != nullptr) this->current_state->onExitState();
+
+        this->current_state = this->next_state;
+        this->next_state    = nullptr;
+
+        this->current_state->onEnterState();
+    }
+
+    if(this->current_state != nullptr) { this->current_state->update(time); }
 }
 
-void ChessGame::InitTiles()
-{
-	auto whiteTile =
-		scene_->GetAssetHandle<bembel::GeometryModel>("white.tile");
-	auto blackTile =
-		scene_->GetAssetHandle<bembel::GeometryModel>("black.tile");
-
-	for (unsigned u = 0; u < 8; ++u)
-	{
-		for (unsigned v = 0; v < 8; ++v)
-		{
-			auto tile = scene_->CreateEntity();
-			_tiles[u][v] = tile;
-
-			auto posComp = scene_->CreateComponent<bembel::PositionComponent>(tile);
-			posComp->position = glm::vec3(2.0f*u, 0, 2.0f*v);
-			auto geomComt = scene_->CreateComponent<bembel::GeometryComponent>(tile);
-			geomComt->model = ((u+v)%2 != 0 ? whiteTile : blackTile);
-			auto selectComp = scene_->CreateComponent<SelectionComponent>(tile);
-			selectComp->state = SelectionComponent::UNSELECTABLE;
-		}
-	}
+void ChessGame::setNextState(GameState* state) {
+    this->next_state = state;
 }
 
-void ChessGame::InitChessPieceTypes()
-{
-	_chessPieceTypes.resize(6);
-	_chessPieceTypes[PAWN]   = CreateChessPieceType("pawn");
-	_chessPieceTypes[ROOK]   = CreateChessPieceType("rook");
-	_chessPieceTypes[KNIGHT] = CreateChessPieceType("knight");
-	_chessPieceTypes[BISHOP] = CreateChessPieceType("bishop");
-	_chessPieceTypes[QUEEN]  = CreateChessPieceType("queen");
-	_chessPieceTypes[KING]   = CreateChessPieceType("king");
+void ChessGame::initTiles() {
+    auto whiteTile = this->scene->getAssetHandle<GeometryModel>("white.tile");
+    auto blackTile = this->scene->getAssetHandle<GeometryModel>("black.tile");
 
-	_chessPieceTypes[PAWN]->AddMove({1,-1}, 1, true, false);
-	_chessPieceTypes[PAWN]->AddMove({1,+0}, 1, false, true);
-	_chessPieceTypes[PAWN]->AddMove({1,+1}, 1, true, false);
-	_chessPieceTypes[PAWN]->GetMoveSet().AddMoveTemplate( 
-		std::make_shared<InitialPawnMove>());
+    for(unsigned u = 0; u < 8; ++u) {
+        for(unsigned v = 0; v < 8; ++v) {
+            auto tile         = this->scene->createEntity();
+            this->tiles[u][v] = tile;
 
-	_chessPieceTypes[ROOK]->AddMove({ 1, 0});
-	_chessPieceTypes[ROOK]->AddMove({ 0,-1});
-	_chessPieceTypes[ROOK]->AddMove({-1, 0});
-	_chessPieceTypes[ROOK]->AddMove({ 0,+1});
-
-	_chessPieceTypes[KNIGHT]->AddMove({+1,+2}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({+2,+1}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({+2,-1}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({+1,-2}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({-1,-2}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({-2,-1}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({-2,+1}, 1U);
-	_chessPieceTypes[KNIGHT]->AddMove({-1,+2}, 1U);
-
-	_chessPieceTypes[BISHOP]->AddMove({+1,+1});
-	_chessPieceTypes[BISHOP]->AddMove({+1,-1});
-	_chessPieceTypes[BISHOP]->AddMove({-1,-1});
-	_chessPieceTypes[BISHOP]->AddMove({-1,+1});
-
-	_chessPieceTypes[QUEEN]->AddMove({+1,+1});
-	_chessPieceTypes[QUEEN]->AddMove({+1, 0});
-	_chessPieceTypes[QUEEN]->AddMove({+1,-1});
-	_chessPieceTypes[QUEEN]->AddMove({ 0,-1});
-	_chessPieceTypes[QUEEN]->AddMove({-1,-1});
-	_chessPieceTypes[QUEEN]->AddMove({-1, 0});
-	_chessPieceTypes[QUEEN]->AddMove({-1,+1});
-	_chessPieceTypes[QUEEN]->AddMove({ 0,+1});
-
-	_chessPieceTypes[KING]->AddMove({+1,+1}, 1U);
-	_chessPieceTypes[KING]->AddMove({+1, 0}, 1U);
-	_chessPieceTypes[KING]->AddMove({+1,-1}, 1U);
-	_chessPieceTypes[KING]->AddMove({ 0,-1}, 1U);
-	_chessPieceTypes[KING]->AddMove({-1,-1}, 1U);
-	_chessPieceTypes[KING]->AddMove({-1, 0}, 1U);
-	_chessPieceTypes[KING]->AddMove({-1,+1}, 1U);
-	_chessPieceTypes[KING]->AddMove({ 0,+1}, 1U);
+            auto geomety       = this->scene->createComponent<GeometryComponent>(tile);
+            auto position      = this->scene->createComponent<PositionComponent>(tile);
+            auto selectComp    = this->scene->createComponent<SelectionComponent>(tile);
+            geomety->model     = ((u + v) % 2 != 0 ? whiteTile : blackTile);
+            position->position = glm::vec3(2.0f * u, 0, 2.0f * v);
+            selectComp->state  = SelectionComponent::State::UNSELECTABLE;
+        }
+    }
 }
 
-void ChessGame::InitChessPices()
-{
-	AddChessPiece( {0,0}, ROOK, 0 );
-	AddChessPiece( {0,1}, KNIGHT, 0 );
-	AddChessPiece( {0,2}, BISHOP, 0 );
-	AddChessPiece( {0,3}, QUEEN, 0 );
-	AddChessPiece( {0,4}, KING, 0 );
-	AddChessPiece( {0,5}, BISHOP, 0 );
-	AddChessPiece( {0,6}, KNIGHT, 0 );
-	AddChessPiece( {0,7}, ROOK, 0 );
+void ChessGame::initChessPieceTypes() {
+    this->chess_piece_types.resize(6);
+    this->chess_piece_types[PAWN]   = this->createChessPieceType("pawn");
+    this->chess_piece_types[ROOK]   = this->createChessPieceType("rook");
+    this->chess_piece_types[KNIGHT] = this->createChessPieceType("knight");
+    this->chess_piece_types[BISHOP] = this->createChessPieceType("bishop");
+    this->chess_piece_types[QUEEN]  = this->createChessPieceType("queen");
+    this->chess_piece_types[KING]   = this->createChessPieceType("king");
 
-	AddChessPiece( {1,0}, PAWN, 0 );
-	AddChessPiece( {1,1}, PAWN, 0 );
-	AddChessPiece( {1,2}, PAWN, 0 );
-	AddChessPiece( {1,3}, PAWN, 0 );
-	AddChessPiece( {1,4}, PAWN, 0 );
-	AddChessPiece( {1,5}, PAWN, 0 );
-	AddChessPiece( {1,6}, PAWN, 0 );
-	AddChessPiece( {1,7}, PAWN, 0 );
+    this->chess_piece_types[PAWN]->addMove({1, -1}, 1, true, false);
+    this->chess_piece_types[PAWN]->addMove({1, +0}, 1, false, true);
+    this->chess_piece_types[PAWN]->addMove({1, +1}, 1, true, false);
+    this->chess_piece_types[PAWN]->getMoveSet().addMoveTemplate(
+        std::make_shared<InitialPawnMove>());
 
-	AddChessPiece( {6,0}, PAWN, 1 );
-	AddChessPiece( {6,1}, PAWN, 1 );
-	AddChessPiece( {6,2}, PAWN, 1 );
-	AddChessPiece( {6,3}, PAWN, 1 );
-	AddChessPiece( {6,4}, PAWN, 1 );
-	AddChessPiece( {6,5}, PAWN, 1 );
-	AddChessPiece( {6,6}, PAWN, 1 );
-	AddChessPiece( {6,7}, PAWN, 1 );
+    this->chess_piece_types[ROOK]->addMove({1, 0});
+    this->chess_piece_types[ROOK]->addMove({0, -1});
+    this->chess_piece_types[ROOK]->addMove({-1, 0});
+    this->chess_piece_types[ROOK]->addMove({0, +1});
 
-	AddChessPiece( {7,0}, ROOK, 1 );
-	AddChessPiece( {7,1}, KNIGHT, 1 );
-	AddChessPiece( {7,2}, BISHOP, 1 );
-	AddChessPiece( {7,3}, QUEEN, 1 );
-	AddChessPiece( {7,4}, KING, 1 );
-	AddChessPiece( {7,5}, BISHOP, 1 );
-	AddChessPiece( {7,6}, KNIGHT, 1 );
-	AddChessPiece( {7,7}, ROOK, 1 );
+    this->chess_piece_types[KNIGHT]->addMove({+1, +2}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({+2, +1}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({+2, -1}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({+1, -2}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({-1, -2}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({-2, -1}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({-2, +1}, 1U);
+    this->chess_piece_types[KNIGHT]->addMove({-1, +2}, 1U);
+
+    this->chess_piece_types[BISHOP]->addMove({+1, +1});
+    this->chess_piece_types[BISHOP]->addMove({+1, -1});
+    this->chess_piece_types[BISHOP]->addMove({-1, -1});
+    this->chess_piece_types[BISHOP]->addMove({-1, +1});
+
+    this->chess_piece_types[QUEEN]->addMove({+1, +1});
+    this->chess_piece_types[QUEEN]->addMove({+1, 0});
+    this->chess_piece_types[QUEEN]->addMove({+1, -1});
+    this->chess_piece_types[QUEEN]->addMove({0, -1});
+    this->chess_piece_types[QUEEN]->addMove({-1, -1});
+    this->chess_piece_types[QUEEN]->addMove({-1, 0});
+    this->chess_piece_types[QUEEN]->addMove({-1, +1});
+    this->chess_piece_types[QUEEN]->addMove({0, +1});
+
+    this->chess_piece_types[KING]->addMove({+1, +1}, 1U);
+    this->chess_piece_types[KING]->addMove({+1, 0}, 1U);
+    this->chess_piece_types[KING]->addMove({+1, -1}, 1U);
+    this->chess_piece_types[KING]->addMove({0, -1}, 1U);
+    this->chess_piece_types[KING]->addMove({-1, -1}, 1U);
+    this->chess_piece_types[KING]->addMove({-1, 0}, 1U);
+    this->chess_piece_types[KING]->addMove({-1, +1}, 1U);
+    this->chess_piece_types[KING]->addMove({0, +1}, 1U);
 }
 
-void ChessGame::InitStates()
-{
-	auto selectChessPiece0 = std::make_unique<SelectChessPieceState>(this, 0, _selectionPointer.get());
-	auto selectChessPiece1 = std::make_unique<SelectChessPieceState>(this, 1, _selectionPointer.get());
-	auto selectMove0       = std::make_unique<SelectMoveState>(this, _selectionPointer.get());
-	auto selectMove1       = std::make_unique<SelectMoveState>(this, _selectionPointer.get());
-	auto performMove0      = std::make_unique<PerformMoveState>(this);
-	auto performMove1      = std::make_unique<PerformMoveState>(this);
-	
+void ChessGame::initChessPices() {
+    this->addChessPiece({0, 0}, ROOK, 0);
+    this->addChessPiece({0, 1}, KNIGHT, 0);
+    this->addChessPiece({0, 2}, BISHOP, 0);
+    this->addChessPiece({0, 3}, QUEEN, 0);
+    this->addChessPiece({0, 4}, KING, 0);
+    this->addChessPiece({0, 5}, BISHOP, 0);
+    this->addChessPiece({0, 6}, KNIGHT, 0);
+    this->addChessPiece({0, 7}, ROOK, 0);
 
-	selectChessPiece0->SetSelectMoveState( selectMove0.get() );
-	selectChessPiece1->SetSelectMoveState( selectMove1.get() );
-	selectMove0->SetPerformMoveState( performMove0.get() );
-	selectMove1->SetPerformMoveState( performMove1.get() );
-	performMove0->Init( selectChessPiece1.get());
-	performMove1->Init( selectChessPiece0.get() );
+    this->addChessPiece({1, 0}, PAWN, 0);
+    this->addChessPiece({1, 1}, PAWN, 0);
+    this->addChessPiece({1, 2}, PAWN, 0);
+    this->addChessPiece({1, 3}, PAWN, 0);
+    this->addChessPiece({1, 4}, PAWN, 0);
+    this->addChessPiece({1, 5}, PAWN, 0);
+    this->addChessPiece({1, 6}, PAWN, 0);
+    this->addChessPiece({1, 7}, PAWN, 0);
 
-	_states.push_back( std::move( selectChessPiece0 ) );
-	_states.push_back( std::move( selectChessPiece1 ) );
-	_states.push_back( std::move( selectMove0 ) );
-	_states.push_back( std::move( selectMove1 ) );
-	_states.push_back( std::move( performMove0 ) );
-	_states.push_back( std::move( performMove1 ) );
+    this->addChessPiece({6, 0}, PAWN, 1);
+    this->addChessPiece({6, 1}, PAWN, 1);
+    this->addChessPiece({6, 2}, PAWN, 1);
+    this->addChessPiece({6, 3}, PAWN, 1);
+    this->addChessPiece({6, 4}, PAWN, 1);
+    this->addChessPiece({6, 5}, PAWN, 1);
+    this->addChessPiece({6, 6}, PAWN, 1);
+    this->addChessPiece({6, 7}, PAWN, 1);
 
-
-	_nextState = _states[0].get();
+    this->addChessPiece({7, 0}, ROOK, 1);
+    this->addChessPiece({7, 1}, KNIGHT, 1);
+    this->addChessPiece({7, 2}, BISHOP, 1);
+    this->addChessPiece({7, 3}, QUEEN, 1);
+    this->addChessPiece({7, 4}, KING, 1);
+    this->addChessPiece({7, 5}, BISHOP, 1);
+    this->addChessPiece({7, 6}, KNIGHT, 1);
+    this->addChessPiece({7, 7}, ROOK, 1);
 }
 
-void ChessGame::AddChessPiece(
-	const glm::vec2& pos,
-	unsigned type,
-	unsigned owner )
-{
-	_chessPieces.push_back( std::make_unique<ChessPiece>(
-		_chessPieceTypes[type].get(), scene_.get(), owner, pos ));
+void ChessGame::initStates() {
+    auto select_chess_piece_0 =
+        std::make_unique<SelectChessPieceState>(this, 0, this->selection_pointer.get());
+    auto select_chess_piece_1 =
+        std::make_unique<SelectChessPieceState>(this, 1, this->selection_pointer.get());
+    auto select_move_0  = std::make_unique<SelectMoveState>(this, this->selection_pointer.get());
+    auto select_move_1  = std::make_unique<SelectMoveState>(this, this->selection_pointer.get());
+    auto perform_move_0 = std::make_unique<PerformMoveState>(this);
+    auto perform_move_1 = std::make_unique<PerformMoveState>(this);
+
+    select_chess_piece_0->setSelectMoveState(select_move_0.get());
+    select_chess_piece_1->setSelectMoveState(select_move_1.get());
+    select_move_0->setPerformMoveState(perform_move_0.get());
+    select_move_1->setPerformMoveState(perform_move_1.get());
+    perform_move_0->init(select_chess_piece_1.get());
+    perform_move_1->init(select_chess_piece_0.get());
+
+    this->states.push_back(std::move(select_chess_piece_0));
+    this->states.push_back(std::move(select_chess_piece_1));
+    this->states.push_back(std::move(select_move_0));
+    this->states.push_back(std::move(select_move_1));
+    this->states.push_back(std::move(perform_move_0));
+    this->states.push_back(std::move(perform_move_1));
+
+    this->next_state = this->states[0].get();
 }
 
-std::unique_ptr<ChessPieceType> ChessGame::CreateChessPieceType(
-	const std::string& modleSufix)
-{
-	auto type = std::make_unique<ChessPieceType>();
-
-	type->GetModles()[0] = scene_->GetAssetHandle<bembel::GeometryModel>(
-		_player[0].GetName() + "." + modleSufix );
-	type->GetModles()[1] = scene_->GetAssetHandle<bembel::GeometryModel>(
-		_player[1].GetName() + "." + modleSufix );
-
-	return std::move(type);
+void ChessGame::addChessPiece(const glm::vec2& pos, unsigned type, unsigned owner) {
+    this->chess_pieces.push_back(std::make_unique<ChessPiece>(
+        this->chess_piece_types[type].get(), this->scene.get(), owner, pos));
 }
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
+
+std::unique_ptr<ChessPieceType> ChessGame::createChessPieceType(const std::string& modleSufix) {
+    auto type = std::make_unique<ChessPieceType>();
+
+    type->getModles()[0] =
+        this->scene->getAssetHandle<GeometryModel>(this->players[0].getName() + "." + modleSufix);
+    type->getModles()[1] =
+        this->scene->getAssetHandle<GeometryModel>(this->players[1].getName() + "." + modleSufix);
+
+    return std::move(type);
+}

@@ -1,0 +1,17 @@
+target_sources(Bembel
+	PUBLIC
+		asset.hpp
+		asset-container.hpp
+		asset-container.inl
+		asset-handle.hpp
+		asset-loader.hpp
+		asset-locator.hpp
+		asset-manager.hpp
+		asset-manager.inl
+		serial-asset-loader.hpp
+		serial-asset-loader.inl
+	PRIVATE
+		asset-locator.cpp
+		asset-manager.cpp
+		CMakeLists.txt
+)

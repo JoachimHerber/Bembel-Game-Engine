@@ -1,268 +1,197 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
+﻿#include "selection-rendering-stage.h"
 
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-
-#include "selection-rendering-stage.h"
-
-#include <bembel-kernel/rendering/texture.h>
-#include <bembel-kernel/rendering/shader.h>
-#include <bembel-kernel/rendering/frame-buffer-object.h>
-#include <bembel-graphics/rendering-pipeline/rendering-pipeline.h>
-#include <bembel-graphics/rendering-pipeline/camera.h>
-#include <bembel-graphics/geometry/geometry-model.h>
-#include <bembel-graphics/geometry/geometry-mesh.h>
+#include <algorithm>
+#include <glm/gtc/matrix_transform.hpp>
+#include <random>
 
 #include "selection-component.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+using namespace bembel::base;
+using namespace bembel::kernel;
+using namespace bembel::graphics;
 
-#include <random>
+SelectionRenderingStage::SelectionRenderingStage(RenderingPipeline& pipline)
+: RenderingStage(pipline) {
+    this->noise = std::make_unique<Texture>(GL_TEXTURE_3D, GL_R8);
 
-/*============================================================================*/
-/* IMPLEMENTATION        													  */
-/*============================================================================*/
-SelectionRenderingStage::SelectionRenderingStage(
-	bembel::RenderingPipeline* pipline)
-	: RenderingStage(pipline)
-{
-	noise_ = std::make_unique<bembel::Texture>(GL_TEXTURE_3D, GL_R8 );
+    unsigned char                   data[32 * 32 * 32];
+    std::random_device              rd;
+    std::mt19937                    gen(rd());
+    std::uniform_int_distribution<> dist(0, 255);
+    for(unsigned i = 0; i < 32 * 32 * 32; ++i) data[i] = dist(gen);
 
-	unsigned char data[32*32*32]; 
-	std::random_device rd;
-	std::mt19937 gen( rd() );
-	std::uniform_int_distribution<> dist( 0, 255 );
-	for( unsigned i = 0; i<32*32*32; ++i )
-		data[i] = dist( gen );
+    this->noise->init(GL_LINEAR, GL_LINEAR);
+    this->noise->bind();
 
-	noise_->Init();
-	noise_->Bind();
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, static_cast<GLint>(GL_REPEAT));
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, static_cast<GLint>(GL_REPEAT));
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, static_cast<GLint>(GL_REPEAT));
+    glTexImage3D(
+        GL_TEXTURE_3D, 0, static_cast<GLint>(GL_R8), 32, 32, 32, 0, GL_RED, GL_UNSIGNED_BYTE, data);
 
-	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, static_cast<GLint>(GL_REPEAT) );
-	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, static_cast<GLint>(GL_REPEAT) );
-	glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, static_cast<GLint>(GL_REPEAT) );
-	glTexImage3D(
-		GL_TEXTURE_3D, 0, static_cast<GLint>(GL_R8),
-		32, 32, 32, 0, GL_RED, GL_UNSIGNED_BYTE, data );
+    this->noise->release();
 
-	noise_->Release();
-
-	start_time_ = std::chrono::high_resolution_clock::now();
+    this->start_time = std::chrono::high_resolution_clock::now();
 }
 
-SelectionRenderingStage::~SelectionRenderingStage()
-{}
-
-void SelectionRenderingStage::SetShader(bembel::AssetHandle shader)
-{
-	shader_ = shader;
+SelectionRenderingStage::~SelectionRenderingStage() {
 }
 
-void SelectionRenderingStage::SetDepthOutputTexture(const std::string& texture)
-{
-	fbo_->SetDepthAttechment(pipline_->GetTexture(texture));
+void SelectionRenderingStage::setShader(const Asset<ShaderProgram>& shader) {
+    this->shader_program = shader;
 }
-void SelectionRenderingStage::SetColorOutputTexture(const std::string& texture)
-{
-	fbo_->SetColorAttechment(0, pipline_->GetTexture(texture));
-}
-void SelectionRenderingStage::Init()
-{
-	fbo_->Init();
+void SelectionRenderingStage::setShader(Asset<ShaderProgram>&& shader) {
+    this->shader_program = std::move(shader);
 }
 
-void SelectionRenderingStage::Cleanup()
-{
-	fbo_->CleanUp();
+void SelectionRenderingStage::setDepthOutputTexture(const std::string& texture) {
+    this->fbo->setDepthAttechment(this->pipline.getTexture(texture));
+}
+void SelectionRenderingStage::setColorOutputTexture(const std::string& texture) {
+    this->fbo->setColorAttechment(0, this->pipline.getTexture(texture));
+}
+void SelectionRenderingStage::init() {
+    this->fbo->init();
 }
 
-void SelectionRenderingStage::DoRendering()
-{
-	auto program = GetAssetManager()->GetAsset<bembel::ShaderProgram>(shader_);
-	if (!program )
- 		return;
- 
- 	fbo_->BeginRenderToTexture();
-	glm::mat4 proj = pipline_->GetCamera()->GetProjectionMatrix();
-	glm::mat4 view = pipline_->GetCamera()->GetViewMatrix();
-
- 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
- 
-	program->Use();
-	noise_->Bind();
- 
- 	glUniformMatrix4fv(
-		program->GetUniformLocation("uProjectionMatrix"),
- 		1, GL_FALSE, &proj[0][0]);
-
-	auto now = std::chrono::high_resolution_clock::now();
-	std::chrono::milliseconds ms =
-		std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_);
-
-	float time = 0.001f*(ms.count());
-
-	glUniform1f(program->GetUniformLocation( "uTime" ), time );
-
-	std::vector<GeometryObject> geometry;
-
-	GetHiglightedObjects(geometry);
-
-	std::sort(geometry.begin(), geometry.end(), [ ](auto& first, auto& second){
-		return first.dist > second.dist;
-	});
- 
-	bembel::GeometryMesh* currentMesh = nullptr;
- 	for (auto& it : geometry)
-	{
-		glm::mat4 modelView = view*glm::translate(glm::mat4(), it.position)*glm::mat4_cast(it.rotation);
-
-		glUniform1i(program->GetUniformLocation("uState"), it.state);
-
-		glUniformMatrix4fv(
-			program->GetUniformLocation("uModleViewMatrix"),
-			1, GL_FALSE, &modelView[0][0]);
-		glUniformMatrix4fv(
-			program->GetUniformLocation("uNormalMatrix"),
-			1, GL_FALSE, &modelView[0][0]);
-
-		auto mesh = scene_->GetAsset<bembel::GeometryMesh>(
-			it.model->GetMesh());
-
-		if(mesh == nullptr)
-			continue;
-
-		if (mesh != currentMesh)
-		{
-			currentMesh = mesh;
-			glBindVertexArray(currentMesh->GetVAO());
-		}
-
-		for (auto& mapping : it.model->GetMateialMapping())
-		{
-			unsigned first, count;
-			if (currentMesh->GetSubMesh(mapping.sub_mesh, first, count))
-			{
-				glDrawElements(
-					GL_TRIANGLES,
-					count,
-					GL_UNSIGNED_INT,
-					(void*)(first * sizeof(unsigned))
-				);
-			}
-		}
-
- 	}
-
-	noise_->Release();
- 	fbo_->EndRenderToTexture();
-	glDisable(GL_BLEND);
+void SelectionRenderingStage::cleanup() {
+    this->fbo->cleanup();
+    this->shader_program.release();
 }
 
-void SelectionRenderingStage::SetScene(bembel::Scene* scene)
-{
-	scene_ = scene;
-	position_components_  = scene->RequestComponentContainer<bembel::PositionComponent>();
-	rotation_components_  = scene->RequestComponentContainer<bembel::RotationComponent>();
-	selection_components_ = scene->RequestComponentContainer<SelectionComponent>();
-	geometry_components_  = scene->RequestComponentContainer<bembel::GeometryComponent>();
+void SelectionRenderingStage::execute() {
+    auto program = this->shader_program.get();
+    if(!program) return;
+
+    this->fbo->beginRenderToTexture();
+    glm::mat4 proj = this->pipline.getCamera()->getProjectionMatrix();
+    glm::mat4 view = this->pipline.getCamera()->getViewMatrix();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_3D);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    program->use();
+    this->noise->bind();
+
+    glUniform1i(program->getUniformLocation("uNoise"), 0);
+    glUniformMatrix4fv(program->getUniformLocation("uProjectionMatrix"), 1, GL_FALSE, &proj[0][0]);
+
+    auto                      now = std::chrono::high_resolution_clock::now();
+    std::chrono::milliseconds ms =
+        std::chrono::duration_cast<std::chrono::milliseconds>(now - this->start_time);
+
+    float time = 0.001f * (ms.count());
+
+    glUniform1f(program->getUniformLocation("uTime"), time);
+
+    std::vector<GeometryObject> geometry;
+
+    this->getHiglightedObjects(geometry);
+
+    std::sort(geometry.begin(), geometry.end(), [](auto& first, auto& second) {
+        return first.dist > second.dist;
+    });
+
+    GeometryMesh* currentMesh = nullptr;
+    for(auto& it : geometry) {
+        glm::mat4 modelView =
+            view * glm::translate(glm::mat4(), it.position) * glm::mat4_cast(it.rotation);
+
+        glUniform1i(program->getUniformLocation("uState"), it.state);
+
+        glUniformMatrix4fv(
+            program->getUniformLocation("uModleViewMatrix"), 1, GL_FALSE, &modelView[0][0]);
+        glUniformMatrix4fv(
+            program->getUniformLocation("uNormalMatrix"), 1, GL_FALSE, &modelView[0][0]);
+
+        auto mesh = it.model->getMesh();
+
+        if(mesh == nullptr) continue;
+
+        if(mesh != currentMesh) {
+            currentMesh = mesh;
+            glBindVertexArray(currentMesh->getVAO());
+        }
+
+        for(auto& mapping : it.model->getMateialMapping()) {
+            unsigned first, count;
+            if(currentMesh->getSubMesh(mapping.sub_mesh, first, count)) {
+                glDrawElements(
+                    GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(first * sizeof(unsigned)));
+            }
+        }
+    }
+
+    this->noise->release();
+    this->fbo->endRenderToTexture();
+    glDisable(GL_BLEND);
 }
 
-std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::CreateInstance(
-	const bembel::xml::Element* properties,
-	bembel::RenderingPipeline* pipline)
-{
-	auto asset_manager = pipline->GetAssetManager();
-	auto shader = asset_manager->RequestAsset<bembel::ShaderProgram>(
-		properties->FirstChildElement("Shader"));
-
-	auto stage = std::make_unique<SelectionRenderingStage>(pipline);
-
-	stage->SetShader(shader);
-
-	std::string textureName;
-	if ( bembel::xml::GetAttribute(properties, "ColorOutput", "texture", textureName))
-		stage->SetColorOutputTexture(textureName);
-	if ( bembel::xml::GetAttribute(properties, "DepthOutput", "texture", textureName))
-		stage->SetDepthOutputTexture(textureName);
-
-	return std::move(stage);
+void SelectionRenderingStage::setScene(Scene* scene) {
+    this->scene                = scene;
+    this->position_components  = scene->requestComponentContainer<PositionComponent>();
+    this->rotation_components  = scene->requestComponentContainer<RotationComponent>();
+    this->selection_components = scene->requestComponentContainer<SelectionComponent>();
+    this->geometry_components  = scene->requestComponentContainer<GeometryComponent>();
 }
 
-void SelectionRenderingStage::GetHiglightedObjects(
-	std::vector<GeometryObject>& objects)
-{
-	glm::vec3 camPos = pipline_->GetCamera()->GetPosition();
+std::unique_ptr<SelectionRenderingStage> SelectionRenderingStage::createInstance(
+    const xml::Element* properties, RenderingPipeline& pipline) {
+    auto& asset_mgr = pipline.getAssetManager();
 
-	const auto& entitis = scene_->GetEntitys();
+    Asset<ShaderProgram> program;
+    program.request(asset_mgr, properties->FirstChildElement("Shader"));
 
-	auto& positions = position_components_->GetComponents();
-	auto& rotations = rotation_components_->GetComponents();
-	auto& selection = selection_components_->GetComponents();
-	auto& geometry  = geometry_components_->GetComponents();
+    auto stage = std::make_unique<SelectionRenderingStage>(pipline);
 
-	bembel::Scene::ComponentMask mask =
-		position_components_->GetComponentMask() |
-		selection_components_->GetComponentMask() |
-		geometry_components_->GetComponentMask();
+    stage->setShader(std::move(program));
 
-	for ( bembel::Scene::EntityID entity = 0; entity < entitis.size(); ++entity)
-	{
-		if ((entitis[entity] & mask)!= mask)
-			continue;
+    std::string texture_name;
+    if(xml::getAttribute(properties, "ColorOutput", "texture", texture_name))
+        stage->setColorOutputTexture(texture_name);
+    if(xml::getAttribute(properties, "DepthOutput", "texture", texture_name))
+        stage->setDepthOutputTexture(texture_name);
 
-		if (selection[entity].state == SelectionComponent::UNSELECTABLE)
-			continue;
-
-		auto model = scene_->GetAsset<bembel::GeometryModel>(
-			geometry[entity].model);
-
-		if(model == nullptr)
-			continue;
-
-		float dist = glm::length(camPos - positions[entity].position);
-
-		glm::quat roatation;
-		if( entitis[entity] & rotation_components_->GetComponentMask() )
-			roatation = rotations[entity].rotation;
-
-		objects.push_back({
-			positions[entity].position, roatation,
-			dist, model, unsigned(selection[entity].state - 1)
-		});
-	}
+    return std::move(stage);
 }
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
+
+void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& objects) {
+    glm::vec3 camPos = this->pipline.getCamera()->getPosition();
+
+    const auto& entitis = this->scene->getEntitys();
+
+    auto& positions = this->position_components->getComponents();
+    auto& rotations = this->rotation_components->getComponents();
+    auto& selection = this->selection_components->getComponents();
+    auto& geometry  = this->geometry_components->getComponents();
+
+    Scene::ComponentMask mask = this->position_components->getComponentMask()
+                                | this->selection_components->getComponentMask()
+                                | this->geometry_components->getComponentMask();
+
+    for(Scene::EntityID entity = 0; entity < entitis.size(); ++entity) {
+        if((entitis[entity] & mask) != mask) continue;
+
+        if(selection[entity].state == SelectionComponent::State::UNSELECTABLE) continue;
+
+        auto model = this->scene->getAsset<GeometryModel>(geometry[entity].model);
+
+        if(model == nullptr) continue;
+
+        float dist = glm::length(camPos - positions[entity].position);
+
+        glm::quat roatation;
+        if(entitis[entity] & this->rotation_components->getComponentMask())
+            roatation = rotations[entity].rotation;
+
+        objects.push_back(
+            {positions[entity].position,
+             roatation,
+             dist,
+             model,
+             unsigned(selection[entity].state) - 1u});
+    }
+}

@@ -1,0 +1,19 @@
+target_sources(Bembel
+    PUBLIC
+		button-widget.hpp
+        group-widget.hpp
+		labeled-button-widget.hpp
+		label-widget.hpp
+        widget.hpp
+		widget-type-utils.hpp
+		window-widget.hpp
+	PRIVATE
+		button-widget.cpp
+		group-widget.cpp
+		labeled-button-widget.cpp
+		label-widget.cpp
+        widget.cpp
+		widget-type-utils.cpp
+		window-widget.cpp
+		CMakeLists.txt
+)

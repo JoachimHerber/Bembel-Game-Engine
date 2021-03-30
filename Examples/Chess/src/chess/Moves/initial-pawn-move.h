@@ -1,60 +1,21 @@
-/******************************************************************************/
-/* ************************************************************************** */
-/* *                                                                        * */
-/* *    MIT License                                                         * */
-/* *                                                                        * */
-/* *   Copyright(c) 2018 Joachim Herber                                     * */
-/* *                                                                        * */
-/* *   Permission is hereby granted, free of charge, to any person          * */
-/* *   obtaining copy of this software and associated documentation files   * */
-/* *   (the "Software"), to deal in the Software without restriction,       * */
-/* *   including without limitation the rights to use, copy, modify, merge, * */
-/* *   publish, distribute, sublicense, and/or sell copies of the Software, * */
-/* *   and to permit persons to whom the Software is furnished to do so,    * */
-/* *   subject to the following conditions :                                * */
-/* *                                                                        * */
-/* *   The above copyright notice and this permission notice shall be       * */
-/* *   included in all copies or substantial portions of the Software.      * */
-/* *                                                                        * */
-/* *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,      * */
-/* *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF   * */
-/* *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                * */
-/* *   NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   * */
-/* *   BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN   * */
-/* *   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN    * */
-/* *   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     * */
-/* *   SOFTWARE.                                                            * */
-/* *                                                                        * */
-/* ************************************************************************** */
-/******************************************************************************/
-
+﻿
 #ifndef BEMBEL_INITIALPAWNMOVE_H
 #define BEMBEL_INITIALPAWNMOVE_H
-/*============================================================================*/
-/* INCLUDES                                                                   */
-/*============================================================================*/
-
 #include "move-set.h"
 
-/*============================================================================*/
-/* CLASS DEFINITIONS                                                          */
-/*============================================================================*/
-class InitialPawnMove : public MoveSet::MoveTemplate
-{
-public:
-	InitialPawnMove();
-	~InitialPawnMove();
+class InitialPawnMove : public MoveSet::MoveTemplate {
+ public:
+  InitialPawnMove();
+  ~InitialPawnMove();
 
-	virtual void GetPosibleMoveParameter(ChessPiece*, const ChessBoard&, std::vector<int>&) override;
+  virtual void getPosibleMoveParameter(
+    ChessPiece*, const ChessBoard&, std::vector<int>&) override;
 
-	virtual glm::vec2 GetTargetPosition(ChessPiece*, int) override;
+  virtual glm::vec2 getTargetPosition(ChessPiece*, int) override;
 
-	virtual void StartMove(ChessPiece*, ChessBoard&, int) override;
-	virtual void EndeMove(ChessPiece*, ChessBoard&, int) override;
+  virtual void startMove(ChessPiece*, ChessBoard&, int) override;
+  virtual void endeMove(ChessPiece*, ChessBoard&, int) override;
 
-	virtual bool UpdateMoveAnimation(double, ChessPiece*, int) override;
+  virtual bool updateMoveAnimation(double, ChessPiece*, int) override;
 };
-/*============================================================================*/
-/* END OF FILE                                                                */
-/*============================================================================*/
-#endif //include guards
+#endif // include guards

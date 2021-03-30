@@ -1,0 +1,4 @@
+<GuiSkin>
+	<Font file_name="arial.xml"/>
+	<TextureAtlas file_name="gui_textures.xml"/>
+</GuiSkin>
