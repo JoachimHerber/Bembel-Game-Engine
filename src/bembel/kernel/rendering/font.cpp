@@ -1,29 +1,16 @@
-﻿#include "Font.hpp"
+﻿module;
+#include "bembel/pch.h"
+module bembel.kernel.rendering;
+
+import bembel.base;
 
 namespace bembel::kernel {
+using namespace bembel::base;
 
-Font::Font() {
-}
-
-Font::~Font() {
-}
-
-float Font::getAscender() const {
-    return this->ascender;
-}
-
-float Font::getDescender() const {
-    return this->descender;
-}
-
-Texture* Font::getGlyphAtlasTexture() const {
-    return this->glyph_atlas_texture.get();
-}
-
-unsigned Font::getGlyphIndex(char32_t character, bool bold, bool oblique) const {
-    const auto& char_map = this->char_maps
-                               [bold ? (oblique ? CharMapIndex::BoldOblique : CharMapIndex::Bold)
-                                     : (oblique ? CharMapIndex::Oblique : CharMapIndex::Default)];
+GlyphIndex Font::getGlyphIndex(char32_t character, bool bold, bool oblique) const {
+    auto const& char_map = m_char_maps
+        [bold ? (oblique ? CharMapIndex::BoldOblique : CharMapIndex::Bold)
+              : (oblique ? CharMapIndex::Oblique : CharMapIndex::Default)];
 
     auto glyph = char_map.find(character);
     if(glyph == char_map.end()) {
@@ -33,37 +20,37 @@ unsigned Font::getGlyphIndex(char32_t character, bool bold, bool oblique) const 
     }
 }
 
-float Font::getAdvance(unsigned glyph_index) const {
-    if(glyph_index >= this->glypths.size()) return 0.0f;
+float Font::getAdvance(GlyphIndex glyph_index) const {
+    if(glyph_index >= m_glypths.size()) return 0.0f;
 
-    return this->glypths[glyph_index].advance;
+    return m_glypths[glyph_index].advance;
 }
 
-float Font::getAdvance(std::vector<unsigned>& glyph_indices) const {
+float Font::getAdvance(std::span<GlyphIndex> glyph_indices) const {
     float    advance    = 0.0f;
     unsigned prev_glyph = 0;
     for(unsigned glyph : glyph_indices) {
-        if(glyph >= this->glypths.size()) continue;
+        if(glyph >= m_glypths.size()) continue;
 
-        advance += this->glypths[glyph].advance;
-        advance += this->getKernig(prev_glyph, glyph);
+        advance += m_glypths[glyph].advance;
+        advance += getKernig(prev_glyph, glyph);
         prev_glyph = glyph;
     }
     return advance;
 }
 
-float Font::getKernig(unsigned left_glyph_index, unsigned right_glyph_index) const {
-    auto key = std::make_pair(left_glyph_index, right_glyph_index);
-    auto it  = this->kernig.find(key);
-    if(it != this->kernig.end()) { return it->second; }
+float Font::getKernig(GlyphIndex left, GlyphIndex right) const {
+    auto key = std::make_pair(left, right);
+    auto it  = m_kernig.find(key);
+    if(it != m_kernig.end()) { return it->second; }
 
     return 0.0f;
 }
 
-const Font::Glyph& Font::getGlypData(unsigned glyph_index) const {
-    if(glyph_index < this->glypths.size()) return this->glypths[glyph_index];
+Font::Glyph const& Font::getGlypData(unsigned glyph_index) const {
+    if(glyph_index < m_glypths.size()) return m_glypths[glyph_index];
 
-    const static Glyph unknow_glyph{
+    static constexpr Glyph unknow_glyph{
         0.f,
         {0.0f, 0.0f},
         {0.0f, 0.0f},
@@ -74,70 +61,58 @@ const Font::Glyph& Font::getGlypData(unsigned glyph_index) const {
     return unknow_glyph;
 }
 
-unsigned Font::getNumGlyphs() const {
-    return this->glypths.size();
-}
-
-const std::string& Font::getTypeName() {
-    const static std::string type_name = "Font";
-    return type_name;
-}
-
-std::unique_ptr<Font> Font::loadAsset(AssetManager& asset_mgr, const std::string& file_name) {
-    xml::Document doc;
-
-    doc.LoadFile(file_name.c_str());
-    if(doc.Error()) {
-        BEMBEL_LOG_ERROR() << "Can't load file \"" << file_name << "\"\n"
-                           << doc.GetErrorStr1() << std::endl;
+std::unique_ptr<Font> Font::loadAsset(AssetManager& asset_mgr, std::filesystem::path file) {
+    std::string const file_path = file.string(); // file.c_str() returns a wchar*
+    xml::Document     doc;
+    if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
+        log().error("Can't load file '{}'\n'{}'", file_path, doc.ErrorStr());
         return nullptr;
     }
 
     xml::Element* root = doc.FirstChildElement("Font");
-    if(doc.Error()) {
-        BEMBEL_LOG_ERROR() << "\"" << file_name << "\" has no root element \"Font\"" << std::endl;
+    if(!root) {
+        log().error("'{}' has no root element 'Font'", file_path);
         return nullptr;
     }
     return createAsset(asset_mgr, root);
 }
 
-std::unique_ptr<Font> Font::createAsset(AssetManager& asset_mgr, const xml::Element* properties) {
+std::unique_ptr<Font> Font::createAsset(AssetManager& asset_mgr, xml::Element const* properties) {
     auto font = std::make_unique<Font>();
 
     std::string texture;
     if(!xml::getAttribute(properties, "texture", texture)) { return nullptr; }
 
-    font->glyph_atlas_texture.request(asset_mgr, texture);
-    if(!font->glyph_atlas_texture) return nullptr;
+    font->m_glyph_atlas_texture.request(asset_mgr, texture);
+    if(!font->m_glyph_atlas_texture) return nullptr;
 
     if(!font->readGlyphs(properties->FirstChildElement("Glyphs"))) {
-        BEMBEL_LOG_ERROR() << "Can't parse glyph informations" << std::endl;
+        log().error("Can't parse glyph informations");
         return nullptr;
     }
 
     if(!font->readCharMap(properties->FirstChildElement("CharMap"))) {
-        BEMBEL_LOG_ERROR() << "Can't parse char-map informations" << std::endl;
+        log().error("Can't parse char-map informations");
         return nullptr;
     }
 
     if(!font->readKerning(properties->FirstChildElement("Kerning"))) {
-        BEMBEL_LOG_ERROR() << "Can't parse kerning informations" << std::endl;
+        log().error("Can't parse kerning informations");
         return nullptr;
     }
 
     // compute ascender and descender
-    for(auto it : font->glypths) {
-        font->ascender  = glm::max(font->ascender, it.extents_max.y);
-        font->descender = glm::min(font->descender, it.extents_min.y);
+    for(auto it : font->m_glypths) {
+        font->m_ascender  = glm::max(font->m_ascender, it.extents_max.y);
+        font->m_descender = glm::min(font->m_descender, it.extents_min.y);
     }
 
     return font;
 }
 
-void Font::deleteAsset(AssetManager&, std::unique_ptr<Font>) {
-}
+void Font::deleteAsset(AssetManager&, std::unique_ptr<Font>) {}
 
-bool Font::readGlyphs(const xml::Element* properties) {
+bool Font::readGlyphs(xml::Element const* properties) {
     if(!properties) return false;
 
     for(auto glyphProps : xml::IterateChildElements(properties, "Glyph")) {
@@ -151,16 +126,16 @@ bool Font::readGlyphs(const xml::Element* properties) {
         } else {
             return false;
         }
-        if(xml::getAttribute(glyphProps, "texCoord", tmp)) {
+        if(base::xml::getAttribute(glyphProps, "texCoord", tmp)) {
             glyph.tex_coords_min = {tmp.x, tmp.z};
             glyph.tex_coords_max = {tmp.y, tmp.w};
         }
-        this->glypths.push_back(glyph);
+        this->m_glypths.push_back(glyph);
     }
     return true;
 }
 
-bool Font::readCharMap(const xml::Element* properties) {
+bool Font::readCharMap(base::xml::Element const* properties) {
     if(!properties) return false;
 
     for(auto entry : xml::IterateChildElements(properties, "Entry")) {
@@ -172,15 +147,15 @@ bool Font::readCharMap(const xml::Element* properties) {
         if(!xml::getAttribute(entry, "glyph_bold", glyph_bold)) return false;
         if(!xml::getAttribute(entry, "glyph_bold_oblique", glyph_bold_oblique)) return false;
 
-        this->char_maps[CharMapIndex::Default][c]     = glyph;
-        this->char_maps[CharMapIndex::Oblique][c]     = glyph_oblique;
-        this->char_maps[CharMapIndex::Bold][c]        = glyph_bold;
-        this->char_maps[CharMapIndex::BoldOblique][c] = glyph_bold_oblique;
+        m_char_maps[CharMapIndex::Default][c]     = glyph;
+        m_char_maps[CharMapIndex::Oblique][c]     = glyph_oblique;
+        m_char_maps[CharMapIndex::Bold][c]        = glyph_bold;
+        m_char_maps[CharMapIndex::BoldOblique][c] = glyph_bold_oblique;
     }
     return true;
 }
 
-bool Font::readKerning(const xml::Element* properties) {
+bool Font::readKerning(xml::Element const* properties) {
     if(!properties) return false;
 
     for(auto entry : xml::IterateChildElements(properties, "Entry")) {
@@ -191,8 +166,8 @@ bool Font::readKerning(const xml::Element* properties) {
         if(!xml::getAttribute(entry, "right", right)) return false;
         if(!xml::getAttribute(entry, "kerning", kerning)) return false;
 
-        auto key          = std::make_pair(left, right);
-        this->kernig[key] = kerning;
+        auto key            = std::make_pair(left, right);
+        this->m_kernig[key] = kerning;
     }
     return true;
 }

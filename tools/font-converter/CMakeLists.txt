@@ -9,21 +9,21 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
-	src/application.hpp 
+	src/application.ixx 
 	src/application.cpp 
-	src/font-converter.hpp
+	src/font-converter.ixx
 	src/font-converter.cpp 
-	src/font-family.hpp
+	src/font-family.ixx
 	src/font-family.cpp 
-	src/font-view.hpp
+	src/font-view.ixx
 	src/font-view.cpp 
-	src/glyph.hpp
+	src/glyph.ixx
 	src/glyph.cpp 
-	src/glyph-texture-atlas.hpp
+	src/glyph-texture-atlas.ixx
 	src/glyph-texture-atlas.cpp 
-	src/preview-renderer.hpp
+	src/preview-renderer.ixx
 	src/preview-renderer.cpp 
-	src/texture-atlas-node.hpp
+	src/texture-atlas-node.ixx
 	src/texture-atlas-node.cpp 
 )
 

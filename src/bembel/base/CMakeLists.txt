@@ -1,10 +1,24 @@
 target_sources(Bembel
-    PUBLIC
-        base.hpp
 	PRIVATE
+        base.ixx
+		types.ixx
+		types.cpp
+		unicode.ixx
+		unicode.cpp
+        concurrent-queue.ixx
+        image.ixx
+        image.cpp
+		xml.ixx
+		conversion.ixx
+		logger.ixx
+        console-log-sink.ixx
+		console-log-sink.cpp
+		factory.ixx
+		signal.ixx
+		slot.ixx
+		events.ixx
+		observable-value.ixx
+		serialisation.ixx
+
 		CMakeLists.txt
 )
-add_subdirectory(io)
-add_subdirectory(logging)
-add_subdirectory(utils)
-

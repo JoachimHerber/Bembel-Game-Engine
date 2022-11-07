@@ -1,80 +1,46 @@
-﻿#include "./labeled-button-widget.hpp"
+﻿module;
+#include "bembel/pch.h"
+module bembel.gui.widgets;
 
-#include <bembel/base/utils/utils.hpp>
-#include <bembel/kernel/assets/asset-manager.hpp>
-#include <bembel/kernel/display/cursor-icon.hpp>
-
-#include "../graphical-user-interface.hpp"
-#include "../rendering/style.hpp"
-#include "./widget-type-utils.hpp"
+import bembel.base;
+import bembel.kernel;
+import bembel.gui.core;
 
 namespace bembel::gui {
+using namespace bembel::base;
+using namespace bembel::kernel;
 
-const std::string LabeledButtonWidget::WIDGET_TYPE_NAME = "LabeledButton";
+LabeledButtonWidget::LabeledButtonWidget(Widget& parent) : Widget{parent} {
+    m_child_widgets.push_back(&m_button);
+    m_child_widgets.push_back(&m_label);
 
-namespace {
-    BEMBEL_STATIC_INITIALIZATION {
-        WidgetTypeUtils::registerWidgetType<LabeledButtonWidget>(
-            LabeledButtonWidget::WIDGET_TYPE_NAME);
+    m_button.setName("Button");
+    m_label.setName("Lable");
+
+    this->size.change_signal.bind(this, &LabeledButtonWidget::onSizeChanged);
+
+    auto style = parent.getStyle();
+    if(style) {
+        float border     = style->getValue(Style::Values::BUTTON_BORDER_WIDTH);
+        m_label.position = ivec2(border, border);
     }
-} // namespace
-
-LabeledButtonWidget::LabeledButtonWidget(GraphicalUserInterface* gui, Widget* parent)
-: Widget{gui, parent}
-, button{gui, this}
-, label{gui, this}
-, press_signal{this->button.press_signal}
-, release_signal{this->button.release_signal}
-, click_signal{this->button.click_signal}
-, text{this->label.text} {
-    this->child_widgets.push_back(&(this->button));
-    this->child_widgets.push_back(&(this->label));
-
-    this->size.change_signal.addSlot(this, &LabeledButtonWidget::onSizeChanged);
 }
 
-LabeledButtonWidget::~LabeledButtonWidget() {
+bool LabeledButtonWidget::configure(xml::Element const* properties) {
+    Widget::configure(properties);
+
+    xml::getAttribute(properties, "label", this->text);
+    return true;
 }
 
-bool LabeledButtonWidget::init() {
-    return this->button.init() && this->label.init();
-}
-
-bool LabeledButtonWidget::init(const base::xml::Element* properties) {
-    auto style = this->getStyle();
-    assert(style && "GUI::Style is undefined");
-
-    glm::vec2 size;
-    if(base::xml::getAttribute(properties, "size", size)) this->size.set(size);
-
-    std::string name;
-    if(base::xml::getAttribute(properties, "name", name)) this->setName(name);
-
-    std::string label;
-    if(base::xml::getAttribute(properties, "label", label)) this->text = label;
-
-    float border = style->getValue(Style::Values::BUTTON_BORDER_WIDTH);
-
-    this->label.position = glm::ivec2(border, border);
-    return this->button.init() && this->label.init();
-}
-
-InteractionHandle::State LabeledButtonWidget::getState() {
-    return this->button.getState();
-}
-
-const std::string& LabeledButtonWidget::getWidgetTypeName() const {
-    return WIDGET_TYPE_NAME;
-}
-
-void LabeledButtonWidget::onSizeChanged(const glm::ivec2&, const glm::ivec2& new_size) {
+void LabeledButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
 
     float border = style->getValue(Style::Values::BUTTON_BORDER_WIDTH);
 
-    this->button.size = new_size;
-    this->label.size  = new_size - glm::ivec2(2 * border, 2 * border);
+    m_button.size = new_size;
+    m_label.size  = new_size - glm::ivec2(2 * border, 2 * border);
 }
 
 } // namespace bembel::gui

@@ -3,8 +3,9 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
-	src/gui-example.h 
+	src/gui-example.ixx 
 	src/gui-example.cpp
+	main_gui.xml
 )
 source_group( "src" FILES ${ProjectSources} )
 

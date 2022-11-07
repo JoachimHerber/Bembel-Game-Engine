@@ -4,14 +4,30 @@
 		<GuiStyle file_name="dark_gui_style.xml" />
 	</Renderer>
 	<Widgets>
-		<Window size="600 400" view="debug">
-			<TileBar layout="linear" layout_alignment="left">
-				<Label size="100 32" text="Hallo Welt" alignment="left"/>
+		<Window size="600 400" view="debug" name="MainWindow">
+			<TileBar>
+				<Label size="100 32" text=" Hello World" alignment="left"/>
 			</TileBar>
-			<WindowArea layout="linear" layout_alignment="center">
-				<LabeledButton size="200 42" name="Button_1" label="Button 1" outline="1"/>
-				<LabeledButton size="200 42" name="Button_2" label="Button 2" outline="1"/>
-				<LabeledButton size="200 42" name="Button_3" label="Button 3"/>
+			<WindowArea layout="relative">
+				<LabeledButton name="Button_1" label="Button 1" outline="1">
+					<Layout size="200 50" rel_pos="1, 1" pos_offset="-200 -50" margin="4"/>
+				</LabeledButton>
+				<LabeledButton name="Button_2" label="Button 2" outline="1">
+					<Layout size="200 50" rel_pos="1, 1" pos_offset="-200 -100" margin="4"/>
+				</LabeledButton>
+				<LabeledButton name="Button_3" label="Button 3">
+					<Layout size="200 50" rel_pos="1, 1" pos_offset="-200 -150" margin="4"/>
+				</LabeledButton>
+				<TextInput name="Text_input">
+					<Layout size="200 50" rel_pos="1, 1" pos_offset="-200 -200" margin="4"/>
+				</TextInput>
+				<Text FontSize="16">
+					<Layout rel_size="1 1" size_offset="-216 -16" rel_pos="0 0" pos_offset="8 8"/>
+					<Content>Lorem="" [i]ipsum[/i] dolor sit amet, [b]consetetur[/b] sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+						Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+					</Content>
+				</Text>
 			</WindowArea>
 		</Window>
 	</Widgets>

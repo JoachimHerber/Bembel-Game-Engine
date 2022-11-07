@@ -45,7 +45,7 @@ void main()
 <Shader type="GL_FRAGMENT_SHADER">
 #version 330
 
-uniform vec2 uTexelSize;
+//uniform vec2 uTexelSize;
 
 in vec3  vLightPos;
 in vec3  vLightColor;

@@ -1,87 +1,96 @@
-﻿#include "./gui-system.hpp"
+﻿module;
+#include <GLFW/glfw3.h>
 
-#include <bembel/base/io/xml.hpp>
-#include <bembel/base/logging/logger.hpp>
-#include <bembel/kernel/assets/asset-manager.hpp>
-#include <bembel/kernel/core/kernel.hpp>
-#include <bembel/kernel/display/display-manager.hpp>
-#include <bembel/kernel/display/window.hpp>
-#include <bembel/kernel/rendering/shader.hpp>
-#include <bembel/kernel/rendering/texture-atlas.hpp>
+#include "bembel/pch.h"
+module bembel.gui;
 
-#include "./graphical-user-interface.hpp"
-#include "./rendering/style.hpp"
+import bembel.base;
+import bembel.kernel;
+import bembel.gui.core;
 
 namespace bembel::gui {
+using namespace bembel::base;
+using namespace bembel::kernel;
 
-GUISystem::GUISystem(kernel::Kernel& kernel)
-: System(kernel, "UserInterface") {
-    kernel.getAssetManager().registerAssetType<kernel::Shader>();
-    kernel.getAssetManager().registerAssetType<kernel::ShaderProgram>();
-    kernel.getAssetManager().registerAssetType<kernel::TextureAtlas>();
-    kernel.getAssetManager().registerAssetType<kernel::Texture>();
-    kernel.getAssetManager().registerAssetType<kernel::Font>();
-    kernel.getAssetManager().registerAssetType<Style>();
-}
-GUISystem::~GUISystem() {
-}
+GuiSystem::GuiSystem(Engine& engine) : System{"UserInterface"}, m_engine{engine} {
+    engine.getAssetManager().registerAssetType<Shader>();
+    engine.getAssetManager().registerAssetType<ShaderProgram>();
+    engine.getAssetManager().registerAssetType<TextureAtlas>();
+    engine.getAssetManager().registerAssetType<Texture>();
+    engine.getAssetManager().registerAssetType<Font>();
+    engine.getAssetManager().registerAssetType<Style>();
 
-bool GUISystem::configure(const base::xml::Element* properties) {
+    registerWidgetTypesInFactory();
+}
+GuiSystem::~GuiSystem() {}
+
+bool GuiSystem::configure(xml::Element const* properties) {
     if(!properties) return false;
 
-    for(auto properties : base::xml::IterateChildElements(properties, "GUI")) {
+    for(auto properties : xml::IterateChildElements(properties, "GUI")) {
         std::string name = "";
-        base::xml::getAttribute(properties, "name", name);
+        xml::getAttribute(properties, "name", name);
         auto gui = createGUI(name);
 
         if(!gui->init(properties)) return false;
 
         unsigned windowId, viewportId;
-        if(base::xml::getAttribute(properties, "window", windowId)
-           && base::xml::getAttribute(properties, "viewport", viewportId)) {
-            auto& display_mgr = this->getKernel().getDisplayManager();
+        if(xml::getAttribute(properties, "window", windowId)
+           && xml::getAttribute(properties, "viewport", viewportId)) {
+            auto& display_mgr = m_engine.getDisplayManager();
             auto  window      = display_mgr.getWindow(windowId);
 
             if(window && window->getViewports().size() > viewportId) {
-                window->getViewports()[viewportId]->addView(gui->getView());
+                window->getViewports()[viewportId]->addView(&gui->getView());
             }
         }
     }
     return true;
 }
 
-bool GUISystem::init() {
+bool GuiSystem::init() {
     return true;
 }
 
-void GUISystem::shutdown() {
-    this->named_guis.clear();
-    this->guis.clear();
+void GuiSystem::shutdown() {
+    m_guis.clear();
+    m_named_guis.clear();
 }
 
-void GUISystem::update(double) {
-}
+void GuiSystem::update(double) {}
 
-GraphicalUserInterface* GUISystem::createGUI(const std::string& name) {
-    if(!name.empty() && this->named_guis.find(name) != this->named_guis.end()) {
-        BEMBEL_LOG_ERROR() << "Can't create GUI with name '" << name
-                           << "', sice a GUI with the same name already exists.";
+GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
+    if(!name.empty() && m_named_guis.find(name) != m_named_guis.end()) {
+        log().error(
+            "Can't create GUI with name '{}'. A GUI with the same name already exists.", name
+        );
         return nullptr;
     }
 
-    this->guis.push_back(std::make_unique<GraphicalUserInterface>(
-        this->kernel.getEventManager(), this->kernel.getAssetManager()));
+    m_guis.push_back(std::make_unique<GraphicalUserInterface>(
+        m_engine.getEventManager(), m_engine.getAssetManager()
+    ));
 
-    GraphicalUserInterface* gui = this->guis.back().get();
+    GraphicalUserInterface* gui = m_guis.back().get();
 
-    if(!name.empty()) this->named_guis.emplace(name, gui);
+    gui->getInputHandler().setButtons(
+        m_engine.getInputManager().getMouse().getButton(0),
+        m_engine.getInputManager().getKeyboard().getKey(Keyboard::DELETE),
+        m_engine.getInputManager().getKeyboard().getKey(Keyboard::BACKSPACE),
+        m_engine.getInputManager().getKeyboard().getKey(Keyboard::RIGHT),
+        m_engine.getInputManager().getKeyboard().getKey(Keyboard::LEFT),
+        m_engine.getInputManager().getKeyboard().getKey(Keyboard::UP),
+        m_engine.getInputManager().getKeyboard().getKey(Keyboard::DOWN)
+    );
+
+    if(!name.empty()) m_named_guis.emplace(name, gui);
 
     return gui;
 }
 
-GraphicalUserInterface* GUISystem::getGUI(const std::string& name) {
-    auto it = this->named_guis.find(name);
-    return it != this->named_guis.end() ? it->second : nullptr;
+GraphicalUserInterface* GuiSystem::getGUI(std::string_view name) {
+    auto it = m_named_guis.find(name);
+    return it != m_named_guis.end() ? it->second : nullptr;
 }
 
 } // namespace bembel::gui

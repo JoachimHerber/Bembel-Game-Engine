@@ -1,134 +1,170 @@
-﻿#include "./keyboard.hpp"
-
+﻿module;
 #include <GLFW/glfw3.h>
 
+#include "bembel/pch.h"
+module bembel.kernel.input:Keyboard;
+
+import bembel.base;
+
 namespace bembel::kernel {
+using namespace bembel::base;
 
-Keyboard::Keyboard(EventManager& eventMgr)
-: InputDevice(eventMgr, "Keyboard") {
-    this->event_mgr.addHandler<KeyPressEvent>(this);
-    this->event_mgr.addHandler<KeyReleaseEvent>(this);
+// clang-format off
+static const std::map<Keyboard::KeyId, std::string_view> KEY_NAMES = {
+    {Keyboard::SPACE,         "[Space]"},        {Keyboard::APOSTROPHE,   "'"},
+    {Keyboard::COMMA,         ","},              {Keyboard::MINUS,        "-"},
+    {Keyboard::PERIOD,        "."},              {Keyboard::SLASH,        "/"},
+    {Keyboard::SEMICOLON,     ";"},              {Keyboard::EQUAL,        "="},
+    {Keyboard::_0,            "0"},              {Keyboard::_1,           "1"},
+    {Keyboard::_2,            "2"},              {Keyboard::_3,           "3"},
+    {Keyboard::_4,            "4"},              {Keyboard::_5,           "5"},
+    {Keyboard::_6,            "6"},              {Keyboard::_7,           "7"},
+    {Keyboard::_8,            "8"},              {Keyboard::_9,           "9"},
+    {Keyboard::A,             "A"},              {Keyboard::B,            "B"},
+    {Keyboard::C,             "C"},              {Keyboard::D,            "D"},
+    {Keyboard::E,             "E"},              {Keyboard::F,            "F"},
+    {Keyboard::G,             "G"},              {Keyboard::H,            "H"},
+    {Keyboard::I,             "I"},              {Keyboard::J,            "J"},
+    {Keyboard::K,             "K"},              {Keyboard::L,            "L"},
+    {Keyboard::M,             "M"},              {Keyboard::N,            "N"},
+    {Keyboard::O,             "O"},              {Keyboard::P,            "P"},
+    {Keyboard::Q,             "Q"},              {Keyboard::R,            "R"},
+    {Keyboard::S,             "S"},              {Keyboard::T,            "T"},
+    {Keyboard::U,             "U"},              {Keyboard::V,            "V"},
+    {Keyboard::W,             "W"},              {Keyboard::X,            "X"},
+    {Keyboard::Y,             "Y"},              {Keyboard::Z,            "Z"},
+    {Keyboard::LEFT_BRACKET,  "["},              {Keyboard::BACKSLASH,    "\\"},
+    {Keyboard::RIGHT_BRACKET, "]"},              {Keyboard::GRAVE_ACCENT, "´"},
+    {Keyboard::WORLD_1,       "[non-US #1]"},    {Keyboard::WORLD_2,      "[non-US #2]"},
+    {Keyboard::ESCAPE,        "[Esc]"},          {Keyboard::ENTER,        "[Enter]"},
+    {Keyboard::TAB,           "[Tab]"},          {Keyboard::BACKSPACE,    "[BackSpace]"},
+    {Keyboard::INSERT,        "[Insert]"},       {Keyboard::DELETE,       "[Delete]"},
+    {Keyboard::RIGHT,         "[Right]"},        {Keyboard::LEFT,         "[Left]"},
+    {Keyboard::DOWN,          "[Down]"},         {Keyboard::UP,           "[Up]"},
+    {Keyboard::PAGE_UP,       "[PageUp]"},       {Keyboard::PAGE_DOWN,    "[PageDown]"},
+    {Keyboard::HOME,          "[Home]"},         {Keyboard::END,          "[End]"},
+    {Keyboard::CAPS_LOCK,     "[CapsLock]"},     {Keyboard::SCROLL_LOCK,  "[ScrollLock]"},
+    {Keyboard::NUM_LOCK,      "[NumLock]"},      {Keyboard::PRINT_SCREEN, "[PrintScreen]"},
+    {Keyboard::PAUSE,         "[Pause]"},        {Keyboard::F1,           "[F1]"},
+    {Keyboard::F2,            "[F2]"},           {Keyboard::F3,           "[F3]"},
+    {Keyboard::F4,            "[F4]"},           {Keyboard::F5,           "[F5]"},
+    {Keyboard::F6,            "[F6]"},           {Keyboard::F7,           "[F7]"},
+    {Keyboard::F8,            "[F8]"},           {Keyboard::F9,           "[F9]"},
+    {Keyboard::F10,           "[F10]"},          {Keyboard::F11,          "[F11]"},
+    {Keyboard::F12,           "[F12]"},          {Keyboard::F13,          "[F13]"},
+    {Keyboard::F14,           "[F14]"},          {Keyboard::F15,          "[F15]"},
+    {Keyboard::F16,           "[F16]"},          {Keyboard::F17,          "[F17]"},
+    {Keyboard::F18,           "[F18]"},          {Keyboard::F19,          "[F19]"},
+    {Keyboard::F20,           "[F20]"},          {Keyboard::F21,          "[F21]"},
+    {Keyboard::F22,           "[F22]"},          {Keyboard::F23,          "[F23]"},
+    {Keyboard::F24,           "[F24]"},          {Keyboard::F25,          "[F25]"},
+    {Keyboard::KP_0,          "[NumPad 0]"},     {Keyboard::KP_1,         "[NumPad 1]"},
+    {Keyboard::KP_2,          "[NumPad 2]"},     {Keyboard::KP_3,         "[NumPad 3]"},
+    {Keyboard::KP_4,          "[NumPad 4]"},     {Keyboard::KP_5,         "[NumPad 5]"},
+    {Keyboard::KP_6,          "[NumPad 6]"},     {Keyboard::KP_7,         "[NumPad 7]"},
+    {Keyboard::KP_8 ,         "[NumPad 8]"},     {Keyboard::KP_9,         "[NumPad 9]"},
+    {Keyboard::KP_DECIMAL,    "[NumPad .]"},     {Keyboard::KP_DIVIDE,    "[NumPad /]"},
+    {Keyboard::KP_MULTIPLY,   "[NumPad *]"},     {Keyboard::KP_SUBTRACT,  "[NumPad -]"},
+    {Keyboard::KP_ADD,        "[NumPad +]"},     {Keyboard::KP_ENTER,     "[NumPad Enter]"},
+    {Keyboard::KP_EQUAL,      "[NumPad =]"},     {Keyboard::LEFT_SHIFT,   "[L Shift]"},
+    {Keyboard::LEFT_CONTROL,  "[L Ctl]"},        {Keyboard::LEFT_ALT,     "[L Alt]"},
+    {Keyboard::LEFT_SUPER,    "[L Super]"},      {Keyboard::RIGHT_SHIFT,  "[R Shift]"},
+    {Keyboard::RIGHT_CONTROL, "[R Ctl]"},        {Keyboard::RIGHT_ALT,    "[R Alt]"},
+    {Keyboard::RIGHT_SUPER,   "[R Super]"},      {Keyboard::MENU,         "[MENU]"}
+};
+// clang-format on
 
-    // register names for non printable keys
-    this->initKey(GLFW_KEY_SPACE, "[SPACE]");
-    this->initKey(GLFW_KEY_ESCAPE, "[ESC]");
-    this->initKey(GLFW_KEY_ENTER, "[ENTER]");
-    this->initKey(GLFW_KEY_TAB, "[TAB]");
-    this->initKey(GLFW_KEY_BACKSPACE, "[BACKSPACE]");
-    this->initKey(GLFW_KEY_INSERT, "[INSERT]");
-    this->initKey(GLFW_KEY_DELETE, "[DELETE]");
-    this->initKey(GLFW_KEY_RIGHT, "[RIGHT]");
-    this->initKey(GLFW_KEY_LEFT, "[LEFT]");
-    this->initKey(GLFW_KEY_DOWN, "[DOWN]");
-    this->initKey(GLFW_KEY_UP, "[UP]");
-    this->initKey(GLFW_KEY_PAGE_UP, "[PAGE_UP]");
-    this->initKey(GLFW_KEY_PAGE_DOWN, "[PAGE_DOWN]");
-    this->initKey(GLFW_KEY_HOME, "[PAGE_HOME]");
-    this->initKey(GLFW_KEY_END, "[END]");
-    this->initKey(GLFW_KEY_CAPS_LOCK, "[CAPS_LOCK]");
-    this->initKey(GLFW_KEY_SCROLL_LOCK, "[SCROLL_LOCK]");
-    this->initKey(GLFW_KEY_NUM_LOCK, "[NUM_LOCK]");
-    this->initKey(GLFW_KEY_PRINT_SCREEN, "[PRINT]");
-    this->initKey(GLFW_KEY_PAUSE, "[PAUSE]");
-    this->initKey(GLFW_KEY_F1, "[F1]");
-    this->initKey(GLFW_KEY_F2, "[F2]");
-    this->initKey(GLFW_KEY_F3, "[F3]");
-    this->initKey(GLFW_KEY_F4, "[F4]");
-    this->initKey(GLFW_KEY_F5, "[F5]");
-    this->initKey(GLFW_KEY_F6, "[F6]");
-    this->initKey(GLFW_KEY_F7, "[F7]");
-    this->initKey(GLFW_KEY_F8, "[F8]");
-    this->initKey(GLFW_KEY_F9, "[F9]");
-    this->initKey(GLFW_KEY_F10, "[F10]");
-    this->initKey(GLFW_KEY_F11, "[F11]");
-    this->initKey(GLFW_KEY_F12, "[F12]");
-    this->initKey(GLFW_KEY_F13, "[F13]");
-    this->initKey(GLFW_KEY_F14, "[F14]");
-    this->initKey(GLFW_KEY_F15, "[F15]");
-    this->initKey(GLFW_KEY_F16, "[F16]");
-    this->initKey(GLFW_KEY_F17, "[F17]");
-    this->initKey(GLFW_KEY_F18, "[F18]");
-    this->initKey(GLFW_KEY_F19, "[F19]");
-    this->initKey(GLFW_KEY_F20, "[F20]");
-    this->initKey(GLFW_KEY_F21, "[F21]");
-    this->initKey(GLFW_KEY_F22, "[F22]");
-    this->initKey(GLFW_KEY_F23, "[F23]");
-    this->initKey(GLFW_KEY_F24, "[F24]");
-    this->initKey(GLFW_KEY_F25, "[F25]");
-    this->initKey(GLFW_KEY_KP_0, "[NUM_PAD_0]");
-    this->initKey(GLFW_KEY_KP_1, "[NUM_PAD_1]");
-    this->initKey(GLFW_KEY_KP_2, "[NUM_PAD_2]");
-    this->initKey(GLFW_KEY_KP_3, "[NUM_PAD_3]");
-    this->initKey(GLFW_KEY_KP_4, "[NUM_PAD_4]");
-    this->initKey(GLFW_KEY_KP_5, "[NUM_PAD_5]");
-    this->initKey(GLFW_KEY_KP_6, "[NUM_PAD_6]");
-    this->initKey(GLFW_KEY_KP_7, "[NUM_PAD_7]");
-    this->initKey(GLFW_KEY_KP_8, "[NUM_PAD_8]");
-    this->initKey(GLFW_KEY_KP_9, "[NUM_PAD_9]");
-    this->initKey(GLFW_KEY_KP_DECIMAL, "[NUM_PAD_DECIMAL]");
-    this->initKey(GLFW_KEY_KP_DIVIDE, "[NUM_PAD_DIVIDE]");
-    this->initKey(GLFW_KEY_KP_MULTIPLY, "[NUM_PAD_MULTIPLY]");
-    this->initKey(GLFW_KEY_KP_SUBTRACT, "[NUM_PAD_SUBTRACT]");
-    this->initKey(GLFW_KEY_KP_ADD, "[NUM_PAD_ADD]");
-    this->initKey(GLFW_KEY_KP_ENTER, "[NUM_PAD_ENTER]");
-    this->initKey(GLFW_KEY_KP_EQUAL, "[NUM_PAD_EQUAL]");
-    this->initKey(GLFW_KEY_LEFT_SHIFT, "[SHIFT]");
-    this->initKey(GLFW_KEY_LEFT_CONTROL, "[CONTROL]");
-    this->initKey(GLFW_KEY_LEFT_ALT, "[ALT]");
-    this->initKey(GLFW_KEY_RIGHT_SHIFT, "[RIGHT_SHIFT]");
-    this->initKey(GLFW_KEY_RIGHT_CONTROL, "[RIGHT_CONTROL]");
-    this->initKey(GLFW_KEY_RIGHT_ALT, "[RIGHT_ALT]");
-    this->initKey(GLFW_KEY_MENU, "[MENU]");
+Keyboard::Keyboard(EventManager& eventMgr) : InputDevice(eventMgr, "Keyboard") {
+    m_event_mgr.addHandler<KeyPressEvent>(this);
+    m_event_mgr.addHandler<KeyReleaseEvent>(this);
+
+    // register keys
+    // clang-format off
+    constexpr std::array<KeyId, 120> GLFW_KEYS{
+        SPACE, APOSTROPHE, COMMA, MINUS, PERIOD, SLASH, SEMICOLON, EQUAL,
+        _0, _1, _2, _3, _4, _5, _6, _7, _8, _9,
+        A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+        LEFT_BRACKET, BACKSLASH, RIGHT_BRACKET, GRAVE_ACCENT, 
+        ESCAPE, ENTER, TAB, BACKSPACE, INSERT, DELETE,
+        RIGHT, LEFT, DOWN, UP, PAGE_UP, PAGE_DOWN, HOME, END,
+        CAPS_LOCK, SCROLL_LOCK, NUM_LOCK, PRINT_SCREEN, PAUSE,
+        F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, F16, F17, F18, F19, F20, F21, F22, F23, F24, F25,
+        KP_0, KP_1, KP_2, KP_3, KP_4, KP_5, KP_6, KP_7, KP_8, KP_9,
+        KP_DECIMAL, KP_DIVIDE, KP_MULTIPLY, KP_SUBTRACT, KP_ADD, KP_ENTER, KP_EQUAL,
+        LEFT_SHIFT,  LEFT_CONTROL,  LEFT_ALT,  LEFT_SUPER,
+        RIGHT_SHIFT, RIGHT_CONTROL, RIGHT_ALT, RIGHT_SUPER,
+        WORLD_1, WORLD_2, MENU};
+    // clang-format on
+    for(KeyId key_id : GLFW_KEYS) { createButton(key_id, 0); }
 }
 
 Keyboard::~Keyboard() {
-    this->event_mgr.removeHandler<KeyPressEvent>(this);
-    this->event_mgr.removeHandler<KeyReleaseEvent>(this);
+    m_event_mgr.removeHandler<KeyPressEvent>(this);
+    m_event_mgr.removeHandler<KeyReleaseEvent>(this);
 }
 
-InputDeviceButton* Keyboard::getKey(int key_id, int scancode) {
-    if(key_id != GLFW_KEY_UNKNOWN) scancode = 0;
-
-    auto key = std::make_pair(key_id, scancode);
-    auto it  = this->key_mapping.find(key);
-
-    if(it != this->key_mapping.end()) return this->buttons[it->second].get();
-
-    auto index = this->buttons.size();
-
-    const char* keyName = glfwGetKeyName(key_id, scancode);
-    if(keyName != nullptr) {
-        this->buttons.push_back(std::make_unique<InputDeviceButton>(this, keyName));
+Keyboard::Key* Keyboard::getKey(KeyId key_id, Scancode scancode) {
+    if(key_id != GLFW_KEY_UNKNOWN) {
+        auto it = m_known_keys.find(key_id);
+        if(it != m_known_keys.end()) return it->second;
     } else {
-        char name[256];
-        sprintf(name, "[KEY%d]", scancode);
-        this->buttons.push_back(std::make_unique<InputDeviceButton>(this, name));
+        auto it = m_unknown_keys.find(scancode);
+        if(it != m_unknown_keys.end()) return it->second;
     }
-    this->key_mapping.emplace(key, int(index));
 
-    return this->buttons.back().get();
+    return createButton(key_id, scancode);
 }
 
-void Keyboard::handleEvent(const kernel::KeyPressEvent& event) {
-    auto key = this->getKey(event.key_id, event.scancode);
-    this->event_mgr.broadcast(InputDeviceButtonPressEvent{key});
+InputDevice::Button* Keyboard::getButton(std::string_view name) {
+    for(auto& key : m_keys) {
+        if(key.getName() == name) return &key;
+    }
+    return nullptr;
+}
+
+void Keyboard::handleEvent(KeyPressEvent const& event) {
+    auto key = this->getKey(KeyId(event.key_id), event.scancode);
+    m_event_mgr.broadcast(InputDeviceButtonPressEvent{key});
     key->setIsPressed(true);
 }
 
-void Keyboard::handleEvent(const kernel::KeyReleaseEvent& event) {
-    auto key = this->getKey(event.key_id, event.scancode);
-    this->event_mgr.broadcast(InputDeviceButtonReleaseEvent{key});
+void Keyboard::handleEvent(KeyReleaseEvent const& event) {
+    auto key = this->getKey(KeyId(event.key_id), event.scancode);
+    m_event_mgr.broadcast(InputDeviceButtonReleaseEvent{key});
     key->setIsPressed(false);
 }
 
-void Keyboard::initKey(int key_id, const std::string& name) {
-    auto key = std::make_pair(key_id, 0);
-    auto it  = this->key_mapping.find(key);
+Keyboard::Key* Keyboard::createButton(KeyId key_id, Scancode scancode) {
+    if(m_keys.size() == MAX_NUM_KEYS) {
+        log().error("Max number of Keys for Keyboard reached");
+        return nullptr;
+    }
 
-    unsigned index = unsigned(this->buttons.size());
+    char const* keyName = glfwGetKeyName(int(key_id), scancode);
 
-    this->buttons.push_back(std::make_unique<InputDeviceButton>(this, name));
-    this->key_mapping.emplace(key, index);
+    m_keys = std::span((Key*)m_Buttons, m_keys.size() + 1);
+
+    Key* key = &m_keys.back();
+
+    if(keyName != nullptr) {
+        new(key) Button(*this, keyName);
+    } else {
+        auto it = KEY_NAMES.find(key_id);
+        if(it != KEY_NAMES.end()) {
+            new(key) Button(*this, it->second);
+        } else {
+            char name[256];
+            sprintf(name, "[KEY%d]", scancode);
+            new(key) Button(*this, name);
+        }
+    }
+
+    if(key_id != GLFW_KEY_UNKNOWN) {
+        this->m_known_keys.emplace(key_id, key);
+    } else {
+        this->m_unknown_keys.emplace(scancode, key);
+    }
+    return key;
 }
 
 } // namespace bembel::kernel

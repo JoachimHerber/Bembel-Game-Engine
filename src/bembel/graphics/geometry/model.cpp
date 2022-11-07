@@ -1,64 +1,64 @@
-﻿#include "./model.hpp"
+﻿module;
+#include "bembel/pch.h"
+module bembel.graphics.geometry;
 
-#include "./mesh.hpp"
+import bembel.base;
+import bembel.kernel;
 
 namespace bembel::graphics {
+using namespace bembel::base;
+using namespace bembel::kernel;
 
 GeometryMesh* GeometryModel::getMesh() {
-    return this->mesh.get();
+    return m_mesh.getAsset();
 }
 
-const std::vector<GeometryModel::MaterialMapping>& GeometryModel::getMateialMapping() {
-    return this->material_mapping;
-}
-
-const std::string& GeometryModel::getTypeName() {
-    const static std::string type_name = "GeometryModel";
-    return type_name;
+std::vector<GeometryModel::MaterialMapping> const& GeometryModel::getMateialMapping() {
+    return m_material_mapping;
 }
 
 std::unique_ptr<GeometryModel> GeometryModel::loadAsset(
-    kernel::AssetManager& asset_mgr, const std::string& file_name) {
-    base::xml::Document doc;
-    if(doc.LoadFile(file_name.c_str()) != tinyxml2::XML_SUCCESS) {
-        BEMBEL_LOG_ERROR() << "Failed to load file '" << file_name << "'\n"
-                           << doc.ErrorName() << std::endl;
+    AssetManager& asset_mgr, std::filesystem::path file
+) {
+    std::string const file_path = file.string(); // file.c_str() returns a wchar*
+    xml::Document     doc;
+    if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
+        log().error("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
         return nullptr;
     }
 
-    const base::xml::Element* root = doc.FirstChildElement("GeometryModel");
+    xml::Element const* root = doc.FirstChildElement("GeometryModel");
     if(!root) {
-        BEMBEL_LOG_ERROR() << "File '" << file_name << "' has no root element 'GeometryModel'"
-                           << std::endl;
+        log().error("File '{}' has no root element 'GeometryModel'", file_path);
         return nullptr;
     }
     return GeometryModel::createGeometryModel(asset_mgr, root);
 }
 
 std::unique_ptr<GeometryModel> GeometryModel::createAsset(
-    kernel::AssetManager& asset_mgr, const base::xml::Element* properties) {
+    AssetManager& asset_mgr, xml::Element const* properties
+) {
     return GeometryModel::createGeometryModel(asset_mgr, properties);
 }
 
-void GeometryModel::deleteAsset(kernel::AssetManager&, std::unique_ptr<GeometryModel>) {
-}
+void GeometryModel::deleteAsset(AssetManager&, std::unique_ptr<GeometryModel>) {}
 
 std::unique_ptr<GeometryModel> GeometryModel::createGeometryModel(
-    kernel::AssetManager& asset_mgr, const base::xml::Element* properties) {
+    AssetManager& asset_mgr, xml::Element const* properties
+) {
     auto model = std::make_unique<GeometryModel>();
 
     std::string mesh;
-    base::xml::getAttribute(properties, "mesh", mesh);
-    model->mesh.request(asset_mgr, mesh);
+    xml::getAttribute(properties, "mesh", mesh);
+    model->m_mesh.request(asset_mgr, mesh);
 
-    for(const base::xml::Element* it :
-        base::xml::IterateChildElements(properties, "MaterialMapping")) {
+    for(xml::Element const* it : xml::IterateChildElements(properties, "MaterialMapping")) {
         MaterialMapping mapping;
         std::string     material;
-        if(base::xml::getAttribute(it, "material", material)
-           && base::xml::getAttribute(it, "submesh", mapping.sub_mesh)
+        if(xml::getAttribute(it, "material", material)
+           && xml::getAttribute(it, "submesh", mapping.sub_mesh)
            && mapping.material.request(asset_mgr, material)) {
-            model->material_mapping.push_back(std::move(mapping));
+            model->m_material_mapping.push_back(std::move(mapping));
         }
     }
 

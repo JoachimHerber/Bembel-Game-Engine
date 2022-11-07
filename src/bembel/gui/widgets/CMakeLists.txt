@@ -1,19 +1,30 @@
 target_sources(Bembel
-    PUBLIC
-		button-widget.hpp
-        group-widget.hpp
-		labeled-button-widget.hpp
-		label-widget.hpp
-        widget.hpp
-		widget-type-utils.hpp
-		window-widget.hpp
 	PRIVATE
+		widgets.ixx
+
+		button-widget.ixx
 		button-widget.cpp
-		group-widget.cpp
-		labeled-button-widget.cpp
+		
+		label-widget.ixx
 		label-widget.cpp
-        widget.cpp
-		widget-type-utils.cpp
+		
+		labeled-button-widget.ixx
+		labeled-button-widget.cpp
+		
+		text-input-widget.ixx
+		text-input-widget.cpp
+
+		text-widget.ixx
+		text-widget.cpp
+		
+		check-box-widget.ixx
+		check-box-widget.cpp
+
+		radio-button-widget.ixx
+		radio-button-widget.cpp
+		
+		window-widget.ixx
 		window-widget.cpp
+		
 		CMakeLists.txt
 )

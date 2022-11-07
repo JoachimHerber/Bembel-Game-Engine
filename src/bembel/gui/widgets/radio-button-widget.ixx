@@ -1,0 +1,116 @@
+module;
+#include "bembel/pch.h"
+export module bembel.gui.widgets:RadioButton;
+
+import bembel.base;
+import bembel.kernel;
+import bembel.gui.core;
+import :Label;
+
+namespace bembel::gui {
+using namespace bembel::base;
+using namespace bembel::kernel;
+
+export class RadioButtonWidget : public Widget {
+  public:
+    static constexpr std::string_view WIDGET_TYPE_NAME = "RadioButton";
+
+  public:
+    RadioButtonWidget(Widget& parent, int index);
+    ~RadioButtonWidget() = default;
+
+    virtual bool configure(xml::Element const* properties) override;
+
+    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+
+    virtual ivec2 getMinSize() const override;
+
+    void disable() {
+        m_handle.disable();
+        m_label.text_color = ColorRGBA(127, 127, 127, 255);
+        m_label.outline    = false;
+    }
+    void enable() {
+        m_handle.enable();
+        m_label.text_color.reset();
+        m_label.outline    = true;
+    }
+
+    bool isDisabled() const { return m_handle.isDisabled(); }
+    bool isHovered() const { return m_handle.isHovered(); }
+    bool isFocused() const { return m_handle.isSelected(); }
+
+    Signal<int> select_signal;
+
+    void select() {
+        if(!m_selected) select_signal.emit(m_index);
+        m_selected = true;
+    }
+    void deselect() { m_selected = false; }
+    bool isSelected() const { return m_selected; }
+
+    ObservableValue<std::string>& text    = m_label.text;
+    ObservableValue<bool>&        outline = m_label.outline;
+
+  protected:
+    void onSizeChanged(In<ivec2>, In<ivec2>);
+
+    void onAction(InteractionHandle::Action, ivec2);
+
+  private:
+    LabelWidget m_label{*this};
+
+    int  m_index;
+    bool m_selected = false;
+
+    InteractionHandle m_handle;
+};
+
+export class SimpleRadioButtonWidgetView : public Widget::View {
+  public:
+    SimpleRadioButtonWidgetView(RadioButtonWidget& widget) : m_widget{widget} {}
+    ~SimpleRadioButtonWidgetView() = default;
+
+    void draw(RenderBatchInterface& batch) override;
+
+  private:
+    RadioButtonWidget& m_widget;
+};
+
+export class RadioButtonGroupWidget : public Widget {
+  public:
+    static constexpr std::string_view WIDGET_TYPE_NAME = "RadioButtonGroup";
+
+  public:
+    RadioButtonGroupWidget(Widget& parent);
+    ~RadioButtonGroupWidget() = default;
+
+    virtual bool configure(xml::Element const* properties) override;
+
+    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+
+    virtual ivec2 getMinSize() const override;
+
+    void disableButton(size_t index) {}
+    void enableButton(size_t index) {}
+
+    void addRadioButton(In<std::string_view> lable);
+
+    int  getSelection() const;
+    void setSelection(int index);
+
+    Signal<int> selection_change_signal;
+
+  protected:
+    void onSizeChanged(In<ivec2>, In<ivec2>);
+
+  private:
+    std::vector<std::unique_ptr<RadioButtonWidget>> m_buttons;
+
+    bool m_align_horizontal = true;
+
+    int m_selection = -1;
+};
+
+
+} // namespace bembel::gui

@@ -1,36 +1,38 @@
-﻿#include "./render-queue.hpp"
+﻿module;
+#include <algorithm>
 
-#include "./mesh.hpp"
-#include "./model.hpp"
+#include "bembel/pch.h"
+module bembel.graphics.geometry;
+
+import bembel.base;
+import bembel.kernel;
 
 namespace bembel::graphics {
+using namespace bembel::base;
+using namespace bembel::kernel;
 
-GeometryRenderQueue::GeometryRenderQueue(kernel::AssetManager& asset_mgr)
-: asset_mgr{asset_mgr} {
-}
+GeometryRenderQueue::GeometryRenderQueue(AssetManager& asset_mgr) : m_asset_mgr{asset_mgr} {}
 
-GeometryRenderQueue::~GeometryRenderQueue() {
-}
+GeometryRenderQueue::~GeometryRenderQueue() {}
 
-bool GeometryRenderQueue::addGeometryObject(
-    kernel::AssetHandle modelHndl, const glm::mat4& transform) {
-    auto* model = this->asset_mgr.getAsset<GeometryModel>(modelHndl);
+bool GeometryRenderQueue::addGeometryObject(AssetHandle modelHndl, mat4 const& transform) {
+    auto* model = m_asset_mgr.getAsset<GeometryModel>(modelHndl);
     return addGeometryObject(model, transform);
 }
 
-bool GeometryRenderQueue::addGeometryObject(GeometryModel* model, const glm::mat4& transform) {
+bool GeometryRenderQueue::addGeometryObject(GeometryModel* model, mat4 const& transform) {
     if(model == nullptr) return false;
 
     auto mesh = model->getMesh();
     if(mesh == nullptr) return false;
 
-    for(const auto& mat_map : model->getMateialMapping()) {
-        Material* mat = mat_map.material.get();
+    for(auto const& mat_map : model->getMateialMapping()) {
+        Material* mat = mat_map.material.getAsset();
         if(mesh == nullptr) continue;
 
         unsigned first, count;
         if(mesh->getSubMesh(mat_map.sub_mesh, first, count)) {
-            this->render_data.push_back({mesh, mat, first, count, transform});
+            m_render_data.push_back({mesh, mat, first, count, transform});
         }
     }
     return true;
@@ -38,18 +40,19 @@ bool GeometryRenderQueue::addGeometryObject(GeometryModel* model, const glm::mat
 
 void GeometryRenderQueue::sortRenderData() {
     std::sort(
-        this->render_data.begin(),
-        this->render_data.end(),
-        [](const GeometryRenderData& r1, const GeometryRenderData& r2) {
+        m_render_data.begin(),
+        m_render_data.end(),
+        [](GeometryRenderData const& r1, GeometryRenderData const& r2) {
             if(r1.material->getRenderer() != r2.material->getRenderer())
                 return r1.material->getRenderer() < r2.material->getRenderer();
 
             return (r1.mesh != r2.mesh) ? (r1.mesh < r2.mesh) : (r1.material < r2.material);
-        });
+        }
+    );
 }
 
 void GeometryRenderQueue::clearRendarData() {
-    this->render_data.clear();
+    m_render_data.clear();
 }
 
 } // namespace bembel::graphics

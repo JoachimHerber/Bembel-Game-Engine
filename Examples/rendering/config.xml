@@ -1,6 +1,7 @@
 <Bembel>
 	<AssetDirectories>
 		<AssetDirectory directory="assets"/>
+		<AssetDirectory directory="assets/gui"/>
 		<AssetDirectory directory="assets/shader"/>
 	</AssetDirectories>
 	<Display>
@@ -11,9 +12,9 @@
 			</DisplayMode>
 			<Viewports>
 				<Viewport relativ_position="0 0" relativ_size="0.75 1"/>
-				<Viewport relativ_position="0.75 0.00000" relativ_size="0.25 0.33333"/>
-				<Viewport relativ_position="0.75 0.33333" relativ_size="0.25 0.33334"/>
-				<Viewport relativ_position="0.75 0.66667" relativ_size="0.25 0.33333"/>
+				<Viewport relativ_position="0.75 0.0000000" relativ_size="0.25 0.3333333"/>
+				<Viewport relativ_position="0.75 0.3333333" relativ_size="0.25 0.3333333"/>
+				<Viewport relativ_position="0.75 0.6666666" relativ_size="0.25 0.3333333"/>
 			</Viewports>
 		</Window>
 	</Display>
@@ -25,7 +26,7 @@
 				</GeometryRenderer>
 			</Renderer>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="1024" vertical_resolution="1024">
+				<RenderingPipeline horizontal_resolution="600" vertical_resolution="600">
 					<Textures>
 						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
 						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
@@ -67,7 +68,7 @@
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
 					</RenderingStages>
-					<Views>	
+					<Views>
 						<View texture="light"    left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="0"/>
 						<View texture="albedo"   left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="1"/>
 						<View texture="normal"   left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="2"/>
@@ -80,5 +81,16 @@
 				</RenderingPipeline>
 			</RenderingPipelines>
 		</Graphics>
+		<UserInterface>
+			<GUI name="main" window="0" viewport="0">
+				<Renderer>
+					<ShaderProgram file_name="gui.shader-program" />
+					<GuiStyle file_name="dark_gui_style.xml" />
+				</Renderer>
+				<Widgets >
+					<Label name="Label" size="500 24" position="8 8" text="Hello World" alignment="left"/>
+				</Widgets>
+			</GUI>
+		</UserInterface>
 	</Systems>
 </Bembel>

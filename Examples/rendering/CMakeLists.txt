@@ -3,9 +3,9 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
-	src/rendering-example.hpp
+	src/rendering-example.ixx
 	src/rendering-example.cpp 
-	src/camera-controle.hpp
+	src/camera-controle.ixx
 	src/camera-controle.cpp 
 )
 

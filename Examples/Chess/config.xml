@@ -1,6 +1,7 @@
 <Bembel>
 	<AssetDirectories>
 		<AssetDirectory directory="assets"/>
+		<AssetDirectory directory="assets/gui"/>
 		<AssetDirectory directory="assets/shader"/>
 	</AssetDirectories>
 	<Display>
@@ -78,5 +79,16 @@
 				</RenderingPipeline>
 			</RenderingPipelines>
 		</Graphics>
+		<UserInterface>
+			<GUI name="main" window="0" viewport="0">
+				<Renderer>
+					<ShaderProgram file_name="gui.shader-program" />
+					<GuiStyle file_name="dark_gui_style.xml" />
+				</Renderer>
+				<Widgets >
+					<Label name="Label" size="600 80" position="100 500" text="Hello World" alignment="center" outline="true" />
+				</Widgets>
+			</GUI>
+		</UserInterface>
 	</Systems>
 </Bembel>

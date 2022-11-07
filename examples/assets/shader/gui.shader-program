@@ -31,7 +31,7 @@
     }
   </Shader>
   <Shader type="GL_FRAGMENT_SHADER">
-    #version 330
+    #version 330 compatibility
 
     in      vec2 vTexCoords;
     flat in vec4 vColor;

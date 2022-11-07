@@ -1,60 +1,76 @@
-BasedOnStyle: Google
-AlignAfterOpenBracket: AlwaysBreak
-AlignConsecutiveMacros: true
-AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
+# Format Style Options - Created with Clang Power Tools
+---
+AccessModifierOffset: -2
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: Left 
+AlignConsecutiveAssignments: Consecutive 
+AlignConsecutiveBitFields: Consecutive 
+AlignConsecutiveDeclarations: Consecutive 
+AlignConsecutiveMacros: Consecutive 
 AlignEscapedNewlines: Right
-AlignOperands: true
+AlignOperands: AlignAfterOperator
 AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: InlineOnly
-AllowShortIfStatementsOnASingleLine: true
-AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments : false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+#AlwaysBreakTemplateDeclarations: MultiLine
+BasedOnStyle: Google
+BinPackArguments: false
 BinPackParameters: false
-
-BreakBeforeBraces: Custom
-BraceWrapping:
+BraceWrapping: 
+  AfterCaseLabel: false
   AfterClass: false
+  AfterControlStatement: false
   AfterEnum: false
-  AfterStruct: false
-  AfterUnion: false
   AfterFunction: false
   AfterNamespace: false
-  AfterControlStatement: false
-  SplitEmptyFunction: false
+  AfterObjCDeclaration: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
   BeforeElse: false
-
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
 BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
+BreakInheritanceList: BeforeComma
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
-BreakInheritanceList: BeforeComma
-#DanglingParenthesis: true
 ColumnLimit: 100
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
-
-ConstructorInitializerIndentWidth: 0 
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth : 2
 ContinuationIndentWidth: 4
-AccessModifierOffset: -2
-IndentWidth: 4
-
 Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
 FixNamespaceComments: true
-
 IndentCaseLabels: true
 IndentPPDirectives: AfterHash
+IndentWidth: 4
 IndentWrappedFunctionNames: true
 KeepEmptyLinesAtTheStartOfBlocks: false
 Language: Cpp
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
+PackConstructorInitializers: CurrentLine
 PointerAlignment: Left
+QualifierAlignment: Custom
+QualifierOrder: ['static', 'inline', 'constexpr', 'type', 'const']
+ReferenceAlignment: Left
+SeparateDefinitionBlocks: Leave
+#SeparateDefinitionBlocks: Always
 SortIncludes: true
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: Never
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
 UseTab: Never
+...

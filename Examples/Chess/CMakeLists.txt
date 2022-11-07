@@ -3,39 +3,43 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
-	src/chess-application.h 
-	src/chess-application.cpp 
-	src/camera-controle.h
+	src/application.ixx
+	src/application.cpp 
+	src/camera-controle.ixx
 	src/camera-controle.cpp
-	src/selection-component.h
-	src/selection-component.cpp
-	src/selection-rendering-stage.h
-	src/selection-rendering-stage.cpp
-	
-	src/chess/chess-game.h 
-	src/chess/chess-game.cpp  
-	src/chess/player.h 
-	src/chess/player.cpp 
-	src/chess/chess-piece.h 
-	src/chess/chess-piece.cpp
-	src/chess/chess-piece-type.h
-	src/chess/chess-piece-type.cpp
-	src/chess/moves/move-set.h
-	src/chess/moves/move-set.cpp
-	src/chess/moves/standard-move.h
-	src/chess/moves/standard-move.cpp
-	src/chess/moves/initial-pawn-move.h
-	src/chess/moves/initial-pawn-move.cpp
-	src/chess/game-logic/selection-pointer.h
-	src/chess/game-logic/selection-pointer.cpp
-	src/chess/game-logic/game-state.h
-	src/chess/game-logic/game-state.cpp
-	src/chess/game-logic/select-chess-piece.h
-	src/chess/game-logic/select-chess-piece.cpp
-	src/chess/game-logic/select-move.h
-	src/chess/game-logic/select-move.cpp
-	src/chess/game-logic/perform-move.h
-	src/chess/game-logic/perform-move.cpp
+	src/selection.ixx
+	src/selection.cpp
+	src/chess-board.ixx
+	src/chess-board.cpp  
+	src/game-logic.ixx
+	src/game-logic.cpp
+	src/move-animations.ixx
+	src/move-animations.cpp
+
+	#src/chess-game.h 
+	#src/chess-game.cpp  
+	#src/player.h 
+	#src/player.cpp 
+	#src/chess-piece.h 
+	#src/chess-piece.cpp
+	#src/chess-piece-type.h
+	#src/chess-piece-type.cpp
+	#src/move-set.h
+	#src/move-set.cpp
+	#src/standard-move.h
+	#src/standard-move.cpp
+	#src/initial-pawn-move.h
+	#src/initial-pawn-move.cpp
+	#src/selection-pointer.h
+	#src/selection-pointer.cpp
+	#src/game-state.h
+	#src/game-state.cpp
+	#src/select-chess-piece.h
+	#src/select-chess-piece.cpp
+	#src/select-move.h
+	#src/select-move.cpp
+	#src/perform-move.h
+	#src/perform-move.cpp
 )
 
 foreach( File ${ProjectSources} )

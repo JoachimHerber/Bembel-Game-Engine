@@ -1,6 +1,6 @@
-﻿#include "./application.hpp"
+﻿import bembel.tools.font_converter;
 
 int main() {
-  Application app;
-  app.run();
+    bembel::tools::Application app;
+    app.run();
 }

@@ -1,23 +1,27 @@
-﻿
-#include "./preview-renderer.hpp"
+﻿module;
+#include <glbinding/gl/gl.h>
 
-//#include <GLFW/glfw3.h>
+#include "bembel/pch.h"
+module bembel.tools.font_converter;
 
-#include <iostream>
+namespace bembel::tools {
+using namespace bembel::base;
+using namespace bembel::kernel;
+using namespace bembel::gui;
+using namespace ::gl;
 
-PreviewRenderer::PreviewRenderer(FontFamily* font, bembel::kernel::Texture* texture)
-: font(font)
-, texture(texture) {
-    this->text.push_back('T');
-    this->text.push_back('e');
-    this->text.push_back('s');
-    this->text.push_back('t');
+PreviewRenderer::PreviewRenderer(FontFamily* font, Texture* texture)
+  : m_font(font)
+  , m_texture(texture) {
+    m_text.push_back('T');
+    m_text.push_back('e');
+    m_text.push_back('s');
+    m_text.push_back('t');
 }
 
-PreviewRenderer::~PreviewRenderer() {
-}
+PreviewRenderer::~PreviewRenderer() {}
 
-void PreviewRenderer::draw(const glm::ivec2& viewport_position, const glm::uvec2& viewport_size) {
+void PreviewRenderer::draw(glm::ivec2 const& viewport_position, uvec2 const& viewport_size) {
     glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -37,38 +41,38 @@ void PreviewRenderer::draw(const glm::ivec2& viewport_position, const glm::uvec2
     glVertex3f(+2.f, 0.f, 0.f);
     glEnd();
 
-    this->texture->bind();
+    m_texture->bind();
 
     glEnable(GL_TEXTURE_2D);
-    this->drawGlypes();
+    drawGlypes();
     glDisable(GL_TEXTURE_2D);
 }
 
 void PreviewRenderer::drawGlypes() {
-    if(!this->font->getTextureAtlas().getRoot()) return;
+    if(!m_font->getTextureAtlas().getRoot()) return;
 
-    double scale = 1.0 / this->font->getUnitsPerEM();
+    double scale = 1.0 / m_font->getUnitsPerEM();
     glScalef(scale, scale, scale);
 
-    glm::dvec2 size = glm::dvec2(this->font->getTextureAtlas().getRoot()->getSize());
+    dvec2 size = dvec2(m_font->getTextureAtlas().getRoot()->getSize());
 
     float advance = 0;
-    for(auto c : this->text) {
-        int id = this->font->getGlypheID(c, false, false);
-        if(id != -1) { advance += this->font->getGlyphs()[id].getAdvance(); }
+    for(auto c : m_text) {
+        int id = m_font->getGlypheID(c, false, false);
+        if(id != -1) { advance += m_font->getGlyphs()[id].getAdvance(); }
     }
 
     float pos = -0.5f * advance;
-    for(auto c : this->text) {
-        int id = this->font->getGlypheID(c, false, false);
+    for(auto c : m_text) {
+        int id = m_font->getGlypheID(c, false, false);
         if(id != -1) {
-            const Glyph& glyph = this->font->getGlyphs()[id];
+            Glyph const& glyph = m_font->getGlyphs()[id];
 
-            glm::ivec2 max = glyph.getExtendsMax();
-            glm::ivec2 min = glyph.getExtendsMin();
+            ivec2 max = glyph.getExtendsMax();
+            ivec2 min = glyph.getExtendsMin();
 
-            glm::vec2 texCoordMin = glm::dvec2(glyph.getTexCoordMin()) / size;
-            glm::vec2 texCoordMax = glm::dvec2(glyph.getTexCoordMax()) / size;
+            vec2 texCoordMin = dvec2(glyph.getTexCoordMin()) / size;
+            vec2 texCoordMax = dvec2(glyph.getTexCoordMax()) / size;
 
             glColor3f(1, 1, 1);
             glBegin(GL_QUADS);
@@ -87,7 +91,9 @@ void PreviewRenderer::drawGlypes() {
     }
 }
 
-void PreviewRenderer::handleEvent(bembel::TextInputEvent& event) {
-    this->text.push_back(event.character);
-    if(this->text.size() > 7) this->text.erase(this->text.begin());
+void PreviewRenderer::handleEvent(TextInputEvent& event) {
+    m_text.push_back(event.character);
+    if(m_text.size() > 7) m_text.erase(m_text.begin());
 }
+
+} // namespace bembel::tools

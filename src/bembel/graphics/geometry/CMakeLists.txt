@@ -1,18 +1,19 @@
 target_sources(Bembel
-    PUBLIC
-        geometry.hpp
-	    material.hpp
-	    mesh.hpp
-	    model.hpp
-	    renderer.hpp
-	    render-queue.hpp
 	PRIVATE
-	    geometry.cpp
+	    material.ixx
 	    material.cpp
+	    mesh.ixx
 	    mesh.cpp
+	    model.ixx
 	    model.cpp
+		geometry.ixx
+        geometry-component.ixx
+	    geometry-component.cpp
+	    renderer.ixx
 	    renderer.cpp
+	    render-queue.ixx
 	    render-queue.cpp
+
 		CMakeLists.txt
 )
 

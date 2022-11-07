@@ -1,11 +1,18 @@
 target_sources(Bembel
-    PUBLIC
-        application.hpp
-        kernel.hpp
-		system.hpp
 	PRIVATE
-        application.cpp
-		kernel.cpp
-		system.cpp
+		core.ixx
+
+		entity.ixx
+		components.ixx
+		system.ixx
+
+		standard-components.ixx
+		
+		scene.ixx
+		scene.cpp
+        engine.ixx
+		engine.cpp
+        application.ixx
+
 		CMakeLists.txt
 )

@@ -3,7 +3,7 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
-	src/input-example.h 
+	src/input-example.ixx
 	src/input-example.cpp
 )
 source_group( "src" FILES ${ProjectSources} )

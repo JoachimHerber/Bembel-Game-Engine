@@ -1,41 +1,28 @@
-﻿#include "./renderer.hpp"
+﻿module;
+#include <glbinding/gl/gl.h>
 
-#include <bembel/kernel/rendering/texture.hpp>
+#include "bembel/pch.h"
+module bembel.graphics.geometry;
 
-#include "./mesh.hpp"
-#include "./model.hpp"
+import bembel.base;
+import bembel.kernel;
 
 namespace bembel::graphics {
+using namespace bembel::base;
+using namespace bembel::kernel;
+using namespace ::gl;
 
-DefaultGeometryRenderer::DefaultGeometryRenderer(kernel::AssetManager& asset_mgr, unsigned id)
-: GeometryRendererBase(asset_mgr, id) {
-}
-
-DefaultGeometryRenderer::~DefaultGeometryRenderer() {
-}
-
-void DefaultGeometryRenderer::addRequiredTexture(
-    const std::string& texture_name, const std::string& uniform_sampler_name) {
-    required_textures.push_back({texture_name, uniform_sampler_name});
-}
-
-bool DefaultGeometryRenderer::setShader(const kernel::Asset<kernel::ShaderProgram>& shader) {
-    if(this->updateUniformLocations(shader.get())) {
-        this->shader = shader;
-        return true;
-    }
-}
-
-bool DefaultGeometryRenderer::updateUniformLocations(kernel::ShaderProgram* shader) {
+bool DefaultGeometryRenderer::updateUniformLocations(ShaderProgram* shader) {
     if(shader == nullptr) return false;
 
-    this->material_uniform_block_index = shader->getUniformBlockIndex("Material");
-    this->material_uniform_buffer_size =
-        shader->getUniformBlockDataSize(this->material_uniform_block_index);
+    m_material_uniform_block_index = shader->getUniformBlockIndex("Material");
+    m_material_uniform_buffer_size =
+        shader->getUniformBlockDataSize(m_material_uniform_block_index);
 
     std::vector<GLint> active_uniform_indices;
     shader->getUniformBlockActiveUniformIndices(
-        this->material_uniform_block_index, &active_uniform_indices);
+        m_material_uniform_block_index, &active_uniform_indices
+    );
 
     for(GLint uniform_index : active_uniform_indices) {
         MaterialParam param;
@@ -43,14 +30,14 @@ bool DefaultGeometryRenderer::updateUniformLocations(kernel::ShaderProgram* shad
         std::string name;
         shader->getActiveUniform(uniform_index, &param.size, &param.type, &name);
 
-        this->material_params[name]       = param;
-        std::string param_name            = name.substr(name.find_last_of(".") + 1);
-        this->material_params[param_name] = param;
+        m_material_params[name]       = param;
+        std::string param_name        = name.substr(name.find_last_of(".") + 1);
+        m_material_params[param_name] = param;
     }
 
     shader->use();
-    GLuint sampler_location = 0;
-    for(const auto& it : this->required_textures) {
+    uint sampler_location = 0;
+    for(auto const& it : m_required_textures) {
         glUniform1i(shader->getUniformLocation(it.uniform_sampler_name), sampler_location);
         ++sampler_location;
     }
@@ -58,19 +45,21 @@ bool DefaultGeometryRenderer::updateUniformLocations(kernel::ShaderProgram* shad
 }
 
 void DefaultGeometryRenderer::render(
-    const glm::mat4& proj, const glm::mat4& view, const std::vector<GeometryRenderData>& data) {
-    auto shader_pointer = this->shader.get();
+    mat4 const& proj, mat4 const& view, std::vector<GeometryRenderData> const& data
+) {
+    auto shader_pointer = m_shader.getAsset();
 
     if(!shader_pointer) return;
 
     shader_pointer->use();
 
     glUniformMatrix4fv(
-        shader_pointer->getUniformLocation("uProjectionMatrix"), 1, GL_FALSE, &proj[0][0]);
+        shader_pointer->getUniformLocation("uProjectionMatrix"), 1, GL_FALSE, &proj[0][0]
+    );
 
     GeometryMesh* currentMesh     = nullptr;
     Material*     currentMaterial = nullptr;
-    for(const auto& it : data) {
+    for(auto const& it : data) {
         if(!it.mesh || !it.material) continue;
 
         if(it.mesh != currentMesh) {
@@ -82,9 +71,9 @@ void DefaultGeometryRenderer::render(
             glBindBufferBase(GL_UNIFORM_BUFFER, 0, currentMaterial->getUniformBufferObject());
 
             GLenum active_texture = GL_TEXTURE0;
-            for(const auto& texture : currentMaterial->getTextures()) {
+            for(auto const& texture : currentMaterial->getTextures()) {
                 if(!texture) {
-                    BEMBEL_LOG_WARNING() << "Texture handle is invalid";
+                    log().warning("Texture handle is invalid");
                     continue;
                 }
                 glActiveTexture(active_texture);
@@ -96,41 +85,40 @@ void DefaultGeometryRenderer::render(
         glm::mat4 modleView = view * it.transform;
 
         glUniformMatrix4fv(
-            shader_pointer->getUniformLocation("uModleViewMatrix"),
-            1,
-            GL_FALSE,
-            &(modleView[0][0]));
+            shader_pointer->getUniformLocation("uModleViewMatrix"), 1, GL_FALSE, &(modleView[0][0])
+        );
         glUniformMatrix4fv(
-            shader_pointer->getUniformLocation("uNormalMatrix"), 1, GL_FALSE, &(modleView[0][0]));
+            shader_pointer->getUniformLocation("uNormalMatrix"), 1, GL_FALSE, &(modleView[0][0])
+        );
 
         glLoadIdentity();
         glMultMatrixf(&(it.transform[0][0]));
         glDrawElements(
-            GL_TRIANGLES, it.count, GL_UNSIGNED_INT, (void*)(it.first * sizeof(unsigned)));
+            GL_TRIANGLES, it.count, GL_UNSIGNED_INT, (void*)(it.first * sizeof(unsigned))
+        );
     }
 
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     glBindVertexArray(0);
+    glUseProgram(0);
 }
 
-namespace {
-    template <typename T>
-    bool ReadMaterialParam(
-        const base::xml::Element* properties, const std::string& param_name, GLbyte* dest) {
-        T value;
-        if(base::xml::getAttribute(properties, param_name, value)) {
-            memcpy(dest, &value, sizeof(value));
-            return true;
-        }
-        return false;
+template <typename T>
+bool ReadMaterialParam(xml::Element const* properties, std::string_view param_name, byte* dest) {
+    T value;
+    if(xml::getAttribute(properties, param_name, value)) {
+        memcpy(dest, &value, sizeof(value));
+        return true;
     }
-} // namespace
+    return false;
+}
 
 bool DefaultGeometryRenderer::readMaterialParameter(
-    const base::xml::Element* properties,
-    const std::string&        param_name,
-    const MaterialParam&      param,
-    GLbyte*                   buffer) {
+    xml::Element const*  properties,
+    std::string_view     param_name,
+    MaterialParam const& param,
+    byte*                buffer
+) {
     switch(param.type) {
         case GL_FLOAT:
             return ReadMaterialParam<float>(properties, param_name, buffer + param.offset);
@@ -144,61 +132,59 @@ bool DefaultGeometryRenderer::readMaterialParameter(
     return false;
 }
 
-std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(
-    const base::xml::Element* properties) {
-    auto mat = std::make_unique<Material>(getRendererID(), this->material_uniform_buffer_size);
+std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element const* properties) {
+    auto mat = std::make_unique<Material>(getRendererID(), m_material_uniform_buffer_size);
 
-    std::vector<kernel::Asset<kernel::Texture>> textures;
-    for(auto& it : this->required_textures) {
+    std::vector<Asset<Texture>> textures;
+    for(auto& it : m_required_textures) {
         auto texture_name = properties->FirstChildElement(it.texture_name.c_str());
         if(texture_name == nullptr) {
-            BEMBEL_LOG_ERROR() << "Material does not secify a '" << it.texture_name << "' texture.";
+            log().error("Material does not secify a '{}' texture", it.texture_name);
             return nullptr;
         }
 
-        kernel::Asset<kernel::Texture> texture;
-        if(!texture.request(this->asset_mgr, texture_name)) {
-            BEMBEL_LOG_ERROR() << "Can't find reqired '" << it.texture_name
-                               << "' texture for material.";
+        Asset<Texture> texture;
+        if(!texture.request(m_asset_mgr, texture_name)) {
+            log().error("Can't find reqired '{}' texture for material", it.texture_name);
             return nullptr;
         }
         textures.push_back(std::move(texture));
     }
     mat->setTextures(std::move(textures));
 
-    std::vector<GLbyte> data;
-    data.resize(this->material_uniform_buffer_size);
-    for(auto& it : this->material_params) {
+    std::vector<byte> data;
+    data.resize(m_material_uniform_buffer_size);
+    for(auto& it : m_material_params) {
         readMaterialParameter(properties, it.first, it.second, &data[0]);
     }
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mat->getUniformBufferObject());
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, this->material_uniform_buffer_size, &data[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, m_material_uniform_buffer_size, &data[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     return std::move(mat);
 }
 
 std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer(
-    const base::xml::Element* properties, kernel::AssetManager& asset_mgr, unsigned id) {
+    xml::Element const* properties, AssetManager& asset_mgr, unsigned id
+) {
     auto shader_params = properties->FirstChildElement("ShaderProgram");
     if(shader_params == nullptr) {
-        BEMBEL_LOG_ERROR() << "Can't create DefaultGeometryRenderer: ShaderProgram "
-                              "parameter is missing";
+        log().error("Can't create DefaultGeometryRenderer: ShaderProgram parameter is missing");
         return nullptr;
     }
 
-    kernel::Asset<kernel::ShaderProgram> shader;
+    Asset<ShaderProgram> shader;
     if(!shader.request(asset_mgr, shader_params)) {
-        BEMBEL_LOG_ERROR() << "Could not load ShaderProgram for DefaultGeometryRenderer";
+        log().error("Could not load ShaderProgram for DefaultGeometryRenderer");
         return nullptr;
     }
     auto renderer = std::make_unique<DefaultGeometryRenderer>(asset_mgr, id);
 
-    for(auto it : base::xml::IterateChildElements(properties, "RequiredTexture")) {
+    for(auto it : xml::IterateChildElements(properties, "RequiredTexture")) {
         std::string texture_name, sampler_uniform;
-        base::xml::getAttribute(it, "texturen_name", texture_name);
-        base::xml::getAttribute(it, "sampler_uniform_name", sampler_uniform);
+        xml::getAttribute(it, "texturen_name", texture_name);
+        xml::getAttribute(it, "sampler_uniform_name", sampler_uniform);
 
         renderer->addRequiredTexture(texture_name, sampler_uniform);
     }

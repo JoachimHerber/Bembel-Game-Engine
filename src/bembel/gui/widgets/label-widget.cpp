@@ -1,48 +1,29 @@
-﻿#include "./label-widget.hpp"
+﻿module;
+#include "bembel/pch.h"
+module bembel.gui.widgets;
 
-#include <bembel/base/utils/utils.hpp>
-#include <bembel/kernel/assets/asset-manager.hpp>
-#include <bembel/kernel/display/cursor-icon.hpp>
-#include <bembel/kernel/rendering/text-layout.hpp>
-
-#include "../graphical-user-interface.hpp"
-#include "../rendering/style.hpp"
-#include "./widget-type-utils.hpp"
+import bembel.base;
+import bembel.kernel;
+import bembel.gui.core;
 
 namespace bembel::gui {
+using namespace bembel::base;
+using namespace bembel::kernel;
 
-const std::string LabelWidget::WIDGET_TYPE_NAME = "Label";
-
-namespace {
-    BEMBEL_STATIC_INITIALIZATION {
-        WidgetTypeUtils::registerWidgetType<LabelWidget>(LabelWidget::WIDGET_TYPE_NAME);
-    }
-} // namespace
-
-LabelWidget::LabelWidget(GraphicalUserInterface* gui, Widget* parent)
-: Widget{gui, parent}
-, text{""}
-, alignment{Alignment::Center} {
-    this->text.change_signal.addSlot(this, &LabelWidget::onTextChanged);
+LabelWidget::LabelWidget(Widget& parent) : Widget{parent}, alignment{Alignment::Center} {
+    text.change_signal.bind(this, &LabelWidget::onTextChanged);
+    m_view = std::make_unique<LabelWidget::View>(*this);
 }
 
-LabelWidget::~LabelWidget() {
-}
+bool LabelWidget::configure(base::xml::Element const* properties) {
+    Widget::configure(properties);
+    if(!properties) return true;
 
-bool LabelWidget::init() {
-    this->view = std::make_unique<LabelWidget::View>(this);
-    return true;
-}
-
-bool LabelWidget::init(const base::xml::Element* properties) {
-    glm::vec2 size;
-    if(base::xml::getAttribute(properties, "size", size)) this->size.set(size);
-
-    std::string text;
-    if(base::xml::getAttribute(properties, "text", text)) this->text = text;
+    xml::getAttribute(properties, "text", this->text);
+    xml::getAttribute(properties, "outline", this->outline);
 
     std::string alignment = "";
-    if(base::xml::getAttribute(properties, "alignment", alignment)) {
+    if(xml::getAttribute(properties, "alignment", alignment)) {
         std::transform(alignment.begin(), alignment.end(), alignment.begin(), [](char c) {
             return std::tolower(c);
         });
@@ -50,70 +31,77 @@ bool LabelWidget::init(const base::xml::Element* properties) {
         if(alignment == "right") this->alignment = Alignment::Right;
     }
 
-    this->view = std::make_unique<LabelWidget::View>(this);
+    m_view = std::make_unique<LabelWidget::View>(*this);
     return true;
 }
 
-const std::string& LabelWidget::getWidgetTypeName() const {
-    return WIDGET_TYPE_NAME;
-}
-
-void LabelWidget::onTextChanged(const std::string&, const std::string& new_text) {
+void LabelWidget::onTextChanged(std::string const&, std::string const& new_text) {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
 
-    this->glyphs.clear();
-    this->text_length   = 0;
+    m_glyphs.clear();
+    m_text_length       = 0;
     unsigned prev_index = kernel::Font::INVALIDE_GLYPH_INDEX;
-    for(char32_t c : kernel::UTF8TextIterator(new_text)) {
+    for(char32_t c : Utf8Decoder(new_text)) {
         unsigned index = font->getGlyphIndex(c, false, false);
         if(index == kernel::Font::INVALIDE_GLYPH_INDEX) continue;
 
         if(prev_index != kernel::Font::INVALIDE_GLYPH_INDEX) {
-            this->text_length += font->getKernig(prev_index, index);
+            m_text_length += font->getKernig(prev_index, index);
         }
-        this->glyphs.push_back({index, this->text_length});
+        if(c != ' ') m_glyphs.emplace_back(index, m_text_length);
 
-        this->text_length += font->getAdvance(index);
+        m_text_length += font->getAdvance(index);
         prev_index = index;
     }
 }
 
-LabelWidget::View::View(LabelWidget* label)
-: label{label} {
-}
-
 void LabelWidget::View::draw(RenderBatchInterface& batch) {
-    auto style = this->label->getStyle();
+    auto style = m_label.getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
 
     float border = 3;
 
-    glm::vec2 size = this->label->size.get();
+    glm::vec2 size = m_label.size.get();
 
-    float line_heith = font->getAscender() - font->getDescender();
-    float scale      = std::min(size.x / this->label->text_length, size.y / line_heith);
+    float outline_margin = m_label.outline.get() ? 0.25 : 0;
+    float text_length    = m_label.m_text_length + outline_margin;
+    float line_heigth    = font->getAscender() - font->getDescender() + outline_margin;
+    float scale          = std::min(size.x / text_length, size.y / line_heigth);
 
-    batch.setColor(style->getColor(Style::Colors::TEXT));
-
-    glm::vec2 pos = glm::vec2(this->label->position.get());
-    switch(this->label->alignment.get()) {
+    glm::vec2 pos = glm::vec2(m_label.position.get());
+    switch(m_label.alignment.get()) {
         case LabelWidget::Alignment::Center:
-            pos.x += 0.5f * (size.x - scale * this->label->text_length);
+            pos.x += 0.5f * (size.x - scale * m_label.m_text_length);
             break;
-        case LabelWidget::Alignment::Right:
-            pos.x += size.x - scale * this->label->text_length;
-            break;
+        case LabelWidget::Alignment::Right: pos.x += size.x - scale * m_label.m_text_length; break;
     }
     pos.y +=
-        0.5f * size.y - scale * (0.5 * line_heith + font->getDescender()); // center text verticaly
+        0.5f * size.y - scale * (0.5 * line_heigth + font->getDescender()); // center text verticaly
 
-    for(const auto& it : this->label->glyphs) {
-        const auto& glyph = font->getGlypData(it.index);
+    if(m_label.outline.get()) {
+        batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
+        for(auto const& it : m_label.m_glyphs) {
+            auto const& glyph = font->getGlypData(it.index);
+
+            glm::vec2 p = pos;
+            p.x += scale * it.x;
+            batch.drawGlyph(glyph, p, scale, 0.20f, 0.30f);
+        }
+    }
+
+    if(m_label.text_color.has_value()) {
+        batch.setColor(m_label.text_color.value());
+    } else {
+        batch.setColor(style->getColor(Style::Colors::TEXT));
+    }
+
+    for(auto const& it : m_label.m_glyphs) {
+        auto const& glyph = font->getGlypData(it.index);
 
         glm::vec2 p = pos;
         p.x += scale * it.x;

@@ -1,4 +1,4 @@
-﻿#include "rendering-example.hpp"
+﻿import bembel.examples.rendering;
 
 int main() {
     bembel::RenderingExample app;

@@ -1,7 +1,6 @@
+import bembel.examples.gui;
 
-#include "gui-example.h"
-int main ()
-{
-	bembel::GUIExample example;
-	example.run();
+int main() {
+    bembel::GuiExample example;
+    example.run();
 }

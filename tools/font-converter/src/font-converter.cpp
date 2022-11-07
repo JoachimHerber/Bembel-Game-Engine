@@ -1,35 +1,53 @@
-﻿#include "./font-converter.hpp"
+﻿module;
+#include "bembel/pch.h"
+//
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_IMAGE_H
+module bembel.tools.font_converter;
+
+namespace bembel::tools {
+using namespace bembel::base;
+using namespace bembel::kernel;
+using namespace bembel::gui;
 
 FontConverter::FontConverter() {
-    FT_Init_FreeType(&this->library);
-
-    for(char32_t c = 0; c < 256; ++c) this->characters.push_back(c);
+    FT_Init_FreeType(&m_library);
 }
 
-FontConverter::~FontConverter() {
-}
+FontConverter::~FontConverter() {}
 
-bool FontConverter::loade(const std::vector<std::string>& files) {
-    for(auto& fileName : files) {
-        FT_Face face;
+bool FontConverter::loade(In<std::filesystem::path> path) {
+    FT_Face face;
 
-        auto error = FT_New_Face(this->library, fileName.c_str(), 0, &face);
-        if(error) {
-            BEMBEL_LOG_ERROR() << "Failed to load TypeFace : '" << fileName << "'";
-            continue;
-        }
+    std::string path_str = path.string();
 
-        auto it = this->fonts.find(face->family_name);
-        if(it != this->fonts.end()) {
-            it->second->addFace(face);
-        } else {
-            auto font = std::make_unique<FontFamily>(face->family_name, face->units_per_EM);
-            font->addFace(face);
-            this->fonts.emplace(face->family_name, std::move(font));
-        }
+    auto error = FT_New_Face(m_library, path_str.c_str(), 0, &face);
+    if(error) {
+        log().error("Failed to load TypeFace : '{}'", path_str);
+        return false;
     }
 
-    for(const auto& it : this->fonts) it.second->parseGlypes(this->characters);
+    auto it = m_font_dictionary.find(face->family_name);
+    if(it != m_font_dictionary.end()) {
+        it->second->addFace(face);
+    } else {
+        auto font = std::make_unique<FontFamily>(face->family_name, face->units_per_EM);
+        font->addFace(face);
+        m_font_dictionary.emplace(face->family_name, font.get());
+        m_fonts.push_back(std::move(font));
+        font_family_added_signal.emit(face->family_name);
+    }
+    return true;
+}
+
+bool FontConverter::parseGlypes() {
+    std::vector<char32_t> characters{
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+        's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+    //for(auto const& it : m_fonts) it.second->parseGlypes(characters);
 
     return true;
 }
@@ -123,3 +141,4 @@ void Font::SaveKening(jhl::xml::Element* root, const KerningMap& kerning) {
   }
 }
 /*/
+} // namespace bembel::tools

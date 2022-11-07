@@ -1,131 +1,186 @@
-﻿#include "./graphic-system.hpp"
+﻿module;
+#include "bembel/pch.h"
+module bembel.graphics;
 
-#include <bembel/base/io/xml.hpp>
-#include <bembel/base/logging/logger.hpp>
-#include <bembel/kernel/assets/asset-manager.hpp>
-#include <bembel/kernel/core/kernel.hpp>
-#include <bembel/kernel/display/display-manager.hpp>
-#include <bembel/kernel/display/window.hpp>
-#include <bembel/kernel/events/display-events.hpp>
-#include <bembel/kernel/open-gl.hpp>
-#include <bembel/kernel/rendering/shader.hpp>
-
-#include "./geometry/material.hpp"
-#include "./geometry/mesh.hpp"
-#include "./geometry/model.hpp"
-#include "./geometry/renderer.hpp"
-#include "./rendering-pipeline/deferred-lighting-stage.hpp"
-#include "./rendering-pipeline/environment-map-reflection-stage.hpp"
-#include "./rendering-pipeline/geometry-rendering-stage.hpp"
-#include "./rendering-pipeline/rendering-pipeline.hpp"
-#include "./texture-view.hpp"
+import bembel.base;
+import bembel.kernel;
+import bembel.graphics.geometry;
+import bembel.graphics.pipeline;
 
 namespace bembel::graphics {
+using namespace bembel::base;
+using namespace bembel::kernel;
 
-GraphicSystem::GraphicSystem(kernel::Kernel& kernel)
-: System(kernel, "Graphics")
-, geometry_render_queue{kernel.getAssetManager()} {
-    auto& asset_mgr = this->kernel.getAssetManager();
-    asset_mgr.registerAssetType<Material>(this);
+class MaterialLoader final : public AssetLoaderBase {
+  public:
+    using ContainerType = AssetContainer<Material>;
+
+    MaterialLoader(AssetManager& asset_mgr, ContainerType* container, GraphicSystem* graphic_system)
+      : m_graphic_system(graphic_system)
+      , m_asset_mgr(asset_mgr)
+      , m_container(container) {}
+    virtual ~MaterialLoader() = default;
+
+    AssetHandle requestAsset(std::string_view filename) override {
+        kernel::AssetHandle handle = m_container->getAssetHandle(filename);
+
+        if(!m_container->isHandelValid(handle)) {
+            // we have to load the asset
+            std::unique_ptr<Material> asset = nullptr;
+            // Material::LoadAsset( _assetMgr, fileName );
+            if(!asset) return kernel::AssetHandle();
+
+            handle = m_container->addAsset(std::move(asset));
+            m_container->incrementAssetRefCount(handle);
+            m_container->registerAssetAlias(handle, filename);
+        }
+
+        m_container->incrementAssetRefCount(handle);
+        return handle;
+    }
+
+    AssetHandle requestAsset(xml::Element const* properties) override {
+        std::string name = "";
+        if(!xml::getAttribute(properties, "name", name)) return AssetHandle();
+
+        AssetHandle handle = m_container->getAssetHandle(name);
+        if(!m_container->isHandelValid(handle)) {
+            std::string renderer_name;
+            xml::getAttribute(properties, "renderer", renderer_name);
+            auto renderer = m_graphic_system->getRenderer(renderer_name);
+            if(!renderer) return AssetHandle();
+
+            // we have to load the asset
+            std::unique_ptr<Material> asset = renderer->createMaterial(properties);
+            if(!asset) return AssetHandle();
+
+            handle = m_container->addAsset(std::move(asset));
+            m_container->registerAssetAlias(handle, name);
+        }
+
+        m_container->incrementAssetRefCount(handle);
+        return handle;
+    }
+    bool releaseAsset(AssetHandle asset_handel) override {
+        if(m_container->isHandelValid(asset_handel)) {
+            m_container->decrementAssetRefCount(asset_handel);
+            if(m_container->getAssetRefCount(asset_handel) == 0) {
+                auto mat = m_container->removeAsset(asset_handel);
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void deleteUnusedAssets() override {
+        std::vector<AssetHandle> unusedAssets;
+        m_container->getUnusedAssets(unusedAssets);
+        for(auto hndl : unusedAssets) { auto mat = m_container->removeAsset(hndl); }
+    }
+
+  private:
+    GraphicSystem* m_graphic_system;
+    AssetManager&  m_asset_mgr;
+    ContainerType* m_container;
+};
+
+GraphicSystem::GraphicSystem(Engine& engine)
+  : System("Graphics")
+  , m_engine{engine}
+  , m_geometry_render_queue{engine.getAssetManager()} {
+    auto& asset_mgr = engine.getAssetManager();
+    asset_mgr.registerAssetType<Material, MaterialLoader>(this);
     asset_mgr.registerAssetType<GeometryMesh>();
     asset_mgr.registerAssetType<GeometryModel>();
-    asset_mgr.registerAssetType<kernel::Shader>();
-    asset_mgr.registerAssetType<kernel::ShaderProgram>();
+    asset_mgr.registerAssetType<Shader>();
+    asset_mgr.registerAssetType<ShaderProgram>();
 
-    this->rendering_stage_factory.registerDefaultObjectGenerator<GeometryRenderingStage>(
-        "DeferredGeometryStage");
-    this->rendering_stage_factory.registerDefaultObjectGenerator<DeferredLightingStage>(
-        "DeferredLightingStage");
-    this->rendering_stage_factory.registerDefaultObjectGenerator<EnvironmentMapReflectionStage>(
-        "EnvironmentMapReflectionStage");
+    using Stage = RenderingPipeline::Stage;
+    Stage::registerStageType<GeometryRenderingStage>("DeferredGeometryStage");
+    Stage::registerStageType<DeferredLightingStage>("DeferredLightingStage");
+    Stage::registerStageType<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
 }
 GraphicSystem::~GraphicSystem() {
-    // this->kernel.getEventManager().removeHandler<kernel::WindowUpdateEvent>(this);
-    // this->kernel.getEventManager().removeHandler<kernel::FrameBufferResizeEvent>(this);
+    m_engine.getEventManager().removeHandler<WindowUpdateEvent>(this);
+    m_engine.getEventManager().removeHandler<FrameBufferResizeEvent>(this);
 }
 
 RenderingPipeline* GraphicSystem::createRenderingPipline() {
-    this->pipelines.push_back(std::make_unique<RenderingPipeline>(*this));
-    return this->pipelines.back().get();
+    m_pipelines.push_back(std::make_unique<RenderingPipeline>(
+        m_engine.getAssetManager(), m_engine.getDisplayManager()
+    ));
+    return m_pipelines.back().get();
 }
 
-const std::vector<std::shared_ptr<RenderingPipeline>>& GraphicSystem::getRenderingPipelines() {
-    return this->pipelines;
+std::vector<std::shared_ptr<RenderingPipeline>> const& GraphicSystem::getRenderingPipelines() {
+    return m_pipelines;
 }
 
-const std::vector<std::shared_ptr<GeometryRendererBase>>& GraphicSystem::getRenderer() const {
-    return this->renderer;
+std::vector<std::shared_ptr<GeometryRendererBase>> const& GraphicSystem::getRenderer() const {
+    return m_renderer;
 }
 
-GeometryRendererBase* GraphicSystem::getRenderer(const std::string& name) const {
-    auto it = this->renderer_map.find(name);
-    if(it != this->renderer_map.end())
-        return this->renderer[it->second].get();
+GeometryRendererBase* GraphicSystem::getRenderer(std::string_view name) const {
+    auto it = m_renderer_map.find(name);
+    if(it != m_renderer_map.end())
+        return m_renderer[it->second].get();
     else
         return nullptr;
 }
 
-GraphicSystem::RendertingStageFactory& GraphicSystem::getRendertingStageFactory() {
-    return this->rendering_stage_factory;
-}
-
-GeometryRenderQueue& GraphicSystem::getGeometryRenderQueue() {
-    return this->geometry_render_queue;
-}
-
-bool GraphicSystem::configure(const base::xml::Element* properties) {
+bool GraphicSystem::configure(xml::Element const* properties) {
     if(!properties) return false;
 
-    this->configureRenderer(properties->FirstChildElement("Renderer"));
-    this->configurePipelines(properties->FirstChildElement("RenderingPipelines"));
-    this->kernel.getEventManager().broadcast(InitGraphicResourcesEvent{});
+    configureRenderer(properties->FirstChildElement("Renderer"));
+    configurePipelines(properties->FirstChildElement("RenderingPipelines"));
+    m_engine.getEventManager().broadcast(InitGraphicResourcesEvent{});
     return true;
 }
 
 bool GraphicSystem::init() {
-    for(auto& pipline : this->pipelines) pipline->init();
+    for(auto& pipline : m_pipelines) pipline->init();
 
-    this->kernel.getEventManager().broadcast(InitGraphicResourcesEvent{});
+    m_engine.getEventManager().broadcast(InitGraphicResourcesEvent{});
     return true;
 }
 
 void GraphicSystem::shutdown() {
-    this->pipelines.clear();
-    this->kernel.getEventManager().broadcast(CleanuptGraphicResourcesEvent{});
+    m_pipelines.clear();
+    m_engine.getEventManager().broadcast(CleanuptGraphicResourcesEvent{});
 }
 
 void GraphicSystem::update(double) {
-    for(auto& pipline : this->pipelines) pipline->update();
+    for(auto& pipline : m_pipelines) pipline->update(m_geometry_render_queue, m_renderer);
 }
 
-void GraphicSystem::configureRenderer(const base::xml::Element* properties) {
+void GraphicSystem::configureRenderer(xml::Element const* properties) {
     if(!properties) return;
 
-    for(auto renderer_properties : base::xml::IterateChildElements(properties)) {
+    for(auto renderer_properties : xml::IterateChildElements(properties)) {
         RendererPtr renderer = DefaultGeometryRenderer::createRenderer(
-            renderer_properties,
-            this->kernel.getAssetManager(),
-            unsigned int(this->renderer.size()));
+            renderer_properties, m_engine.getAssetManager(), uint(m_renderer.size())
+        );
 
         if(renderer) {
             std::string name;
-            if(base::xml::getAttribute(renderer_properties, "name", name))
-                this->renderer_map.emplace(name, this->renderer.size());
+            if(xml::getAttribute(renderer_properties, "name", name))
+                m_renderer_map.emplace(name, m_renderer.size());
 
-            this->renderer.push_back(std::move(renderer));
+            m_renderer.push_back(std::move(renderer));
         }
     }
 }
-
-void GraphicSystem::configurePipelines(const base::xml::Element* properties) {
+void GraphicSystem::configurePipelines(xml::Element const* properties) {
     if(!properties) return;
 
-    for(auto pipeline_properties :
-        base::xml::IterateChildElements(properties, "RenderingPipeline")) {
-        auto pipline = std::make_unique<RenderingPipeline>(*this);
+    for(auto pipeline_properties : xml::IterateChildElements(properties, "RenderingPipeline")) {
+        auto pipline = std::make_unique<RenderingPipeline>(
+            m_engine.getAssetManager(), m_engine.getDisplayManager()
+        );
         if(!pipline->configure(pipeline_properties)) pipline.reset();
 
-        this->pipelines.push_back(std::move(pipline));
+        m_pipelines.push_back(std::move(pipline));
     }
 }
 

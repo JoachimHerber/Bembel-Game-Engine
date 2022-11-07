@@ -1,6 +1,6 @@
-﻿#include "chess-application.h"
+﻿import bembel.examples.chess;
 
 int main() {
-  ChessApplication app;
-  app.run();
+    bembel::examples::chess::Application app;
+    app.run();
 }

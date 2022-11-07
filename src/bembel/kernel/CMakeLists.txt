@@ -1,14 +1,11 @@
 target_sources(Bembel
-    PUBLIC
-        kernel.hpp
-        open-gl.hpp
 	PRIVATE
+        kernel.ixx
+
 		CMakeLists.txt
 )
 add_subdirectory(assets)
-add_subdirectory(core)
 add_subdirectory(display)
-add_subdirectory(events)
-add_subdirectory(rendering)
-add_subdirectory(scene)
 add_subdirectory(input)
+add_subdirectory(core)
+add_subdirectory(rendering)

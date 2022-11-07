@@ -1,99 +1,89 @@
-﻿#include "./frame-buffer-object.hpp"
+﻿module;
+#include <glbinding/gl/gl.h>
+module bembel.kernel.rendering;
 
-#include "./texture.hpp"
+import bembel.base;
+
+import : FBO;
 
 namespace bembel::kernel {
+using namespace bembel::base;
+using namespace ::gl;
 
-FrameBufferObject::FrameBufferObject()
-: handle(0)
-, depth_attechment{nullptr, 0} {
-}
-
-FrameBufferObject::~FrameBufferObject() {
-    cleanup();
-}
-
-void FrameBufferObject::init() {
-    glGenFramebuffers(1, &(this->handle));
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->handle);
-    if(this->depth_attechment.texture) {
-        glFramebufferTexture2D(
-            GL_DRAW_FRAMEBUFFER,
-            GL_DEPTH_ATTACHMENT,
-            this->depth_attechment.texture->getTextureTarget(),
-            this->depth_attechment.texture->getTextureHandle(),
-            this->depth_attechment.level);
-    }
-    for(unsigned n = 0; n < this->color_attechments.size(); ++n) {
-        if(this->color_attechments[n].texture) {
+namespace gl {
+    inline void setFramebufferTexture2D(GLenum attachment, Texture* texture, int level) {
+        if(texture) {
             glFramebufferTexture2D(
                 GL_DRAW_FRAMEBUFFER,
-                GL_COLOR_ATTACHMENT0 + n,
-                this->color_attechments[n].texture->getTextureTarget(),
-                this->color_attechments[n].texture->getTextureHandle(),
-                this->color_attechments[n].level);
+                attachment,
+                static_cast<GLenum>(texture->getTextureTarget()),
+                texture->getTextureHandle(),
+                level);
         }
+    }
+} // namespace gl
+
+FrameBufferObject::FrameBufferObject() : m_depth_attechment{nullptr, 0} {}
+
+FrameBufferObject::~FrameBufferObject() { cleanup(); }
+
+void FrameBufferObject::init() {
+    glGenFramebuffers(1, &(m_handle));
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_handle);
+    gl::setFramebufferTexture2D(GL_DEPTH_ATTACHMENT, m_depth_attechment.texture, m_depth_attechment.level);
+    for(unsigned n = 0; n < m_color_attechments.size(); ++n) {
+        gl::setFramebufferTexture2D(
+            GL_COLOR_ATTACHMENT0 + n, m_color_attechments[n].texture, m_color_attechments[n].level);
     }
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 void FrameBufferObject::cleanup() {
-    if(this->handle != 0) {
-        glDeleteFramebuffers(1, &(this->handle));
-        this->handle = 0;
+    if(m_handle != 0) {
+        glDeleteFramebuffers(1, &m_handle);
+        m_handle = 0;
     }
 }
 
 void FrameBufferObject::removeAllAttechments() {
     setDepthAttechment(nullptr);
-    for(unsigned n = 0; n < this->color_attechments.size(); ++n) setColorAttechment(n, nullptr);
+    for(unsigned n = 0; n < m_color_attechments.size(); ++n) setColorAttechment(n, nullptr);
 }
 
 void FrameBufferObject::setDepthAttechment(Texture* texture, GLint level /*= 0*/) {
-    this->depth_attechment.texture = texture;
-    this->depth_attechment.level   = level;
+    m_depth_attechment.texture = texture;
+    m_depth_attechment.level   = level;
 
-    if(this->handle != 0) {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->handle);
-        glFramebufferTexture2D(
-            GL_DRAW_FRAMEBUFFER,
-            GL_DEPTH_ATTACHMENT,
-            texture->getTextureTarget(),
-            texture->getTextureHandle(),
-            level);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->handle);
+    if(m_handle != 0) {
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_handle);
+        gl::setFramebufferTexture2D(GL_DEPTH_ATTACHMENT, texture, level);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
 }
 
 void FrameBufferObject::setColorAttechment(unsigned index, Texture* texture, GLint level /*= 0*/) {
-    while(this->color_attechments.size() <= index)
-        this->color_attechments.push_back(Attechment{nullptr, 0});
+    while(m_color_attechments.size() <= index) m_color_attechments.push_back(Attechment{nullptr, 0});
 
-    this->color_attechments[index].texture = texture;
-    this->color_attechments[index].level   = level;
+    m_color_attechments[index].texture = texture;
+    m_color_attechments[index].level   = level;
 
-    if(this->handle != 0) {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->handle);
-        glFramebufferTexture2D(
-            GL_DRAW_FRAMEBUFFER,
-            GL_COLOR_ATTACHMENT0 + index,
-            texture->getTextureTarget(),
-            texture->getTextureHandle(),
-            level);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->handle);
+    if(m_handle != 0) {
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_handle);
+        gl::setFramebufferTexture2D(GL_COLOR_ATTACHMENT0 + index, texture, level);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
 }
 
 void FrameBufferObject::beginRenderToTexture() {
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->handle);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_handle);
 
     GLenum status;
     status = glCheckFramebufferStatusEXT(GL_DRAW_FRAMEBUFFER);
 
     std::vector<GLenum> draw_buffers;
-    for(unsigned n = 0; n < this->color_attechments.size(); ++n) {
-        if(this->color_attechments[n].texture) draw_buffers.push_back(GL_COLOR_ATTACHMENT0 + n);
+    for(unsigned n = 0; n < m_color_attechments.size(); ++n) {
+        if(m_color_attechments[n].texture) draw_buffers.push_back(GL_COLOR_ATTACHMENT0 + n);
     }
 
     glDrawBuffers(GLsizei(draw_buffers.size()), &draw_buffers[0]);
@@ -109,7 +99,7 @@ void FrameBufferObject::blitToBackBuffer(
     const glm::ivec2& source_max,
     const glm::ivec2& target_min,
     const glm::ivec2& target_max) {
-    glBindFramebufferEXT(GL_READ_FRAMEBUFFER, this->handle);
+    glBindFramebufferEXT(GL_READ_FRAMEBUFFER, m_handle);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
     glBlitFramebufferEXT(

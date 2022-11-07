@@ -1,130 +1,87 @@
-﻿#include "./display-mode.hpp"
+﻿module;
+#include "bembel/pch.h"
+module bembel.kernel.display;
 
-#include <GLFW/glfw3.h>
+import bembel.base;
 
 namespace bembel::kernel {
+using namespace bembel::base;
 
-int WindowDisplayMode::getWidth() const {
-    return this->width;
-}
-void WindowDisplayMode::setWidth(int value) {
-    this->width = value;
-}
-
-int WindowDisplayMode::getHeight() const {
-    return this->height;
-}
-void WindowDisplayMode::setHeight(int value) {
-    this->height = value;
+Factory<DisplayModeBase>& DisplayModeBase::getFactory() {
+    static Factory<DisplayModeBase> factory;
+    return factory;
 }
 
-bool WindowDisplayMode::getIsResizable() const {
-    return this->resizable;
-}
-void WindowDisplayMode::setIsResizable(bool value) {
-    this->resizable = value;
+bool WindowDisplayMode::configure(xml::Element const* properties) {
+    using namespace base::xml;
+
+    getAttribute(properties, "Size", "width", m_width);
+    getAttribute(properties, "Size", "height", m_height);
+    getAttribute(properties, "resizable", m_resizable);
+    if(getAttribute(properties, "SizeLimit", "min_width", m_min_size.x)
+       && getAttribute(properties, "SizeLimit", "min_height", m_min_size.y)
+       && getAttribute(properties, "SizeLimit", "max_width", m_min_size.x)
+       && getAttribute(properties, "SizeLimit", "max_height", m_min_size.y)) {
+        m_limit_size = true;
+    }
+    getAttribute(properties, "AspectRatio", "numerator", m_aspect_ratio_numer);
+    getAttribute(properties, "AspectRatio", "denominator", m_aspect_ratio_denom);
+
+    return true;
 }
 
-GLFWwindow* WindowDisplayMode::creatWindow(const std::string& title, GLFWwindow* shared_context) {
+GLFWwindow* WindowDisplayMode::creatWindow(std::string_view title, GLFWwindow* shared_context) {
     glfwDefaultWindowHints();
-
-    glfwWindowHint(GLFW_RESIZABLE, this->resizable);
+    // GLFWwindow
+    glfwWindowHint(GLFW_RESIZABLE, m_resizable);
     glfwWindowHint(GLFW_SRGB_CAPABLE, true);
 
+    std::string title_str{title};
     GLFWwindow* window =
-        glfwCreateWindow(this->width, this->height, title.c_str(), nullptr, shared_context);
+        glfwCreateWindow(m_width, m_height, title_str.c_str(), nullptr, shared_context);
 
-    if(this->limit_size) {
-        glfwSetWindowSizeLimits(
-            window, this->min_size.x, this->min_size.y, this->max_size.x, this->max_size.y);
+    if(m_limit_size) {
+        glfwSetWindowSizeLimits(window, m_min_size.x, m_min_size.y, m_max_size.x, m_max_size.y);
     }
 
-    if(this->aspect_ratio_numer != 0 && this->aspect_ratio_denom != 0) {
-        glfwSetWindowAspectRatio(window, this->aspect_ratio_numer, this->aspect_ratio_denom);
+    if(m_aspect_ratio_numer != 0 && m_aspect_ratio_denom != 0) {
+        glfwSetWindowAspectRatio(window, m_aspect_ratio_numer, m_aspect_ratio_denom);
     }
 
     return window;
 }
-
-std::unique_ptr<WindowDisplayMode> WindowDisplayMode::createInstance(
-    const base::xml::Element* properties) {
-    auto mode = std::make_unique<WindowDisplayMode>();
-
-    using namespace base::xml;
-
-    getAttribute(properties, "Size", "width", mode->width);
-    getAttribute(properties, "Size", "height", mode->height);
-    getAttribute(properties, "resizable", mode->resizable);
-    if(getAttribute(properties, "SizeLimit", "min_width", mode->min_size.x)
-       && getAttribute(properties, "SizeLimit", "min_height", mode->min_size.y)
-       && getAttribute(properties, "SizeLimit", "max_width", mode->min_size.x)
-       && getAttribute(properties, "SizeLimit", "max_height", mode->min_size.y)) {
-        mode->limit_size = true;
-    }
-    getAttribute(properties, "AspectRatio", "numerator", mode->aspect_ratio_numer);
-    getAttribute(properties, "AspectRatio", "denominator", mode->aspect_ratio_denom);
-
-    return std::move(mode);
-}
-
-const std::string& WindowDisplayMode::getTypeName() {
-    const static std::string type_name = "WindowDisplayMode";
-    return type_name;
-}
+bool WindowDisplayMode::registerd =
+    DisplayModeBase::getFactory().registerObjectGenerator<WindowDisplayMode>("Windowed");
 
 FullscreenDisplayMode::FullscreenDisplayMode() {
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    GLFWvidmode const* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    this->resolution.x = mode->width;
-    this->resolution.y = mode->height;
+    m_resolution.x = mode->width;
+    m_resolution.y = mode->height;
 
-    this->refresh_rate = mode->refreshRate;
+    m_refresh_rate = mode->refreshRate;
 }
 
-glm::ivec2 FullscreenDisplayMode::getResolution() const {
-    return this->resolution;
-}
-
-void FullscreenDisplayMode::setResolution(glm::ivec2 val) {
-    this->resolution = val;
-}
-
-int FullscreenDisplayMode::getRefreshRate() const {
-    return this->refresh_rate;
-}
-
-void FullscreenDisplayMode::setRefreshRate(int val) {
-    this->refresh_rate = val;
-}
-
-GLFWwindow* FullscreenDisplayMode::creatWindow(
-    const std::string& title, GLFWwindow* shared_context) {
+GLFWwindow* FullscreenDisplayMode::creatWindow(std::string_view title, GLFWwindow* shared_context) {
     glfwDefaultWindowHints();
 
     glfwWindowHint(GLFW_RED_BITS, 8);
     glfwWindowHint(GLFW_GREEN_BITS, 8);
     glfwWindowHint(GLFW_BLUE_BITS, 8);
     glfwWindowHint(GLFW_ALPHA_BITS, 8);
-    glfwWindowHint(GLFW_REFRESH_RATE, this->refresh_rate);
+    glfwWindowHint(GLFW_REFRESH_RATE, m_refresh_rate);
 
+    std::string title_str{title};
     return glfwCreateWindow(
-        this->resolution.x,
-        this->resolution.y,
-        title.c_str(),
-        glfwGetPrimaryMonitor(),
-        shared_context);
+        m_resolution.x, m_resolution.y, title_str.c_str(), glfwGetPrimaryMonitor(), shared_context
+    );
 }
 
-std::unique_ptr<FullscreenDisplayMode> FullscreenDisplayMode::createInstance(
-    const base::xml::Element* properties) {
-    auto mode = std::make_unique<FullscreenDisplayMode>();
-
-    return std::move(mode);
+bool FullscreenDisplayMode::configure(xml::Element const*) {
+    return true;
 }
 
-const std::string& FullscreenDisplayMode::getTypeName() {
-    const static std::string type_name = "FullscreenDisplayMode";
-    return type_name;
-}
+bool FullscreenDisplayMode::registerd =
+    DisplayModeBase::getFactory().registerObjectGenerator<FullscreenDisplayMode>("Fullscreen");
 
 } // namespace bembel::kernel

@@ -1,41 +1,49 @@
-﻿#include "./font-family.hpp"
+﻿module;
+#include "bembel/pch.h"
+//
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_IMAGE_H
+module bembel.tools.font_converter;
 
-#include <limits>
+namespace bembel::tools {
+using namespace bembel::base;
+using namespace bembel::kernel;
+using namespace bembel::gui;
 
-FontFamily::FontFamily(const std::string& name, unsigned int units_per_EM)
-: name{name}
-, units_per_EM{units_per_EM} {
-}
+FontFamily::FontFamily(std::string_view name, unsigned int units_per_EM)
+  : m_name{name}
+  , m_units_per_EM{units_per_EM} {}
 
-bool FontFamily::addFace(const FT_Face& face) {
+bool FontFamily::addFace(FT_Face const& face) {
     FT_Set_Pixel_Sizes(face, face->units_per_EM / 64, face->units_per_EM / 64);
 
     // test if the face matches previews loaded faces
-    if(face->units_per_EM != this->units_per_EM) return false; // unitsPerEM do not match
+    if(face->units_per_EM != m_units_per_EM) return false; // unitsPerEM do not match
 
     int index = face->style_flags & 0b0011;
 
-    if(this->faces[index]) return false; // face with same flags already loaded
+    if(m_faces[index]) return false; // face with same flags already loaded
 
-    this->faces[index] = std::make_unique<Face>(face);
+    m_faces[index] = std::make_unique<Face>(face);
 
     return true;
 }
 
-bool FontFamily::parseGlypes(const std::vector<char32_t>& characters) {
-    this->glyphs.clear();
-    this->kerning.clear();
+bool FontFamily::parseGlypes(std::vector<char32_t> const& characters) {
+    m_glyphs.clear();
+    m_kerning.clear();
 
-    if(!this->faces[0]) return false;
+    if(!m_faces[0]) return false;
 
     // init '.notdef' glyph
-    this->glyphs.push_back(Glyph());
-    this->glyphs.back().init(this->faces[0]->face, 0, 2 * this->units_per_EM / 10);
+    m_glyphs.emplace_back();
+    m_glyphs.back().init(m_faces[0]->face, 0, 2 * m_units_per_EM / 10);
 
     for(int i = 0; i < 4; ++i) {
-        if(!this->faces[i]) continue;
-        FT_Face  face    = this->faces[i]->face;
-        CharMap& charMap = this->faces[i]->charMap;
+        if(!m_faces[i]) continue;
+        FT_Face  face    = m_faces[i]->face;
+        CharMap& charMap = m_faces[i]->charMap;
 
         std::map<unsigned, int> glyphMap;
         for(char32_t c : characters) {
@@ -44,12 +52,12 @@ bool FontFamily::parseGlypes(const std::vector<char32_t>& characters) {
 
             auto it = glyphMap.find(glyph_index);
             if(it != glyphMap.end()) {
-                this->faces[i]->charMap.emplace(c, it->second);
+                m_faces[i]->charMap.emplace(c, it->second);
             } else {
-                glyphMap.emplace(glyph_index, this->glyphs.size());
-                charMap.emplace(c, this->glyphs.size());
-                this->glyphs.push_back(Glyph());
-                this->glyphs.back().init(face, glyph_index, 2 * this->units_per_EM / 10);
+                glyphMap.emplace(glyph_index, m_glyphs.size());
+                charMap.emplace(c, m_glyphs.size());
+                m_glyphs.emplace_back();
+                m_glyphs.back().init(face, glyph_index, 2 * m_units_per_EM / 10);
             }
         }
 
@@ -59,40 +67,22 @@ bool FontFamily::parseGlypes(const std::vector<char32_t>& characters) {
                 FT_Get_Kerning(face, left.first, right.first, FT_KERNING_UNSCALED, &kerning);
                 if(kerning.x != 0) {
                     auto key = std::make_pair(left.second, right.second);
-                    this->kerning.emplace(key, kerning.x);
+                    m_kerning.emplace(key, float(kerning.x));
                 }
             }
         }
     }
 
-    this->texture_atlas.update(this->glyphs);
+    m_texture_atlas.update(m_glyphs);
     return true;
 }
 
 size_t FontFamily::getGlypheID(char32_t c, bool bold, bool oblique) {
-    auto& face = this->faces[(bold ? 2 : 0) | (oblique ? 1 : 0)];
+    auto& face = m_faces[(bold ? 2 : 0) | (oblique ? 1 : 0)];
     auto  it   = face->charMap.find(c);
     if(it != face->charMap.end()) return it->second;
 
     return std::numeric_limits<size_t>::max();
 }
 
-std::vector<Glyph>& FontFamily::getGlyphs() {
-    return this->glyphs;
-}
-
-const std::vector<Glyph>& FontFamily::getGlyphs() const {
-    return this->glyphs;
-}
-
-const std::string& FontFamily::getName() {
-    return this->name;
-}
-
-unsigned FontFamily::getUnitsPerEM() {
-    return this->units_per_EM;
-}
-
-GlyphTextureAtlas& FontFamily::getTextureAtlas() {
-    return this->texture_atlas;
-}
+} // namespace bembel::tools

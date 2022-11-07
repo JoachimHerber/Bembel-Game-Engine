@@ -2,6 +2,9 @@ cmake_minimum_required( VERSION 3.16 )
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 include( cmake_utils )
 
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
 project( BembelGameEngine )
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -18,7 +21,7 @@ include_directories( "${EXTERNAL_INCLUDE_DIRS}" )
 
 set( CMAKE_CONFIGURAION_TYPES "Debug;Release" )
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(src)

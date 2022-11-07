@@ -1,6 +1,6 @@
 <ShaderProgram>
 	<Shader type="GL_VERTEX_SHADER">
-#version 330 compatibility
+#version 330
 
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;  
@@ -57,7 +57,7 @@ vec3 EncodeNormal(vec3 n)
 void main()
 {
  	oEmission    = material.emission;
- 	oAlbedo      = material.albedo;
+	oAlbedo      = material.albedo;
  	oMaterial    = vec3(material.roughness, material.metallic, material.f0);
  	oNormal      = EncodeNormal(normalize(frag_data.normal));
 }
