@@ -7,13 +7,13 @@ import bembel.base;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-bool Text::parse(std::string_view text) {
+bool Text::parse(In<String> text) {
     if(!m_font) return false;
 
     m_text.clear();
     m_text.emplace_back();
     m_glyphs.clear();
-    m_glyphs.reserve(text.length());
+    m_glyphs.reserve(text.size());
 
     bool bold    = false;
     bool oblique = false;
@@ -22,7 +22,7 @@ bool Text::parse(std::string_view text) {
 
     std::string format;
 
-    for(Utf8Decoder it{text}; it; ++it) {
+    for(auto it = text.begin(); it; ++it) {
         char32_t c = *it;
         if(c != '[' && c != ' ' && c != '\t' && c != '\n') {
             GlyphIndex i = m_font->getGlyphIndex(c, bold, oblique);

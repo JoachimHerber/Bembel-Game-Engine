@@ -70,7 +70,7 @@ export class Engine final {
     std::unique_ptr<DisplayManager> m_display_manager;
     std::unique_ptr<InputManager>   m_input_manager;
 
-    Dictionary<uint>                     m_system_mapping;
+    Dictionary<size_t>                   m_system_mapping;
     std::vector<std::unique_ptr<System>> m_systems;
 };
 

@@ -1,4 +1,7 @@
 ﻿module;
+#pragma warning(disable : 4005) // macro redefinition
+#pragma warning(disable : 5106) // macro redefinition with different parameter names
+
 #include <windows.h>
 
 #include <iostream>
@@ -11,8 +14,7 @@ import :Logger;
 
 namespace bembel::base {
 ConsoleLogSink::ConsoleLogSink(In<std::string_view> prefix, In<int> color)
-  : m_prefix(prefix)
-  , m_color(color) {
+  : m_prefix(prefix), m_color(color) {
     ::SetConsoleOutputCP(CP_UTF8);
 }
 
@@ -42,7 +44,7 @@ void ConsoleLogSink::writeMessage(
 }
 
 //*
-Logger Logger::info {std::make_shared<ConsoleLogSink>("", 0x0F)};
+Logger Logger::info{std::make_shared<ConsoleLogSink>("", 0x0F)};
 Logger Logger::error{std::make_shared<ConsoleLogSink>("###ERROR### ", 0xCE)};
 Logger Logger::debug{std::make_shared<ConsoleLogSink>("", 0x09)};
 Logger Logger::warning{std::make_shared<ConsoleLogSink>("- WARNING - ", 0xE0)};

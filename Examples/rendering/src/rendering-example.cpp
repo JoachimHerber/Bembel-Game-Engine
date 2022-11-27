@@ -49,7 +49,7 @@ void RenderingExample::cleanup() {
 void RenderingExample::update(double time) {
     m_camera->update(time);
 
-    std::string text = std::format(
+    bembel::base::String text = std::format(
         "Cam: pos=({:.3}; {:.3}; {:.3}) pitch={:.3} yaw={:.3}",
         m_camera->getPosition().x,
         m_camera->getPosition().y,
@@ -58,7 +58,7 @@ void RenderingExample::update(double time) {
         m_camera->getYaw()
     );
 
-    m_label->text.set(text);
+    m_label->setText(text);
 }
 
 void RenderingExample::handleEvent(kernel::WindowShouldCloseEvent const& event) {

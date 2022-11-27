@@ -17,7 +17,7 @@ export class Text final {
     void        setFont(Font* font) { m_font = font; }
     Font const* getFont() const { return m_font; }
 
-    bool parse(std::string_view text);
+    bool parse(In<String> text);
 
     enum Alignment : u32 { LEFT, RIGHT, CENTER, BLOCK };
 

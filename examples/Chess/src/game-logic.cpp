@@ -18,10 +18,7 @@ GameLogic::GameLogic(
     CameraControle*         camera,
     GraphicalUserInterface* gui
 )
-  : m_board(board)
-  , m_selection_ptr(selection_ptr)
-  , m_camera(camera)
-  , m_gui(gui) {
+  : m_board(board), m_selection_ptr(selection_ptr), m_camera(camera), m_gui(gui) {
     setState(std::make_unique<SelectChessPice>(this, ChessPlayer::WHITE));
 
     selection_ptr->getSelectSignal().bind(this, &GameLogic::onClick);
@@ -143,8 +140,7 @@ bool GameLogic::addMove(ChessPiece pice, std::vector<Move>& moves, ivec2 pos, bo
 }
 
 GameLogic::SelectChessPice::SelectChessPice(GameLogic* logic, ChessPlayer player)
-  : m_logic(logic)
-  , m_player(player) {}
+  : m_logic(logic), m_player(player) {}
 
 void GameLogic::SelectChessPice::update(double) {
     ivec2 tile = m_logic->getSelectionPointer()->getSelectedTile();
@@ -199,16 +195,14 @@ void GameLogic::SelectChessPice::onEnter() {
     auto lable = m_logic->getGui()->getWidget<LabelWidget>("Label");
     if(!lable) return;
 
-    lable->text.set(
-        m_player == ChessPlayer::WHITE ? "White's Turn: select chess pice"
-                                       : "Black's Turn: select chess pice"
+    lable->setText(
+        m_player == ChessPlayer::WHITE ? u8"White's Turn: select chess pice"
+                                       : u8"Black's Turn: select chess pice"
     );
 }
 
 GameLogic::SelectMove::SelectMove(GameLogic* logic, ChessPiece pice)
-  : m_logic(logic)
-  , m_pice(pice)
-  , m_moves(m_logic->getPossibleMoves(pice)) {}
+  : m_logic(logic), m_pice(pice), m_moves(m_logic->getPossibleMoves(pice)) {}
 
 void GameLogic::SelectMove::update(double) {
     ivec2 tile = m_logic->getSelectionPointer()->getSelectedTile();
@@ -250,16 +244,14 @@ void GameLogic::SelectMove::onEnter() {
     auto lable = m_logic->getGui()->getWidget<LabelWidget>("Label");
     if(!lable) return;
 
-    lable->text.set(
-        m_pice.getOwner() == ChessPlayer::WHITE ? "White's Turn: select move"
-                                                : "Black's Turn: select move"
+    lable->setText(
+        m_pice.getOwner() == ChessPlayer::WHITE ? u8"White's Turn: select move"
+                                                : u8"Black's Turn: select move"
     );
 }
 
 GameLogic::PerformMove::PerformMove(GameLogic* logic, ChessPiece pice, Move move)
-  : m_logic(logic)
-  , m_pice(pice)
-  , m_move(move) {
+  : m_logic(logic), m_pice(pice), m_move(move) {
     m_animation = std::make_unique<StandartMoveAnimation>(pice, move.to);
 }
 
@@ -279,7 +271,7 @@ void GameLogic::PerformMove::onEnter() {
     auto lable = m_logic->getGui()->getWidget<LabelWidget>("Label");
     if(!lable) return;
 
-    lable->text.set("");
+    lable->setText(u8"");
 }
 
 } // namespace bembel::examples::chess

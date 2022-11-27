@@ -26,8 +26,8 @@ bool fromString(In<std::string_view> str, Out<std::string> value) {
     return true;
 }
 
-bool fromString(In<std::string_view> str, Out<std::u32string> value) {
-    for(char32_t c : Utf8Decoder(str)) { value.push_back(c); }
+bool fromString(In<std::string_view> str, Out<String> value) {
+    value = str;
     return true;
 }
 

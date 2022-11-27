@@ -7,7 +7,7 @@ import :Types;
 
 namespace bembel::base {
 
-export template <typename T>
+export template <std::equality_comparable T>
 class ObservableValue final {
   public:
     ObservableValue() = default;
@@ -36,17 +36,18 @@ class ObservableValue final {
     ConstrainSignal constrain_signal;
 
     T const& get() const { return m_value; }
-    bool     set(T new_value) {
-            if(new_value == m_value) return false;
+
+    bool set(T new_value) {
+        if(new_value == m_value) return false;
 
         this->constrain_signal.emit(m_value, new_value);
-            if(new_value == m_value) return false;
+        if(new_value == m_value) return false;
 
         T old_value = std::move(m_value);
-            m_value     = std::move(new_value);
+        m_value     = std::move(new_value);
 
-            this->change_signal.emit(old_value, m_value);
-            return true;
+        this->change_signal.emit(old_value, m_value);
+        return true;
     }
 
     ObservableValue<T>& operator=(ObservableValue<T> const& other) {
@@ -54,8 +55,8 @@ class ObservableValue final {
         return *this;
     }
 
-    ObservableValue<T>& operator=(In<T> value) {
-        set(value);
+    ObservableValue<T>& operator=(T value) {
+        set(std::move(value));
         return *this;
     }
 
