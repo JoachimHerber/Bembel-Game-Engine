@@ -5,6 +5,7 @@ export module bembel.gui.widgets:Button;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
+import :Label;
 
 namespace bembel::gui {
 using namespace bembel::base;
@@ -15,12 +16,28 @@ export class ButtonWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Button";
 
   public:
-    ButtonWidget(Widget& parent);
+    ButtonWidget(Widget& parent, std::u8string_view text = u8"");
     ~ButtonWidget();
 
     virtual bool configure(xml::Element const* properties) override;
 
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+
+    String const& getText() const { return m_label.getText(); }
+    void          setText(std::u8string_view text) { m_label.setText(text); }
+
+    void disable() {
+        m_handle.disable();
+        m_label.setTextColor({ColorRGBA(127, 127, 127, 255)});
+    }
+
+    void enable() {
+        m_handle.enable();
+        m_label.setTextColor({});
+    }
 
     bool isDisabled() const { return m_handle.isDisabled(); }
     bool isHovered() const { return m_handle.isHovered(); }
@@ -39,6 +56,8 @@ export class ButtonWidget : public Widget {
 
   private:
     InteractionHandle m_handle;
+
+    LabelWidget m_label;
 
     bool m_is_pressed = false;
 };

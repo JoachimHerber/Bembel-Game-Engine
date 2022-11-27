@@ -47,10 +47,11 @@ export class InteractionHandle {
   public:
     /**
      * This Signal is emited when ever the curser is moved while the the InteractionHandle is
-     * active. The Signal Argument is the accumulated curser movement (can be modified by signal
-     * handelers).
+     * active. 
+     * Fist Signal Argument: Cursor Position (relative to Widget)
+     * Second Signal Argument: Accumulated curser movement (can be modified by signal handelers).
      */
-    Signal<ivec2&> dragging_signal;
+    Signal<ivec2, ivec2&> dragging_signal;
 
     /**
      * This Signal is emited when the hovered state (whether the curser is above the

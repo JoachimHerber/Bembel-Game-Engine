@@ -9,12 +9,12 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
+/*
 Factory<WidgetLayout>& WidgetLayout::GetLayouterFactory() {
     static Factory<WidgetLayout> factory{};
     return factory;
 }
-
-LinearWidgetLayout::~LinearWidgetLayout() {}
+//*/
 
 inline void stringToLower(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) {
@@ -23,253 +23,252 @@ inline void stringToLower(std::string& str) {
 }
 
 bool LinearWidgetLayout::configure(In<xml::Element const*> properties) {
-    static const std::unordered_map<std::string, Direction> string_to_direction_enum = {
-        {"vertical",   Direction::VERTICAL  },
-        {"horizontal", Direction::HORIZONTAL}
-    };
-
-    std::string attrib;
-    if(xml::getAttribute(properties, "layout_direction", attrib)) {
-        stringToLower(attrib);
-        auto direction_it = string_to_direction_enum.find(attrib);
-        if(direction_it != string_to_direction_enum.end()) m_direction = direction_it->second;
-    }
-
     return true;
 }
 
-void LinearWidgetLayout::calculateLayout(In<ivec2> size, In<std::span<Widget* const>> widgets) {
-    if(m_direction == Direction::HORIZONTAL)
-        calculateHorizontalLayout(size, widgets);
-    else
-        calculateVerticalLayout(size, widgets);
-}
-
-void LinearWidgetLayout::calculateHorizontalLayout(
-    In<ivec2> size, In<std::span<Widget* const>> widgets
-) {
-    float  min_width    = 0.f;
-    float  sum_wights   = 0.f;
-    size_t num_widdgets = 0;
-
-    for(auto widget : widgets) {
-        if(widget->isHidden()) continue;
-
-        auto& params = widget->getLayoutParams();
-
-        min_width += std::max<int>(widget->getMinSize().x, params.min_width);
-        min_width += params.margin.left + params.margin.right;
-        sum_wights += params.rel_size.x;
-        ++num_widdgets;
-    }
-
-    float spacing = (m_primary_axis == PrimaryAxis::SPACE_EQUALLY)
-                      ? (num_widdgets + 1.f) / (size.x - min_width)
-                      : 0;
-
-    float scale = (size.x - min_width) / sum_wights;
-
-    float offset = 0.0;
-    switch(m_primary_axis) {
-        case PrimaryAxis::ALIGN_CENTER: offset = (size.x - min_width) * 0.5f; break;
-        case PrimaryAxis::ALIGN_RIGHT: offset = size.x - min_width; break;
-        case PrimaryAxis::SPACE_EQUALLY: offset = 0.5 * spacing; break;
-    }
-
-    for(auto widget : widgets) {
-        if(widget->isHidden()) continue;
-
-        auto& params = widget->getLayoutParams();
-
-        ivec2 widget_size =
-            glm::max(widget->getMinSize(), ivec2(params.min_width, params.min_height));
-        if(m_primary_axis == PrimaryAxis::SCALE_TO_FIT) widget_size.x += params.rel_size.x * scale;
-        if(m_secondary_axis == SecondaryAxis::SCALE_TO_FIT)
-            widget_size.y = size.y - params.margin.top - params.margin.bottom;
-
-        widget->size.set(widget_size);
-
-        ivec2 widget_pos;
-        widget_pos.x = params.margin.left + offset;
-        switch(m_secondary_axis) {
-            case SecondaryAxis::SCALE_TO_FIT:
-            case SecondaryAxis::ALIGN_BUTTON: widget_pos.y = params.margin.bottom; break;
-            case SecondaryAxis::ALIGN_CENTER:
-                widget_pos.y =
-                    0.5f * (size.y - params.margin.top - params.margin.bottom - widget_size.y);
-                break;
-            case SecondaryAxis::ALIGN_TOP:
-                widget_pos.y = size.y - params.margin.top - widget_size.y;
-                break;
+uint LinearWidgetLayout::getMinWidth() const {
+    uint min_width = 0;
+    for(auto& row : m_rows) {
+        row.min_width = row.margin_left + m_margin_left + m_margin_right;
+        for(auto& element : row.elements) {
+            element.width = std::max(element.min_width, element.widget->getMinWidth());
+            row.min_width += element.width + element.margin_right;
         }
-        widget->position.set(widget_pos);
-
-        offset += widget_size.x + params.margin.left + params.margin.right + spacing;
+        min_width = std::max(min_width, row.min_width);
     }
+    return min_width;
 }
 
-void LinearWidgetLayout::calculateVerticalLayout(
-    In<ivec2> size, In<std::span<Widget* const>> widgets
-) {
-    float  min_height   = 0.f;
-    float  sum_wights   = 0.f;
-    size_t num_widdgets = 0;
-
-    for(auto widget : widgets) {
-        if(widget->isHidden()) continue;
-
-        auto& params = widget->getLayoutParams();
-
-        min_height += std::max<int>(widget->getMinSize().y, params.min_height);
-        min_height += params.margin.bottom + params.margin.top;
-        sum_wights += params.rel_size.y;
-        ++num_widdgets;
-    }
-
-    float spacing = (m_primary_axis == PrimaryAxis::SPACE_EQUALLY)
-                      ? (num_widdgets + 1.f) / (size.y - min_height)
-                      : 0;
-
-    float scale = (size.y - min_height) / sum_wights;
-
-    float offset = 0.0;
-
-    switch(m_primary_axis) {
-        case PrimaryAxis::SCALE_TO_FIT: offset = size.y; break;
-        case PrimaryAxis::ALIGN_CENTER: offset = 0.5 * (size.y - min_height); break;
-        case PrimaryAxis::ALIGN_TOP: offset = size.y; break;
-        case PrimaryAxis::ALIGN_BUTTON: offset = size.y - min_height; break;
-        case PrimaryAxis::SPACE_EQUALLY: offset = size.y - 0.5f * spacing; break;
-    }
-
-    for(auto widget : widgets) {
-        if(widget->isHidden()) continue;
-
-        auto& params = widget->getLayoutParams();
-
-        ivec2 widget_size =
-            glm::max(widget->getMinSize(), ivec2(params.min_width, params.min_height));
-        if(m_secondary_axis == SecondaryAxis::SCALE_TO_FIT)
-            widget_size.x = size.x - params.margin.left - params.margin.right;
-        if(m_primary_axis == PrimaryAxis::SCALE_TO_FIT) widget_size.y += params.rel_size.y * scale;
-
-        widget->size.set(widget_size);
-
-        ivec2 widget_pos;
-        switch(m_secondary_axis) {
-            case SecondaryAxis::SCALE_TO_FIT:
-            case SecondaryAxis::ALIGN_LEFT: widget_pos.x = params.margin.left; break;
-            case SecondaryAxis::ALIGN_CENTER:
-                widget_pos.x =
-                    0.5f * (size.x - params.margin.left - params.margin.right - widget_size.x);
-                break;
-            case LinearWidgetLayout::SecondaryAxis::ALIGN_RIGHT:
-                widget_pos.x = size.x - params.margin.right - widget_size.x;
-                break;
-        }
-        widget_pos.y = offset - params.margin.top - widget_size.y;
-
-        widget->position.set(widget_pos);
-
-        offset -= widget_size.y + params.margin.top + params.margin.bottom + spacing;
-    }
-}
-
-glm::ivec2 LinearWidgetLayout::calculateMinSize(In<std::span<Widget const* const>> widgets) {
-    ivec2 min_size = {0, 0};
-
-    for(auto widget : widgets) {
-        if(widget->isHidden()) continue;
-
-        auto& params = widget->getLayoutParams();
-
-        ivec2 min_widget_size =
-            glm::max(widget->getMinSize(), ivec2(params.min_width, params.min_height));
-
-        min_widget_size.x += params.margin.left + params.margin.right;
-        min_widget_size.y += params.margin.bottom + params.margin.top;
-
-        if(m_direction == Direction::VERTICAL) {
-            min_size.x = std::max(min_size.x, min_widget_size.x);
-            min_size.y += min_widget_size.y;
+uint LinearWidgetLayout::getMinHeight() const {
+    uint min_height = 0;
+    for(auto& row : m_rows) {
+        if(row.params.height.has_value()) {
+            row.min_height = row.params.height.value();
         } else {
-            min_size.x += min_widget_size.x;
-            min_size.y = std::max(min_size.y, min_widget_size.y);
+            row.min_height = row.params.min_height;
+            for(auto& element : row.elements) {
+                row.min_height = std::max(row.min_height, element.widget->getMinHeight());
+            }
         }
+        min_height += row.min_height;
     }
-    return min_size;
+    return min_height;
 }
 
+void LinearWidgetLayout::updateLayout() {
+    updateLayout(m_group->size.get());
+}
+
+void LinearWidgetLayout::updateLayout(In<vec2> size) {
+    uint min_width  = getMinWidth();
+    uint min_height = getMinHeight();
+
+    float height_Scale = 0;
+    if(m_mode == Mode::SCALE_TO_FIT) {
+        for(auto& row : m_rows) height_Scale += row.params.rel_height;
+        height_Scale = (size.y - min_height) / height_Scale;
+    }
+
+    float y         = size.y;
+    float y_spacing = 0;
+    switch(m_mode) {
+        case Mode::ALIGN_BOTTON: y -= /***/ (size.y - min_height); break;
+        case Mode::ALIGN_CENTER: y -= 0.5 * (size.y - min_height); break;
+        case Mode::SPACE_EQUALLY:
+            y_spacing = (size.y - min_height) / float(m_rows.size());
+            y -= 0.5 * y_spacing;
+            break;
+    }
+
+    for(auto& row : m_rows) {
+        uint height = row.min_height;
+        if(m_mode == Mode::SCALE_TO_FIT) height += row.params.rel_height * height_Scale;
+
+        y -= height;
+
+        float x         = row.margin_left + m_margin_left;
+        float x_spacing = 0;
+        switch(row.params.mode) {
+            case Mode::ALIGN_RIGHT: x += /***/ (size.x - row.min_width); break;
+            case Mode::ALIGN_CENTER: x += 0.5 * (size.x - row.min_width); break;
+            case Mode::SPACE_EQUALLY:
+                x_spacing = (size.y - min_height) / float(m_rows.size());
+                x += 0.5 * x_spacing;
+                break;
+        }
+
+        if(row.params.mode == Mode::SCALE_TO_FIT)
+            scaleElements(row.elements, size.x - m_margin_left - m_margin_right - row.margin_left);
+
+        for(auto& elem : row.elements) {
+            elem.widget->size.set({elem.width, height});
+            elem.widget->position.set({x, y});
+            x += elem.width + elem.margin_right + x_spacing;
+        }
+
+        y -= y_spacing;
+    }
+}
+
+void LinearWidgetLayout::scaleElements(std::span<Row::Element> elements, uint width) {
+    float sum_rel_width = 0;
+
+    std::vector<Row::Element*> unscaled_elements;
+    for(auto& elem : elements) {
+        width -= elem.margin_right;
+
+        if(elem.rel_width > 0) {
+            sum_rel_width += elem.rel_width;
+            unscaled_elements.push_back(&elem);
+        } else {
+            width -= elem.width;
+        }
+    }
+    std::vector<Row::Element*> tmp;
+    float                      scale = width / sum_rel_width;
+    while(unscaled_elements.size() != tmp.size()) {
+        scale         = width / sum_rel_width;
+        sum_rel_width = 0;
+        tmp.clear();
+        for(auto elem : unscaled_elements) {
+            uint scaled_width = elem->rel_width * scale;
+            if(scaled_width > elem->width) {
+                sum_rel_width += elem->rel_width;
+                tmp.push_back(elem);
+            } else {
+                width -= elem->width;
+            }
+        }
+        std::swap(unscaled_elements, tmp);
+    }
+    for(auto elem : unscaled_elements) { elem->width = elem->rel_width * scale; }
+}
+
+LinearWidgetLayout& LinearWidgetLayout::addSpacing(In<uint> margin) {
+    if(!m_rows.empty()) {
+        if(!m_rows.back().elements.empty()) {
+            m_rows.back().elements.back().margin_right += margin;
+        } else {
+            m_rows.back().margin_left += margin;
+        }
+    }
+    return *this;
+}
+
+LinearWidgetLayout& LinearWidgetLayout::addRow(In<RowParams> params) {
+    m_rows.emplace_back(params);
+    return *this;
+}
+
+LinearWidgetLayout& LinearWidgetLayout::addWidget(
+    In<Widget*> widget, In<float> rel_width, In<uint> min_width
+) {
+    if(!m_rows.empty()) { m_rows.back().elements.emplace_back(widget, rel_width, min_width); }
+    return *this;
+}
+
+/*
 bool LinearWidgetLayout::registerd =
     WidgetLayout::GetLayouterFactory().registerObjectGenerator<LinearWidgetLayout>("linear");
+    //*/
 
 bool RelativeWidgetLayout::configure(xml::Element const*) {
     return true;
 }
+uint RelativeWidgetLayout::getMinWidth() const {
+    uint min_width = 1;
 
-void RelativeWidgetLayout::calculateLayout(
-    In<ivec2> area_size, In<std::span<Widget* const>> widgets
+    for(auto& elem : m_elements) {
+        if(elem.widget->isHidden()) continue;
+
+        float rel_pos     = elem.rel_pos.x;
+        float pos_offset  = elem.pos_offset.x;
+        float rel_size    = elem.rel_size.x;
+        float size_offset = elem.size_offset.x;
+
+        // clang-format off
+        //                        0 < pos_offset + rel_pos*min_width
+        // <=>  -pos_offset/rel_pos < min_width;
+        if(pos_offset < 0) min_width = std::max<uint>(min_width, -pos_offset / rel_pos);
+        //      pos_offset + size_offset + (rel_pos + rel_size)*min_width < min_width
+        // <=>  pos_offset + size_offset                                  < min_width - (rel_pos +  rel_size) * min_width
+        // <=>  pos_offset + size_offset                                  < (1 - rel_pos - rel_size) * min_width
+        // <=> (pos_offset + size_offset) /(1 - rel_pos - rel_size)       < min_width
+        min_width = std::max<uint>(min_width, (pos_offset + size_offset) / (1 - rel_pos - rel_size));
+        //      widget.min_width                          < size_offset + rel_size*min_width
+        // <=> (widget.min_width - size_offset) /rel_size < min_width
+        min_width = std::max<uint>(min_width, (elem.widget->getMinWidth() - size_offset) / rel_size);
+        // clang-format on
+    }
+    return min_width;
+}
+
+uint RelativeWidgetLayout::getMinHeight() const {
+    uint min_height = 1;
+
+    for(auto& elem : m_elements) {
+        if(elem.widget->isHidden()) continue;
+
+        float rel_pos     = elem.rel_pos.y;
+        float pos_offset  = elem.pos_offset.y;
+        float rel_size    = elem.rel_size.y;
+        float size_offset = elem.size_offset.y;
+
+        // clang-format off
+        //                        0 < pos_offset + rel_pos*min_height
+        // <=>  -pos_offset/rel_pos < min_width;
+        if(pos_offset < 0) min_height = std::max<uint>(min_height, -pos_offset / rel_pos);
+        //      pos_offset + size_offset + (rel_pos + rel_size)*min_height < min_height
+        // <=>  pos_offset + size_offset                                   < min_height - (rel_pos +  rel_size) * min_height
+        // <=>  pos_offset + size_offset                                   < (1 - rel_pos - rel_size) * min_width
+        // <=> (pos_offset + size_offset) /(1 - rel_pos - rel_size)        < min_width
+        min_height = std::max<uint>(min_height, (pos_offset + size_offset) / (1 - rel_pos - rel_size));
+        //      widget.min_height                          < size_offset + rel_size*min_height
+        // <=> (widget.min_height - size_offset) /rel_size < min_height
+        min_height = std::max<uint>(min_height, (elem.widget->getMinHeight() - size_offset) / rel_size);
+        // clang-format on
+    }
+    return min_height;
+}
+
+void RelativeWidgetLayout::updateLayout() {
+    updateLayout(m_group->size.get());
+}
+
+void RelativeWidgetLayout::updateLayout(In<vec2> size) {
+    for(auto& elem : m_elements) {
+        if(elem.widget->isHidden()) continue;
+
+        vec2 pos  = size * elem.rel_pos + elem.pos_offset;
+        vec2 size = size * elem.rel_size + elem.size_offset;
+
+        size.x = std::max<int>(size.x, elem.widget->getMinWidth());
+        size.y = std::max<int>(size.y, elem.widget->getMinHeight());
+
+        // size.x -= p.margin.left + p.margin.right;
+        // size.y -= p.margin.bottom + p.margin.top;
+        // pos.x += p.margin.left;
+        // pos.y += p.margin.bottom;
+
+        elem.widget->position.set(pos);
+        elem.widget->size.set(size);
+    }
+}
+
+RelativeWidgetLayout& RelativeWidgetLayout::addWidget(
+    In<Widget*> widget,
+    In<vec2>    position,
+    In<vec2>    size,
+    In<vec2>    position_offset,
+    In<vec2>    size_offset
 ) {
-    vec2 scale = area_size;
-
-    for(auto* widget : widgets) {
-        if(widget->isHidden()) continue;
-        auto& p = widget->getLayoutParams();
-
-        vec2 pos  = scale * p.rel_pos + vec2(p.pos_offset);
-        vec2 size = scale * p.rel_size + vec2(p.size_offset);
-
-        size.x = std::max<int>(size.x, p.min_width);
-        size.y = std::max<int>(size.y, p.min_height);
-
-        size.x -= p.margin.left + p.margin.right;
-        size.y -= p.margin.bottom + p.margin.top;
-        pos.x += p.margin.left;
-        pos.y += p.margin.bottom;
-
-        widget->position.set(pos);
-        widget->size.set(size);
-    }
+    m_elements.emplace_back(widget, position, size, position_offset, size_offset);
+    return *this;
 }
 
-glm::ivec2 RelativeWidgetLayout::calculateMinSize(In<std::span<Widget const* const>> widgets) {
-    glm::ivec2 minSize{1, 1};
-
-    for(auto* widget : widgets) {
-        if(widget->isHidden()) continue;
-        auto& p = widget->getLayoutParams();
-
-        vec2  rel_pos     = p.rel_pos;
-        ivec2 pos_offset  = p.pos_offset;
-        vec2  rel_size    = p.rel_size;
-        ivec2 size_offset = p.size_offset;
-
-        //                        0 < pos_offset + rel_pos*minSize
-        // <=>  -pos_offset/rel_pos < minSize;
-        if(pos_offset.x < 0) minSize.x = std::max<int>(minSize.x, -pos_offset.x / rel_pos.x);
-        if(pos_offset.y < 0) minSize.y = std::max<int>(minSize.y, -pos_offset.y / rel_pos.y);
-        //      pos_offset + size_offset + (rel_pos + rel_size)*minSize < minSize
-        // <=>  pos_offset + size_offset                                < minSize - (rel_pos +
-        // rel_size) * minSize
-        // <=>  pos_offset + size_offset                                < (1 - rel_pos -
-        // rel_size) * minSize
-        // <=> (pos_offset + size_offset) /(1 - rel_pos - rel_size)     < minSize
-        minSize.x =
-            std::max<int>(minSize.x, (pos_offset.x + size_offset.x) / (1 - rel_pos.x - rel_size.x));
-        minSize.y =
-            std::max<int>(minSize.y, (pos_offset.y + size_offset.y) / (1 - rel_pos.y - rel_size.y));
-
-        //      min_width                          < size_offset + rel_size*minSize
-        // <=> (min_width - size_offset) /rel_size < minSize
-        minSize.x = std::max<int>(minSize.x, (p.min_width - size_offset.x) / rel_size.x);
-
-        //      min_height                          < size_offset + rel_size*minSize
-        // <=> (min_height - size_offset) /rel_size < minSize
-        minSize.y = std::max<int>(minSize.y, (p.min_height - size_offset.y) / rel_size.y);
-    }
-    return minSize;
-}
-
+/*
 bool RelativeWidgetLayout::registerd =
     WidgetLayout::GetLayouterFactory().registerObjectGenerator<RelativeWidgetLayout>("relative");
+
+//*/
 } // namespace bembel::gui

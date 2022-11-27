@@ -14,7 +14,9 @@ void setupVertexAttribute(
     GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset
 ) {
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(index, size, type, normalized, sizeof(InstanceData), (void*)(offset));
+    glVertexAttribPointer(
+        index, size, type, normalized, sizeof(InstanceData), (void*)(uintptr_t)offset
+    );
     glVertexAttribDivisor(index, 1);
 }
 

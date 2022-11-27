@@ -21,38 +21,36 @@ export class Style {
 
     enum class Colors : u32 {
         TEXT = 0,
-        TEXT_OUTLINE,
         TEXT_DISABLED,
-        TEXT_BACKGROUND,
+        TEXT_OUTLINE,
 
         WINDOW_BACKGROUND,
         WINDOW_BORDER,
         MENU_BAR_BACKGROUND,
 
-        BUTTON_BACKGROUND,
-        BUTTON_BACKGROUND_HOVERED,
-        BUTTON_BACKGROUND_SELECTED,
-        BUTTON_BACKGROUND_SELECTED_AND_HOVERED,
-        BUTTON_BACKGROUND_DISABLED,
-        BUTTON_BACKGROUND_ACTIVE,
+        BORDER,
+        BORDER_DISABLED,
+        BORDER_HOVERED,
+        BORDER_ACTIVE,
 
-        BUTTON_BORDER,
-        BUTTON_BORDER_HOVERED,
-        BUTTON_BORDER_SELECTED,
-        BUTTON_BORDER_SELECTED_AND_HOVERED,
-        BUTTON_BORDER_DISABLED,
-        BUTTON_BORDER_ACTIVE,
+        BUTTON,
+        BUTTON_DISABLED,
+        BUTTON_HOVERED,
+        BUTTON_ACTIVE,
 
-        INPUT_BORDER,
-        INPUT_BACKGROUND,
-        INPUT_BACKGROUND_DISABLED,
-        INPUT_BACKGROUND_HOVERED,
-        INPUT_BACKGROUND_SELECTED,
+        INPUT,
+        INPUT_DISABLED,
+        INPUT_HOVERED,
+        INPUT_ACTIVE,
 
-        CHECKBOX_BORDER,
-        CHECKBOX_BACKGROUND,
-        CHECKBOX_BACKGROUND_DISABLED,
-        CHECKBOX_SELECTED,
+        CHECKBOX,
+        CHECKBOX_DISABLED,
+        CHECKBOX_HOVERED,
+
+        SLIDER,
+        SLIDER_DISABLED,
+        SLIDER_HOVERED,
+        SLIDER_ACTIVE,
 
         COUNT // for internal use only
     };
@@ -62,7 +60,8 @@ export class Style {
         MIN_FONT_SIZE = 0,
         WINDOW_BORDER_WIDTH,
         WINDOW_TITLE_BAR_HEIGHT,
-        BUTTON_BORDER_WIDTH,
+        BUTTON_CORNER_SIZE,
+        BUTTON_TEXT_MARGIN,
         INPUT_BORDER_WIDTH,
         INPUT_VERTICAL_MARGIN,
         INPUT_HORIZONTAL_MARGIN,
@@ -70,6 +69,7 @@ export class Style {
         INPUT_CURSOR_BLINK_ON_DURATION,
         CHECKBOX_SIZE,
         CHECKBOX_LABLE_MARGIN,
+        SLIDER_HANDLE_WIDTH,
         COUNT // for internal use only
     };
 
@@ -101,47 +101,49 @@ export class Style {
 
     Asset<Font> m_font;
 
+    ColorRGBA u32ToColor(u32 c) { return {u8(c >> 24), u8(c >> 16), u8(c >> 8), u8(c)}; }
+
     ColorRGBA m_colors[usize(Colors::COUNT)]{
-        {0xff, 0xff, 0xff, 0xff}, // TEXT
-        {0x00, 0x00, 0x00, 0xff}, // TEXT_OUTLINE
-        {0x80, 0x80, 0x80, 0xff}, // TEXT_DISABLED
-        {0x00, 0x00, 0x00, 0xff}, // TEXT_BACKGROUND
+        u32ToColor(0xff'ff'ff'ff), // TEXT
+        u32ToColor(0x80'80'80'ff), // TEXT_DISABLED
+        u32ToColor(0x00'00'00'ff), // TEXT_OUTLINE
 
-        {0x0f, 0x0f, 0x0f, 0xf0}, // WINDOW_BACKGROUND
-        {0x0c, 0x0c, 0x0c, 0xff}, // WINDOW_BORDER
-        {0x24, 0x24, 0x24, 0xff}, // MENU_BAR_BACKGROUND
+        u32ToColor(0x0f'0f'0f'f0), // WINDOW_BACKGROUND
+        u32ToColor(0x0c'0c'0c'ff), // WINDOW_BORDER
+        u32ToColor(0x24'24'24'ff), // MENU_BAR_BACKGROUND
 
-        {0x42, 0x96, 0xfa, 0x66}, // BUTTON_BACKGROUND
-        {0x42, 0x96, 0xfa, 0xff}, // BUTTON_BACKGROUND_HOVERED
-        {0x42, 0x96, 0xfa, 0xaa}, // BUTTON_BACKGROUND_SELECTED
-        {0x42, 0x96, 0xfa, 0xff}, // BUTTON_BACKGROUND_SELECTED_AND_HOVERED
-        {0x80, 0x80, 0x80, 0x66}, // BUTTON_BACKGROUND_DISABLED
-        {0x0f, 0x87, 0xfa, 0xff}, // BUTTON_BACKGROUND_ACTIVE
+        u32ToColor(0x0a'17'26'ff), // BORDER
+        u32ToColor(0x0a'17'26'ff), // BORDER_DISABLED
+        u32ToColor(0x11'26'40'ff), // BORDER_HOVERED
+        u32ToColor(0x11'26'40'ff), // BORDER_ACTIVE
 
-        {0x35, 0x78, 0xc8, 0x66}, // BUTTON_BORDER
-        {0x35, 0x78, 0xc8, 0xff}, // BUTTON_BORDER_HOVERED
-        {0x35, 0x78, 0xc8, 0xaa}, // BUTTON_BORDER_SELECTED
-        {0x35, 0x78, 0xc8, 0xff}, // BUTTON_BORDER_SELECTED_AND_HOVERED
-        {0x66, 0x66, 0x66, 0x66}, // BUTTON_BORDER_DISABLED
-        {0x0c, 0x6c, 0xc8, 0xff}, // BUTTON_BORDER_ACTIVE
+        u32ToColor(0x22'4d'80'ff), // BUTTON
+        u32ToColor(0x2c'2c'2c'66), // BUTTON_DISABLED
+        u32ToColor(0x19'48'80'ff), // BUTTON_HOVERED
+        u32ToColor(0x11'3e'73'ff), // BUTTON_ACTIVE
 
-        {0x04, 0x04, 0x07, 0xff}, // INPUT_BORDER
-        {0x42, 0x96, 0xfa, 0x66}, // INPUT_BACKGROUND
-        {0x80, 0x80, 0x80, 0x66}, // INPUT_BACKGROUND_DISABLED
-        {0x42, 0x96, 0xfa, 0xff}, // INPUT_BACKGROUND_HOVERED
-        {0x0f, 0x87, 0xfa, 0xff}, // INPUT_BACKGROUND_SELECTED
+        u32ToColor(0x04'04'07'ff), // INPUT
+        u32ToColor(0x80'80'80'66), // INPUT_DISABLED
+        u32ToColor(0x0a'0d'13'ff), // INPUT_HOVERED
+        u32ToColor(0x08'0a'0f'ff), // INPUT_ACTIVE
 
-        {0x04, 0x04, 0x07, 0xff}, // CHECKBOX_BORDER
-        {0x42, 0x96, 0xfa, 0x33}, // CHECKBOX_BACKGROUND
-        {0x04, 0x04, 0x07, 0x66}, // CHECKBOX_BACKGROUND_DISABLED
-        {0x04, 0x04, 0x07, 0xff}  // CHECKBOX_SELECTED
+        u32ToColor(0x14'3a'66'ff), // CHECKBOX
+        u32ToColor(0x80'80'80'66), // CHECKBOX_DISABLED
+        u32ToColor(0x1f'57'99'ff), // CHECKBOX_HOVERED
+
+        u32ToColor(0x22'4d'80'ff), // SLIDER
+        u32ToColor(0x2c'2c'2c'66), // SLIDER_DISABLED
+        u32ToColor(0x33'79'cc'ff), // SLIDER_HOVERED
+        u32ToColor(0x26'6c'bf'ff), // SLIDER_ACTIVE
+
     };
 
     float m_values[usize(Values::COUNT)]{
-        28,   // MIN_FONT_SIZE
+        28,  // MIN_FONT_SIZE
         4,   // WINDOW_BORDER_WIDTH
         32,  // WINDOW_TITLE_BAR_HEIGHT
-        4,   // BUTTON_BORDER_WIDTH
+        8,   // BUTTON_CORNER_SIZE
+        4,   // BUTTON_TEXT_MARGIN
         2,   // INPUT_BORDER_WIDTH
         2,   // INPUT_VERTICAL_MARGIN
         8,   // INPUT_HORIZONTAL_MARGIN
@@ -149,6 +151,7 @@ export class Style {
         0.6, // INPUT_CURSOR_BLINK_ON_DURATION
         16,  // CHECKBOX_SIZE
         4,   // CHECKBOX_LABLE_MARGIN
+        16,  // SLIDER_HANDLE_WIDTH
     };
 };
 

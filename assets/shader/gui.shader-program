@@ -57,7 +57,7 @@
 			} break;
 			case 2u: {
 				vec4 mix = texture2D(uAtlasTexture, vTexCoords);
-				oColor = mix;
+				oColor *= mix;
 				oColor.rgb += (vec3(1)-mix.rgb) *  vData.rgb / 255.0f;
 			} break;
 		}

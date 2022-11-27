@@ -7,7 +7,6 @@ import bembel.kernel;
 import :Style;
 import :RenderBatch;
 import :InteractionHandle;
-import :WidgetLayoutParams;
 
 namespace bembel::gui {
 using namespace bembel::base;
@@ -25,6 +24,19 @@ export class Widget {
         virtual void draw(RenderBatchInterface& batch) = 0;
     };
 
+    class Layout {
+      public:
+        virtual bool configure(In<xml::Element const*> properties) = 0;
+
+        virtual uint getMinWidth() const  = 0;
+        virtual uint getMinHeight() const = 0;
+
+        virtual void updateLayout()              = 0;
+        virtual void updateLayout(In<vec2> size) = 0;
+
+        static Factory<Layout>& GetLayouterFactory();
+    };
+
   public:
     Widget(GraphicalUserInterface& gui) : m_gui{gui}, m_parent{nullptr} {}
     Widget(Widget& parent) : m_gui{parent.getGUI()}, m_parent{&parent} {}
@@ -34,10 +46,8 @@ export class Widget {
 
     virtual bool configure(xml::Element const* properties);
 
-    virtual ivec2 getMinSize() const { return {0, 0}; }
-    virtual ivec2 getMaxSize() const {
-        return {std::numeric_limits<int>::max(), std::numeric_limits<int>::max()};
-    }
+    virtual uint getMinWidth() const  = 0;
+    virtual uint getMinHeight() const = 0;
 
     virtual std::string_view getWidgetTypeName() const = 0;
 
@@ -49,9 +59,6 @@ export class Widget {
 
     std::string const& getName() const { return m_name; }
     void               setName(std::string_view name) { m_name = name; }
-
-    WidgetLayoutParams const& getLayoutParams() const { return m_layout_params; }
-    void setLayoutParams(In<WidgetLayoutParams>& param) { m_layout_params = param; }
 
     ObservableValue<ivec2> position = {0, 0};
     ObservableValue<ivec2> size     = {1, 1};
@@ -80,8 +87,6 @@ export class Widget {
 
     std::vector<Widget*>            m_child_widgets;
     std::vector<InteractionHandle*> m_interaction_handles;
-
-    WidgetLayoutParams m_layout_params;
 };
 
 } // namespace bembel::gui

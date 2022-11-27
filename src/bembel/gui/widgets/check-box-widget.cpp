@@ -10,12 +10,12 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-CheckBoxWidget::CheckBoxWidget(Widget& parent) : Widget{parent} {
+CheckBoxWidget::CheckBoxWidget(Widget& parent, std::u8string_view label)
+  : Widget{parent}, m_label{*this, label} {
     m_interaction_handles.push_back(&m_handle);
     m_child_widgets.push_back(&m_label);
 
     m_label.setName("Lable");
-    m_label.alignment = LabelWidget::Alignment::Left;
 
     size.change_signal.bind(this, &CheckBoxWidget::onSizeChanged);
     m_handle.action_signal.bind(this, &CheckBoxWidget::onAction);
@@ -27,15 +27,23 @@ bool CheckBoxWidget::configure(xml::Element const* properties) {
     return false;
 }
 
-ivec2 CheckBoxWidget::getMinSize() const {
+uint CheckBoxWidget::getMinWidth() const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float font_size = style->getValue(Style::Values::MIN_FONT_SIZE);
-    float box_size  = style->getValue(Style::Values::CHECKBOX_SIZE);
-    float margin    = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
+    float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+    float margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
 
-    return {box_size + margin, std::max(box_size, font_size)};
+    return box_size + margin + m_label.getMinWidth();
+}
+
+uint CheckBoxWidget::getMinHeight() const {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+
+    return std::max(uint(box_size), m_label.getMinHeight());
 }
 
 void CheckBoxWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
@@ -78,11 +86,16 @@ void SimpleCheckBoxWidgetView::draw(RenderBatchInterface& batch) {
 
     if(!tc) { return; }
 
-    batch.setPrimaryColor(style->getColor(
-        m_widget.isDisabled() ? Style::Colors::CHECKBOX_BACKGROUND_DISABLED
-                              : Style::Colors::CHECKBOX_BACKGROUND
-    ));
-    batch.setSecondaryColor(style->getColor(Style::Colors::INPUT_BACKGROUND));
+    if(m_widget.isDisabled()) {
+        batch.setPrimaryColor(style->getColor(Style::Colors::CHECKBOX_DISABLED));
+        batch.setSecondaryColor(style->getColor(Style::Colors::BORDER_DISABLED));
+    } else if(m_widget.isHovered()) {
+        batch.setPrimaryColor(style->getColor(Style::Colors::CHECKBOX_HOVERED));
+        batch.setSecondaryColor(style->getColor(Style::Colors::BORDER_HOVERED));
+    } else {
+        batch.setPrimaryColor(style->getColor(Style::Colors::CHECKBOX));
+        batch.setSecondaryColor(style->getColor(Style::Colors::BORDER));
+    }
     batch.setAlpha(255);
     batch.drawIcon({x, y}, {x + size, y + size}, tc->min, tc->max);
 }

@@ -96,7 +96,7 @@ void InputHandler::onCursorMoved(glm::ivec2 cursor_pos) {
     if(m_selection && m_dragging) {
         m_dragging_offset += movement;
 
-        m_selection.handle->dragging_signal(m_dragging_offset);
+        m_selection.handle->dragging_signal(getRelativeCursorPos(m_selection), m_dragging_offset);
     }
 }
 

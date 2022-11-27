@@ -18,21 +18,24 @@ export class TextInputWidget : public Widget {
     TextInputWidget(Widget& parent);
     ~TextInputWidget() = default;
 
+    virtual bool configure(xml::Element const* properties) override;
+
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
+    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+
     bool isDisabled() const { return m_handle.isDisabled(); }
     bool isHovered() const { return m_handle.isHovered(); }
     bool isSelected() const { return m_handle.isSelected(); }
 
-    virtual bool configure(xml::Element const* properties) override;
-
-    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
-
-    ObservableValue<std::u32string> text;
+    ObservableValue<String> text;
 
   protected:
-    void onSizeChanged(In<ivec2>, In<ivec2>);
-    void onAction(InteractionHandle::Action, ivec2);
-    void onTextInput(char32_t);
-    void onTextChanged(In<std::u32string>, In<std::u32string>);
+    virtual void onSizeChanged(In<ivec2>, In<ivec2>);
+    virtual void onAction(InteractionHandle::Action, ivec2);
+    virtual void onTextInput(char32_t);
+    virtual void onTextChanged(In<String>, In<String>);
 
     void copy();
     void paste();
@@ -46,7 +49,7 @@ export class TextInputWidget : public Widget {
 
         void draw(RenderBatchInterface& batch) override;
 
-        void updateGlyphs(std::u32string const& str);
+        void updateGlyphs(In<String> str);
 
       protected:
         virtual void drawBackground(

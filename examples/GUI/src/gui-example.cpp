@@ -25,9 +25,9 @@ bool GuiExample::init() {
 
     auto gui = m_gui_system->getGUI("main");
 
-    auto button_1 = gui->getWidget<LabeledButtonWidget>("MainWindow/Body/Button_1");
-    auto button_2 = gui->getWidget<LabeledButtonWidget>("MainWindow/Body/Button_2");
-    auto button_3 = gui->getWidget<LabeledButtonWidget>("MainWindow/Body/Button_3");
+    auto button_1 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_1");
+    auto button_2 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_2");
+    auto button_3 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_3");
 
     if(button_1) { button_1->click_signal.bind(this, &GuiExample::onButton1Click); }
     if(button_2) { button_2->click_signal.bind(this, &GuiExample::onButton2Click); }

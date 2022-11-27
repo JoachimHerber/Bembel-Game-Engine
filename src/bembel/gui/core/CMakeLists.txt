@@ -13,8 +13,6 @@ target_sources(Bembel
 		render-batch.ixx
 		render-batch.cpp
 
-		widget-layout-params.ixx
-		widget-layout-params.cpp
 		widget-layout.ixx
 		widget-layout.cpp
 

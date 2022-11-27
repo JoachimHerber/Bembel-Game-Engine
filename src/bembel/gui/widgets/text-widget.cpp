@@ -21,7 +21,10 @@ bool TextWidget::configure(xml::Element const* properties) {
     if(!properties) return true;
 
     auto content = properties->FirstChildElement("Content");
-    if(content) { this->text.set(content->GetText()); }
+    if(content) {
+        String text = std::u8string_view((char8_t*)content->GetText());
+        this->text.set(text);
+    }
 
     xml::getAttribute(properties, "FontSize", m_fontSize);
 
@@ -29,7 +32,15 @@ bool TextWidget::configure(xml::Element const* properties) {
     return true;
 }
 
-void TextWidget::onTextChanged(In<std::string>, In<std::string> new_text) {
+uint TextWidget::getMinWidth() const {
+    return 0;
+}
+
+uint TextWidget::getMinHeight() const {
+    return 0;
+}
+
+void TextWidget::onTextChanged(In<String>, In<String> new_text) {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
@@ -63,8 +74,8 @@ void TextWidget::View::draw(RenderBatchInterface& batch) {
     glm::vec2 size     = m_widget.size.get();
     glm::vec2 position = m_widget.position.get();
 
-    batch.setColor(style->getColor(Style::Colors::TEXT_BACKGROUND));
-    batch.drawRectangle(position, position + size);
+    // batch.setColor(style->getColor(Style::Colors::TEXT_BACKGROUND));
+    // batch.drawRectangle(position, position + size);
 
     batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
     for(auto& g : m_widget.m_layout.getGlyphs()) {

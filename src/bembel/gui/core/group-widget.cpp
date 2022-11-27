@@ -34,8 +34,8 @@ bool GroupWidget::configure(base::xml::Element const* properties) {
             [](unsigned char c) { return std::tolower(c); }
         );
 
-        auto layout = WidgetLayout::GetLayouterFactory().createObject(layout_name);
-        if(layout->configure(properties)) setLayout(std::move(layout));
+        // auto layout = Widget::Layout::GetLayouterFactory().createObject(layout_name);
+        // if(layout->configure(properties)) setLayout(std::move(layout));
     }
 
     for(auto it : base::xml::IterateChildElements(properties)) {
@@ -60,25 +60,16 @@ Widget* GroupWidget::createChildWidget(
     return m_widgets.back().get();
 }
 
-void GroupWidget::setLayout(std::shared_ptr<WidgetLayout> layout) {
-    m_layout = layout;
-    updateLayout();
+uint GroupWidget::getMinWidth() const {
+    return m_layout ? m_layout->getMinWidth() : 0;
 }
 
-void GroupWidget::updateLayout() {
-    if(m_layout) m_layout->calculateLayout(this->size.get(), m_child_widgets);
+uint GroupWidget::getMinHeight() const {
+    return m_layout ? m_layout->getMinHeight() : 0;
 }
 
-ivec2 GroupWidget::getMinSize() const {
-    if(m_layout) {
-        return m_layout->calculateMinSize(m_child_widgets);
-    } else {
-        return {0, 0};
-    }
-}
-
-void GroupWidget::onSizeChanged(In<ivec2> old_size, In<ivec2> new_size) {
-    if(m_layout) m_layout->calculateLayout(new_size, m_child_widgets);
+void GroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
+    if(m_layout) m_layout->updateLayout(new_size);
 }
 
 } // namespace bembel::gui

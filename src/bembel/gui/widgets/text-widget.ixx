@@ -20,22 +20,27 @@ export class TextWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
-    ObservableValue<std::string> text;
+    ObservableValue<String> text;
     std::optional<ColorRGBA>     text_color;
 
   private:
-    void onTextChanged(In<std::string>, In<std::string>);
+    void onTextChanged(In<String>, In<String>);
     void onSizeChanged(In<ivec2>, In<ivec2>);
 
     void recalculateLayout(In<ivec2>);
 
   private:
     friend class View;
+
     class View : public Widget::View {
       public:
         View(TextWidget& widget) : m_widget{widget} {}
+
         ~View() = default;
 
         void draw(RenderBatchInterface& batch) override;

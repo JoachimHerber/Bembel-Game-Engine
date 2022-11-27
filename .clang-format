@@ -2,11 +2,10 @@
 ---
 AccessModifierOffset: -2
 AlignAfterOpenBracket: BlockIndent
-AlignArrayOfStructures: Left 
-AlignConsecutiveAssignments: Consecutive 
-AlignConsecutiveBitFields: Consecutive 
-AlignConsecutiveDeclarations: Consecutive 
-AlignConsecutiveMacros: Consecutive 
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AlignConsecutiveMacros: Consecutive
 AlignEscapedNewlines: Right
 AlignOperands: AlignAfterOperator
 AlignTrailingComments: true
@@ -15,7 +14,6 @@ AllowShortBlocksOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: WithoutElse
-#AlwaysBreakTemplateDeclarations: MultiLine
 BasedOnStyle: Google
 BinPackArguments: false
 BinPackParameters: false
@@ -49,24 +47,14 @@ ConstructorInitializerIndentWidth : 2
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
-EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
 FixNamespaceComments: true
 IndentCaseLabels: true
-IndentPPDirectives: AfterHash
 IndentWidth: 4
-IndentWrappedFunctionNames: true
-KeepEmptyLinesAtTheStartOfBlocks: false
 Language: Cpp
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
-PackConstructorInitializers: CurrentLine
 PointerAlignment: Left
-QualifierAlignment: Custom
-QualifierOrder: ['static', 'inline', 'constexpr', 'type', 'const']
-ReferenceAlignment: Left
-SeparateDefinitionBlocks: Leave
-#SeparateDefinitionBlocks: Always
 SortIncludes: true
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: Never

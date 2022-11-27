@@ -20,6 +20,9 @@ export class WindowWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
     GroupWidget& getTitleBar() { return m_title_bar; }
@@ -28,13 +31,13 @@ export class WindowWidget : public Widget {
   protected:
     void onSizeChanged(In<ivec2>, In<ivec2>);
 
-    void moveWidget(ivec2&);
+    void moveWidget(In<ivec2> cursor, InOut<ivec2> movement);
 
-    void onLeftResizeHandleMoved(ivec2&);
-    void onBottomLeftResizeHandleMoved(ivec2&);
-    void onBottomResizeHandleMoved(ivec2&);
-    void onBottomRightResizeHandleMoved(ivec2&);
-    void onRightResizeHandleMoved(ivec2&);
+    void onLeftResizeHandleMoved /*********/ (In<ivec2> cursor, InOut<ivec2> movement);
+    void onBottomLeftResizeHandleMoved /***/ (In<ivec2> cursor, InOut<ivec2> movement);
+    void onBottomResizeHandleMoved /*******/ (In<ivec2> cursor, InOut<ivec2> movement);
+    void onBottomRightResizeHandleMoved /**/ (In<ivec2> cursor, InOut<ivec2> movement);
+    void onRightResizeHandleMoved /********/ (In<ivec2> cursor, InOut<ivec2> movement);
 
     void updateLayout();
 

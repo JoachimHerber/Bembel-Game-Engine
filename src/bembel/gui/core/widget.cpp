@@ -15,7 +15,6 @@ bool Widget::configure(xml::Element const* properties) {
         xml::getAttribute(properties, "position", this->position);
         xml::getAttribute(properties, "size", this->size);
     }
-    m_layout_params.configure(properties->FirstChildElement("Layout"));
     return true;
 }
 

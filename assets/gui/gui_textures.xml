@@ -1,7 +1,8 @@
 <TextureAtlas texture="gui_texture_atlas.png">
-	<Entry name="radio_button"          min="0.000 0.875" max="0.125 1.000" />
-	<Entry name="radio_button_selected" min="0.125 0.875" max="0.250 1.000" />
-	<Entry name="check_box"             min="0.000 0.750" max="0.125 0.875" />
-	<Entry name="check_box_selected"    min="0.125 0.750" max="0.250 0.875" />
-	<Entry name="check_box_indeterminate"    min="0.125 0.750" max="0.250 0.875" />
+	<Entry name="radio_button"          	min="0.000 0.875" max="0.125 1.000" />
+	<Entry name="radio_button_selected" 	min="0.125 0.875" max="0.250 1.000" />
+	<Entry name="check_box"             	min="0.000 0.750" max="0.125 0.875" />
+	<Entry name="check_box_selected"    	min="0.125 0.750" max="0.250 0.875" />
+	<Entry name="check_box_indeterminate"   min="0.125 0.750" max="0.250 0.875" />
+	<Entry name="button"    	        	min="0.250 0.875" max="0.375 1.000" />
 </TextureAtlas>

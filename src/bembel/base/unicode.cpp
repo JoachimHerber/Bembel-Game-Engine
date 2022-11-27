@@ -130,9 +130,12 @@ bool String::insertCodePoint(size_t position, utf8::CodePoint c) {
     size_t   n  = 0;
     Iterator it = this->begin();
     while(it && n < position) { ++it, ++n; }
-    if(!it) return false;
-
-    this->data.insert(it.m_pos, utf8::encode(c));
+    if(n != position) { return false; }
+    if(it) {
+        this->data.insert(it.m_pos, utf8::encode(c));
+    } else {
+        this->data.insert(this->data.size(), utf8::encode(c));
+    }
     return true;
 }
 

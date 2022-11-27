@@ -15,7 +15,6 @@ RadioButtonWidget::RadioButtonWidget(Widget& parent, int index) : Widget{parent}
     m_child_widgets.push_back(&m_label);
 
     m_label.setName("Lable");
-    m_label.alignment = LabelWidget::Alignment::Left;
 
     size.change_signal.bind(this, &RadioButtonWidget::onSizeChanged);
     m_handle.action_signal.bind(this, &RadioButtonWidget::onAction);
@@ -27,15 +26,23 @@ bool RadioButtonWidget::configure(xml::Element const* properties) {
     return false;
 }
 
-ivec2 RadioButtonWidget::getMinSize() const {
+uint RadioButtonWidget::getMinWidth() const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float font_size = style->getValue(Style::Values::MIN_FONT_SIZE);
-    float box_size  = style->getValue(Style::Values::CHECKBOX_SIZE);
-    float margin    = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
+    float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+    float margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
 
-    return {box_size + margin, std::max(box_size, font_size)};
+    return box_size + margin + m_label.getMinWidth();
+}
+
+uint RadioButtonWidget::getMinHeight() const {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+
+    return std::max(uint(box_size), m_label.getMinHeight());
 }
 
 void RadioButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
@@ -70,8 +77,8 @@ void SimpleRadioButtonWidgetView::draw(RenderBatchInterface& batch) {
 
     if(!tc) { return; }
 
-    batch.setPrimaryColor(style->getColor(Style::Colors::INPUT_BORDER));
-    batch.setSecondaryColor(style->getColor(Style::Colors::INPUT_BACKGROUND));
+    batch.setPrimaryColor(style->getColor(Style::Colors::INPUT));
+    batch.setSecondaryColor(style->getColor(Style::Colors::BORDER));
     batch.setAlpha(255);
     batch.drawIcon({x, y}, {x + size, y + size}, tc->min, tc->max);
 }
@@ -84,25 +91,36 @@ bool RadioButtonGroupWidget::configure(xml::Element const* properties) {
     return false;
 }
 
-ivec2 RadioButtonGroupWidget::getMinSize() const {
-    ivec2 min_size{0, 0};
-    for(auto& it : m_buttons) {
-        ivec2 min = it->getMinSize();
-        if(m_align_horizontal) {
-            min_size.x += min.x;
-            min_size.y += std::max(min_size.y, min.y);
-        } else {
-            min_size.x += std::max(min_size.x, min.x);
-            min_size.y += min.y;
+uint RadioButtonGroupWidget::getMinWidth() const {
+    uint min_width     = 0;
+    uint min_row_width = 0;
+    for(uint n = 0; n < m_buttons.size(); ++n) {
+        if((n % m_buttons_per_row) == 0) {
+            min_width += std::max(min_width, min_row_width);
+            min_row_width = 0;
         }
+        min_row_width += m_buttons[n]->getMinWidth();
     }
-    return min_size;
+    return std::max(min_width, min_row_width);
 }
 
-void RadioButtonGroupWidget::addRadioButton(In<std::string_view> lable) {
+uint RadioButtonGroupWidget::getMinHeight() const {
+    uint min_height     = 0;
+    uint min_row_height = 0;
+    for(uint n = 0; n < m_buttons.size(); ++n) {
+        if((n % m_buttons_per_row) == 0) {
+            min_height += min_row_height;
+            min_row_height = 0;
+        }
+        min_row_height += std::max(min_row_height, m_buttons[n]->getMinHeight());
+    }
+    return min_height + min_row_height;
+}
+
+void RadioButtonGroupWidget::addRadioButton(In<std::u8string_view> lable) {
     m_buttons.push_back(std::make_unique<RadioButtonWidget>(*this, int(m_buttons.size())));
     m_child_widgets.push_back(m_buttons.back().get());
-    m_buttons.back()->text.set(std::string(lable));
+    m_buttons.back()->setText(lable);
     m_buttons.back()->select_signal.bind(this, &RadioButtonGroupWidget::setSelection);
 }
 
@@ -126,20 +144,21 @@ void RadioButtonGroupWidget::setSelection(int index) {
 void RadioButtonGroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     if(m_buttons.empty()) return;
 
-    ivec2 button_size   = new_size;
-    ivec2 button_offset = m_align_horizontal ? ivec2{new_size.x / m_buttons.size(), 0}
-                                             : ivec2{0, new_size.y / m_buttons.size()};
-    if(m_align_horizontal) {
-        button_size.x /= m_buttons.size();
-    } else {
-        button_size.y /= m_buttons.size();
-    }
-    ivec2 pos = {0, 0};
+    int num_rows =
+        m_buttons.size() / m_buttons_per_row + (m_buttons.size() % m_buttons_per_row ? 1 : 0);
 
-    for(auto& it : m_buttons) {
-        it->size = button_size;
-        it->position = pos;
-        pos += button_offset;
+    ivec2 button_size = {new_size.x / m_buttons_per_row, new_size.y / num_rows};
+    int   y           = new_size.y;
+    int   x           = 0;
+
+    for(uint n = 0; n < m_buttons.size(); ++n) {
+        if(n % m_buttons_per_row == 0) {
+            x = 0;
+            y -= button_size.y;
+        }
+        m_buttons[n]->size     = button_size;
+        m_buttons[n]->position = ivec2{x, y};
+        x += button_size.x;
     }
 }
 

@@ -16,32 +16,36 @@ export class CheckBoxWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "CheckBox";
 
   public:
-    CheckBoxWidget(Widget& parent);
+    CheckBoxWidget(Widget& parent, std::u8string_view label = u8"");
     ~CheckBoxWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;
 
-    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
 
-    virtual ivec2 getMinSize() const override;
+    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
     void disable() {
         m_handle.disable();
-        m_label.text_color = ColorRGBA(127, 127, 127, 255);
-        m_label.outline    = false;
+        m_label.setTextColor({ColorRGBA(127, 127, 127, 255)});
     }
     void enable() {
         m_handle.enable();
-        m_label.text_color.reset();
-        m_label.outline = true;
+        m_label.setTextColor({});
     }
     bool isDisabled() const { return m_handle.isDisabled(); }
+    bool isHovered() const { return m_handle.isHovered(); }
 
     enum class State { UNSELECTED = 0, SELECTED = 1, INDETERMINATE = -1 };
 
-    ObservableValue<State>        state   = State::UNSELECTED;
-    ObservableValue<std::string>& text    = m_label.text;
-    ObservableValue<bool>&        outline = m_label.outline;
+    ObservableValue<State> state = State::UNSELECTED;
+
+    bool isSelected() const { return state.get() == State::SELECTED; }
+
+    String const& getText() const { return m_label.getText(); }
+
+    void setText(std::u8string_view text) { m_label.setText(text); }
 
   protected:
     void onSizeChanged(In<ivec2>, In<ivec2>);
@@ -49,7 +53,7 @@ export class CheckBoxWidget : public Widget {
     void onAction(InteractionHandle::Action, ivec2);
 
   private:
-    LabelWidget m_label{*this};
+    LabelWidget m_label;
 
     InteractionHandle m_handle;
 };

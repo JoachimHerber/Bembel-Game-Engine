@@ -17,6 +17,16 @@ using Element  = tinyxml2::XMLElement;
 using Document = tinyxml2::XMLDocument;
 
 template <typename T>
+requires std::integral<T> || std::floating_point<T>
+bool setAttribute(In<Element*> node, In<std::string_view> name, T value) {
+    if(!node) return false;
+
+    std::string name_str{name};
+    node->SetAttribute(name_str.c_str(), value);
+    return true;
+}
+
+template <typename T>
 bool setAttribute(In<Element*> node, In<std::string_view> name, const T& value) {
     if(!node) return false;
 

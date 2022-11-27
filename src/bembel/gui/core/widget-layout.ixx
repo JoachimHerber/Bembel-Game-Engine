@@ -5,81 +5,123 @@ export module bembel.gui.core:WidgetLayout;
 import bembel.base;
 import bembel.kernel;
 import :Widget;
+import :GroupWidget;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export class WidgetLayout {
+export class LinearWidgetLayout : public Widget::Layout {
   public:
-    virtual bool  configure(In<xml::Element const*> properties)            = 0;
-    virtual void  calculateLayout(In<ivec2>, In<std::span<Widget* const>>) = 0;
-    virtual ivec2 calculateMinSize(In<std::span<Widget const* const>>)     = 0;
-
-    static Factory<WidgetLayout>& GetLayouterFactory();
-};
-
-export class LinearWidgetLayout : public WidgetLayout {
-  public:
-    enum class Direction { VERTICAL, HORIZONTAL };
-    enum class PrimaryAxis {
+    enum class Mode {
         SCALE_TO_FIT  = -1,
-        ALIGN_BUTTON  = 0,
+        ALIGN_BOTTON  = 0,
         ALIGN_LEFT    = 0,
         ALIGN_CENTER  = 1,
-        ALIGN_TOP     = 2,
         ALIGN_RIGHT   = 2,
+        ALIGN_TOP     = 2,
         SPACE_EQUALLY = 3,
-
-    };
-    enum class SecondaryAxis {
-        SCALE_TO_FIT = -1,
-        ALIGN_BUTTON = 0,
-        ALIGN_LEFT   = 0,
-        ALIGN_CENTER = 1,
-        ALIGN_TOP    = 2,
-        ALIGN_RIGHT  = 2,
     };
 
-    LinearWidgetLayout() = default;
-    LinearWidgetLayout(
-        In<Direction> dir, In<PrimaryAxis> primary_axis, In<SecondaryAxis> secondary_axis
-    )
-      : m_direction{dir}
-      , m_primary_axis{primary_axis}
-      , m_secondary_axis{secondary_axis} {}
+    LinearWidgetLayout(GroupWidget* group, In<Mode> mode = Mode::ALIGN_TOP)
+      : m_group{group}, m_mode{mode} {}
 
-    ~LinearWidgetLayout();
+    ~LinearWidgetLayout() = default;
 
     virtual bool configure(In<xml::Element const*> properties) override;
-    virtual void calculateLayout(In<ivec2> area_size, In<std::span<Widget* const>> widgets)
-        override;
-    virtual ivec2 calculateMinSize(In<std::span<Widget const* const>> widgets) override;
+
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
+    virtual void updateLayout() override;
+    virtual void updateLayout(In<vec2> size) override;
+
+    void setMargin(uint left, uint right) {
+        m_margin_left  = left;
+        m_margin_right = right;
+    }
+
+    struct RowParams {
+        Mode                mode = Mode::SCALE_TO_FIT;
+        std::optional<uint> height;
+        uint                min_height = 0;
+        float               rel_height = 0.f;
+    };
+
+    LinearWidgetLayout& addRow(In<RowParams> params = {});
+
+    LinearWidgetLayout& addSpacing(In<uint> width);
+    LinearWidgetLayout& addWidget(
+        In<Widget*> widget, In<float> rel_width = 1.0f, In<uint> min_width = 0
+    );
 
   private:
-    void calculateHorizontalLayout(In<ivec2> area_size, In<std::span<Widget* const>> widgets);
-    void calculateVerticalLayout(In<ivec2> area_size, In<std::span<Widget* const>> widgets);
+    struct Row {
+        RowParams params;
+
+        struct Element {
+            Widget* widget;
+            float   rel_width    = 1.0;
+            uint    min_width    = 0;
+            uint    margin_right = 0;
+
+            mutable uint width = 0;
+        };
+
+        std::vector<Element> elements;
+
+        uint margin_left = 0;
+
+        mutable uint min_width  = 0;
+        mutable uint min_height = 0;
+    };
+
+    void scaleElements(std::span<Row::Element>, uint width);
 
   private:
-    Direction     m_direction      = Direction::VERTICAL;
-    PrimaryAxis   m_primary_axis   = PrimaryAxis::SCALE_TO_FIT;
-    SecondaryAxis m_secondary_axis = SecondaryAxis::SCALE_TO_FIT;
+    GroupWidget* m_group;
+    Mode         m_mode;
 
-    static bool registerd;
+    uint m_margin_left  = 0;
+    uint m_margin_right = 0;
+
+    std::vector<Row> m_rows;
 };
 
-export class RelativeWidgetLayout : public WidgetLayout {
+export class RelativeWidgetLayout : public Widget::Layout {
   public:
-    RelativeWidgetLayout(){};
-    ~RelativeWidgetLayout(){};
+    RelativeWidgetLayout(GroupWidget* group) : m_group{group} {}
+    ~RelativeWidgetLayout() = default;
 
     virtual bool configure(In<xml::Element const*> properties) override;
-    virtual void calculateLayout(In<ivec2> area_size, In<std::span<Widget* const>> widgets)
-        override;
-    virtual ivec2 calculateMinSize(In<std::span<Widget const* const>> widgets) override;
+
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
+    virtual void updateLayout() override;
+    virtual void updateLayout(In<vec2> size) override;
+
+    RelativeWidgetLayout& addWidget(
+        In<Widget*> widget,
+        In<vec2>    position,
+        In<vec2>    size,
+        In<vec2>    position_offset = {0.f, 0.f},
+        In<vec2>    size_offset     = {0.f, 0.f}
+    );
 
   private:
-    static bool registerd;
+    struct Element {
+        Widget* widget;
+
+        vec2 rel_pos;
+        vec2 rel_size;
+
+        vec2 pos_offset;
+        vec2 size_offset;
+    };
+    GroupWidget* m_group;
+
+    std::vector<Element> m_elements;
 };
 
 } // namespace bembel::gui

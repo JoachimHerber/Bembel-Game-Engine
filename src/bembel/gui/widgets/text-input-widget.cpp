@@ -29,12 +29,19 @@ bool TextInputWidget::configure(xml::Element const* properties) {
 
     auto content = properties->FirstChildElement("Content");
     if(content) {
-        std::u32string tmp;
-        conversion::fromString(content->GetText(), tmp);
-        this->text.set(tmp);
+        char8_t* text = (char8_t*)content->GetText();
+        this->text.set(std::u8string_view(text));
     }
 
     return true;
+}
+
+uint TextInputWidget::getMinWidth() const {
+    return uint(0);
+}
+
+uint TextInputWidget::getMinHeight() const {
+    return uint(0);
 }
 
 void TextInputWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
@@ -46,16 +53,16 @@ void TextInputWidget::onAction(InteractionHandle::Action action, ivec2 cursor_po
         case InteractionHandle::Action::INTERACT: break;
         case InteractionHandle::Action::DELETE:
             if(m_cursor_pos < text.get().size()) {
-                std::u32string tmp = this->text.get();
-                tmp.erase(m_cursor_pos, 1);
+                String tmp = this->text.get();
+                tmp.eraseCodePoint(m_cursor_pos);
                 this->text.set(tmp);
             }
             break;
         case InteractionHandle::Action::BACKSPACE:
             if(m_cursor_pos > 0) {
-                std::u32string tmp = this->text.get();
+                String tmp = this->text.get();
                 --m_cursor_pos;
-                tmp.erase(m_cursor_pos, 1);
+                tmp.eraseCodePoint(m_cursor_pos);
                 this->text.set(tmp);
             }
             break;
@@ -69,23 +76,21 @@ void TextInputWidget::onAction(InteractionHandle::Action action, ivec2 cursor_po
 }
 
 void TextInputWidget::onTextInput(char32_t c) {
-    std::u32string tmp = this->text.get();
-    tmp.insert(m_cursor_pos, 1, c);
+    String tmp = this->text.get();
+    tmp.insertCodePoint(m_cursor_pos, c);
     ++m_cursor_pos;
     this->text.set(tmp);
 }
 
-void TextInputWidget::onTextChanged(In<std::u32string>, In<std::u32string> str) {
+void TextInputWidget::onTextChanged(In<String>, In<String> str) {
     if(m_view) ((View*)m_view.get())->updateGlyphs(str);
 }
 
-void TextInputWidget::copy() {
-}
+void TextInputWidget::copy() {}
 
-void TextInputWidget::paste() {
-}
+void TextInputWidget::paste() {}
 
-void TextInputWidget::View::updateGlyphs(std::u32string const& str) {
+void TextInputWidget::View::updateGlyphs(In<String> str) {
     auto style = m_widget.getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
@@ -140,20 +145,28 @@ void TextInputWidget::View::drawBackground(
     vec2 inner_min = outer_min + vec2(border);
     vec2 inner_max = outer_max - vec2(border);
 
-    batch.setColor(style.getColor(Style::Colors::INPUT_BORDER));
+    if(m_widget.isDisabled()) {
+        batch.setColor(style.getColor(Style::Colors::BORDER_DISABLED));
+    } else if(m_widget.isSelected()) {
+        batch.setColor(style.getColor(Style::Colors::BORDER_ACTIVE));
+    } else if(m_widget.isHovered()) {
+        batch.setColor(style.getColor(Style::Colors::BORDER_HOVERED));
+    } else {
+        batch.setColor(style.getColor(Style::Colors::BORDER));
+    }
     batch.drawRectangle({inner_min.x, outer_min.y}, {inner_max.x, inner_min.y});
     batch.drawRectangle({inner_min.x, inner_max.y}, {inner_max.x, outer_max.y});
     batch.drawRectangle({outer_min.x, outer_min.y}, {inner_min.x, outer_max.y});
     batch.drawRectangle({inner_max.x, outer_min.y}, {outer_max.x, outer_max.y});
 
     if(m_widget.isDisabled()) {
-        batch.setColor(style.getColor(Style::Colors::INPUT_BACKGROUND_DISABLED));
+        batch.setColor(style.getColor(Style::Colors::INPUT_DISABLED));
     } else if(m_widget.isSelected()) {
-        batch.setColor(style.getColor(Style::Colors::INPUT_BACKGROUND_SELECTED));
+        batch.setColor(style.getColor(Style::Colors::INPUT_ACTIVE));
     } else if(m_widget.isHovered()) {
-        batch.setColor(style.getColor(Style::Colors::INPUT_BACKGROUND_HOVERED));
+        batch.setColor(style.getColor(Style::Colors::INPUT_HOVERED));
     } else {
-        batch.setColor(style.getColor(Style::Colors::INPUT_BACKGROUND));
+        batch.setColor(style.getColor(Style::Colors::INPUT));
     }
     batch.drawRectangle(inner_min, inner_max);
 }

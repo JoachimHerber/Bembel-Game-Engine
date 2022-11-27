@@ -7,13 +7,13 @@ target_sources(Bembel
 		
 		label-widget.ixx
 		label-widget.cpp
-		
-		labeled-button-widget.ixx
-		labeled-button-widget.cpp
-		
+				
 		text-input-widget.ixx
 		text-input-widget.cpp
-
+		
+		slider-widget.ixx
+		slider-widget.cpp
+		
 		text-widget.ixx
 		text-widget.cpp
 		

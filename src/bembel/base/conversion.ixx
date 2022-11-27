@@ -81,7 +81,6 @@ bool fromString(In<std::string_view> str, Out<glm::tvec3<T>> value) {
 
 template <typename T>
 requires std::integral<T> || std::floating_point<T>
-
 bool fromString(In<std::string_view> str, Out<glm::tvec4<T>> value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {

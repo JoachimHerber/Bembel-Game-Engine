@@ -72,11 +72,29 @@ bool WindowWidget::configure(xml::Element const* properties) {
     return true;
 }
 
+uint WindowWidget::getMinWidth() const {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+
+    return 2 * border_width + std::max(m_window_area.getMinWidth(), m_title_bar.getMinWidth());
+}
+
+uint WindowWidget::getMinHeight() const {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
+    return title_bar_height + border_width + m_window_area.getMinHeight();
+}
+
 void WindowWidget::onSizeChanged(In<ivec2>, In<ivec2>) {
     updateLayout();
 }
 
-void WindowWidget::moveWidget(ivec2& cursor_offset) {
+void WindowWidget::moveWidget(In<ivec2>, InOut<ivec2> cursor_offset) {
     ivec2 pos = this->position.get() + cursor_offset;
 
     ivec2 clamped_pos = pos;
@@ -92,7 +110,7 @@ void WindowWidget::moveWidget(ivec2& cursor_offset) {
     this->position = clamped_pos;
 }
 
-void WindowWidget::onLeftResizeHandleMoved(ivec2& cursor_offset) {
+void WindowWidget::onLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
@@ -100,7 +118,7 @@ void WindowWidget::onLeftResizeHandleMoved(ivec2& cursor_offset) {
     ivec2 size     = this->size;
 
     int max_x = position.x + size.x;
-    max_x -= m_window_area.getMinSize().x;
+    max_x -= m_window_area.getMinWidth();
     max_x -= 2 * style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
     int start_x   = position.x + cursor_offset.x;
@@ -111,7 +129,7 @@ void WindowWidget::onLeftResizeHandleMoved(ivec2& cursor_offset) {
     this->position.set({clamped_x, position.y});
 }
 
-void WindowWidget::onBottomLeftResizeHandleMoved(glm::ivec2& cursor_offset) {
+void WindowWidget::onBottomLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
@@ -122,10 +140,10 @@ void WindowWidget::onBottomLeftResizeHandleMoved(glm::ivec2& cursor_offset) {
     ivec2 size = this->size;
 
     ivec2 max = pos + size;
-    max.x -= m_window_area.getMinSize().x;
+    max.x -= m_window_area.getMinWidth();
     max.x -= 2 * border_width;
     max.y -= title_bar_height;
-    max.y -= m_window_area.getMinSize().y;
+    max.y -= m_window_area.getMinHeight();
     max.y -= border_width;
 
     ivec2 start   = pos + cursor_offset;
@@ -136,7 +154,7 @@ void WindowWidget::onBottomLeftResizeHandleMoved(glm::ivec2& cursor_offset) {
     this->position.set(clamped);
 }
 
-void WindowWidget::onBottomResizeHandleMoved(glm::ivec2& cursor_offset) {
+void WindowWidget::onBottomResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
 
@@ -146,7 +164,7 @@ void WindowWidget::onBottomResizeHandleMoved(glm::ivec2& cursor_offset) {
     ivec2 pos  = this->position;
     ivec2 size = this->size;
 
-    int max_y = pos.y + size.y - title_bar_height - m_window_area.getMinSize().y - border_width;
+    int max_y = pos.y + size.y - title_bar_height - m_window_area.getMinHeight() - border_width;
 
     int start_y   = pos.y + cursor_offset.y;
     int clamped_y = glm::clamp(start_y, 0, max_y);
@@ -156,7 +174,7 @@ void WindowWidget::onBottomResizeHandleMoved(glm::ivec2& cursor_offset) {
     this->position.set({pos.x, clamped_y});
 }
 
-void WindowWidget::onBottomRightResizeHandleMoved(glm::ivec2& cursor_offset) {
+void WindowWidget::onBottomRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
@@ -166,13 +184,13 @@ void WindowWidget::onBottomRightResizeHandleMoved(glm::ivec2& cursor_offset) {
     ivec2 pos  = this->position;
     ivec2 size = this->size;
 
-    int const min_width = m_window_area.getMinSize().x + 2 * border_width;
+    int const min_width = m_window_area.getMinWidth() + 2 * border_width;
 
     ivec2 min = {pos.x + min_width, 0};
     ivec2 max = {m_parent->size.get().x, pos.y + size.y};
 
     max.y -= title_bar_height;
-    max.y -= m_window_area.getMinSize().y;
+    max.y -= m_window_area.getMinHeight();
     max.y -= border_width;
 
     glm::ivec2 start   = {pos.x + size.x + cursor_offset.x, pos.y + cursor_offset.y};
@@ -184,7 +202,7 @@ void WindowWidget::onBottomRightResizeHandleMoved(glm::ivec2& cursor_offset) {
     this->position.set({pos.x, clamped.y});
 }
 
-void WindowWidget::onRightResizeHandleMoved(ivec2& cursor_offset) {
+void WindowWidget::onRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
@@ -192,7 +210,7 @@ void WindowWidget::onRightResizeHandleMoved(ivec2& cursor_offset) {
     ivec2 pos          = this->position;
     ivec2 size         = this->size;
 
-    int const min_width = m_window_area.getMinSize().x + 2 * border_width;
+    int const min_width = m_window_area.getMinWidth() + 2 * border_width;
     int const min_x     = pos.x + min_width;
     int const max_x     = m_parent->size.get().x;
 

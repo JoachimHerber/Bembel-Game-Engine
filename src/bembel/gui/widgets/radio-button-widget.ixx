@@ -21,19 +21,19 @@ export class RadioButtonWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
-    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
 
-    virtual ivec2 getMinSize() const override;
+    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
     void disable() {
         m_handle.disable();
-        m_label.text_color = ColorRGBA(127, 127, 127, 255);
-        m_label.outline    = false;
+        m_label.setTextColor({ColorRGBA(127, 127, 127, 255)});
     }
+
     void enable() {
         m_handle.enable();
-        m_label.text_color.reset();
-        m_label.outline    = true;
+        m_label.setTextColor({});
     }
 
     bool isDisabled() const { return m_handle.isDisabled(); }
@@ -46,11 +46,13 @@ export class RadioButtonWidget : public Widget {
         if(!m_selected) select_signal.emit(m_index);
         m_selected = true;
     }
+
     void deselect() { m_selected = false; }
+
     bool isSelected() const { return m_selected; }
 
-    ObservableValue<std::string>& text    = m_label.text;
-    ObservableValue<bool>&        outline = m_label.outline;
+    String const& getText() const { return m_label.getText(); }
+    void          setText(std::u8string_view text) { m_label.setText(text); }
 
   protected:
     void onSizeChanged(In<ivec2>, In<ivec2>);
@@ -69,6 +71,7 @@ export class RadioButtonWidget : public Widget {
 export class SimpleRadioButtonWidgetView : public Widget::View {
   public:
     SimpleRadioButtonWidgetView(RadioButtonWidget& widget) : m_widget{widget} {}
+
     ~SimpleRadioButtonWidgetView() = default;
 
     void draw(RenderBatchInterface& batch) override;
@@ -87,14 +90,15 @@ export class RadioButtonGroupWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
+    virtual uint getMinWidth() const override;
+    virtual uint getMinHeight() const override;
+
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
-    virtual ivec2 getMinSize() const override;
+    void disableButton(size_t index);
+    void enableButton(size_t index);
 
-    void disableButton(size_t index) {}
-    void enableButton(size_t index) {}
-
-    void addRadioButton(In<std::string_view> lable);
+    void addRadioButton(In<std::u8string_view> lable);
 
     int  getSelection() const;
     void setSelection(int index);
@@ -107,10 +111,9 @@ export class RadioButtonGroupWidget : public Widget {
   private:
     std::vector<std::unique_ptr<RadioButtonWidget>> m_buttons;
 
-    bool m_align_horizontal = true;
+    uint m_buttons_per_row = 1;
 
     int m_selection = -1;
 };
-
 
 } // namespace bembel::gui
