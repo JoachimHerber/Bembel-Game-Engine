@@ -17,12 +17,12 @@ set( ProjectSources
 	src/font-family.cpp 
 	src/font-view.ixx
 	src/font-view.cpp 
+	src/font-texture-generator.ixx
+	src/font-texture-generator.cpp
 	src/glyph.ixx
 	src/glyph.cpp 
 	src/glyph-texture-atlas.ixx
-	src/glyph-texture-atlas.cpp 
-	src/preview-renderer.ixx
-	src/preview-renderer.cpp 
+	src/glyph-texture-atlas.cpp
 	src/texture-atlas-node.ixx
 	src/texture-atlas-node.cpp 
 )
