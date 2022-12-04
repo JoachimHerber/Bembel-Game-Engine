@@ -22,11 +22,11 @@ export class FontFamily {
 
     bool addFace(FT_Face const& face);
 
-    enum class FaceType { DEFAULT = 0, OBLIQUE, BOLD, BOLD_OBLIQUE };
+    enum FaceType { DEFAULT = 0, OBLIQUE, BOLD, BOLD_OBLIQUE };
 
     bool hasFace(FaceType type) { return m_faces[std::to_underlying(type)] != nullptr; }
 
-    bool parseGlypes(std::vector<char32_t> const& characters);
+    bool parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces);
 
     size_t getGlypheID(char32_t, bool, bool);
 
@@ -36,7 +36,7 @@ export class FontFamily {
     const std::string_view getName() { return m_name; }
     unsigned               getUnitsPerEM() { return m_units_per_EM; }
 
-    GlyphTextureAtlas& getTextureAtlas() { return m_texture_atlas; }
+    auto& getKerning() { return m_kerning; }
 
   private:
     using CharMap    = std::map<char32_t, unsigned int>;
@@ -58,7 +58,5 @@ export class FontFamily {
 
     std::vector<Glyph> m_glyphs;
     KerningMap         m_kerning;
-
-    GlyphTextureAtlas m_texture_atlas;
 };
 } // namespace bembel::tools

@@ -11,7 +11,7 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::gui;
 
-FontConverter::FontConverter() {
+FontConverter::FontConverter(AssetManager& asset_mgr) : m_texture_generator{asset_mgr} {
     FT_Init_FreeType(&m_library);
 }
 
@@ -36,109 +36,121 @@ bool FontConverter::loade(In<std::filesystem::path> path) {
         font->addFace(face);
         m_font_dictionary.emplace(face->family_name, font.get());
         m_fonts.push_back(std::move(font));
-        font_family_added_signal.emit(face->family_name);
+        font_family_added_signal.emit((char8_t*)face->family_name);
     }
     return true;
 }
 
-bool FontConverter::parseGlypes() {
-    std::vector<char32_t> characters{
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-        's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+void FontConverter::setResolution(uvec2 res) {
+    m_texture_atlas.setResolution(res);
+    m_texture_generator.setResolution(res);
+}
 
-    //for(auto const& it : m_fonts) it.second->parseGlypes(characters);
+bool FontConverter::save(In<std::filesystem::path> path) {
+    FontFamily* font = getFontFamily();
+    if(!font) return false;
+
+    if(!m_texture_generator.saveTexture(path)) {}
+
+    bembel::base::xml::Document doc;
+
+    xml::Element* root = doc.NewElement("Font");
+    doc.InsertEndChild(root);
+
+    xml::Element* texture = doc.NewElement("Texture");
+    root->InsertEndChild(texture);
+    texture->SetAttribute("file", (path.string() + ".png").c_str());
+
+    xml::Element* glyphs = doc.NewElement("Glyphs");
+    root->InsertEndChild(glyphs);
+    saveGlypes(glyphs);
+
+    xml::Element* charMap = doc.NewElement("CharMap");
+    root->InsertEndChild(charMap);
+    saveCharMap(charMap);
+
+    xml::Element* kerning = doc.NewElement("Kerning");
+    root->InsertEndChild(kerning);
+    saveKerning(kerning);
+
+    doc.SaveFile((path.string() + ".xml").c_str());
 
     return true;
 }
 
-/*
-void Font::Save()
-{
-        jhl::xml::Document doc;
+void FontConverter::converSelectedFont(
+    std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces, double max_dist
+) {
+    m_characters = std::move(characters);
+    m_faces.fill(false);
+    for(auto it : faces) { m_faces[std::to_underlying(it)] = true; }
 
-        jhl::xml::Element* font = doc.NewElement("Font");
-        doc.InsertEndChild(font);
+    if(m_selected_font_family) {
+        m_selected_font_family->parseGlypes(m_characters, faces);
 
-        jhl::xml::Element* texture = doc.NewElement("Texture");
-        font->InsertEndChild(texture);
-        jhl::xml::SetAttribute(texture, "file", _name + ".png");
-
-        jhl::xml::Element* glyphs = doc.NewElement("Glyphs");
-        font->InsertEndChild(glyphs);
-        SaveGlypes(glyphs);
-
-        jhl::xml::Element* charMap = doc.NewElement("CharMap");
-        font->InsertEndChild(charMap);
-        SaveCharMap(charMap);
-
-        jhl::xml::Element* kerning = doc.NewElement("Kerning");
-        font->InsertEndChild(kerning);
-        SaveKening(kerning, _kerning);
-
-        doc.SaveFile((_name + ".xml").c_str());
-}//*/
-
-/*
-void Font::SaveGlypes(jhl::xml::Element* root) {
-  float glypeScale     = 1.f / float(_unitsPerEM);
-  float texCoordScaleU = _atlas->GetTexCoordScaleU();
-  float texCoordScaleV = _atlas->GetTexCoordScaleV();
-
-  for(auto& it : _glyphs) {
-    jhl::xml::Element* glyph = root->GetDocument()->NewElement("Glyph");
-    root->InsertEndChild(glyph);
-
-    jhl::xml::SetAttribute(
-      glyph, "advance", it.GetAdvance() / float(_unitsPerEM));
-
-    jhl::Rectangle extends;
-    if(it.GetExtendsMin() != it.GetExtendsMax()) {
-      extends.max = glypeScale * glm::vec2(it.GetExtendsMax());
-      extends.min = glypeScale * glm::vec2(it.GetExtendsMin());
-      jhl::xml::SetAttribute(glyph, "extends", extends);
+        m_texture_atlas.update(m_selected_font_family->getGlyphs());
+        m_texture_generator.generateTexture(*m_selected_font_family, m_texture_atlas, max_dist);
     }
-
-    if(it.GetTexCoordMin() != it.GetTexCoordMax()) {
-      jhl::Rectangle texCoord;
-      texCoord.min.x = texCoordScaleU * it.GetTexCoordMin().x;
-      texCoord.min.y = texCoordScaleV * it.GetTexCoordMin().y;
-      texCoord.max.x = texCoordScaleU * it.GetTexCoordMax().x;
-      texCoord.max.y = texCoordScaleV * it.GetTexCoordMax().y;
-      jhl::xml::SetAttribute(glyph, "texCoord", texCoord);
-    }
-  }
 }
 
-void Font::SaveCharMap(jhl::xml::Element* root) {
-  for(char32_t c : _character) {
-    unsigned glypes[4] = {GetGlypeID(_faces[0], c),
-                          GetGlypeID(_faces[1], c),
-                          GetGlypeID(_faces[2], c),
-                          GetGlypeID(_faces[3], c)};
+void FontConverter::saveGlypes(xml::Element* root) {
+    unsigned units_per_em      = m_selected_font_family->getUnitsPerEM();
+    float    glypeScale        = 1.f / float(units_per_em);
+    float    tex_coord_scale_u = m_texture_atlas.getTexCoordScaleU();
+    float    tex_coord_scale_v = m_texture_atlas.getTexCoordScaleV();
 
-    if(glypes[0] || glypes[1] || glypes[2] || glypes[3]) {
-      jhl::xml::Element* entry = root->GetDocument()->NewElement("Entry");
-      root->InsertEndChild(entry);
-      jhl::xml::SetAttribute(entry, "char", c);
-      if(glypes[0]) jhl::xml::SetAttribute(entry, "glyph", glypes[0]);
-      if(glypes[1]) jhl::xml::SetAttribute(entry, "glyph_oblique", glypes[1]);
-      if(glypes[2]) jhl::xml::SetAttribute(entry, "glyph_bold", glypes[2]);
-      if(glypes[3])
-        jhl::xml::SetAttribute(entry, "glyph_bold_oblique", glypes[3]);
+    for(auto& it : m_selected_font_family->getGlyphs()) {
+        xml::Element* glyph = root->GetDocument()->NewElement("Glyph");
+        root->InsertEndChild(glyph);
+
+        xml::setAttribute(glyph, "advance", it.getAdvance() / float(units_per_em));
+
+        if(it.getExtendsMin() != it.getExtendsMax() && it.getTexCoordMin() != it.getTexCoordMax()) {
+            vec2      max = glypeScale * glm::vec2(it.getExtendsMax());
+            vec2      min = glypeScale * glm::vec2(it.getExtendsMin());
+            glm::vec4 extends{min.x, max.x, min.y, max.y};
+            xml::setAttribute(glyph, "extends", extends);
+
+            glm::vec4 tex_coord = {
+                tex_coord_scale_u * it.getTexCoordMin().x,
+                tex_coord_scale_u * it.getTexCoordMax().x,
+                tex_coord_scale_v * it.getTexCoordMin().y,
+                tex_coord_scale_v * it.getTexCoordMax().y};
+            xml::setAttribute(glyph, "texCoord", tex_coord);
+        }
     }
-  }
 }
 
-void Font::SaveKening(jhl::xml::Element* root, const KerningMap& kerning) {
-  for(auto& it : kerning) {
-    jhl::xml::Element* entry = root->GetDocument()->NewElement("Entry");
-    root->InsertEndChild(entry);
+void FontConverter::saveCharMap(xml::Element* root) {
+    for(char32_t c : m_characters) {
+        size_t glypes[4] = {
+            m_selected_font_family->getGlypheID(c, false, false),
+            m_selected_font_family->getGlypheID(c, false, true),
+            m_selected_font_family->getGlypheID(c, true, false),
+            m_selected_font_family->getGlypheID(c, true, true)};
 
-    jhl::xml::SetAttribute(entry, "left", it.first.first);
-    jhl::xml::SetAttribute(entry, "right", it.first.second);
-    jhl::xml::SetAttribute(entry, "kerning", it.second / float(_unitsPerEM));
-  }
+        if(glypes[0] || glypes[1] || glypes[2] || glypes[3]) {
+            xml::Element* entry = root->GetDocument()->NewElement("Entry");
+            root->InsertEndChild(entry);
+            xml::setAttribute(entry, "char", c);
+            if(m_faces[0] && glypes[0]) xml::setAttribute(entry, "glyph", glypes[0]);
+            if(m_faces[1] && glypes[1]) xml::setAttribute(entry, "glyph_oblique", glypes[1]);
+            if(m_faces[2] && glypes[2]) xml::setAttribute(entry, "glyph_bold", glypes[2]);
+            if(m_faces[3] && glypes[3]) xml::setAttribute(entry, "glyph_bold_oblique", glypes[3]);
+        }
+    }
 }
-/*/
+
+void FontConverter::saveKerning(xml::Element* root) {
+    double scale = 1.0 / m_selected_font_family->getUnitsPerEM();
+    for(auto& it : m_selected_font_family->getKerning()) {
+        xml::Element* entry = root->GetDocument()->NewElement("Entry");
+        root->InsertEndChild(entry);
+
+        xml::setAttribute(entry, "left", it.first.first);
+        xml::setAttribute(entry, "right", it.first.second);
+        xml::setAttribute(entry, "kerning", it.second * scale);
+    }
+}
+
 } // namespace bembel::tools

@@ -33,8 +33,8 @@ export class Glyph {
 
     ivec2 const& getSize() const { return m_size; }
 
-    void         setTexCoordMin(ivec2 const& value) { m_tex_corrds_min; }
-    void         setTexCoordMax(ivec2 const& value) { m_tex_corrds_max; }
+    void         setTexCoordMin(ivec2 const& value) { m_tex_corrds_min = value; }
+    void         setTexCoordMax(ivec2 const& value) { m_tex_corrds_max = value; }
     ivec2 const& getTexCoordMin() const { return m_tex_corrds_min; }
     ivec2 const& getTexCoordMax() const { return m_tex_corrds_max; }
 

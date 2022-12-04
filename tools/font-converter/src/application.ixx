@@ -4,18 +4,20 @@ export module bembel.tools.font_converter;
 
 import bembel;
 import :FontConverter;
-import :PreviewRenderer;
 import :FontView;
 import :FontFamily;
+import :FontTextureGenerator;
 
 namespace bembel::tools {
 using namespace bembel::base;
+using bembel::gui::ButtonWidget;
 using bembel::gui::CheckBoxWidget;
 using bembel::gui::GraphicalUserInterface;
 using bembel::gui::GroupWidget;
 using bembel::gui::GuiSystem;
-using bembel::gui::LabeledButtonWidget;
+using bembel::gui::IntSliderWidget;
 using bembel::gui::LabelWidget;
+using bembel::gui::LinearWidgetLayout;
 using bembel::gui::RadioButtonGroupWidget;
 using bembel::gui::TextInputWidget;
 using bembel::kernel::FileDropEvent;
@@ -41,49 +43,56 @@ export class Application : public kernel::Application {
   private:
     bool initUserInterface();
 
-    void createWidgets();
-
     void lodeFontFile();
-    void onFontFilePathChanged(In<std::u32string>, In<std::u32string>);
-    void onFontFamilyAdded(In<std::string_view> name);
+    void onFontFilePathChanged(In<String>, In<String>);
+    void onFontFamilyAdded(In<std::u8string_view> name);
     void onSelectFontFamily(int index);
+    void onTextureResulutionUpdate(i64 res);
+    void onConvertFont();
+    void onSaveFont();
+
 
   private:
     GuiSystem*                       m_gui_system;
     std::unique_ptr<FontConverter>   m_converter;
-    std::unique_ptr<PreviewRenderer> m_preview;
     std::unique_ptr<FontView>        m_font_view;
 
     Window* m_main_window;
 
     GraphicalUserInterface* m_gui;
 
-    struct FilePathInput {
-        LabelWidget*         label;
-        GroupWidget*         group;
-        TextInputWidget*     file_path;
-        LabeledButtonWidget* button;
-        LabelWidget*         error;
+    LinearWidgetLayout* m_layout;
 
-        void createWidgets(
-            GraphicalUserInterface* gui,
-            In<std::string_view>    label,
-            In<std::string_view>    button_text
-        );
-    };
+    struct Widgets {
+        LabelWidget*     load_file_label;
+        TextInputWidget* load_file_path_input;
+        ButtonWidget*    load_file_button;
+        LabelWidget*     load_file_error;
 
-    struct FontSelection {
-        RadioButtonGroupWidget* font_family;
-        CheckBoxWidget*         check_boxes[4];
+        LabelWidget*            font_selections_label;
+        RadioButtonGroupWidget* font_family_selections;
+        CheckBoxWidget*         type_face_selection[4];
+
+        LabelWidget*     char_set_label;
+        CheckBoxWidget*  char_set_selection[4];
+        LabelWidget*     additional_chars_label;
+        TextInputWidget* additional_chars_input;
+
+        LabelWidget*     sdf_label;
+
+        LabelWidget*     texture_size_label;
+        IntSliderWidget* texture_size_slider;
+
+        LabelWidget*     sdf_max_dist_label;
+        IntSliderWidget* sdf_max_dist_slider;
+
+        ButtonWidget* convert_font_button;
+        ButtonWidget* save_font_button;
+        LabelWidget*  save_file_error;
 
         void createWidgets(GraphicalUserInterface* gui);
-    };
 
-    struct {
-        FilePathInput input;
-        FontSelection font_selection;
-        GroupWidget*  spacing;
-        FilePathInput output;
+        void initLayout(LinearWidgetLayout* layout);
     } m_widgets;
 };
 

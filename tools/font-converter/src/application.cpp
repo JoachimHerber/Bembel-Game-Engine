@@ -7,7 +7,7 @@ using namespace bembel::base;
 using namespace bembel::gui;
 using namespace bembel::kernel;
 
-Application::Application() : kernel::Application(), m_converter(std::make_unique<FontConverter>()) {
+Application::Application() : kernel::Application() {
     m_gui_system = m_engine.addSystem<GuiSystem>();
 
     auto& eventMgr = m_engine.getEventManager();
@@ -17,8 +17,6 @@ Application::Application() : kernel::Application(), m_converter(std::make_unique
 
     auto escapeKey = m_engine.getInputManager().getKeyboard().getKey(Keyboard::ESCAPE);
     escapeKey->press_signal.bind<Application>(this, &Application::quit);
-
-    m_converter->font_family_added_signal.bind(this, &Application::onFontFamilyAdded);
 }
 
 Application::~Application() {
@@ -48,12 +46,21 @@ bool Application::init() {
 
     m_main_window->open("Font Converter");
 
+    m_converter = std::make_unique<FontConverter>(m_engine.getAssetManager());
+    m_converter->font_family_added_signal.bind(this, &Application::onFontFamilyAdded);
+
     if(!initUserInterface()) return false;
 
     m_main_window->getViewport(1)->addView(&m_gui->getView());
 
-    m_font_view = std::make_unique<FontView>(m_engine.getAssetManager());
+    m_font_view = std::make_unique<FontView>(
+        m_engine.getAssetManager(),
+        m_converter->getGlyphTextureAtlas(),
+        m_converter->getTextureGenerator()
+    );
     m_main_window->getViewport(0)->addView(m_font_view.get());
+
+    m_widgets.texture_size_slider->setValue(1024);
 
     m_engine.initSystems();
 
@@ -62,6 +69,7 @@ bool Application::init() {
 
 void Application::cleanup() {
     m_font_view.reset();
+    m_converter.reset();
 
     m_engine.shutdownSystems();
     m_engine.getDisplayManager().closeOpenWindows();
@@ -78,7 +86,18 @@ void Application::handleEvent(In<WindowResizeEvent> event) {}
 void Application::handleEvent(In<FileDropEvent> event) {
     for(auto& file_path : event.files) { m_converter->loade(file_path); }
 
-    m_converter->parseGlypes();
+    auto font_family = m_converter->getFontFamily();
+
+    if(font_family) {
+        for(int i = 0; i < 4; ++i) {
+            if(font_family->hasFace(FontFamily::FaceType(i))) {
+                m_widgets.type_face_selection[i]->enable();
+                m_widgets.type_face_selection[i]->state = CheckBoxWidget::State::SELECTED;
+            } else {
+                m_widgets.type_face_selection[i]->disable();
+            }
+        }
+    }
 }
 
 bool Application::initUserInterface() {
@@ -93,149 +112,202 @@ bool Application::initUserInterface() {
     m_gui = m_gui_system->createGUI("main");
     m_gui->getRenderer().init(gui_shader, gui_style);
 
-    createWidgets();
+    using LinearWidgetLayout::Mode::SCALE_TO_FIT;
+
+    m_layout = m_gui->getRootWidget().setLayout<LinearWidgetLayout>(SCALE_TO_FIT);
+
+    m_widgets.createWidgets(m_gui);
+    m_widgets.initLayout(m_layout);
+
+    // clang-format off
+    m_widgets.load_file_path_input  ->     text.change_signal.bind(this, &Application::onFontFilePathChanged);
+    m_widgets.load_file_button      ->           click_signal.bind(this, &Application::lodeFontFile);
+    m_widgets.font_family_selections->selection_change_signal.bind(this, &Application::onSelectFontFamily);
+    m_widgets.texture_size_slider   ->    value_update_signal.bind(this, &Application::onTextureResulutionUpdate);
+    m_widgets.convert_font_button   ->           click_signal.bind(this, &Application::onConvertFont);
+    m_widgets.save_font_button      ->           click_signal.bind(this, &Application::onSaveFont);
+    // clang-format on
+
     return true;
 }
 
-void Application::createWidgets() {
-    m_gui->getRootWidget().setLayout(std::make_shared<LinearWidgetLayout>(
-        LinearWidgetLayout::Direction::VERTICAL,
-        LinearWidgetLayout::PrimaryAxis::ALIGN_TOP,
-        LinearWidgetLayout::SecondaryAxis::SCALE_TO_FIT
-    ));
-
-    m_widgets.input.createWidgets(m_gui, "Load Font File:", "Load");
-
-    m_widgets.input.file_path->text = std::u32string{U"fonts/FreeSans.ttf"};
-    m_widgets.input.file_path->text.change_signal.bind(this, &Application::onFontFilePathChanged);
-    m_widgets.input.button->click_signal.bind(this, &Application::lodeFontFile);
-
-    m_widgets.font_selection.createWidgets(m_gui);
-    m_widgets.font_selection.font_family->selection_change_signal.bind(
-        this, &Application::onSelectFontFamily
-    );
-}
-
 void Application::lodeFontFile() {
-    std::filesystem::path path = m_widgets.input.file_path->text.get();
+    std::filesystem::path path = m_widgets.load_file_path_input->text.get().data;
     if(!std::filesystem::exists(path)) {
-        m_widgets.input.error->text.set("File dosn't exist");
+        m_widgets.load_file_error->setText(u8"File dosn't exist");
         return;
     }
     if(!m_converter->loade(path)) {
-        m_widgets.input.error->text.set("Failed to load file.");
+        m_widgets.load_file_error->setText(u8"Failed to load file.");
         return;
     }
-
-    m_converter->parseGlypes();
 }
 
-void Application::onFontFilePathChanged(In<std::u32string>, In<std::u32string>) {
-    m_widgets.input.error->text.set("");
+void Application::onFontFilePathChanged(In<String>, In<String>) {
+    m_widgets.load_file_error->setText(u8"");
 }
 
-void Application::onFontFamilyAdded(In<std::string_view> name) {
-    m_widgets.font_selection.font_family->addRadioButton(name);
-    if(m_widgets.font_selection.font_family->getSelection() == -1)
-        m_widgets.font_selection.font_family->setSelection(0);
+void Application::onFontFamilyAdded(In<std::u8string_view> name) {
+    m_widgets.font_family_selections->addRadioButton(name);
+    if(m_widgets.font_family_selections->getSelection() == -1)
+        m_widgets.font_family_selections->setSelection(0);
+
+    m_widgets.convert_font_button->enable();
 
     m_gui->getRootWidget().updateLayout();
 }
 
+void Application::onConvertFont() {
+    std::vector<char32_t> chars;
+    if(m_widgets.char_set_selection[0]->isSelected()) // Basic Latin
+        for(char32_t c = 0x0000; c <= 0x007f; ++c) chars.push_back(c);
+    if(m_widgets.char_set_selection[1]->isSelected()) // Latin-1 Supplement
+        for(char32_t c = 0x0080; c <= 0x00ff; ++c) chars.push_back(c);
+    if(m_widgets.char_set_selection[2]->isSelected()) // Latin Extended-A
+        for(char32_t c = 0x0100; c <= 0x017f; ++c) chars.push_back(c);
+    if(m_widgets.char_set_selection[3]->isSelected()) // Latin Extended-B
+        for(char32_t c = 0x0180; c <= 0x024f; ++c) chars.push_back(c);
+
+    std::vector<FontFamily::FaceType> faces;
+    if(m_widgets.type_face_selection[0]->isSelected()) // DEFAULT
+        faces.push_back(FontFamily::FaceType::DEFAULT);
+    if(m_widgets.type_face_selection[1]->isSelected()) // OBLIQUE
+        faces.push_back(FontFamily::FaceType::OBLIQUE);
+    if(m_widgets.type_face_selection[2]->isSelected()) // BOLD
+        faces.push_back(FontFamily::FaceType::BOLD);
+    if(m_widgets.type_face_selection[3]->isSelected()) // BOLD & OBLIQUE
+        faces.push_back(FontFamily::FaceType::BOLD_OBLIQUE);
+
+    m_converter->converSelectedFont(
+        std::move(chars), faces, m_widgets.sdf_max_dist_slider->getValue()
+    );
+
+    m_widgets.save_font_button->enable();
+}
+
+void Application::onSaveFont() {
+    FontFamily* font = m_converter->getFontFamily();
+    if(!font) return;
+
+    std::filesystem::path path = u8"fonts/";
+    path.append(font->getName());
+    if(!m_converter->save(path)) {}
+}
+
 void Application::onSelectFontFamily(int index) {
-    auto font_family = m_converter->getFontFamily(index);
+    m_converter->setSelectedFontFamily(index);
+
+    auto font_family = m_converter->getFontFamily();
     if(!font_family) { return; }
     for(int i = 0; i < 4; ++i) {
-        m_widgets.font_selection.check_boxes[i]->show();
         if(font_family->hasFace(FontFamily::FaceType(i))) {
-            m_widgets.font_selection.check_boxes[i]->enable();
+            m_widgets.type_face_selection[i]->enable();
+            m_widgets.type_face_selection[i]->state = CheckBoxWidget::State::SELECTED;
         } else {
-            m_widgets.font_selection.check_boxes[i]->disable();
+            m_widgets.type_face_selection[i]->disable();
         }
     }
 
     m_gui->getRootWidget().updateLayout();
+
+    m_font_view->setFont(font_family);
 }
 
-void Application::FilePathInput::createWidgets(
-    GraphicalUserInterface* gui, In<std::string_view> label_text, In<std::string_view> button_text
-) {
-    label     = gui->getRootWidget().createChildWidget<LabelWidget>();
-    group     = gui->getRootWidget().createChildWidget<GroupWidget>();
-    file_path = group->createChildWidget<TextInputWidget>();
-    button    = group->createChildWidget<LabeledButtonWidget>();
-    error     = gui->getRootWidget().createChildWidget<LabelWidget>();
-
-    label->text      = std::string(label_text);
-    label->alignment = LabelWidget::Alignment::Left;
-    label->outline   = true;
-
-    button->text      = std::string(button_text);
-    button->alignment = LabelWidget::Alignment::Center;
-    button->outline   = true;
-
-    error->text_color = {255, 0, 0, 255};
-    error->alignment  = LabelWidget::Alignment::Left;
-    error->outline    = true;
-
-    group->setLayout(std::make_shared<LinearWidgetLayout>(
-        LinearWidgetLayout::Direction::HORIZONTAL,
-        LinearWidgetLayout::PrimaryAxis::SCALE_TO_FIT,
-        LinearWidgetLayout::SecondaryAxis::SCALE_TO_FIT
-    ));
-
-    // clang-format off
-    group->setLayoutParams({                                              .min_height = 32                                                            });
-    label->setLayoutParams({                                              .min_height = 28, .margin = {.left = 6, .right = 6, .bottom = 0, .top = 16} });
-    file_path->setLayoutParams({.rel_size = {1.f, 1.f },                  .min_height = 32, .margin = {.left = 4, .right = 2}                         });
-    button->setLayoutParams({   .rel_size = {0.f, 0.f }, .min_width = 64, .min_height = 32, .margin = {.left = 2, .right = 4}                         });
-    error->setLayoutParams({    .rel_size = {1.f, 1.f },                  .min_height = 24, .margin = {.left = 6, .right = 4, .bottom = 8, .top = 2}  });
-    // clang-format on
+void Application::onTextureResulutionUpdate(i64 res) {
+    m_converter->setResolution(uvec2{res, res});
 }
 
-void Application::FontSelection::createWidgets(GraphicalUserInterface* gui) {
-    font_family = gui->getRootWidget().createChildWidget<RadioButtonGroupWidget>();
+void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
+    auto& root = gui->getRootWidget();
 
-    auto group_0 = gui->getRootWidget().createChildWidget<GroupWidget>();
-    auto group_1 = gui->getRootWidget().createChildWidget<GroupWidget>();
+    load_file_label = root.createChildWidget<LabelWidget>(u8"Load Font File:");
+    load_file_label->setHasOutline(true);
 
-    check_boxes[0] = group_0->createChildWidget<CheckBoxWidget>();
-    check_boxes[1] = group_0->createChildWidget<CheckBoxWidget>();
-    check_boxes[2] = group_1->createChildWidget<CheckBoxWidget>();
-    check_boxes[3] = group_1->createChildWidget<CheckBoxWidget>();
+    load_file_path_input = root.createChildWidget<TextInputWidget>();
+    load_file_button     = root.createChildWidget<ButtonWidget>(u8"Load");
+    load_file_error      = root.createChildWidget<LabelWidget>();
 
-    check_boxes[0]->text = std::string{"Default"};
-    check_boxes[1]->text = std::string{"Oblique"};
-    check_boxes[2]->text = std::string{"Bold"};
-    check_boxes[3]->text = std::string{"Bold & Oblique"};
+    load_file_path_input->text = String(u8"fonts/FreeSans.ttf");
+    load_file_error->setTextColor(ColorRGBA{255, 0, 0, 255});
 
-    check_boxes[0]->hide();
-    check_boxes[1]->hide();
-    check_boxes[2]->hide();
-    check_boxes[3]->hide();
+    font_selections_label = root.createChildWidget<LabelWidget>(u8"Font:");
+    font_selections_label->setHasOutline(true);
+
+    font_family_selections = root.createChildWidget<RadioButtonGroupWidget>();
+    type_face_selection[0] = root.createChildWidget<CheckBoxWidget>(u8"Default");
+    type_face_selection[1] = root.createChildWidget<CheckBoxWidget>(u8"Oblique");
+    type_face_selection[2] = root.createChildWidget<CheckBoxWidget>(u8"Bold");
+    type_face_selection[3] = root.createChildWidget<CheckBoxWidget>(u8"Bold & Oblique");
+
+    type_face_selection[0]->disable();
+    type_face_selection[1]->disable();
+    type_face_selection[2]->disable();
+    type_face_selection[3]->disable();
+
+    char_set_label = root.createChildWidget<LabelWidget>(u8"Character Sets:");
+    char_set_label->setHasOutline(true);
+
+    char_set_selection[0] = root.createChildWidget<CheckBoxWidget>(u8"Basic Latin");
+    char_set_selection[1] = root.createChildWidget<CheckBoxWidget>(u8"Latin-1 Supplement");
+    char_set_selection[2] = root.createChildWidget<CheckBoxWidget>(u8"Latin Extended-A");
+    char_set_selection[3] = root.createChildWidget<CheckBoxWidget>(u8"Latin Extended-B");
+
+    char_set_selection[0]->state = CheckBoxWidget::State::SELECTED;
+
+    additional_chars_label = root.createChildWidget<LabelWidget>(u8"Other Chars:");
+    additional_chars_input = root.createChildWidget<TextInputWidget>();
+
+    sdf_label = root.createChildWidget<LabelWidget>(u8"SDF Texture:");
+    sdf_label->setHasOutline(true);
+
+    texture_size_label  = root.createChildWidget<LabelWidget>(u8"Resolution:");
+    texture_size_slider = root.createChildWidget<IntSliderWidget>(256, 4 * 1024, true);
+    sdf_max_dist_label  = root.createChildWidget<LabelWidget>(u8"Max distance:");
+    sdf_max_dist_slider = root.createChildWidget<IntSliderWidget>(2, 16);
+
+    convert_font_button = root.createChildWidget<ButtonWidget>(u8"Convert Font");
+    convert_font_button->disable();
+
+    save_font_button = root.createChildWidget<ButtonWidget>(u8"Save Font");
+    save_font_button->disable();
+
+    save_file_error = root.createChildWidget<LabelWidget>();
+    save_file_error->setTextColor(ColorRGBA{255, 0, 0, 255});
+}
+
+void Application::Widgets::initLayout(LinearWidgetLayout* layout) {
+    layout->setMargin(8, 8);
 
     // clang-format off
-    font_family->setLayoutParams({ .margin = {.left = 8, .right = 8} });
-
-    group_0->setLayoutParams({ .margin = {.left = 8, .right = 8} });
-    group_1->setLayoutParams({ .margin = {.left = 8, .right = 8} });
-
-    group_0->setLayout(std::make_shared<LinearWidgetLayout>(
-        LinearWidgetLayout::Direction::HORIZONTAL,
-        LinearWidgetLayout::PrimaryAxis::SCALE_TO_FIT,
-        LinearWidgetLayout::SecondaryAxis::SCALE_TO_FIT
-    ));
-    group_1->setLayout(std::make_shared<LinearWidgetLayout>(
-        LinearWidgetLayout::Direction::HORIZONTAL,
-        LinearWidgetLayout::PrimaryAxis::SCALE_TO_FIT,
-        LinearWidgetLayout::SecondaryAxis::SCALE_TO_FIT
-    ));
-
-    check_boxes[0]->setLayoutParams({ .rel_size = {1.f, 1.f} });
-    check_boxes[1]->setLayoutParams({ .rel_size = {1.f, 1.f} });
-    check_boxes[2]->setLayoutParams({ .rel_size = {1.f, 1.f} });
-    check_boxes[3]->setLayoutParams({ .rel_size = {1.f, 1.f} });
-    // clang-format on
+    layout->addRow({.min_height = 8, .rel_height = 0.0});
+    layout->addRow({.height = 32}).addWidget(load_file_label);
+    layout->addRow({.height = 32}).addWidget(load_file_path_input).addSpacing(2).addWidget(load_file_button, 0.f, 64);
+    layout->addRow({.height = 28}).addWidget(load_file_error);
+    layout->addRow({.rel_height = 1.0});
+    layout->addRow({.height = 32}).addWidget(font_selections_label);
+    layout->addRow().addWidget(font_family_selections);
+    layout->addRow({.height = 28}).addWidget(type_face_selection[0]).addWidget(type_face_selection[1]);
+    layout->addRow({.height = 28}).addWidget(type_face_selection[2]).addWidget(type_face_selection[3]);
+    layout->addRow({.rel_height = 1.0});
+    layout->addRow({.height = 32}).addWidget(char_set_label);
+    layout->addRow({.height = 28}).addWidget(char_set_selection[0]);
+    layout->addRow({.height = 28}).addWidget(char_set_selection[1]);
+    layout->addRow({.height = 28}).addWidget(char_set_selection[2]);
+    layout->addRow({.height = 28}).addWidget(char_set_selection[3]);
+    layout->addRow({.height = 28}).addWidget(additional_chars_label, 0.f, 128).addWidget(additional_chars_input);
+    layout->addRow({.rel_height = 1.0});
+    layout->addRow({.height = 32}).addWidget(sdf_label);
+    layout->addRow({.height = 2});
+    layout->addRow({.height = 28}).addWidget(texture_size_label, 0.f, 128).addWidget(texture_size_slider);
+    layout->addRow({.height = 2});
+    layout->addRow({.height = 28}).addWidget(sdf_max_dist_label, 0.f, 128).addWidget(sdf_max_dist_slider);
+    layout->addRow({.rel_height = 1.0});
+    layout->addRow({.height = 32}).addWidget(convert_font_button);
+    layout->addRow({.height = 2});
+    layout->addRow({.height = 32}).addWidget(save_font_button);
+    layout->addRow({.height = 28}).addSpacing(4).addWidget(save_file_error);
+    layout->addRow({.rel_height = 1.0});
+    // clang-format off
 }
 
 } // namespace bembel::tools

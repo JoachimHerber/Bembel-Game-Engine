@@ -12,8 +12,7 @@ using namespace bembel::kernel;
 using namespace bembel::gui;
 
 FontFamily::FontFamily(std::string_view name, unsigned int units_per_EM)
-  : m_name{name}
-  , m_units_per_EM{units_per_EM} {}
+  : m_name{name}, m_units_per_EM{units_per_EM} {}
 
 bool FontFamily::addFace(FT_Face const& face) {
     FT_Set_Pixel_Sizes(face, face->units_per_EM / 64, face->units_per_EM / 64);
@@ -30,7 +29,7 @@ bool FontFamily::addFace(FT_Face const& face) {
     return true;
 }
 
-bool FontFamily::parseGlypes(std::vector<char32_t> const& characters) {
+bool FontFamily::parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces) {
     m_glyphs.clear();
     m_kerning.clear();
 
@@ -40,7 +39,7 @@ bool FontFamily::parseGlypes(std::vector<char32_t> const& characters) {
     m_glyphs.emplace_back();
     m_glyphs.back().init(m_faces[0]->face, 0, 2 * m_units_per_EM / 10);
 
-    for(int i = 0; i < 4; ++i) {
+    for(auto i : faces) {
         if(!m_faces[i]) continue;
         FT_Face  face    = m_faces[i]->face;
         CharMap& charMap = m_faces[i]->charMap;
@@ -72,17 +71,17 @@ bool FontFamily::parseGlypes(std::vector<char32_t> const& characters) {
             }
         }
     }
-
-    m_texture_atlas.update(m_glyphs);
     return true;
 }
 
 size_t FontFamily::getGlypheID(char32_t c, bool bold, bool oblique) {
     auto& face = m_faces[(bold ? 2 : 0) | (oblique ? 1 : 0)];
-    auto  it   = face->charMap.find(c);
-    if(it != face->charMap.end()) return it->second;
+    if(face) {
+        auto it = face->charMap.find(c);
+        if(it != face->charMap.end()) return it->second;
+    }
 
-    return std::numeric_limits<size_t>::max();
+    return 0;
 }
 
 } // namespace bembel::tools
