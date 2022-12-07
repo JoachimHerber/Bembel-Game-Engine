@@ -24,11 +24,10 @@ WindowWidget::WindowWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_resize_handle_bottom_right);
     m_interaction_handles.push_back(&m_resize_handle_right);
 
-    auto&      asset_mgr        = m_gui.getAssetManager();
-    auto const hand_cursor      = asset_mgr.getAssetHandle<CursorIcon>("Hand");
-    auto const h_resize_cursor  = asset_mgr.getAssetHandle<CursorIcon>("HResize");
-    auto const v_resize_cursor  = asset_mgr.getAssetHandle<CursorIcon>("VResize");
-    auto const crosshair_cursor = asset_mgr.getAssetHandle<CursorIcon>("Crosshair");
+    auto const hand_cursor      = m_gui.assets.getAssetHandle<CursorIcon>("Hand");
+    auto const h_resize_cursor  = m_gui.assets.getAssetHandle<CursorIcon>("HResize");
+    auto const v_resize_cursor  = m_gui.assets.getAssetHandle<CursorIcon>("VResize");
+    auto const crosshair_cursor = m_gui.assets.getAssetHandle<CursorIcon>("Crosshair");
 
     m_top_handle.cursor                  = hand_cursor;
     m_resize_handle_left.cursor          = h_resize_cursor;
@@ -39,22 +38,14 @@ WindowWidget::WindowWidget(Widget& parent) : Widget{parent} {
 
     this->size.change_signal.bind(this, &WindowWidget::onSizeChanged);
 
-    m_top_handle /*******************/.dragging_signal.bind(this, &WindowWidget::moveWidget);
-    m_resize_handle_left /***********/.dragging_signal.bind(
-        this, &WindowWidget::onLeftResizeHandleMoved
-    );
-    m_resize_handle_bottom_left /****/.dragging_signal.bind(
-        this, &WindowWidget::onBottomLeftResizeHandleMoved
-    );
-    m_resize_handle_bottom_center /**/.dragging_signal.bind(
-        this, &WindowWidget::onBottomResizeHandleMoved
-    );
-    m_resize_handle_bottom_right /***/.dragging_signal.bind(
-        this, &WindowWidget::onBottomRightResizeHandleMoved
-    );
-    m_resize_handle_right /**********/.dragging_signal.bind(
-        this, &WindowWidget::onRightResizeHandleMoved
-    );
+    // clang-format off
+    m_top_handle                 .dragging_signal.bind(this, &WindowWidget::moveWidget);
+    m_resize_handle_left         .dragging_signal.bind(this, &WindowWidget::onLeftResizeHandleMoved);
+    m_resize_handle_bottom_left  .dragging_signal.bind(this, &WindowWidget::onBottomLeftResizeHandleMoved);
+    m_resize_handle_bottom_center.dragging_signal.bind(this, &WindowWidget::onBottomResizeHandleMoved);
+    m_resize_handle_bottom_right .dragging_signal.bind(this, &WindowWidget::onBottomRightResizeHandleMoved);
+    m_resize_handle_right        .dragging_signal.bind(this, &WindowWidget::onRightResizeHandleMoved);
+    // clang-format on
 
     updateLayout();
 

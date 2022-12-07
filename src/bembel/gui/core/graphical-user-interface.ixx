@@ -29,7 +29,7 @@ export class GraphicalUserInterface {
         GraphicalUserInterface& m_gui;
     };
 
-    GraphicalUserInterface(EventManager& event_mgr, AssetManager& asset_mgr);
+    GraphicalUserInterface(AssetManager& asset_mgr);
     GraphicalUserInterface(GraphicalUserInterface const&)            = delete;
     GraphicalUserInterface& operator=(GraphicalUserInterface const&) = delete;
     ~GraphicalUserInterface();
@@ -39,26 +39,17 @@ export class GraphicalUserInterface {
 
     template <typename WidgetType>
     WidgetType* getWidget(std::string_view path) const;
-    Widget* getWidget(std::string_view path) const { return m_root_widget.getChildWidget(path); }
+    Widget*     getWidget(std::string_view path) const;
 
-    EventManager& getEventManager() /**/ { return m_event_mgr; }
-    AssetManager& getAssetManager() /**/ { return m_asset_mgr; }
-    View&         getView() /**********/ { return m_view; }
-    InputHandler& getInputHandler() /**/ { return m_input_handler; }
-    Renderer&     getRenderer() /******/ { return m_renderer; }
-    GroupWidget&  getRootWidget() /****/ { return m_root_widget; }
+  public:
+    AssetManager& assets;
+
+    View         view;
+    InputHandler input;
+    Renderer     renderer;
+    GroupWidget  root_widget;
 
   private:
-    EventManager& m_event_mgr;
-    AssetManager& m_asset_mgr;
-
-    View m_view{*this};
-
-    InputHandler m_input_handler;
-    Renderer     m_renderer;
-
-    GroupWidget m_root_widget;
-
     friend class Widget;
 };
 

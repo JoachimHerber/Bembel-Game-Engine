@@ -43,14 +43,11 @@ export class InputDevice {
     std::string const& getDeviceName() const { return m_name; }
 
   protected:
-    InputDevice(EventManager& event_mgr, std::string_view name)
-      : m_event_mgr{event_mgr}
-      , m_name{name} {}
+    InputDevice(std::string_view name) : m_name{name} {}
     InputDevice(InputDevice const& other) = delete;
     virtual ~InputDevice()                = default;
 
   protected:
-    EventManager&     m_event_mgr;
     std::string const m_name;
 };
 

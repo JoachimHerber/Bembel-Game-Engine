@@ -50,7 +50,7 @@ export class Application {
             m_engine.pollEvents();
             update(timeSinceLastUpdate);
             m_engine.updateSystems(timeSinceLastUpdate);
-            m_engine.getDisplayManager().updateWindows();
+            m_engine.display.updateWindows();
 
             time = now;
         }

@@ -7,38 +7,37 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 InputExample::InputExample() : Application() {
-    m_engine.getEventManager().addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<WindowShouldCloseEvent>(this);
 
-    m_engine.getEventManager().addHandler<KeyPressEvent>(this);
-    m_engine.getEventManager().addHandler<KeyRepeatEvent>(this);
-    m_engine.getEventManager().addHandler<KeyReleaseEvent>(this);
-    m_engine.getEventManager().addHandler<TextInputEvent>(this);
-    m_engine.getEventManager().addHandler<MouseButtonPressEvent>(this);
-    m_engine.getEventManager().addHandler<MouseButtonRepeatEvent>(this);
-    m_engine.getEventManager().addHandler<MouseButtonReleaseEvent>(this);
-    m_engine.getEventManager().addHandler<CursorMovedEvent>(this);
-    m_engine.getEventManager().addHandler<CursorEnteredEvent>(this);
-    m_engine.getEventManager().addHandler<CursorLeftEvent>(this);
-    m_engine.getEventManager().addHandler<ScrollEvent>(this);
+    events::addHandler<KeyPressEvent>(this);
+    events::addHandler<KeyRepeatEvent>(this);
+    events::addHandler<KeyReleaseEvent>(this);
+    events::addHandler<TextInputEvent>(this);
+    events::addHandler<MouseButtonPressEvent>(this);
+    events::addHandler<MouseButtonRepeatEvent>(this);
+    events::addHandler<MouseButtonReleaseEvent>(this);
+    events::addHandler<CursorMovedEvent>(this);
+    events::addHandler<CursorEnteredEvent>(this);
+    events::addHandler<CursorLeftEvent>(this);
+    events::addHandler<ScrollEvent>(this);
 
-    m_engine.getEventManager().addHandler<InputDeviceButtonPressEvent>(this);
-    m_engine.getEventManager().addHandler<InputDeviceButtonReleaseEvent>(this);
+    events::addHandler<InputDeviceButtonPressEvent>(this);
+    events::addHandler<InputDeviceButtonReleaseEvent>(this);
 }
 
-InputExample::~InputExample() {
-}
+InputExample::~InputExample() {}
 
 bool InputExample::init() {
-    auto window = m_engine.getDisplayManager().createWindow();
+    auto window = m_engine.display.createWindow();
     window->open("Input Example");
     m_engine.initSystems();
 
-    auto& keyboard = m_engine.getInputManager().getKeyboard();
+    auto& keyboard = m_engine.input.keyboard;
 
     keyboard.getKey(Keyboard::LEFT)->release_signal.bind(this, &InputExample::pervCursor);
     keyboard.getKey(Keyboard::RIGHT)->release_signal.bind(this, &InputExample::nextCursor);
 
-    auto& asset_mgr = m_engine.getAssetManager();
+    auto& asset_mgr = m_engine.assets;
     cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("Arrow"));
     cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("IBeam"));
     cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("Crosshair"));
@@ -50,11 +49,10 @@ bool InputExample::init() {
 
 void InputExample::cleanup() {
     m_engine.shutdownSystems();
-    m_engine.getDisplayManager().closeOpenWindows();
+    m_engine.display.closeOpenWindows();
 }
 
-void InputExample::update(double time) {
-}
+void InputExample::update(double time) {}
 
 void InputExample::handleEvent(const WindowShouldCloseEvent& event) {
     quit();
@@ -113,20 +111,16 @@ void InputExample::handleEvent(const InputDeviceButtonReleaseEvent& event) {
 }
 
 void InputExample::pervCursor() {
-    current_cursor        = (current_cursor - 1) % cursor.size();
+    current_cursor = (current_cursor - 1) % cursor.size();
 
-    auto&       asset_mgr = m_engine.getAssetManager();
-    CursorIcon* cursor    = asset_mgr.getAsset<CursorIcon>(this->cursor[current_cursor]);
-    auto&       event_mgr = m_engine.getEventManager();
-    event_mgr.broadcast(kernel::SetCursorIconEvent{cursor, WindowId(0) });
+    CursorIcon* cursor = m_engine.assets.getAsset<CursorIcon>(this->cursor[current_cursor]);
+    events::broadcast(kernel::SetCursorIconEvent{cursor, WindowId(0)});
 }
 void InputExample::nextCursor() {
-    current_cursor        = (current_cursor + 1) % cursor.size();
+    current_cursor = (current_cursor + 1) % cursor.size();
 
-    auto&       asset_mgr = m_engine.getAssetManager();
-    CursorIcon* cursor    = asset_mgr.getAsset<CursorIcon>(this->cursor[current_cursor]);
-    auto&       event_mgr = m_engine.getEventManager();
-    event_mgr.broadcast(kernel::SetCursorIconEvent{cursor, WindowId(0)});
+    CursorIcon* cursor = m_engine.assets.getAsset<CursorIcon>(this->cursor[current_cursor]);
+    events::broadcast(kernel::SetCursorIconEvent{cursor, WindowId(0)});
 }
 
 } // namespace bembel

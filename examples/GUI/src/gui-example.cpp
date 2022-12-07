@@ -13,10 +13,12 @@ using namespace bembel::gui;
 GuiExample::GuiExample() : Application() {
     m_gui_system = m_engine.addSystem<GuiSystem>();
 
-    m_engine.getEventManager().addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<WindowShouldCloseEvent>(this);
 }
 
-GuiExample::~GuiExample() {}
+GuiExample::~GuiExample() {
+    events::removeHandler<WindowShouldCloseEvent>(this);
+}
 
 bool GuiExample::init() {
     if(!m_engine.loadSetting("GUI/config.xml")) return false;
@@ -38,17 +40,25 @@ bool GuiExample::init() {
 
 void GuiExample::cleanup() {
     m_engine.shutdownSystems();
-    m_engine.getDisplayManager().closeOpenWindows();
+    m_engine.display.closeOpenWindows();
 }
 
 void GuiExample::update(double time) {}
 
-void GuiExample::handleEvent(const WindowShouldCloseEvent& event) { quit(); }
+void GuiExample::handleEvent(const WindowShouldCloseEvent& event) {
+    quit();
+}
 
-void GuiExample::onButton1Click() { log().info("Button 1 clicked"); }
+void GuiExample::onButton1Click() {
+    log().info("Button 1 clicked");
+}
 
-void GuiExample::onButton2Click() { log().info("Button 2 clicked"); }
+void GuiExample::onButton2Click() {
+    log().info("Button 2 clicked");
+}
 
-void GuiExample::onButton3Click() { log().info("Button 3 clicked"); }
+void GuiExample::onButton3Click() {
+    log().info("Button 3 clicked");
+}
 
 } // namespace bembel

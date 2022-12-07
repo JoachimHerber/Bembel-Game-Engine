@@ -27,7 +27,7 @@ void Widget::hide() {
 }
 
 Style* Widget::getStyle() const {
-    return m_gui.getRenderer().getStyle();
+    return m_gui.renderer.getStyle();
 }
 
 Widget* Widget::getChildWidget(std::string_view path) const {

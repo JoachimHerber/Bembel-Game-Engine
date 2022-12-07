@@ -11,7 +11,7 @@ using namespace graphics;
 
 export class CameraControle {
   public:
-    CameraControle(EventManager&, std::shared_ptr<Camera> camera);
+    CameraControle(std::shared_ptr<Camera> camera);
     ~CameraControle();
 
     void        enableManualControle(bool b) { m_enabeld = b; }
@@ -36,7 +36,6 @@ export class CameraControle {
     void        handleEvent(ScrollEvent const&);
 
   private:
-    EventManager&           m_event_mgr;
     std::shared_ptr<Camera> m_camera;
 
     bool                    m_enabeld    = false;

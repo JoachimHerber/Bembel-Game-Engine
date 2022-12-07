@@ -12,7 +12,7 @@ using namespace bembel::base;
 
 export class Mouse : public InputDevice {
   public:
-    Mouse(EventManager&);
+    Mouse();
     Mouse(Mouse const&)            = delete;
     Mouse& operator=(Mouse const&) = delete;
     ~Mouse();

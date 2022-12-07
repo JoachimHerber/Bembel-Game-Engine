@@ -126,4 +126,30 @@ export class EventManager final {
     EventChannelMap m_channels;
 };
 
+export namespace events {
+    template <typename EventType>
+    EventChannel<EventType>& getEventChannel() {
+        static EventChannel<EventType> instance;
+        return instance;
+    }
+
+    template <typename EventType, typename EventHandlerType>
+    void addHandler(EventHandlerType* handler) {
+        getEventChannel<EventType>().addHandler(handler);
+    }
+    template <typename EventType, typename EventHandlerType>
+    void removeHandler(EventHandlerType* handler) {
+        getEventChannel<EventType>().removeHandler(handler);
+    }
+
+    template <typename EventType>
+    void broadcast(EventType const& event) {
+        getEventChannel<EventType>().broadcast(event);
+    }
+    template <typename EventType, typename... TArgs>
+    void broadcast(TArgs&&... args) {
+        getEventChannel<EventType>().broadcast(EventType{std::forward<TArgs>(args)...});
+    }
+} // namespace events
+
 } // namespace bembel::base

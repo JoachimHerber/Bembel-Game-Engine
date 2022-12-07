@@ -16,16 +16,15 @@ using namespace gui;
 using namespace ::gl;
 using namespace std::chrono;
 
-SelectionPointer::SelectionPointer(EventManager& event_mgr, RenderingPipeline* pipline)
-  : m_event_mgr(event_mgr)
-  , m_pipline(pipline) {
-    m_event_mgr.addHandler<CursorMovedEvent>(this);
-    m_event_mgr.addHandler<MouseButtonPressEvent>(this);
+SelectionPointer::SelectionPointer(RenderingPipeline* pipline)
+  : m_pipline(pipline) {
+    events::addHandler<CursorMovedEvent>(this);
+    events::addHandler<MouseButtonPressEvent>(this);
 }
 
 SelectionPointer::~SelectionPointer() {
-    m_event_mgr.removeHandler<CursorMovedEvent>(this);
-    m_event_mgr.removeHandler<MouseButtonPressEvent>(this);
+    events::removeHandler<CursorMovedEvent>(this);
+    events::removeHandler<MouseButtonPressEvent>(this);
 }
 
 void SelectionPointer::handleEvent(CursorMovedEvent const& event) {

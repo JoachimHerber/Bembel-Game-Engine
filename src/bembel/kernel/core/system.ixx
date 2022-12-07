@@ -10,10 +10,8 @@ using namespace bembel::base;
 
 export class System {
   public:
-    System(std::string_view name) : m_system_name{name} {}
+    System(std::string_view name) : name{name} {}
     virtual ~System() = default;
-
-    std::string const& getName() const { return m_system_name; }
 
     virtual bool configure(xml::Element const*) { return true; }
 
@@ -22,8 +20,8 @@ export class System {
 
     virtual void update(double time_since_last_update) = 0;
 
-  protected:
-    const std::string m_system_name;
+  public:
+    const std::string name;
 };
 
 } // namespace bembel::kernel

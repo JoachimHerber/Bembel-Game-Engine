@@ -18,12 +18,10 @@ export class Window {
     using DisplayModePtr = std::shared_ptr<DisplayModeBase>;
 
   public:
-    Window(EventManager&, WindowId);
+    Window(WindowId);
     Window(Window const&) = delete;
     Window(Window&&)      = default;
     ~Window();
-
-    EventManager& getEventManager() { return m_event_mgr; }
 
     DisplayModePtr getDisplayMode() const { return m_display_mode; }
     void           setDisplayMode(DisplayModePtr val) { m_display_mode = val; }
@@ -37,17 +35,14 @@ export class Window {
 
     bool isOpend() { return m_window_impl != nullptr; }
 
-    glm::ivec2 getWindowSize() const;
-    glm::ivec2 getFrameBufferSize() const;
+    ivec2 getWindowSize() const;
+    ivec2 getFrameBufferSize() const;
 
     bool setIconify(bool b);
     bool setVisible(bool b);
 
     bool getShouldClose() const;
     bool setShouldClose(bool should_close);
-
-    glm::vec3 const& getBackgroundColor() const { return m_background_color; }
-    void             setBackgroundColor(glm::vec3 const& color) { m_background_color = color; }
 
     Viewport& createViewport(
         vec2 relativ_position,
@@ -67,7 +62,7 @@ export class Window {
     void makeContextCurent();
     void swapBuffers();
 
-    void updateViewports(glm::ivec2 const& frambuffer_size) {
+    void updateViewports(In<ivec2> frambuffer_size) {
         for(auto& viewport : m_viewports) {
             viewport->updatePosition(frambuffer_size);
             viewport->updateSize(frambuffer_size);
@@ -76,13 +71,12 @@ export class Window {
 
     void handleEvent(SetCursorIconEvent const& event);
 
-  private:
-    EventManager& m_event_mgr;
+  public:
+    vec3 background_color = {0.5f, 0.5f, 0.5f};
 
+  private:
     GLFWwindow*    m_window_impl = nullptr;
     DisplayModePtr m_display_mode;
-
-    glm::vec3 m_background_color = {0.5f, 0.5f, 0.5f};
 
     std::vector<ViewportPtr> m_viewports;
 

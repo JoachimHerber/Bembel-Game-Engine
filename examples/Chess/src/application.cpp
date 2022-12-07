@@ -16,21 +16,23 @@ Application::Application() : kernel::Application() {
 
     RenderingPipeline::Stage::registerStageType<SelectionRenderingStage>("SelectionRenderingStage");
 
-    auto& event_mgr = m_engine.getEventManager();
-    event_mgr.addHandler<WindowShouldCloseEvent>(this);
-    event_mgr.addHandler<FrameBufferResizeEvent>(this);
+    events::addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<FrameBufferResizeEvent>(this);
 }
 
-Application::~Application() {}
+Application::~Application() {
+    events::removeHandler<WindowShouldCloseEvent>(this);
+    events::removeHandler<FrameBufferResizeEvent>(this);
+}
 
 bool Application::init() {
     log().info("Loading Application Settings");
     if(!m_engine.loadSetting("chess/config.xml")) return false;
     auto pipline = m_graphic_system->getRenderingPipelines()[0].get();
 
-    m_camera = std::make_unique<CameraControle>(m_engine.getEventManager(), pipline->getCamera());
+    m_camera = std::make_unique<CameraControle>(pipline->getCamera());
 
-    m_scene = std::make_shared<Scene>(m_engine.getAssetManager());
+    m_scene = std::make_shared<Scene>(m_engine.assets);
     m_scene->registerComponentType<DirectionalLightSource>();
     m_scene->loadAssets("assets/assets.xml");
 
@@ -41,7 +43,7 @@ bool Application::init() {
         vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2))
     );
 
-    m_selection_ptr = std::make_unique<SelectionPointer>(m_engine.getEventManager(), pipline);
+    m_selection_ptr = std::make_unique<SelectionPointer>(pipline);
 
     log().info("Initalizing Game");
     m_game_logic = std::make_unique<GameLogic>(
@@ -63,8 +65,8 @@ void Application::cleanup() {
     m_scene.reset();
 
     m_engine.shutdownSystems();
-    m_engine.getAssetManager().deleteUnusedAssets();
-    m_engine.getDisplayManager().closeOpenWindows();
+    m_engine.assets.deleteUnusedAssets();
+    m_engine.display.closeOpenWindows();
 }
 
 void Application::update(double time) {

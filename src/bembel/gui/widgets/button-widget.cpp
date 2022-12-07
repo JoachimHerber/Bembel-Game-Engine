@@ -22,7 +22,7 @@ ButtonWidget::ButtonWidget(Widget& parent, std::u8string_view text)
     m_handle.press_signal.bind(this, &ButtonWidget::onPress);
     m_handle.release_signal.bind(this, &ButtonWidget::onRelease);
 
-    m_handle.cursor = getGUI().getAssetManager().getAssetHandle<kernel::CursorIcon>("Hand");
+    m_handle.cursor = m_gui.assets.getAssetHandle<kernel::CursorIcon>("Hand");
 
     m_view = std::make_unique<SimpleButtonWidgetView>(*this);
 }

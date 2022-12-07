@@ -12,18 +12,13 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-InputHandler::InputHandler(
-    EventManager& event_mgr, AssetManager& asset_mgr, Widget& root_widget, Viewport::View& gui_view
-)
-  : m_event_mgr{event_mgr}
-  , m_asset_mgr{asset_mgr}
-  , m_root_widget{root_widget}
-  , m_gui_view{gui_view} {
-    m_event_mgr.addHandler<TextInputEvent>(this);
+InputHandler::InputHandler(AssetManager& asset_mgr, Widget& root_widget, Viewport::View& gui_view)
+  : m_asset_mgr{asset_mgr}, m_root_widget{root_widget}, m_gui_view{gui_view} {
+    events::addHandler<TextInputEvent>(this);
 }
 
 InputHandler::~InputHandler() {
-    m_event_mgr.removeHandler<TextInputEvent>(this);
+    events::removeHandler<TextInputEvent>(this);
 
     setButton(Action::INTERACT, nullptr);
     setButton(Action::DELETE, nullptr);
@@ -48,7 +43,6 @@ void InputHandler::setButton(Action action, InputDevice::Button* new_button) {
             case Action::NAVIGATE_LEFT:  button->press_signal  .unbind(this, &InputHandler::onNavigateLeft);  break;
             case Action::NAVIGATE_UP:    button->press_signal  .unbind(this, &InputHandler::onNavigateUp);    break;
             case Action::NAVIGATE_DOWN:  button->press_signal  .unbind(this, &InputHandler::onNavigateDown);  break;
-       break;
         }
         // clang-format on
     }
@@ -64,7 +58,6 @@ void InputHandler::setButton(Action action, InputDevice::Button* new_button) {
             case Action::NAVIGATE_LEFT:  button->press_signal  .bind(this, &InputHandler::onNavigateLeft);  break;
             case Action::NAVIGATE_UP:    button->press_signal  .bind(this, &InputHandler::onNavigateUp);    break;
             case Action::NAVIGATE_DOWN:  button->press_signal  .bind(this, &InputHandler::onNavigateDown);  break;
-        break;
         }
         // clang-format on
     }
@@ -228,11 +221,10 @@ void InputHandler::updateCursorIcon() {
     auto window_id = vp->getWindowID();
 
     if(m_focus.handle != nullptr) {
-        kernel::CursorIcon* cursor =
-            m_asset_mgr.getAsset<kernel::CursorIcon>(m_focus.handle->cursor);
-        m_event_mgr.broadcast(kernel::SetCursorIconEvent{cursor, window_id});
+        CursorIcon* cursor = m_asset_mgr.getAsset<CursorIcon>(m_focus.handle->cursor);
+        events::broadcast<SetCursorIconEvent>(cursor, window_id);
     } else {
-        m_event_mgr.broadcast(kernel::SetCursorIconEvent{nullptr, window_id});
+        events::broadcast<SetCursorIconEvent>(nullptr, window_id);
     }
 }
 

@@ -4,19 +4,19 @@ namespace bembel::examples::chess {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-CameraControle::CameraControle(EventManager& event_mgr, std::shared_ptr<graphics::Camera> camera)
-: m_event_mgr(event_mgr), m_camera(camera) {
-    m_event_mgr.addHandler<kernel::MouseButtonPressEvent>(this);
-    m_event_mgr.addHandler<kernel::MouseButtonReleaseEvent>(this);
-    m_event_mgr.addHandler<kernel::CursorMovedEvent>(this);
-    m_event_mgr.addHandler<kernel::ScrollEvent>(this);
+CameraControle::CameraControle(std::shared_ptr<graphics::Camera> camera)
+: m_camera(camera) {
+    events::addHandler<kernel::MouseButtonPressEvent>(this);
+    events::addHandler<kernel::MouseButtonReleaseEvent>(this);
+    events::addHandler<kernel::CursorMovedEvent>(this);
+    events::addHandler<kernel::ScrollEvent>(this);
 }
 
 CameraControle::~CameraControle() {
-    m_event_mgr.removeHandler<kernel::MouseButtonPressEvent>(this);
-    m_event_mgr.removeHandler<kernel::MouseButtonReleaseEvent>(this);
-    m_event_mgr.removeHandler<kernel::CursorMovedEvent>(this);
-    m_event_mgr.removeHandler<kernel::ScrollEvent>(this);
+    events::removeHandler<kernel::MouseButtonPressEvent>(this);
+    events::removeHandler<kernel::MouseButtonReleaseEvent>(this);
+    events::removeHandler<kernel::CursorMovedEvent>(this);
+    events::removeHandler<kernel::ScrollEvent>(this);
 }
 
 void CameraControle::update(double dTime) {

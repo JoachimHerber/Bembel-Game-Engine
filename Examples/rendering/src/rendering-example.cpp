@@ -13,19 +13,20 @@ using namespace bembel::gui;
 RenderingExample::RenderingExample() : kernel::Application() {
     m_graphic_system = m_engine.addSystem<GraphicSystem>();
     m_gui_system     = m_engine.addSystem<GuiSystem>();
-    m_engine.getEventManager().addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<WindowShouldCloseEvent>(this);
 }
 
-RenderingExample::~RenderingExample() {}
+RenderingExample::~RenderingExample() {
+    events::removeHandler<WindowShouldCloseEvent>(this);
+}
 
 bool RenderingExample::init() {
     if(!m_engine.loadSetting("rendering/config.xml")) return false;
 
-    m_camera = std::make_unique<CameraControle>(
-        m_engine.getEventManager(), m_graphic_system->getRenderingPipelines()[0]->getCamera()
-    );
+    m_camera =
+        std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
 
-    m_scenes.push_back(std::make_shared<kernel::Scene>(m_engine.getAssetManager()));
+    m_scenes.push_back(std::make_shared<kernel::Scene>(m_engine.assets));
     m_graphic_system->getRenderingPipelines()[0]->setScene(m_scenes[0]);
 
     m_scenes[0]->loadScene("scenes/material-test.scene");
@@ -42,8 +43,8 @@ void RenderingExample::cleanup() {
     m_camera.reset();
     m_scenes.clear();
     m_engine.shutdownSystems();
-    m_engine.getAssetManager().deleteUnusedAssets();
-    m_engine.getDisplayManager().closeOpenWindows();
+    m_engine.assets.deleteUnusedAssets();
+    m_engine.display.closeOpenWindows();
 }
 
 void RenderingExample::update(double time) {

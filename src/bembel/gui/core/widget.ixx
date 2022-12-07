@@ -39,7 +39,7 @@ export class Widget {
 
   public:
     Widget(GraphicalUserInterface& gui) : m_gui{gui}, m_parent{nullptr} {}
-    Widget(Widget& parent) : m_gui{parent.getGUI()}, m_parent{&parent} {}
+    Widget(Widget& parent) : m_gui{parent.m_gui}, m_parent{&parent} {}
     Widget(Widget const&)            = delete;
     Widget& operator=(Widget const&) = delete;
     virtual ~Widget()                = default;

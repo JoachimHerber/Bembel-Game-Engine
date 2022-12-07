@@ -18,7 +18,7 @@ SliderWidget::SliderWidget(Widget& parent) : Widget{parent} {
     m_handle.release_signal.bind(this, &SliderWidget::onHandleRelease);
     m_handle.dragging_signal.bind(this, &SliderWidget::onHandleMoved);
 
-    m_handle.cursor = getGUI().getAssetManager().getAssetHandle<kernel::CursorIcon>("Hand");
+    m_handle.cursor = m_gui.assets.getAssetHandle<CursorIcon>("Hand");
 
     m_view = std::make_unique<SliderWidgetView>(*this);
 }

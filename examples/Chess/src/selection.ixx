@@ -12,7 +12,7 @@ using namespace gui;
 
 export class SelectionPointer {
   public:
-    SelectionPointer(EventManager&, RenderingPipeline*);
+    SelectionPointer(RenderingPipeline*);
     ~SelectionPointer();
 
     void handleEvent(CursorMovedEvent const& event);
@@ -28,7 +28,6 @@ export class SelectionPointer {
     void updateRay(vec2 pos);
 
   private:
-    EventManager&      m_event_mgr;
     RenderingPipeline* m_pipline;
 
     vec3     m_ray_origin;

@@ -11,7 +11,7 @@ using namespace graphics;
 
 class CameraControle {
   public:
-    CameraControle(EventManager&, std::shared_ptr<Camera> camera);
+    CameraControle(std::shared_ptr<Camera> camera);
     ~CameraControle();
 
     void        setPitch(float f) { m_pitch = f; }
@@ -35,9 +35,7 @@ class CameraControle {
     void        handleEvent(ScrollEvent const&);
 
   private:
-    EventManager&           m_event_mgr;
     std::shared_ptr<Camera> m_camera;
-
 
     bool                    m_move       = false;
 

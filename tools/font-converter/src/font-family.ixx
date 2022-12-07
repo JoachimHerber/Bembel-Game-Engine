@@ -39,7 +39,7 @@ export class FontFamily {
     auto& getKerning() { return m_kerning; }
 
   private:
-    using CharMap    = std::map<char32_t, unsigned int>;
+    using CharMap    = std::map<char32_t, usize>;
     using KerningMap = std::map<std::pair<char32_t, char32_t>, float>;
 
     struct Face {

@@ -10,24 +10,22 @@ using namespace bembel::kernel;
 Application::Application() : kernel::Application() {
     m_gui_system = m_engine.addSystem<GuiSystem>();
 
-    auto& eventMgr = m_engine.getEventManager();
-    eventMgr.addHandler<WindowShouldCloseEvent>(this);
-    eventMgr.addHandler<WindowResizeEvent>(this);
-    eventMgr.addHandler<FileDropEvent>(this);
+    events::addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<WindowResizeEvent>(this);
+    events::addHandler<FileDropEvent>(this);
 
-    auto escapeKey = m_engine.getInputManager().getKeyboard().getKey(Keyboard::ESCAPE);
+    auto escapeKey = m_engine.input.keyboard.getKey(Keyboard::ESCAPE);
     escapeKey->press_signal.bind<Application>(this, &Application::quit);
 }
 
 Application::~Application() {
-    auto& eventMgr = m_engine.getEventManager();
-    eventMgr.removeHandler<WindowShouldCloseEvent>(this);
-    eventMgr.removeHandler<WindowResizeEvent>(this);
-    eventMgr.removeHandler<FileDropEvent>(this);
+    events::removeHandler<WindowShouldCloseEvent>(this);
+    events::removeHandler<WindowResizeEvent>(this);
+    events::removeHandler<FileDropEvent>(this);
 }
 
 bool Application::init() {
-    auto& asset_locator = m_engine.getAssetManager().getAssetLocator();
+    auto& asset_locator = m_engine.assets.getAssetLocator();
     asset_locator.addGenericAssetDirectory("../assets");
     asset_locator.addGenericAssetDirectory("../assets/gui");
     asset_locator.addGenericAssetDirectory("../assets/shader");
@@ -37,8 +35,8 @@ bool Application::init() {
     display_mode->setHeight(900);
     display_mode->setAspectRatio(4, 3);
 
-    m_main_window = m_engine.getDisplayManager().createWindow();
-    m_main_window->setBackgroundColor(vec3{0.05f, 0.05f, 0.10f});
+    m_main_window                   = m_engine.display.createWindow();
+    m_main_window->background_color = vec3{0.05f, 0.05f, 0.10f};
     m_main_window->setDisplayMode(display_mode);
 
     m_main_window->createViewport(vec2{0.00f, 0.f}, vec2{0.75f, 1.f});
@@ -46,17 +44,15 @@ bool Application::init() {
 
     m_main_window->open("Font Converter");
 
-    m_converter = std::make_unique<FontConverter>(m_engine.getAssetManager());
+    m_converter = std::make_unique<FontConverter>(m_engine.assets);
     m_converter->font_family_added_signal.bind(this, &Application::onFontFamilyAdded);
 
     if(!initUserInterface()) return false;
 
-    m_main_window->getViewport(1)->addView(&m_gui->getView());
+    m_main_window->getViewport(1)->addView(&m_gui->view);
 
     m_font_view = std::make_unique<FontView>(
-        m_engine.getAssetManager(),
-        m_converter->getGlyphTextureAtlas(),
-        m_converter->getTextureGenerator()
+        m_engine.assets, m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator()
     );
     m_main_window->getViewport(0)->addView(m_font_view.get());
 
@@ -72,7 +68,7 @@ void Application::cleanup() {
     m_converter.reset();
 
     m_engine.shutdownSystems();
-    m_engine.getDisplayManager().closeOpenWindows();
+    m_engine.display.closeOpenWindows();
 }
 
 void Application::update(double time) {}
@@ -104,17 +100,17 @@ bool Application::initUserInterface() {
     Asset<ShaderProgram> gui_shader;
     Asset<gui::Style>    gui_style;
 
-    gui_shader.request(m_engine.getAssetManager(), "gui.shader-program");
-    gui_style.request(m_engine.getAssetManager(), "dark_gui_style.xml");
+    gui_shader.request(m_engine.assets, "gui.shader-program");
+    gui_style.request(m_engine.assets, "dark_gui_style.xml");
 
     if(!gui_shader || !gui_style) return false;
 
     m_gui = m_gui_system->createGUI("main");
-    m_gui->getRenderer().init(gui_shader, gui_style);
+    m_gui->renderer.init(gui_shader, gui_style);
 
     using LinearWidgetLayout::Mode::SCALE_TO_FIT;
 
-    m_layout = m_gui->getRootWidget().setLayout<LinearWidgetLayout>(SCALE_TO_FIT);
+    m_layout = m_gui->root_widget.setLayout<LinearWidgetLayout>(SCALE_TO_FIT);
 
     m_widgets.createWidgets(m_gui);
     m_widgets.initLayout(m_layout);
@@ -154,7 +150,7 @@ void Application::onFontFamilyAdded(In<std::u8string_view> name) {
 
     m_widgets.convert_font_button->enable();
 
-    m_gui->getRootWidget().updateLayout();
+    m_gui->root_widget.updateLayout();
 }
 
 void Application::onConvertFont() {
@@ -208,7 +204,7 @@ void Application::onSelectFontFamily(int index) {
         }
     }
 
-    m_gui->getRootWidget().updateLayout();
+    m_gui->root_widget.updateLayout();
 
     m_font_view->setFont(font_family);
 }
@@ -218,7 +214,7 @@ void Application::onTextureResulutionUpdate(i64 res) {
 }
 
 void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
-    auto& root = gui->getRootWidget();
+    auto& root = gui->root_widget;
 
     load_file_label = root.createChildWidget<LabelWidget>(u8"Load Font File:");
     load_file_label->setHasOutline(true);

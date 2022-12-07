@@ -18,98 +18,85 @@ namespace event_callbacks {
     }
 
     void windowPositionCallback(GLFWwindow* glfw, int x, int y) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
-        event_mgr.broadcast(WindowMovedEvent{window, glm::vec2(x, y)});
+        events::broadcast<WindowMovedEvent>(window, vec2{x, y});
     }
     void windowSizeCallback(GLFWwindow* glfw, int w, int h) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
-        event_mgr.broadcast(WindowResizeEvent{window, glm::vec2(w, h)});
+        events::broadcast<WindowResizeEvent>(window, vec2{w, h});
     }
     void windowCloseCallback(GLFWwindow* glfw) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
-        event_mgr.broadcast(WindowShouldCloseEvent{window});
+        events::broadcast<WindowShouldCloseEvent>(window);
     }
     void windowRefreshCallback(GLFWwindow* glfw) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
         // currently unused
     }
     void windowFocusCallback(GLFWwindow* glfw, int focused) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
         if(focused)
-            event_mgr.broadcast(WindowGainedFocusEvent{window});
+            events::broadcast<WindowGainedFocusEvent>(window);
         else
-            event_mgr.broadcast(WindowLostFocusEvent{window});
+            events::broadcast<WindowLostFocusEvent>(window);
     }
     void windowIconifyCallback(GLFWwindow* glfw, int iconified) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
-
+        auto window = getWindow(glfw);
         if(iconified)
-            event_mgr.broadcast(WindowIconifyedEvent{window});
+            events::broadcast<WindowIconifyedEvent>(window);
         else
-            event_mgr.broadcast(WindowRestoredEvent{window});
+            events::broadcast<WindowRestoredEvent>(window);
     }
 
     void framebufferSizeCallback(GLFWwindow* glfw, int w, int h) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
         vec2 framebuffer_size(w, h);
 
-        event_mgr.broadcast(FrameBufferResizeEvent(window, framebuffer_size));
+        events::broadcast<FrameBufferResizeEvent>(window, framebuffer_size);
         window->updateViewports(framebuffer_size);
     }
 
     void keyCallback(GLFWwindow* glfw, int key_id, int scancode, int action, int mods) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
         if(action == GLFW_PRESS)
-            event_mgr.broadcast(KeyPressEvent{window, key_id, scancode, mods});
+            events::broadcast<KeyPressEvent>(window, key_id, scancode, mods);
         else if(action == GLFW_REPEAT)
-            event_mgr.broadcast(KeyRepeatEvent{window, key_id, scancode, mods});
+            events::broadcast<KeyRepeatEvent>(window, key_id, scancode, mods);
         else if(action == GLFW_RELEASE)
-            event_mgr.broadcast(KeyReleaseEvent{window, key_id, scancode, mods});
+            events::broadcast<KeyReleaseEvent>(window, key_id, scancode, mods);
     }
 
     void charCallback(GLFWwindow* glfw, unsigned int c) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
-        event_mgr.broadcast(TextInputEvent{window, c});
+        events::broadcast<TextInputEvent>(window, c);
     }
     void charModsCallback(GLFWwindow* glfw, unsigned int c, int mods) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
         // currently unused
     }
 
     void mouseButtonCallback(GLFWwindow* glfw, int button_id, int action, int mods) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
         if(action == GLFW_PRESS)
-            event_mgr.broadcast(MouseButtonPressEvent{window, button_id, mods});
+            events::broadcast<MouseButtonPressEvent>(window, button_id, mods);
         else if(action == GLFW_REPEAT)
-            event_mgr.broadcast(MouseButtonRepeatEvent{window, button_id, mods});
+            events::broadcast<MouseButtonRepeatEvent>(window, button_id, mods);
         else if(action == GLFW_RELEASE)
-            event_mgr.broadcast(MouseButtonReleaseEvent{window, button_id, mods});
+            events::broadcast<MouseButtonReleaseEvent>(window, button_id, mods);
     }
 
     void cursorPositionCallback(GLFWwindow* glfw, double x, double y) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
-        event_mgr.broadcast(CursorMovedEvent{window, glm::vec2(x, y)});
+        events::broadcast(CursorMovedEvent{window, glm::vec2(x, y)});
 
         auto& viewports = window->getViewports();
         for(auto it = viewports.rbegin(); it != viewports.rend(); ++it) {
@@ -123,47 +110,41 @@ namespace event_callbacks {
     }
 
     void cursorEnterCallback(GLFWwindow* glfw, int entered) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
         if(entered)
-            event_mgr.broadcast(CursorEnteredEvent{window});
+            events::broadcast(CursorEnteredEvent{window});
         else
-            event_mgr.broadcast(CursorLeftEvent{window});
+            events::broadcast(CursorLeftEvent{window});
     }
 
     void scrollCallback(GLFWwindow* glfw, double x, double y) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
+        auto window = getWindow(glfw);
 
-        event_mgr.broadcast(ScrollEvent{window, x, y});
+        events::broadcast(ScrollEvent{window, x, y});
     }
 
     void dropCallback(GLFWwindow* glfw, int count, char const** files) {
-        auto  window    = getWindow(glfw);
-        auto& event_mgr = window->getEventManager();
-        //
+        auto window = getWindow(glfw);
+
         std::vector<std::string> file_names;
         for(int i = 0; i < count; ++i) file_names.push_back(files[i]);
-        event_mgr.broadcast(FileDropEvent{window, std::move(file_names)});
+        events::broadcast(FileDropEvent{window, std::move(file_names)});
     }
 
     void monitorCallback(GLFWmonitor* glfw, int) {
         //  Window*       window = GetWindow(glfw);
-        //  EventManager* eventMgr = window->GetKernel()->GetEventManager();
     }
 
 } // namespace event_callbacks
 
-Window::Window(EventManager& event_mgr, WindowId id)
-  : m_event_mgr{event_mgr}
-  , m_display_mode{std::make_shared<WindowDisplayMode>()}
-  , m_window_id{id} {
-    m_event_mgr.addHandler<SetCursorIconEvent>(this);
+Window::Window(WindowId id)
+  : m_display_mode{std::make_shared<WindowDisplayMode>()}, m_window_id{id} {
+    events::addHandler<SetCursorIconEvent>(this);
 }
 
 Window::~Window() {
-    m_event_mgr.removeHandler<SetCursorIconEvent>(this);
+    events::removeHandler<SetCursorIconEvent>(this);
     close();
 }
 
@@ -177,7 +158,7 @@ void Window::init(base::xml::Element const* properties) {
         m_display_mode->configure(disp_mode);
     }
 
-    xml::getAttribute(properties, "background_color", m_background_color);
+    xml::getAttribute(properties, "background_color", this->background_color);
 
     auto* viewports = properties->FirstChildElement("Viewports");
     if(viewports) {
@@ -209,7 +190,7 @@ void Window::open(std::string_view titel) {
 
     glbinding::initialize(glfwGetProcAddress, false);
 
-    m_event_mgr.broadcast(WindowOpendEvent{this});
+    events::broadcast(WindowOpendEvent{this});
 
     glfwSetWindowUserPointer(m_window_impl, this);
 
@@ -243,7 +224,7 @@ void Window::open(std::string_view titel) {
 void Window::close() {
     if(!m_window_impl) return; // window is not opend;
 
-    m_event_mgr.broadcast(WindowClosedEvent{this});
+    events::broadcast(WindowClosedEvent{this});
 
     glfwDestroyWindow(m_window_impl);
     m_window_impl = nullptr;
@@ -271,14 +252,14 @@ Viewport& Window::createViewport(
     return *m_viewports.back();
 }
 
-glm::ivec2 Window::getWindowSize() const {
-    glm::ivec2 size;
+ivec2 Window::getWindowSize() const {
+    ivec2 size;
     glfwGetWindowSize(m_window_impl, &size.x, &size.y);
     return size;
 }
 
-glm::ivec2 Window::getFrameBufferSize() const {
-    glm::ivec2 size;
+ivec2 Window::getFrameBufferSize() const {
+    ivec2 size;
     glfwGetFramebufferSize(m_window_impl, &size.x, &size.y);
     return size;
 }

@@ -74,13 +74,20 @@ static const std::map<Keyboard::KeyId, std::string_view> KEY_NAMES = {
 };
 // clang-format on
 
-Keyboard::Keyboard(EventManager& eventMgr) : InputDevice(eventMgr, "Keyboard") {
-    m_event_mgr.addHandler<KeyPressEvent>(this);
-    m_event_mgr.addHandler<KeyReleaseEvent>(this);
+Keyboard::Keyboard() : InputDevice("Keyboard") {
+    events::addHandler<KeyPressEvent>(this);
+    events::addHandler<KeyReleaseEvent>(this);
+}
 
+Keyboard::~Keyboard() {
+    events::removeHandler<KeyPressEvent>(this);
+    events::removeHandler<KeyReleaseEvent>(this);
+}
+
+void Keyboard::initDefaultKeys() {
     // register keys
     // clang-format off
-    constexpr std::array<KeyId, 120> GLFW_KEYS{
+    constexpr auto GLFW_KEYS = std::array{
         SPACE, APOSTROPHE, COMMA, MINUS, PERIOD, SLASH, SEMICOLON, EQUAL,
         _0, _1, _2, _3, _4, _5, _6, _7, _8, _9,
         A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
@@ -93,14 +100,9 @@ Keyboard::Keyboard(EventManager& eventMgr) : InputDevice(eventMgr, "Keyboard") {
         KP_DECIMAL, KP_DIVIDE, KP_MULTIPLY, KP_SUBTRACT, KP_ADD, KP_ENTER, KP_EQUAL,
         LEFT_SHIFT,  LEFT_CONTROL,  LEFT_ALT,  LEFT_SUPER,
         RIGHT_SHIFT, RIGHT_CONTROL, RIGHT_ALT, RIGHT_SUPER,
-        WORLD_1, WORLD_2, MENU};
+        /*WORLD_1, WORLD_2,*/ MENU};
     // clang-format on
     for(KeyId key_id : GLFW_KEYS) { createButton(key_id, 0); }
-}
-
-Keyboard::~Keyboard() {
-    m_event_mgr.removeHandler<KeyPressEvent>(this);
-    m_event_mgr.removeHandler<KeyReleaseEvent>(this);
 }
 
 Keyboard::Key* Keyboard::getKey(KeyId key_id, Scancode scancode) {
@@ -124,13 +126,13 @@ InputDevice::Button* Keyboard::getButton(std::string_view name) {
 
 void Keyboard::handleEvent(KeyPressEvent const& event) {
     auto key = this->getKey(KeyId(event.key_id), event.scancode);
-    m_event_mgr.broadcast(InputDeviceButtonPressEvent{key});
+    events::broadcast<InputDeviceButtonPressEvent>(key);
     key->setIsPressed(true);
 }
 
 void Keyboard::handleEvent(KeyReleaseEvent const& event) {
     auto key = this->getKey(KeyId(event.key_id), event.scancode);
-    m_event_mgr.broadcast(InputDeviceButtonReleaseEvent{key});
+    events::broadcast<InputDeviceButtonReleaseEvent>(key);
     key->setIsPressed(false);
 }
 

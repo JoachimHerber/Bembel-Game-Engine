@@ -14,10 +14,12 @@ using namespace bembel::base;
 
 export class Keyboard : public InputDevice {
   public:
-    Keyboard(EventManager&);
+    Keyboard();
     Keyboard(Keyboard const&)            = delete;
     Keyboard& operator=(Keyboard const&) = delete;
     ~Keyboard();
+
+    void initDefaultKeys();
 
     enum KeyId : int {
         SPACE         = GLFW_KEY_SPACE,

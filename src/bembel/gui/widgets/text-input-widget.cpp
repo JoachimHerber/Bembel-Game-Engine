@@ -20,7 +20,7 @@ TextInputWidget::TextInputWidget(Widget& parent) : Widget{parent} {
     m_handle.action_signal.bind(this, &TextInputWidget::onAction);
     m_handle.text_input_signal.bind(this, &TextInputWidget::onTextInput);
 
-    m_handle.cursor = getGUI().getAssetManager().getAssetHandle<kernel::CursorIcon>("IBeam");
+    m_handle.cursor = m_gui.assets.getAssetHandle<kernel::CursorIcon>("IBeam");
 }
 
 bool TextInputWidget::configure(xml::Element const* properties) {

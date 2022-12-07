@@ -12,13 +12,13 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GraphicalUserInterface::GraphicalUserInterface(EventManager& event_mgr, AssetManager& asset_mgr)
-  : m_event_mgr{event_mgr}
-  , m_asset_mgr{asset_mgr}
-  , m_input_handler{event_mgr, asset_mgr, m_root_widget, m_view}
-  , m_renderer{asset_mgr, m_root_widget}
-  , m_root_widget{*this} {
-    m_root_widget.setName("Root");
+GraphicalUserInterface::GraphicalUserInterface(AssetManager& asset_mgr)
+  : assets{asset_mgr}
+  , view{*this}
+  , input{asset_mgr, root_widget, view}
+  , renderer{asset_mgr, root_widget}
+  , root_widget{*this} {
+    this->root_widget.setName("Root");
 }
 
 GraphicalUserInterface::~GraphicalUserInterface() {}
@@ -30,11 +30,11 @@ bool GraphicalUserInterface::init(xml::Element const* properties, bool load_file
     if(load_file && xml::getAttribute(properties, "config_file", file_name)) {
         return init(file_name);
     } else {
-        if(!m_renderer.init(properties->FirstChildElement("Renderer"))) {
+        if(!this->renderer.init(properties->FirstChildElement("Renderer"))) {
             log().error("Failed to init Renderer");
             return false;
         }
-        if(!m_root_widget.configure(properties->FirstChildElement("Widgets"))) {
+        if(!this->root_widget.configure(properties->FirstChildElement("Widgets"))) {
             log().error("Failed to init Widgets");
             return false;
         }
@@ -56,16 +56,20 @@ bool GraphicalUserInterface::init(std::filesystem::path file) {
     return init(properties, false);
 }
 
+Widget* GraphicalUserInterface::getWidget(std::string_view path) const {
+    return this->root_widget.getChildWidget(path);
+}
+
 void GraphicalUserInterface::View::onCurserMove(vec2 const& pos) {
-    m_gui.m_input_handler.onCursorMoved(pos);
+    m_gui.input.onCursorMoved(pos);
 }
 
 void GraphicalUserInterface::View::onResize(uvec2 const& size) {
-    m_gui.m_root_widget.size.set(size);
+    m_gui.root_widget.size.set(size);
 }
 
 void GraphicalUserInterface::View::draw(ivec2 const& pos, uvec2 const& size) {
-    m_gui.m_renderer.drawGui(pos, size);
+    m_gui.renderer.drawGui(pos, size);
 }
 
 } // namespace bembel::gui

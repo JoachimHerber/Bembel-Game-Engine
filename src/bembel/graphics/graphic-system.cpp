@@ -16,9 +16,7 @@ class MaterialLoader final : public AssetLoaderBase {
     using ContainerType = AssetContainer<Material>;
 
     MaterialLoader(AssetManager& asset_mgr, ContainerType* container, GraphicSystem* graphic_system)
-      : m_graphic_system(graphic_system)
-      , m_asset_mgr(asset_mgr)
-      , m_container(container) {}
+      : m_graphic_system(graphic_system), m_asset_mgr(asset_mgr), m_container(container) {}
     virtual ~MaterialLoader() = default;
 
     AssetHandle requestAsset(std::string_view filename) override {
@@ -86,15 +84,12 @@ class MaterialLoader final : public AssetLoaderBase {
 };
 
 GraphicSystem::GraphicSystem(Engine& engine)
-  : System("Graphics")
-  , m_engine{engine}
-  , m_geometry_render_queue{engine.getAssetManager()} {
-    auto& asset_mgr = engine.getAssetManager();
-    asset_mgr.registerAssetType<Material, MaterialLoader>(this);
-    asset_mgr.registerAssetType<GeometryMesh>();
-    asset_mgr.registerAssetType<GeometryModel>();
-    asset_mgr.registerAssetType<Shader>();
-    asset_mgr.registerAssetType<ShaderProgram>();
+  : System("Graphics"), m_engine{engine}, m_geometry_render_queue{engine.assets} {
+    engine.assets.registerAssetType<Material, MaterialLoader>(this);
+    engine.assets.registerAssetType<GeometryMesh>();
+    engine.assets.registerAssetType<GeometryModel>();
+    engine.assets.registerAssetType<Shader>();
+    engine.assets.registerAssetType<ShaderProgram>();
 
     using Stage = RenderingPipeline::Stage;
     Stage::registerStageType<GeometryRenderingStage>("DeferredGeometryStage");
@@ -102,14 +97,12 @@ GraphicSystem::GraphicSystem(Engine& engine)
     Stage::registerStageType<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
 }
 GraphicSystem::~GraphicSystem() {
-    m_engine.getEventManager().removeHandler<WindowUpdateEvent>(this);
-    m_engine.getEventManager().removeHandler<FrameBufferResizeEvent>(this);
+    events::removeHandler<WindowUpdateEvent>(this);
+    events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
 RenderingPipeline* GraphicSystem::createRenderingPipline() {
-    m_pipelines.push_back(std::make_unique<RenderingPipeline>(
-        m_engine.getAssetManager(), m_engine.getDisplayManager()
-    ));
+    m_pipelines.push_back(std::make_unique<RenderingPipeline>(m_engine.assets, m_engine.display));
     return m_pipelines.back().get();
 }
 
@@ -134,20 +127,20 @@ bool GraphicSystem::configure(xml::Element const* properties) {
 
     configureRenderer(properties->FirstChildElement("Renderer"));
     configurePipelines(properties->FirstChildElement("RenderingPipelines"));
-    m_engine.getEventManager().broadcast(InitGraphicResourcesEvent{});
+    events::broadcast<InitGraphicResourcesEvent>();
     return true;
 }
 
 bool GraphicSystem::init() {
     for(auto& pipline : m_pipelines) pipline->init();
 
-    m_engine.getEventManager().broadcast(InitGraphicResourcesEvent{});
+    events::broadcast<InitGraphicResourcesEvent>();
     return true;
 }
 
 void GraphicSystem::shutdown() {
     m_pipelines.clear();
-    m_engine.getEventManager().broadcast(CleanuptGraphicResourcesEvent{});
+    events::broadcast<CleanuptGraphicResourcesEvent>();
 }
 
 void GraphicSystem::update(double) {
@@ -159,7 +152,7 @@ void GraphicSystem::configureRenderer(xml::Element const* properties) {
 
     for(auto renderer_properties : xml::IterateChildElements(properties)) {
         RendererPtr renderer = DefaultGeometryRenderer::createRenderer(
-            renderer_properties, m_engine.getAssetManager(), uint(m_renderer.size())
+            renderer_properties, m_engine.assets, uint(m_renderer.size())
         );
 
         if(renderer) {
@@ -175,9 +168,7 @@ void GraphicSystem::configurePipelines(xml::Element const* properties) {
     if(!properties) return;
 
     for(auto pipeline_properties : xml::IterateChildElements(properties, "RenderingPipeline")) {
-        auto pipline = std::make_unique<RenderingPipeline>(
-            m_engine.getAssetManager(), m_engine.getDisplayManager()
-        );
+        auto pipline = std::make_unique<RenderingPipeline>(m_engine.assets, m_engine.display);
         if(!pipline->configure(pipeline_properties)) pipline.reset();
 
         m_pipelines.push_back(std::move(pipline));

@@ -9,14 +9,14 @@ import bembel.base;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-Mouse::Mouse(EventManager& eventMgr) : InputDevice(eventMgr, "Mouse") {
-    m_event_mgr.addHandler<MouseButtonPressEvent>(this);
-    m_event_mgr.addHandler<MouseButtonReleaseEvent>(this);
+Mouse::Mouse() : InputDevice("Mouse") {
+    events::addHandler<MouseButtonPressEvent>(this);
+    events::addHandler<MouseButtonReleaseEvent>(this);
 }
 
 Mouse::~Mouse() {
-    m_event_mgr.removeHandler<MouseButtonPressEvent>(this);
-    m_event_mgr.removeHandler<MouseButtonReleaseEvent>(this);
+    events::removeHandler<MouseButtonPressEvent>(this);
+    events::removeHandler<MouseButtonReleaseEvent>(this);
 }
 
 InputDevice::Button* Mouse::getButton(u64 button_id) {
@@ -38,7 +38,7 @@ Mouse::Button* Mouse::getButton(std::string_view name) {
 void Mouse::handleEvent(MouseButtonPressEvent const& event) {
     if(event.button_id < NUM_BUTTONS) {
         Button* button = &m_buttons[event.button_id];
-        m_event_mgr.broadcast(InputDeviceButtonPressEvent{button});
+        events::broadcast<InputDeviceButtonPressEvent>(button);
         button->setIsPressed(true);
     } else {
         log().error(
@@ -50,7 +50,7 @@ void Mouse::handleEvent(MouseButtonPressEvent const& event) {
 void Mouse::handleEvent(MouseButtonReleaseEvent const& event) {
     if(event.button_id < NUM_BUTTONS) {
         Button* button = &m_buttons[event.button_id];
-        m_event_mgr.broadcast(InputDeviceButtonReleaseEvent{button});
+        events::broadcast<InputDeviceButtonReleaseEvent>(button);
         button->setIsPressed(false);
     } else {
         log().error(
