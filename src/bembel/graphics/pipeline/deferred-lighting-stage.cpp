@@ -51,11 +51,11 @@ bool DeferredLightingStage::configure(xml::Element const* properties) {
 void DeferredLightingStage::setScene(Scene* scene) {
     m_scene = scene;
     m_dir_light_container =
-        scene ? m_scene->requestComponentContainer<DirectionalLightSource>() : nullptr;
+        scene ? m_scene->requestComponentContainer<DirectionalLightComponent>() : nullptr;
     m_point_light_container =
-        scene ? m_scene->requestComponentContainer<PointLightSource>() : nullptr;
+        scene ? m_scene->requestComponentContainer<PointLightComponent>() : nullptr;
     m_position_container =
-        scene ? m_scene->requestComponentContainer<kernel::PositionComponent>() : nullptr;
+        scene ? m_scene->requestComponentContainer<PositionComponent>() : nullptr;
 }
 
 inline void setVertexAttribPointer(uint index, int size, uint offset) {
@@ -139,7 +139,7 @@ void DeferredLightingStage::applyDirectionalLights() {
 
     glm::mat3 normal_matrix = camera->getViewMatrix();
 
-    for(auto const& it : m_dir_light_container->getComponents()) {
+    for(auto const& it : m_dir_light_container->getComponentData()) {
         glm::vec3 dir = it.second.direction;
         dir           = normal_matrix * dir;
 
@@ -177,13 +177,13 @@ void DeferredLightingStage::applyPointLights() {
     Camera* camera = m_pipline.getCamera().get();
 
     std::vector<PointLight> point_lights;
-    for(auto const& it : m_point_light_container->getComponents()) {
+    for(auto const& it : m_point_light_container->getComponentData()) {
         if((m_scene->getEntitys()[u64(it.first)] & mask) != mask)
             continue; // this should not happen
 
         PointLight light;
 
-        vec4 position = vec4(m_position_container->getComponent(it.first)->position, 1);
+        vec4 position = vec4(*(m_position_container->getComponent(it.first)), 1);
         position      = camera->getViewMatrix() * position;
 
         light.x = position.x;

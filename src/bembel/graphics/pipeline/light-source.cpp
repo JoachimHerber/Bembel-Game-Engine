@@ -9,7 +9,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-bool PointLightSource::initComponent(
+bool initComponent(
     In<xml::Element const*> properties,
     InOut<AssetManager>     asset_mgr,
     InOut<PointLightSource> component
@@ -25,7 +25,7 @@ bool PointLightSource::initComponent(
     return true;
 }
 
-bool DirectionalLightSource::initComponent(
+bool initComponent(
     In<xml::Element const*>       properties,
     InOut<AssetManager>           asset_mgr,
     InOut<DirectionalLightSource> component

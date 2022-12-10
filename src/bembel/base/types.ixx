@@ -52,6 +52,13 @@ struct Exeption : public std::runtime_error {
     Exeption(Exeption const& other) noexcept = default;
 };
 
+template <usize N>
+struct StringLiteral {
+    consteval StringLiteral(const char (&str)[N]) { std::copy_n(str, N, value); }
+
+    char value[N];
+};
+
 // clang-format off
 template <typename T>
 inline constexpr bool PASS_BY_VALUE = std::is_trivially_copyable_v<T> && sizeof(T) < 4 * sizeof(int); // pass small trivially copyable Types by value
@@ -68,7 +75,8 @@ template <typename T> using Move  = T&&;
 template <typename T> using Copy  = T;
 // clang-format on
 
-template <typename T> using Dictionary = std::map<std::string, T, std::less<>>;
+template <typename T>
+using Dictionary = std::map<std::string, T, std::less<>>;
 // std::less<> allowes us to use std::string_views to find element in the map/Dictionary
 
 template <typename T, typename... TArgs>
@@ -78,71 +86,84 @@ concept AllowedTypes = (std::same_as<T, TArgs> || ...);
 using bembel::base::In;
 using bembel::base::InOut;
 using bembel::base::Out;
-export template <> struct std::formatter<glm::vec2> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::vec2> : std::formatter<std::string> {
     auto format(In<glm::vec2> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
     }
 };
-export template <> struct std::formatter<glm::vec3> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::vec3> : std::formatter<std::string> {
     auto format(In<glm::vec3> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
     }
 };
-export template <> struct std::formatter<glm::vec4> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::vec4> : std::formatter<std::string> {
     auto format(In<glm::vec4> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
     }
 };
 
-export template <> struct std::formatter<glm::dvec2> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::dvec2> : std::formatter<std::string> {
     auto format(In<glm::dvec2>& v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
     }
 };
-export template <> struct std::formatter<glm::dvec3> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::dvec3> : std::formatter<std::string> {
     auto format(In<glm::dvec3> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
     }
 };
-export template <> struct std::formatter<glm::dvec4> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::dvec4> : std::formatter<std::string> {
     auto format(In<glm::dvec4> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
     }
 };
 
-export template <> struct std::formatter<glm::ivec2> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::ivec2> : std::formatter<std::string> {
     auto format(In<glm::ivec2> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
     }
 };
-export template <> struct std::formatter<glm::ivec3> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::ivec3> : std::formatter<std::string> {
     auto format(In<glm::ivec3> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
     }
 };
-export template <> struct std::formatter<glm::ivec4> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::ivec4> : std::formatter<std::string> {
     auto format(In<glm::ivec4> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
     }
 };
 
-export template <> struct std::formatter<glm::uvec2> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::uvec2> : std::formatter<std::string> {
     auto format(In<glm::uvec2> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
     }
 };
-export template <> struct std::formatter<glm::uvec3> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::uvec3> : std::formatter<std::string> {
     auto format(In<glm::uvec3> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
     }
 };
-export template <> struct std::formatter<glm::uvec4> : std::formatter<std::string> {
+export template <>
+struct std::formatter<glm::uvec4> : std::formatter<std::string> {
     auto format(In<glm::uvec4> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
     }
 };
 
-export template <> struct std::formatter<bembel::base::WindowId> : std::formatter<std::string> {
+export template <>
+struct std::formatter<bembel::base::WindowId> : std::formatter<std::string> {
     auto format(In<bembel::base::WindowId> v, format_context& ctx) {
         return formatter<string>::format(std::format("{}", uint32_t(v)), ctx);
     }

@@ -37,13 +37,12 @@ export class SelectionPointer {
 };
 
 export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECTED };
-export struct SelectionHighlightComponent {
-    SelectionHighlight highlight;
+export bool initComponent(xml::Element const*, AssetManager&, SelectionHighlight&) {
+    return true;
+}
+export using SelectionHighlightComponent =
+    StandardComponent<"SelectionHighlight", SelectionHighlight>;
 
-    static constexpr std::string_view COMPONENT_TYPE_NAME = "SelectionHighlight";
-
-    using ContainerType = ComponentArray<SelectionHighlightComponent>;
-};
 
 export class SelectionRenderingStage : public RenderingPipeline::Stage {
   public:
@@ -80,11 +79,11 @@ export class SelectionRenderingStage : public RenderingPipeline::Stage {
 
     std::unique_ptr<Texture> m_noise;
 
-    Scene*                                      m_scene;
-    PositionComponent::ContainerType*           m_position_components;
-    RotationComponent::ContainerType*           m_rotation_components;
-    GeometryComponent::ContainerType*           m_geometry_components;
-    SelectionHighlightComponent::ContainerType* m_highlight_components;
+    Scene*                                  m_scene;
+    PositionComponent::Container*           m_position_components;
+    RotationComponent::Container*           m_rotation_components;
+    GeometryComponent::Container*           m_geometry_components;
+    SelectionHighlightComponent::Container* m_highlight_components;
 
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;
 };

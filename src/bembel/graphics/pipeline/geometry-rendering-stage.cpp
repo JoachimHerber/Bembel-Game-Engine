@@ -55,9 +55,9 @@ void GeometryRenderingStage::execute(
     auto cam = m_pipline.getCamera();
 
     auto const& entitis             = m_scene->getEntitys();
-    auto const& position_components = m_position_components->getComponents();
-    auto const& rotation_components = m_rotation_components->getComponents();
-    auto const& geometry_components = m_geometry_components->getComponents();
+    auto const& position_components = m_position_components->getComponentData();
+    auto const& rotation_components = m_rotation_components->getComponentData();
+    auto const& geometry_components = m_geometry_components->getComponentData();
 
     renderQueue.clearRendarData();
 
@@ -66,14 +66,14 @@ void GeometryRenderingStage::execute(
 
         mat4 transform(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         if(entitis[entity] & m_position_components->getComponentMask()) {
-            transform = glm::translate(transform, position_components[entity].position);
+            transform = glm::translate(transform, position_components[entity]);
         }
         if(entitis[entity] & m_rotation_components->getComponentMask()) {
-            transform = transform * glm::mat4_cast(rotation_components[entity].rotation);
+            transform = transform * glm::mat4_cast(rotation_components[entity]);
         }
 
-        GeometryComponent const& geom = geometry_components[entity];
-        renderQueue.addGeometryObject(geom.m_model, transform);
+        auto& geom = geometry_components[entity];
+        renderQueue.addGeometryObject(geom.model, transform);
     }
 
     renderQueue.sortRenderData();

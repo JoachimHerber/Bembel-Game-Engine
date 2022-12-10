@@ -151,10 +151,8 @@ void GameLogic::SelectChessPice::update(double) {
 
     for(uint x = 0; x < 8; ++x) {
         for(uint y = 0; y < 8; ++y) {
-            m_logic->getChessBoard()
-                ->getTileAt({x, y})
-                .getComponent<SelectionHighlightComponent>()
-                ->highlight = SelectionHighlight::NO_HIGHLIGHT;
+            auto tile = m_logic->getChessBoard()->getTileAt({x, y});
+            tile.getComponent<SelectionHighlightComponent>() = SelectionHighlight::NO_HIGHLIGHT;
         }
     }
 
@@ -174,10 +172,8 @@ void GameLogic::SelectChessPice::update(double) {
     );
 
     for(auto move : moves) {
-        m_logic->getChessBoard()
-            ->getTileAt(move.to)
-            .getComponent<SelectionHighlightComponent>()
-            ->highlight = SelectionHighlight::SELECTABLE;
+        m_logic->getChessBoard()->getTileAt(move.to).getComponent<SelectionHighlightComponent>() =
+            SelectionHighlight::SELECTABLE;
     }
 }
 
@@ -215,13 +211,11 @@ void GameLogic::SelectMove::update(double) {
     if(m_selection == selection) return;
 
     if(auto highlight = getHighlightComponentOfSelectedTile()) {
-        if(highlight->highlight == SelectionHighlight::FOCUSED)
-            highlight->highlight = SelectionHighlight::SELECTABLE;
+        if(highlight == SelectionHighlight::FOCUSED) highlight = SelectionHighlight::SELECTABLE;
     }
     m_selection = selection;
     if(auto highlight = getHighlightComponentOfSelectedTile()) {
-        if(highlight->highlight == SelectionHighlight::SELECTABLE)
-            highlight->highlight = SelectionHighlight::FOCUSED;
+        if(highlight == SelectionHighlight::SELECTABLE) highlight = SelectionHighlight::FOCUSED;
     }
 }
 
@@ -232,10 +226,8 @@ void GameLogic::SelectMove::onClick() {
     m_pice.setHighlight(SelectionHighlight::NO_HIGHLIGHT);
 
     for(auto& move : m_moves) {
-        m_logic->getChessBoard()
-            ->getTileAt(move.to)
-            .getComponent<SelectionHighlightComponent>()
-            ->highlight = SelectionHighlight::NO_HIGHLIGHT;
+        m_logic->getChessBoard()->getTileAt(move.to).getComponent<SelectionHighlightComponent>() =
+            SelectionHighlight::NO_HIGHLIGHT;
     }
     m_logic->setState(std::make_unique<PerformMove>(m_logic, m_pice, m_moves[m_selection]));
 }

@@ -9,39 +9,32 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export class PointLightSource {
-  public:
+export struct PointLightSource {
     vec3 color;
 
     float bulb_radius;
     float cutoff_radius;
-
-    static constexpr std::string_view COMPONENT_TYPE_NAME = "PointLight";
-
-    static bool initComponent(
-        In<xml::Element const*> properties,
-        InOut<AssetManager>     asset_mgr,
-        InOut<PointLightSource> component
-    );
-
-    using ContainerType = ComponentMap<PointLightSource>;
-    using ContainerPtr  = std::shared_ptr<ContainerType>;
 };
 
-export class DirectionalLightSource {
-  public:
+export struct DirectionalLightSource {
     vec3 color;
     vec3 direction;
-
-    static constexpr std::string_view COMPONENT_TYPE_NAME = "DirectionalLight";
-
-    static bool initComponent(
-        In<xml::Element const*>       properties,
-        InOut<AssetManager>           asset_mgr,
-        InOut<DirectionalLightSource> component
-    );
-    using ContainerType = ComponentMap<DirectionalLightSource>;
-    using ContainerPtr  = std::shared_ptr<ContainerType>;
 };
+
+export bool initComponent(
+    In<xml::Element const*> properties,
+    InOut<AssetManager>     asset_mgr,
+    InOut<PointLightSource> component
+);
+
+export bool initComponent(
+    In<xml::Element const*>       properties,
+    InOut<AssetManager>           asset_mgr,
+    InOut<DirectionalLightSource> component
+);
+
+export using PointLightComponent = StandardComponent<"PointLight", PointLightSource, false>;
+export using DirectionalLightComponent =
+    StandardComponent<"DirectionalLight", DirectionalLightSource, false>;
 
 } // namespace bembel::graphics

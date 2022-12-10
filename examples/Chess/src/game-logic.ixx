@@ -83,8 +83,8 @@ export class GameLogic {
         virtual void onEnter() override;
 
       private:
-        SelectionHighlightComponent* getHighlightComponentOfSelectedTile() {
-            if(m_selection >= m_moves.size()) return nullptr;
+        SelectionHighlightComponent getHighlightComponentOfSelectedTile() {
+            if(m_selection >= m_moves.size()) return {nullptr};
             return m_logic->getChessBoard()
                 ->getTileAt(m_moves[m_selection].to)
                 .getComponent<SelectionHighlightComponent>();

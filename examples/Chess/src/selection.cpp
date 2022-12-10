@@ -16,8 +16,7 @@ using namespace gui;
 using namespace ::gl;
 using namespace std::chrono;
 
-SelectionPointer::SelectionPointer(RenderingPipeline* pipline)
-  : m_pipline(pipline) {
+SelectionPointer::SelectionPointer(RenderingPipeline* pipline) : m_pipline(pipline) {
     events::addHandler<CursorMovedEvent>(this);
     events::addHandler<MouseButtonPressEvent>(this);
 }
@@ -229,10 +228,10 @@ void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& 
 
     auto const& entitis = m_scene->getEntitys();
 
-    auto& positions  = m_position_components->getComponents();
-    auto& rotations  = m_rotation_components->getComponents();
-    auto& geometry   = m_geometry_components->getComponents();
-    auto& highlights = m_highlight_components->getComponents();
+    auto& positions  = m_position_components->getComponentData();
+    auto& rotations  = m_rotation_components->getComponentData();
+    auto& geometry   = m_geometry_components->getComponentData();
+    auto& highlights = m_highlight_components->getComponentData();
 
     ComponentMask mask = m_position_components->getComponentMask()
                        | m_geometry_components->getComponentMask()
@@ -241,9 +240,9 @@ void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& 
     for(usize entity = 0; entity < entitis.size(); ++entity) {
         if((entitis[entity] & mask) != mask) continue;
 
-        if(highlights[entity].highlight == SelectionHighlight::NO_HIGHLIGHT) continue;
+        if(highlights[entity] == SelectionHighlight::NO_HIGHLIGHT) continue;
 
-        GeometryModel* model = m_scene->getAsset<GeometryModel>(geometry[entity].m_model);
+        GeometryModel* model = m_scene->getAsset<GeometryModel>(geometry[entity].model);
         if(model == nullptr) continue;
 
         float dist = glm::length(camPos - (vec3)positions[entity]);
@@ -253,7 +252,7 @@ void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& 
             roatation = rotations[entity];
 
         objects.emplace_back(
-            positions[entity], roatation, dist, model, unsigned(highlights[entity].highlight) - 1
+            positions[entity], roatation, dist, model, unsigned(highlights[entity]) - 1
         );
     }
 }

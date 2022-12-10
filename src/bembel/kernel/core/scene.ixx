@@ -20,13 +20,13 @@ export class Scene {
     AssetManager& getAssetManager() { return m_asste_mgr; }
 
     template <Component T>
-    T::ContainerType* requestComponentContainer() {
+    T::Container* requestComponentContainer() {
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it != m_component_type_map.end()) {
-            return static_cast<typename T::ContainerType*>(m_container[it->second].get());
+            return static_cast<typename T::Container*>(m_container[it->second].get());
         }
 
-        auto container         = std::make_unique<typename T::ContainerType>(m_container.size());
+        auto container         = std::make_unique<typename T::Container>(m_container.size());
         auto container_pointer = container.get();
 
         m_component_type_map.emplace(T::COMPONENT_TYPE_NAME, m_container.size());
@@ -34,10 +34,10 @@ export class Scene {
         return container_pointer;
     }
     template <Component T>
-    typename T::ContainerType* getComponentContainer() {
+    typename T::Container* getComponentContainer() {
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it != m_component_type_map.end()) {
-            return static_cast<typename T::ContainerType*>(m_container[it->second].get());
+            return static_cast<typename T::Container*>(m_container[it->second].get());
         }
         return nullptr;
     }
@@ -46,7 +46,7 @@ export class Scene {
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it != m_component_type_map.end()) return;
 
-        auto container = std::make_unique<typename T::ContainerType>(m_container.size());
+        auto container = std::make_unique<typename T::Container>(m_container.size());
 
         m_component_type_map.emplace(T::COMPONENT_TYPE_NAME, m_container.size());
         m_container.push_back(std::move(container));
@@ -59,26 +59,26 @@ export class Scene {
     bool loadScene(std::filesystem::path file_name);
 
     template <Component T, typename... TArgs>
-    T* createComponent(EntityID id, TArgs&&... args) {
+    T createComponent(EntityID id, TArgs&&... args) {
         if(to_underlying(id) >= m_entities.size()) return nullptr;
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) return nullptr;
 
-        auto container = static_cast<typename T::ContainerType*>(m_container[it->second].get());
+        auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 
         m_entities[to_underlying(id)] |= container->getComponentMask();
         return container->createComponent(id, std::forward<TArgs>(args)...);
     }
 
     template <Component T>
-    T* getComponent(EntityID id) {
+    T getComponent(EntityID id) {
         if(to_underlying(id) >= m_entities.size()) return nullptr; // invalided entity id
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) return nullptr; // component type does not exist
 
-        auto container = static_cast<typename T::ContainerType*>(m_container[it->second].get());
+        auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 
         if((m_entities[to_underlying(id)] & container->getComponentMask()) == 0)
             return nullptr; // entity doesn't have a component of the requested type
@@ -86,20 +86,20 @@ export class Scene {
         return container->getComponent(id);
     }
     template <Component T>
-    T& acquireComponent(EntityID id) {
+    T acquireComponent(EntityID id) {
         if(to_underlying(id) >= m_entities.size())
             throw Exeption("Tying to acquire component for invalid entity");
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) throw Exeption("Invalid Component Type");
 
-        auto container = static_cast<typename T::ContainerType*>(m_container[it->second].get());
+        auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 
         if((m_entities[to_underlying(id)] & container->getComponentMask()) != 0)
-            return *container->getComponent(id);
+            return container->getComponent(id);
 
         m_entities[to_underlying(id)] |= container->getComponentMask();
-        return *container->createComponent(id);
+        return container->createComponent(id);
     }
 
     std::vector<ComponentMask> const& getEntitys() const;

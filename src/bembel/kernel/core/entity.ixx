@@ -34,18 +34,18 @@ class Entity {
     }
 
     template <class ComponentType, typename... TArgs>
-    ComponentType* createComponent(TArgs&&... args) {
+    ComponentType createComponent(TArgs&&... args) {
         return m_scene ? m_scene->createComponent<ComponentType>(m_id, std::forward<TArgs>(args)...)
-                       : nullptr;
+                       : ComponentType();
     }
 
     template <class ComponentType>
-    ComponentType* getComponent() {
-        return m_scene ? m_scene->getComponent<ComponentType>(m_id) : nullptr;
+    ComponentType getComponent() {
+        return m_scene ? m_scene->getComponent<ComponentType>(m_id) : ComponentType();
     }
 
     template <class ComponentType>
-    ComponentType& acquireComponent() {
+    ComponentType acquireComponent() {
         if(!m_scene || m_id == EntityID::INVALID)
             throw Exeption("Tying to acquire component for invalid entity");
         return m_scene->acquireComponent<ComponentType>(m_id);
@@ -77,8 +77,8 @@ struct tuple_element<TIndex, Entity<TComponents...>>
   : tuple_element<TIndex, tuple<TComponents...>> {};
 
 export template <size_t TIndex, Component... TComponents>
-std::tuple_element_t<TIndex, tuple<TComponents...>>& get(Entity<TComponents...>& entity) {
-    return *entity.getComponent<std::tuple_element_t<TIndex, tuple<TComponents...>>>();
+std::tuple_element_t<TIndex, tuple<TComponents...>> get(Entity<TComponents...>& entity) {
+    return entity.getComponent<std::tuple_element_t<TIndex, tuple<TComponents...>>>();
 }
 
 } // namespace std

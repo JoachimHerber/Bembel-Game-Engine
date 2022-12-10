@@ -39,10 +39,10 @@ export class DeferredLightingStage : public RenderingPipeline::Stage {
     uint m_vbo         = 0;
     uint m_buffer_size = 0;
 
-    Scene*                                 m_scene                 = nullptr;
-    DirectionalLightSource::ContainerType* m_dir_light_container   = nullptr;
-    PointLightSource::ContainerType*       m_point_light_container = nullptr;
-    PositionComponent::ContainerType*      m_position_container    = nullptr;
+    Scene*                                m_scene                 = nullptr;
+    DirectionalLightComponent::Container* m_dir_light_container   = nullptr;
+    PointLightComponent::Container*       m_point_light_container = nullptr;
+    PositionComponent::Container*         m_position_container    = nullptr;
 };
 
 } // namespace bembel::graphics

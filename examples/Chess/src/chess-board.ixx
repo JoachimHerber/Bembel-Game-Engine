@@ -13,16 +13,17 @@ using namespace graphics;
 export enum ChessPieceType : u8 { PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 export enum ChessPlayer : u8 { WHITE, BLACK };
 
-export struct ChessPieceComponent {
+export struct ChessPieceComponentData {
     ChessPieceType type;
     ChessPlayer    owner;
     ivec2          position;
     bool           has_moved = false;
-
-    static constexpr std::string_view COMPONENT_TYPE_NAME = "ChessPieceComponent";
-
-    using ContainerType = ComponentArray<ChessPieceComponent>;
 };
+export bool initComponent(xml::Element const*, AssetManager&, ChessPieceComponentData&) {
+    return true;
+}
+export using ChessPieceComponent =
+    StandardComponent<"ChessPieceComponent", ChessPieceComponentData>;
 
 class ChessBoard;
 
@@ -62,10 +63,10 @@ export class ChessPiece {
     void  setPosition(vec3 pos) { *(m_entity.getComponent<PositionComponent>()) = pos; }
 
     SelectionHighlight getHighlight() {
-        return m_entity.getComponent<SelectionHighlightComponent>()->highlight;
+        return *(m_entity.getComponent<SelectionHighlightComponent>());
     }
     void setHighlight(SelectionHighlight highlight) {
-        m_entity.getComponent<SelectionHighlightComponent>()->highlight = highlight;
+        *(m_entity.getComponent<SelectionHighlightComponent>()) = highlight;
     }
 
   private:

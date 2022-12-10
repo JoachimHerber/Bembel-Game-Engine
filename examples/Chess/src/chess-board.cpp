@@ -39,9 +39,9 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
             m_tiles[u][v] = TilesEntity{*m_scene};
 
             auto& [pos, geom, highlight] = m_tiles[u][v];
-            pos                          = vec3(2.0f * u, 0, 2.0f * v);
-            geom.m_model                 = (u + v) % 2 != 0 ? whiteTile : blackTile;
-            highlight.highlight          = SelectionHighlight::NO_HIGHLIGHT;
+            *pos                         = vec3(2.0f * u, 0, 2.0f * v);
+            geom->model                  = (u + v) % 2 != 0 ? whiteTile : blackTile;
+            *highlight                   = SelectionHighlight::NO_HIGHLIGHT;
         }
     }
     resetBoard();
@@ -110,13 +110,13 @@ void ChessBoard::createChessPiece(ivec2 pos, ChessPieceType type, ChessPlayer ow
     chess_piece                                        = ChessPieceEntity{*m_scene};
     auto& [piece, position, rotation, geom, selection] = chess_piece;
 
-    piece.type          = type;
-    piece.owner         = owner;
-    piece.position      = pos;
-    position            = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
-    rotation            = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
-    geom.m_model        = m_models[type][owner].getHandle();
-    selection.highlight = SelectionHighlight::NO_HIGHLIGHT;
+    piece->type     = type;
+    piece->owner    = owner;
+    piece->position = pos;
+    *position       = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
+    *rotation       = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
+    geom->model     = m_models[type][owner].getHandle();
+    *selection      = SelectionHighlight::NO_HIGHLIGHT;
 }
 
 bool ChessBoard::canCaptureEnPassant(ivec2 pos) {

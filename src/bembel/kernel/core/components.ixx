@@ -34,113 +34,104 @@ concept Component = true; /* requires() {
      T::COMPONENT_TYPE_NAME;
  };//*/
 
-namespace component_utiles {
-    template <typename TComponent, typename... TArgs>
-    concept StaticInitializableFrom = requires(TComponent c, TArgs... args) {
-        { TComponent::initComponent(args..., c) } -> std::convertible_to<bool>;
+export template <StringLiteral TTypeName, typename TDataType, bool TDense = true>
+class StandardComponent {
+  public:
+    StandardComponent(TDataType* data = nullptr) : m_data{data} {}
+    StandardComponent(StandardComponent const&) = default;
+    StandardComponent(StandardComponent&&)      = default;
+
+    StandardComponent& operator=(StandardComponent const&) = default;
+    StandardComponent& operator=(StandardComponent&&)      = default;
+    StandardComponent& operator=(In<TDataType> data) {
+        *m_data = data;
+        return *this;
+    }
+
+    operator bool() const { return m_data != nullptr; }
+
+    bool operator==(StandardComponent other) { return *m_data == *other.m_data; }
+    bool operator==(In<TDataType> data) { return *m_data == data; }
+
+    auto& operator*() { return *m_data; }
+    auto* operator->() { return m_data; }
+
+    static constexpr std::string_view COMPONENT_TYPE_NAME = TTypeName.value;
+
+    class Container : public ComponentContainerBase {
+      public:
+        using ContainerType =
+            std::conditional_t<TDense, std::vector<TDataType>, std::map<EntityID, TDataType>>;
+
+        Container(ComponentTypeID type_id) : ComponentContainerBase(type_id) {}
+        virtual ~Container() = default;
+
+        StandardComponent createComponent(EntityID entity_id) {
+            if constexpr(TDense) {
+                if(to_underlying(entity_id) >= m_components.size())
+                    m_components.resize(to_underlying(entity_id) + 1);
+                return {&(m_components[to_underlying(entity_id)])};
+            } else {
+                return {&(m_components[entity_id])};
+            }
+        }
+
+        template <typename... TArgs>
+        StandardComponent createComponent(EntityID entity_id, TArgs&&... args) {
+            auto component = createComponent(entity_id);
+            *component     = TDataType(std::forward<TArgs>(args)...);
+            return component;
+        }
+
+        bool createComponent(
+            EntityID entity_id, xml::Element const* properties, AssetManager& asset_mgr
+        ) override {
+            TDataType component;
+            if(initComponent(properties, asset_mgr, component)) {
+                if constexpr(TDense) {
+                    if(to_underlying(entity_id) >= m_components.size())
+                        m_components.resize(to_underlying(entity_id) + 1);
+                    m_components[to_underlying(entity_id)] = component;
+                } else {
+                    m_components[entity_id] = component;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        bool deleteComponent(EntityID entity_id) override {
+            if constexpr(TDense) {
+                return true;
+            } else {
+                auto it = m_components.find(entity_id);
+                if(it != m_components.end()) {
+                    m_components.erase(it);
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        auto& getComponentData() { return m_components; }
+
+        StandardComponent getComponent(EntityID entity_id) {
+            if constexpr(TDense) {
+                assert(to_underlying(entity_id) < m_components.size());
+                return &m_components[to_underlying(entity_id)];
+            } else {
+                auto it = m_components.find(entity_id);
+                if(it != m_components.end()) return {&(it->second)};
+            }
+            return {nullptr};
+        }
+
+      private:
+        ContainerType m_components;
     };
 
-    template <Component T>
-    bool initComponent(
-        In<xml::Element const*> properties,
-        InOut<AssetManager>     asset_mgr,
-        InOut<T>                geometry_component
-    ) {
-        if constexpr(StaticInitializableFrom<T, xml::Element const*, AssetManager>) {
-            return T::initComponent(properties, asset_mgr, geometry_component);
-        } else if constexpr(StaticInitializableFrom<T, xml::Element const*>) {
-            return T::initComponent(properties, geometry_component);
-        } else {
-            return true;
-        }
-    }
-} // namespace component_utiles
-
-export template <Component T>
-class ComponentMap : public ComponentContainerBase {
-  public:
-    ComponentMap(ComponentTypeID type_id) : ComponentContainerBase(type_id) {}
-    virtual ~ComponentMap() {}
-
-    T* createComponent(EntityID entity_id) { return &(m_components[entity_id]); }
-    template <typename... TArgs>
-    T* createComponent(EntityID entity_id, TArgs&&... args) {
-        return new(&(m_components[entity_id])) T(std::forward<TArgs>(args)...);
-    }
-    bool createComponent(
-        EntityID entity_id, base::xml::Element const* properties, AssetManager& asset_mgr
-    ) override {
-        T component;
-        if(component_utiles::initComponent(properties, asset_mgr, component)) {
-            m_components[entity_id] = component;
-            return true;
-        }
-        return false;
-    }
-    bool deleteComponent(EntityID entity_id) override {
-        auto it = m_components.find(entity_id);
-        if(it != m_components.end()) {
-            m_components.erase(it);
-            return true;
-        }
-        return false;
-    }
-
-    std::map<EntityID, T>& getComponents() { return m_components; }
-
-    T* getComponent(EntityID entity_id) {
-        auto it = m_components.find(entity_id);
-        if(it != m_components.end()) return &(it->second);
-
-        return nullptr;
-    }
-
   private:
-    std::map<EntityID, T> m_components;
-};
-
-export template <Component T>
-class ComponentArray : public ComponentContainerBase {
-  public:
-    ComponentArray(ComponentTypeID id) : ComponentContainerBase(id) {}
-    virtual ~ComponentArray() {}
-
-    T* createComponent(EntityID entity_id) {
-        if(to_underlying(entity_id) >= m_components.size())
-            m_components.resize(to_underlying(entity_id) + 1);
-
-        return &(m_components[to_underlying(entity_id)]);
-    }
-    template <typename... TArgs>
-    T* createComponent(EntityID entity_id, TArgs&&... args) {
-        if(to_underlying(entity_id) >= m_components.size())
-            m_components.resize(to_underlying(entity_id) + 1);
-
-        return new(&(m_components[to_underlying(entity_id)])) T(std::forward<TArgs>(args)...);
-    }
-    bool createComponent(
-        EntityID entity_id, xml::Element const* properties, AssetManager& asset_mgr
-    ) override {
-        T component;
-        if(component_utiles::initComponent(properties, asset_mgr, component)) {
-            if(to_underlying(entity_id) >= m_components.size())
-                m_components.resize(to_underlying(entity_id) + 1);
-
-            m_components[to_underlying(entity_id)] = component;
-            return true;
-        }
-        return false;
-    }
-    bool deleteComponent(EntityID entity_id) override { return true; }
-
-    std::vector<T>& getComponents() { return m_components; }
-    T*              getComponent(EntityID entity_id) {
-                     assert(to_underlying(entity_id) < m_components.size());
-                     return &m_components[to_underlying(entity_id)];
-    }
-
-  private:
-    std::vector<T> m_components;
+    TDataType* m_data;
 };
 
 } // namespace bembel::kernel
