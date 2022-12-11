@@ -50,12 +50,20 @@ bool DeferredLightingStage::configure(xml::Element const* properties) {
 
 void DeferredLightingStage::setScene(Scene* scene) {
     m_scene = scene;
-    m_dir_light_container =
-        scene ? m_scene->requestComponentContainer<DirectionalLightComponent>() : nullptr;
-    m_point_light_container =
-        scene ? m_scene->requestComponentContainer<PointLightComponent>() : nullptr;
-    m_position_container =
-        scene ? m_scene->requestComponentContainer<PositionComponent>() : nullptr;
+    if(scene) {
+        m_scene->registerComponentType<DirectionalLightComponent>();
+        m_scene->registerComponentType<PointLightComponent>();
+        m_scene->registerComponentType<PositionComponent>();
+
+        m_dir_light_container   = m_scene->getComponentContainer<DirectionalLightComponent>();
+        m_point_light_container = m_scene->getComponentContainer<PointLightComponent>();
+        m_position_container    = m_scene->getComponentContainer<PositionComponent>();
+
+    } else {
+        m_dir_light_container   = nullptr;
+        m_point_light_container = nullptr;
+        m_position_container    = nullptr;
+    }
 }
 
 inline void setVertexAttribPointer(uint index, int size, uint offset) {

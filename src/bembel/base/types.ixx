@@ -61,14 +61,14 @@ struct StringLiteral {
 
 // clang-format off
 template <typename T>
-inline constexpr bool PASS_BY_VALUE = std::is_trivially_copyable_v<T> && sizeof(T) < 4 * sizeof(int); // pass small trivially copyable Types by value
+struct PASS_BY_VALUE : std::bool_constant<std::is_trivially_copyable_v<T> && sizeof(T) < 4 * sizeof(int)>{}; // pass small trivially copyable Types by value
 
-template <>           inline constexpr bool PASS_BY_VALUE<std::string_view>     = true;
-template <>           inline constexpr bool PASS_BY_VALUE<std::u8string_view>   = true;
-template <typename T> inline constexpr bool PASS_BY_VALUE<std::span<T>>         = true;
-template <>           inline constexpr bool PASS_BY_VALUE<std::source_location> = true;
+template <>           struct PASS_BY_VALUE<std::string_view>     : std::true_type{};
+template <>           struct PASS_BY_VALUE<std::u8string_view>   : std::true_type{};
+template <typename T> struct PASS_BY_VALUE<std::span<T>>         : std::true_type{};
+template <>           struct PASS_BY_VALUE<std::source_location> : std::true_type{};
 
-template <typename T> using In    = std::conditional_t<PASS_BY_VALUE<T>, T, T const&>;
+template <typename T> using In    = std::conditional_t<PASS_BY_VALUE<T>::value, T, T const&>;
 template <typename T> using InOut = T&;
 template <typename T> using Out   = T&;
 template <typename T> using Move  = T&&;

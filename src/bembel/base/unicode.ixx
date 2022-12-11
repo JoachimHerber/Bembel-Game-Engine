@@ -67,7 +67,7 @@ export class String {
         std::u8string_view m_str;
         size_t             m_pos;
     };
-    Iterator begin() const noexcept { return {this->data}; }
+    Iterator begin() const noexcept { return Iterator{this->data}; }
     Iterator end() const noexcept { return {this->data, this->data.size()}; }
 
     bool isValidUtf8String() const;

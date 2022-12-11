@@ -1,0 +1,8 @@
+<GUI>
+	<Renderer>
+		<ShaderProgram file_name="gui.shader-program" />
+		<GuiStyle file_name="dark_gui_style.xml" />
+	</Renderer>
+	<Widgets>
+	</Widgets>
+</GUI>

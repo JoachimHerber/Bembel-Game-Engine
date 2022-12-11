@@ -11,6 +11,7 @@
 module bembel.base;
 
 import :Logger;
+import :ConsoleLogSink;
 
 namespace bembel::base {
 ConsoleLogSink::ConsoleLogSink(In<std::string_view> prefix, In<int> color)

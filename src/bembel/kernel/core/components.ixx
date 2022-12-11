@@ -5,34 +5,11 @@ export module bembel.kernel.core:Components;
 import bembel.base;
 import bembel.kernel.assets;
 
+import :Scene;
+
 namespace bembel::kernel {
 using namespace bembel::base;
 
-export using ComponentTypeID = u64;
-export using ComponentMask   = u64;
-
-export enum class EntityID : u64 { INVALID = ~u64(0) };
-
-export class ComponentContainerBase {
-  public:
-    ComponentContainerBase(ComponentTypeID type_id) : m_type_id{type_id}, m_mask{1ull << type_id} {}
-    virtual ~ComponentContainerBase() {}
-
-    virtual bool createComponent(EntityID, xml::Element const*, AssetManager&) = 0;
-    virtual bool deleteComponent(EntityID)                                     = 0;
-
-    ComponentTypeID getComponentTypeID() { return m_type_id; }
-    ComponentMask   getComponentMask() { return m_mask; }
-
-  private:
-    ComponentTypeID m_type_id;
-    ComponentMask   m_mask;
-};
-
-export template <typename T>
-concept Component = true; /* requires() {
-     T::COMPONENT_TYPE_NAME;
- };//*/
 
 export template <StringLiteral TTypeName, typename TDataType, bool TDense = true>
 class StandardComponent {
@@ -63,7 +40,8 @@ class StandardComponent {
         using ContainerType =
             std::conditional_t<TDense, std::vector<TDataType>, std::map<EntityID, TDataType>>;
 
-        Container(ComponentTypeID type_id) : ComponentContainerBase(type_id) {}
+        Container(ComponentTypeID type_id, Scene* scene)
+          : ComponentContainerBase{type_id}, m_scene{scene} {}
         virtual ~Container() = default;
 
         StandardComponent createComponent(EntityID entity_id) {
@@ -83,11 +61,9 @@ class StandardComponent {
             return component;
         }
 
-        bool createComponent(
-            EntityID entity_id, xml::Element const* properties, AssetManager& asset_mgr
-        ) override {
+        bool createComponent(EntityID entity_id, xml::Element const* properties) override {
             TDataType component;
-            if(initComponent(properties, asset_mgr, component)) {
+            if(initComponent(properties, m_scene->getAssetManager(), component)) {
                 if constexpr(TDense) {
                     if(to_underlying(entity_id) >= m_components.size())
                         m_components.resize(to_underlying(entity_id) + 1);
@@ -127,6 +103,7 @@ class StandardComponent {
         }
 
       private:
+        Scene*        m_scene;
         ContainerType m_components;
     };
 

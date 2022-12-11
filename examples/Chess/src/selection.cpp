@@ -198,12 +198,18 @@ void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<Renderer
 }
 
 void SelectionRenderingStage::setScene(Scene* scene) {
-    m_scene               = scene;
-    m_position_components = scene ? scene->requestComponentContainer<PositionComponent>() : nullptr;
-    m_rotation_components = scene ? scene->requestComponentContainer<RotationComponent>() : nullptr;
-    m_geometry_components = scene ? scene->requestComponentContainer<GeometryComponent>() : nullptr;
-    m_highlight_components =
-        scene ? scene->requestComponentContainer<SelectionHighlightComponent>() : nullptr;
+    m_scene = scene;
+    if(m_scene) {
+        m_position_components  = scene->getComponentContainer<PositionComponent>();
+        m_rotation_components  = scene->getComponentContainer<RotationComponent>();
+        m_geometry_components  = scene->getComponentContainer<GeometryComponent>();
+        m_highlight_components = scene->getComponentContainer<SelectionHighlightComponent>();
+    } else {
+        m_position_components  = nullptr;
+        m_rotation_components  = nullptr;
+        m_geometry_components  = nullptr;
+        m_highlight_components = nullptr;
+    }
 }
 
 bool SelectionRenderingStage::configure(xml::Element const* properties) {

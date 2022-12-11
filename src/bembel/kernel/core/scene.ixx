@@ -5,10 +5,34 @@ export module bembel.kernel.core:Scene;
 import bembel.base;
 import bembel.kernel.assets;
 
-import :Components;
 
 namespace bembel::kernel {
 using namespace bembel::base;
+export using ComponentTypeID = u64;
+export using ComponentMask   = u64;
+
+export enum class EntityID : u64 { INVALID = ~u64(0) };
+
+export class ComponentContainerBase {
+  public:
+    ComponentContainerBase(ComponentTypeID type_id) : m_type_id{type_id}, m_mask{1ull << type_id} {}
+    virtual ~ComponentContainerBase() {}
+
+    virtual bool createComponent(EntityID, xml::Element const*) = 0;
+    virtual bool deleteComponent(EntityID)                      = 0;
+
+    ComponentTypeID getComponentTypeID() { return m_type_id; }
+    ComponentMask   getComponentMask() { return m_mask; }
+
+  private:
+    ComponentTypeID m_type_id;
+    ComponentMask   m_mask;
+};
+
+export template <typename T>
+concept Component = true; /* requires() {
+     T::COMPONENT_TYPE_NAME;
+ };//*/
 
 export class Scene {
   public:
@@ -19,20 +43,19 @@ export class Scene {
 
     AssetManager& getAssetManager() { return m_asste_mgr; }
 
-    template <Component T>
-    T::Container* requestComponentContainer() {
+    template <Component T, typename... TArgs>
+    void registerComponentType(TArgs&&... args) {
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
-        if(it != m_component_type_map.end()) {
-            return static_cast<typename T::Container*>(m_container[it->second].get());
-        }
+        if(it != m_component_type_map.end()) return;
 
-        auto container         = std::make_unique<typename T::Container>(m_container.size());
-        auto container_pointer = container.get();
+        auto container = std::make_unique<typename T::Container>(
+            m_container.size(), this, std::forward<TArgs>(args)...
+        );
 
         m_component_type_map.emplace(T::COMPONENT_TYPE_NAME, m_container.size());
         m_container.push_back(std::move(container));
-        return container_pointer;
     }
+
     template <Component T>
     typename T::Container* getComponentContainer() {
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
@@ -40,16 +63,6 @@ export class Scene {
             return static_cast<typename T::Container*>(m_container[it->second].get());
         }
         return nullptr;
-    }
-    template <Component T>
-    void registerComponentType() {
-        auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
-        if(it != m_component_type_map.end()) return;
-
-        auto container = std::make_unique<typename T::Container>(m_container.size());
-
-        m_component_type_map.emplace(T::COMPONENT_TYPE_NAME, m_container.size());
-        m_container.push_back(std::move(container));
     }
 
     EntityID createEntity();

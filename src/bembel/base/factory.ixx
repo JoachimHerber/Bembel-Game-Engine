@@ -46,12 +46,12 @@ class Factory {
     }
     bool registerObjectGenerator() { return registerObjectGenerator<T>(T::getTypeName()); }
 
-    ObjectPtr createObject(In<std::string_view> generator_name, TArgs&&... args) const {
+    ObjectPtr createObject(In<std::string_view> generator_name, TArgs... args) const {
         auto it = m_generators.find(generator_name);
 
         if(it == m_generators.end()) return {};
 
-        return it->second(std::forward<TArgs>(args)...);
+        return it->second(args...);
     }
 
   private:

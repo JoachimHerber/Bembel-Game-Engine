@@ -30,6 +30,7 @@ bembel_conditional_add_sub_project(Input "examples/input" "a simple example that
 bembel_conditional_add_sub_project(rendering "examples/rendering" "rendering example application")
 bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
 bembel_conditional_add_sub_project(GUI "examples/GUI" "GUI example application")
+bembel_conditional_add_sub_project(Physics "examples/physics" "Physics example application")
 
 bembel_conditional_add_sub_project(FontConverter "tools/font-converter" "A tool for converting fonts")
 

@@ -1,20 +1,17 @@
-<Bembel>
+﻿<Bembel>
 	<AssetDirectories>
 		<AssetDirectory directory="assets"/>
 		<AssetDirectory directory="assets/gui"/>
 		<AssetDirectory directory="assets/shader"/>
 	</AssetDirectories>
 	<Display>
-		<Window title="Rendering Test">
+		<Window title="Physics Demo">
 			<DisplayMode mode = "Windowed">
 				<Size width="800" height="600" />
 				<AspectRatio numerator="4" denominator="3" />
 			</DisplayMode>
 			<Viewports>
-				<Viewport relativ_position="0 0" relativ_size="0.75 1"/>
-				<Viewport relativ_position="0.75 0.0000000" relativ_size="0.25 0.3333333"/>
-				<Viewport relativ_position="0.75 0.3333333" relativ_size="0.25 0.3333333"/>
-				<Viewport relativ_position="0.75 0.6666666" relativ_size="0.25 0.3333333"/>
+				<Viewport relativ_position="0 0" relativ_size="1 1" />
 			</Viewports>
 		</Window>
 	</Display>
@@ -70,6 +67,9 @@
 					</RenderingStages>
 					<Views>
 						<View texture="light"    left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="0"/>
+						<View texture="albedo"   left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="1"/>
+						<View texture="normal"   left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="2"/>
+						<View texture="material" left="0.0" right="1.0" bottom="0.0" top="1.0" window="0" viewport="3"/>
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
@@ -79,15 +79,7 @@
 			</RenderingPipelines>
 		</Graphics>
 		<UserInterface>
-			<GUI name="main" window="0" viewport="0">
-				<Renderer>
-					<ShaderProgram file_name="gui.shader-program" />
-					<GuiStyle file_name="dark_gui_style.xml" />
-				</Renderer>
-				<Widgets >
-					<Label name="Label" size="500 24" position="8 8" text="Hello World" alignment="left"/>
-				</Widgets>
-			</GUI>
+			<GUI name="main" window="0" viewport="0" config_file="physics/gui.xml"/>
 		</UserInterface>
 	</Systems>
 </Bembel>

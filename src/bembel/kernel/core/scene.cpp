@@ -28,7 +28,7 @@ EntityID Scene::createEntity(xml::Element const* properties) {
         auto it = m_component_type_map.find(component->Value());
         if(it == m_component_type_map.end()) continue; // unknown component type
 
-        if(m_container[it->second]->createComponent(entity_id, component, m_asste_mgr)) {
+        if(m_container[it->second]->createComponent(entity_id, component)) {
             m_entities[u64(entity_id)] |= m_container[it->second]->getComponentMask();
         }
     }

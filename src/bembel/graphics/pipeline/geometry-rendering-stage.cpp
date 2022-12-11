@@ -32,10 +32,20 @@ bool GeometryRenderingStage::configure(xml::Element const* properties) {
 }
 
 void GeometryRenderingStage::setScene(Scene* scene) {
-    m_scene               = scene;
-    m_geometry_components = scene ? scene->requestComponentContainer<GeometryComponent>() : nullptr;
-    m_position_components = scene ? scene->requestComponentContainer<PositionComponent>() : nullptr;
-    m_rotation_components = scene ? scene->requestComponentContainer<RotationComponent>() : nullptr;
+    m_scene = scene;
+    if(scene) {
+        m_scene->registerComponentType<GeometryComponent>();
+        m_scene->registerComponentType<PositionComponent>();
+        m_scene->registerComponentType<RotationComponent>();
+
+        m_geometry_components = scene->getComponentContainer<GeometryComponent>();
+        m_position_components = scene->getComponentContainer<PositionComponent>();
+        m_rotation_components = scene->getComponentContainer<RotationComponent>();
+    } else {
+        m_geometry_components = nullptr;
+        m_position_components = nullptr;
+        m_rotation_components = nullptr;
+    }
 }
 
 void GeometryRenderingStage::execute(
@@ -54,25 +64,33 @@ void GeometryRenderingStage::execute(
 
     auto cam = m_pipline.getCamera();
 
-    auto const& entitis             = m_scene->getEntitys();
+    auto const& entities            = m_scene->getEntitys();
     auto const& position_components = m_position_components->getComponentData();
     auto const& rotation_components = m_rotation_components->getComponentData();
     auto const& geometry_components = m_geometry_components->getComponentData();
 
     renderQueue.clearRendarData();
 
-    for(usize entity = 0; entity < entitis.size(); ++entity) {
-        if((entitis[entity] & m_geometry_components->getComponentMask()) == 0) continue;
+    for(usize entity = 0; entity < entities.size(); ++entity) {
+        if((entities[entity] & m_geometry_components->getComponentMask()) == 0) continue;
 
-        mat4 transform(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        if(entitis[entity] & m_position_components->getComponentMask()) {
+        auto& geom = geometry_components[entity];
+        // clang-format off
+        mat4 transform = {
+            1.0f, 0.0f, 0.0f, 0.0f, 
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+        // clang-format on
+        if(entities[entity] & m_position_components->getComponentMask()) {
             transform = glm::translate(transform, position_components[entity]);
         }
-        if(entitis[entity] & m_rotation_components->getComponentMask()) {
+        transform = glm::scale(transform, geom.scale);
+        if(entities[entity] & m_rotation_components->getComponentMask()) {
             transform = transform * glm::mat4_cast(rotation_components[entity]);
         }
 
-        auto& geom = geometry_components[entity];
         renderQueue.addGeometryObject(geom.model, transform);
     }
 
