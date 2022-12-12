@@ -7,6 +7,8 @@ export module bembel.physics:RigidBody;
 import bembel.base;
 import bembel.kernel;
 
+import :Units;
+
 namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
@@ -27,6 +29,10 @@ export class RigidBodyComponent {
 
         RigidBodyComponent createComponent(EntityID entity_id);
 
+        RigidBodyComponent createComponent(
+            EntityID entity_id, AssetHandle collision_shape, units::Kilogram mass
+        );
+
         bool createComponent(EntityID entity_id, xml::Element const* properties) override;
 
         bool deleteComponent(EntityID entity_id) override;
@@ -45,7 +51,7 @@ export class RigidBodyComponent {
     };
 
   public:
-    RigidBodyComponent(Container* container, RigidBodyData* data)
+    RigidBodyComponent(Container* container = nullptr, RigidBodyData* data = nullptr)
       : m_container{container}, m_data{data} {}
     RigidBodyComponent(RigidBodyComponent const&) = default;
     RigidBodyComponent(RigidBodyComponent&&)      = default;
@@ -54,6 +60,11 @@ export class RigidBodyComponent {
     RigidBodyComponent& operator=(RigidBodyComponent&&)      = default;
 
     operator bool() const { return m_container && m_data; }
+
+    //void setPosition(vec3);
+    void setIsKinematic();
+
+    void setOrientation(quat);
 
     static constexpr std::string_view COMPONENT_TYPE_NAME = "RigidBody";
 

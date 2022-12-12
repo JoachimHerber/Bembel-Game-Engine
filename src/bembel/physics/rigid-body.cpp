@@ -34,6 +34,15 @@ bool RigidBodyComponent::Container::createComponent(
     return createRigidBody(entity_id, collision_shape, mass);
 }
 
+RigidBodyComponent RigidBodyComponent::Container::createComponent(
+    EntityID entity_id, AssetHandle collision_shape, units::Kilogram mass
+) {
+    if(createRigidBody(entity_id, collision_shape, mass.value)) {
+        return {this, &m_data[to_underlying(entity_id)]};
+    }
+    return {this, nullptr};
+}
+
 bool RigidBodyComponent::Container::deleteComponent(EntityID entity_id) {
     if(to_underlying(entity_id) > m_data.size()) {
         auto& component = m_data[to_underlying(entity_id)];
@@ -87,6 +96,22 @@ bool RigidBodyComponent::Container::createRigidBody(
     m_scene->getAssetManager().incrementAssetRefCount(collision_shape);
 
     return true;
+}
+
+void RigidBodyComponent::setIsKinematic() {
+    if(m_data && m_data->rigid_body) {
+        m_data->rigid_body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+        m_data->rigid_body->setActivationState(DISABLE_DEACTIVATION);
+    }
+}
+
+void RigidBodyComponent::setOrientation(quat ori) {
+    if(m_data && m_data->motion_state) {
+        btTransform trans;
+        m_data->motion_state->getWorldTransform(trans);
+        trans.setRotation(btQuaternion(ori.x, ori.y, ori.z, ori.w));
+        m_data->motion_state->setWorldTransform(trans);
+    }
 }
 
 } // namespace bembel::physics

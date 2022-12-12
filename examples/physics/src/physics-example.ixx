@@ -30,6 +30,9 @@ export class PhysicsExample : public kernel::Application {
     GraphicalUserInterface* m_gui;
     std::shared_ptr<Scene>  m_scene;
 
+    EntityID m_stirring_stick;
+    double   m_rotation = 0;
+
     std::unique_ptr<CameraControle> m_camera;
 };
 

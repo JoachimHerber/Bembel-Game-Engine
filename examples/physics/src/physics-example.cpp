@@ -9,6 +9,7 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::graphics;
 using namespace bembel::physics;
+using namespace bembel::physics::units::literals;
 using namespace bembel::gui;
 
 PhysicsExample::PhysicsExample() : Application() {
@@ -29,19 +30,31 @@ bool PhysicsExample::init() {
 
     m_camera = std::make_unique<CameraControle>(pipline->getCamera());
 
-    m_gui    = m_gui_system->getGUI("main");
+    m_gui = m_gui_system->getGUI("main");
 
     m_scene = std::make_shared<Scene>(m_engine.assets);
     m_graphic_system->getRenderingPipelines()[0]->setScene(m_scene);
     m_physics_system->addScene(m_scene);
 
-    Entity<> ligth = {*m_scene, m_scene->createEntity()};
-    ligth.createComponent<DirectionalLightComponent>(
-        vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2))
-    );
-
     m_scene->loadAssets("assets/assets.xml");
     m_scene->loadScene("scenes/physics-demo.scene");
+
+    m_stirring_stick = m_scene->createEntity();
+
+    m_scene->createComponent<PositionComponent>(m_stirring_stick, vec3(0, -0.75, 0));
+    m_scene->createComponent<RotationComponent>(m_stirring_stick);
+    m_scene->createComponent<GeometryComponent>(
+        m_stirring_stick,
+        m_engine.assets.getAssetHandle<GeometryModel>("stirring_stick"),
+        vec3(4.5f, 0.5f, 0.1f)
+    );
+    m_scene
+        ->createComponent<RigidBodyComponent>(
+            m_stirring_stick,
+            m_engine.assets.getAssetHandle<CollisionShape>("stirring_stick"),
+            0.0_kg
+        )
+        .setIsKinematic();
 
     m_engine.initSystems();
     return true;
@@ -57,6 +70,10 @@ void PhysicsExample::cleanup() {
 }
 
 void PhysicsExample::update(double time) {
+    m_rotation += time;
+
+    auto rb = m_scene->getComponent<RigidBodyComponent>(m_stirring_stick);
+    if(rb) rb.setOrientation(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }
 
 void PhysicsExample::handleEvent(const WindowShouldCloseEvent& event) {

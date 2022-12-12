@@ -73,10 +73,10 @@ export class Scene {
 
     template <Component T, typename... TArgs>
     T createComponent(EntityID id, TArgs&&... args) {
-        if(to_underlying(id) >= m_entities.size()) return nullptr;
+        if(to_underlying(id) >= m_entities.size()) return {};
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
-        if(it == m_component_type_map.end()) return nullptr;
+        if(it == m_component_type_map.end()) return {};
 
         auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 

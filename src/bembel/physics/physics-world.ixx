@@ -51,9 +51,12 @@ export class World {
                 rigid_bodys[entity].motion_state->getWorldTransform(trans);
             }
             if((entities[entity] & m_position->getComponentMask()) != 0) {
-                positions[entity] = glm::vec3(
-                    trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()
-                );
+                auto origin       = trans.getOrigin();
+                positions[entity] = vec3(origin.getX(), origin.getY(), origin.getZ());
+            }
+            if((entities[entity] & m_rotations->getComponentMask()) != 0) {
+                auto rot          = trans.getRotation();
+                rotations[entity] = quat(rot.x(), rot.y(), rot.z(), rot.w());
             }
         }
     }

@@ -6,7 +6,8 @@ import bembel.base;
 
 export namespace bembel::physics::units {
 
-template <int _T, int _L, int _M> struct Quantity {
+template <int _T, int _L, int _M>
+struct Quantity {
     static inline constexpr int T = _T; // Time
     static inline constexpr int L = _L; // Length
     static inline constexpr int M = _M; // Mass
@@ -24,21 +25,15 @@ template <typename T> concept RatioType    = IS_RATIO<T>;
 // clang-format on
 
 template <QuantityType T0, QuantityType T1>
-using Product = Quantity<
-    T0::T + T1::T,
-    T0::L + T1::L,
-    T0::M + T1::M>;
+using Product = Quantity<T0::T + T1::T, T0::L + T1::L, T0::M + T1::M>;
 template <QuantityType T0, QuantityType T1>
-using Quotient = Quantity<
-    T0::T - T1::T,
-    T0::L - T1::L,
-    T0::M - T1::M>;
+using Quotient = Quantity<T0::T - T1::T, T0::L - T1::L, T0::M - T1::M>;
 
 using Scalar = Quantity<0, 0, 0>;
 
-using Time              = Quantity<1, 0, 0>;
-using Length            = Quantity<0, 1, 0>;
-using Mass              = Quantity<0, 0, 1>;
+using Time   = Quantity<1, 0, 0>;
+using Length = Quantity<0, 1, 0>;
+using Mass   = Quantity<0, 0, 1>;
 
 using Area         = Product<Length, Length>;
 using Volume       = Product<Area, Length>;
@@ -52,7 +47,8 @@ using Pressure  = Quotient<Force, Area>;
 using Energy    = Product<Force, Length>;
 using Power     = Quotient<Energy, Time>;
 
-template <typename TRep, QuantityType TQuantity, RatioType TRatio = std::ratio<1>> struct Unit {
+template <typename TRep, QuantityType TQuantity, RatioType TRatio = std::ratio<1>>
+struct Unit {
     using Type     = TRep;
     using Quantity = TQuantity;
     using Ratio    = TRatio;
@@ -109,56 +105,53 @@ ToUnit unit_cast(Unit<FromType, typename ToUnit::Quantity, FromRatio> a) {
 }
 // clang-format on
 
-namespace units {
+// clang-format off
+using Second   = Unit<double, Time>;
+using Meter    = Unit<double, Length>;
+using Kilogram = Unit<double, Mass>;
+
+using Hertz  = Unit<double, Frequency>;
+using Newton = Unit<double, Force>;
+using Pascal = Unit<double, Pressure>;
+using Joule  = Unit<double, Energy>;
+using Watt   = Unit<double, Power>;
+
+using SquareMeter = Unit<double, Area>;
+using CubicMetre  = Unit<double, Volume>;
+
+using MeterPerSecond  = Unit<double, Velocity>;
+using MeterPerSecond² = Unit<double, Acceleration>;
+
+using NanoSecond  = Unit<double, Length, std::nano>;
+using MicroSecond = Unit<double, Length, std::micro>;
+using MilliSecond = Unit<double, Length, std::milli>;
+using Minute      = Unit<double, Length, std::ratio<60>>;
+using Hour        = Unit<double, Length, std::ratio<3600>>;
+using Day         = Unit<double, Length, std::ratio<86400>>;
+
+using NanoMeter  = Unit<double, Length, std::nano>;
+using MicroMeter = Unit<double, Length, std::micro>;
+using MilliMeter = Unit<double, Length, std::milli>;
+using KiloMeter  = Unit<double, Length, std::kilo>;
+// clang-format on
+
+namespace literals {
     // clang-format off
-    template <typename T> using Second   = Unit<T, Time>;
-    template <typename T> using Meter    = Unit<T, Length>;
-    template <typename T> using Kilogram = Unit<T, Mass>;
-
-    template <typename T> using Hertz  = Unit<T, Frequency>;
-    template <typename T> using Newton = Unit<T, Force>;
-    template <typename T> using Pascal = Unit<T, Pressure>;
-    template <typename T> using Joule  = Unit<T, Energy>;
-    template <typename T> using Watt   = Unit<T, Power>;
-
-    template <typename T> using SquareMeter = Unit<T, Area>;
-    template <typename T> using CubicMetre  = Unit<T, Volume>;
-
-    template <typename T> using MeterPerSecond = Unit<T, Velocity>;
-    template <typename T> using MeterPerSecond² = Unit<T, Acceleration>;
-
-    template <typename T> using NanoSecond  = Unit<T, Length, std::nano>;
-    template <typename T> using MicroSecond = Unit<T, Length, std::micro>;
-    template <typename T> using MilliSecond = Unit<T, Length, std::milli>;
-    template <typename T> using Minute      = Unit<T, Length, std::ratio<60>>;
-    template <typename T> using Hour        = Unit<T, Length, std::ratio<3600>>;
-    template <typename T> using Day         = Unit<T, Length, std::ratio<86400>>;
-
-    template <typename T> using NanoMeter  = Unit<T, Length, std::nano>;
-    template <typename T> using MicroMeter = Unit<T, Length, std::micro>;
-    template <typename T> using MilliMeter = Unit<T, Length, std::milli>;
-    template <typename T> using KiloMeter  = Unit<T, Length, std::kilo>;
-    // clang-format on
-
-    namespace literals {
-        // clang-format off
-        Second     <base::u64> operator""_s (unsigned long long v) { return {v}; }
-        Meter      <base::u64> operator""_m (unsigned long long v) { return {v}; }
-        SquareMeter<base::u64> operator""_m²(unsigned long long v) { return {v}; }
-        CubicMetre <base::u64> operator""_m³(unsigned long long v) { return {v}; }
-        Kilogram   <base::u64> operator""_kg(unsigned long long v) { return {v}; }
+        Second      operator""_s (unsigned long long v) { return {double(v)}; }
+        Meter       operator""_m (unsigned long long v) { return {double(v)}; }
+        SquareMeter operator""_m²(unsigned long long v) { return {double(v)}; }
+        CubicMetre  operator""_m³(unsigned long long v) { return {double(v)}; }
+        Kilogram    operator""_kg(unsigned long long v) { return {double(v)}; }
         
-        Second     <double> operator""_s (long double v) { return {double(v)}; }
-        Meter      <double> operator""_m (long double v) { return {double(v)}; }
-        SquareMeter<double> operator""_m²(long double v) { return {double(v)}; }
-        CubicMetre <double> operator""_m³(long double v) { return {double(v)}; }
-        Kilogram   <double> operator""_kg(long double v) { return {double(v)}; }
+        Second      operator""_s (long double v) { return {double(v)}; }
+        Meter       operator""_m (long double v) { return {double(v)}; }
+        SquareMeter operator""_m²(long double v) { return {double(v)}; }
+        CubicMetre  operator""_m³(long double v) { return {double(v)}; }
+        Kilogram    operator""_kg(long double v) { return {double(v)}; }
 
-        MeterPerSecond   <base::u64> operator""_mps(unsigned long long v) { return {v}; }
-        MeterPerSecond   <double>    operator""_mps(long double        v) { return {double(v)}; }
-        // clang-format on
-    } // namespace literals
+        MeterPerSecond operator""_mps(unsigned long long v) { return {double(v)}; }
+        MeterPerSecond operator""_mps(long double        v) { return {double(v)}; }
+    // clang-format on
+} // namespace literals
 
-} // namespace units
-
-} // namespace bembel::physics::si
+} // namespace bembel::physics::units
