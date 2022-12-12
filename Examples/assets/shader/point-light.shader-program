@@ -27,6 +27,7 @@ out vec3  vLightColor;
 out float vBulbRadius;
 out float vCutoffRadius;
 
+out vec2 vTexCoord;
 
 void main()
 {
@@ -35,9 +36,11 @@ void main()
 	vBulbRadius   = aBulbRadius;
 	vCutoffRadius = aCutoffRadius;
 	
-	gl_Position = uProjectionMatrix*vec4(aPosition + aCutoffRadius*gOffsets[gl_VertexID], 1);
+	gl_Position = uProjectionMatrix*vec4(aPosition + 1.1*aCutoffRadius*gOffsets[gl_VertexID], 1);
 	gl_Position /= gl_Position.w;
 	gl_Position.z = 0;
+	
+	vTexCoord = vec2(0.5*(gl_Position.xy + vec2(1)));
 }
 </Shader>
 <Shader file_name="cook-torrance.shader" />
@@ -71,7 +74,7 @@ void main()
 	vec4 position;
 	vec3 normal;
 	Material mat;
-	if(GetGeomData(vTexCoord, position, normal, mat))
+	if(!GetGeomData(vTexCoord, position, normal, mat))
 	{
 		oColor = vec3(0);
 		return;
@@ -84,7 +87,7 @@ void main()
 	float att = (1 + ligthDistance/vBulbRadius)/(1 + 1/vBulbRadius);
 	att = smoothstep(vCutoffRadius, 0.8*vCutoffRadius, ligthDistance)/(att*att);
 
-	oColor.rgb = vLightColor*att*BRDF(normal, -ligthDirection, -normalize(position.xyz), mat);
+	oColor.rgb = max(vLightColor*att*BRDF(normal, -ligthDirection, -normalize(position.xyz), mat),vec3(0));
 }
 </Shader>
 </ShaderProgram>

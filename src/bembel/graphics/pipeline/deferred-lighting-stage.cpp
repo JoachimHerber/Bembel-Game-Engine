@@ -232,8 +232,7 @@ void DeferredLightingStage::applyPointLights() {
 
     for(size_t n = 0; n < point_lights.size(); n += m_buffer_size) {
         GLsizei num_lights = std::min(m_buffer_size, uint(point_lights.size() - n));
-        glBufferSubData(
-            GL_ARRAY_BUFFER, 0, num_lights * sizeof(PointLightSource), &point_lights[n]
+        glBufferSubData(GL_ARRAY_BUFFER, 0, num_lights * sizeof(PointLight), &point_lights[n]
         );
 
         glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 10, num_lights);

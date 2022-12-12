@@ -86,10 +86,10 @@ void GeometryRenderingStage::execute(
         if(entities[entity] & m_position_components->getComponentMask()) {
             transform = glm::translate(transform, position_components[entity]);
         }
-        transform = glm::scale(transform, geom.scale);
         if(entities[entity] & m_rotation_components->getComponentMask()) {
             transform = transform * glm::mat4_cast(rotation_components[entity]);
         }
+        transform = glm::scale(transform, geom.scale);
 
         renderQueue.addGeometryObject(geom.model, transform);
     }
