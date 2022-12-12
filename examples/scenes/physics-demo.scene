@@ -1,11 +1,12 @@
 <Scene>
   <Assets>
-    <Material name="sphere" renderer="default" emission="0.0 0.0 0.0" albedo="0.8 0.1 0.1" roughness="0.5" metallic="0" f0="0.1"/>
-    <Material name="floor"  renderer="default" emission="0.0 0.0 0.0" albedo="0.1 0.8 0.1" roughness="0.5" metallic="0" f0="0.04"/>
-    <Material name="wall"   renderer="default" emission="0.0 0.0 0.0" albedo="0.1 0.1 0.8" roughness="0.5" metallic="0" f0="0.04"/>
-    <CollisionShape name="floor"  type="box" size="25.0 0.1 25.0"/>
-    <CollisionShape name="wall_1" type="box" size="0.1 2.0 25.0"/>
-    <CollisionShape name="wall_2" type="box" size="25.0 2.0 0.1"/>
+    <Material name="sphere" renderer="default" emission="0 0 0" albedo="0.8 0.1 0.1" roughness="0.5" metallic="0.1" f0="0.5"/>
+    <Material name="floor"  renderer="default" emission="0 0 0" albedo="0.1 0.8 0.1" roughness="0.5" metallic="0.1" f0="0.5"/>
+    <Material name="wall"   renderer="default" emission="0 0 0" albedo="0.1 0.1 0.8" roughness="0.5" metallic="0.1" f0="0.5"/>
+    <CollisionShape name="floor"  type="box" size="5.0 0.1 5.0"/>
+    <CollisionShape name="wall_1" type="box" size="0.1 2.0 5.0"/>
+    <CollisionShape name="wall_2" type="box" size="5.0 2.0 0.1"/>
+    <CollisionShape name="stirring_stick" type="box" size="4.5 0.5 0.1"/>
     <CollisionShape name="sphere" type="sphere" radius="1.0"/>
     <GeometryModel name="sphere" mesh="basic-shapes.geom-mesh">
       <MaterialMapping material="sphere" submesh="sphere"/>
@@ -14,6 +15,9 @@
       <MaterialMapping material="floor" submesh="cube"/>
     </GeometryModel>
     <GeometryModel name="wall" mesh="basic-shapes.geom-mesh">
+      <MaterialMapping material="wall" submesh="cube"/>
+    </GeometryModel>
+    <GeometryModel name="stirring_stick" mesh="basic-shapes.geom-mesh">
       <MaterialMapping material="wall" submesh="cube"/>
     </GeometryModel>
   </Assets>
@@ -29,36 +33,86 @@
     </Entity>
     <Entity>
       <Position x="0" y="-1.0" z="0"/>
-      <Geometry model="floor" scale="25.0 0.1 25.0"/>
+      <Geometry model="floor" scale="5.0 0.1 5.0"/>
       <RigidBody shape="floor" mass="0" />
     </Entity>
     <Entity>
-      <Position x="-25" y="0" z="0"/>
-      <Geometry model="wall" scale="0.1 2 25.0"/>
+      <Position x="-5" y="0" z="0"/>
+      <Geometry model="wall" scale="0.1 2 5.0"/>
       <RigidBody shape="wall_1" mass="0" />
     </Entity>
     <Entity>
-      <Position x="25" y="0" z="0"/>
-      <Geometry model="wall" scale="0.1 2 25.0"/>
+      <Position x="5" y="0" z="0"/>
+      <Geometry model="wall" scale="0.1 2 5.0"/>
       <RigidBody shape="wall_1" mass="0" />
     </Entity>
     <Entity>
-      <Position x="0" y="0" z="-25"/>
-      <Geometry model="wall" scale="25.0 2 0.1"/>
+      <Position x="0" y="0" z="-5"/>
+      <Geometry model="wall" scale="5.0 2 0.1"/>
       <RigidBody shape="wall_2" mass="0" />
     </Entity>
     <Entity>
-      <Position x="0" y="0" z="25"/>
-      <Geometry model="wall" scale="25.0 2 0.1"/>
+      <Position x="0" y="0" z="5"/>
+      <Geometry model="wall" scale="5.0 2 0.1"/>
       <RigidBody shape="wall_2" mass="0" />
     </Entity>
     <Entity>
-      <Position x="0" y="2" z="0"/>
+      <Position x="-2" y="2" z="-2"/>
       <Geometry model="sphere" scale="1 1 1"/>
       <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
-      <Position x="0" y="8" z="1"/>
+      <Position x="2" y="2" z="-2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="-2" y="2" z="2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="2" y="2" z="2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="-2" y="5" z="-1"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="1" y="5" z="-2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="-2" y="5" z="1"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="1" y="5" z="2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="-1" y="7" z="-2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="2" y="7" z="-1"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="-1" y="7" z="2"/>
+      <Geometry model="sphere" scale="1 1 1"/>
+      <RigidBody shape="sphere" mass="1" />
+    </Entity>
+    <Entity>
+      <Position x="2" y="7" z="1"/>
       <Geometry model="sphere" scale="1 1 1"/>
       <RigidBody shape="sphere" mass="1" />
     </Entity>
