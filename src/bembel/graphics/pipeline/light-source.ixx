@@ -9,14 +9,14 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export struct PointLightSource {
+export struct PointLightData {
     vec3 color;
 
     float bulb_radius;
     float cutoff_radius;
 };
 
-export struct DirectionalLightSource {
+export struct DirectionalLightData {
     vec3 color;
     vec3 direction;
 };
@@ -24,17 +24,16 @@ export struct DirectionalLightSource {
 export bool initComponent(
     In<xml::Element const*> properties,
     InOut<AssetManager>     asset_mgr,
-    InOut<PointLightSource> component
+    InOut<PointLightData>   component
 );
 
 export bool initComponent(
     In<xml::Element const*>       properties,
     InOut<AssetManager>           asset_mgr,
-    InOut<DirectionalLightSource> component
+    InOut<DirectionalLightData> component
 );
 
-export using PointLightComponent = StandardComponent<"PointLight", PointLightSource, false>;
-export using DirectionalLightComponent =
-    StandardComponent<"DirectionalLight", DirectionalLightSource, false>;
+export using PointLight       = BasicComponent<"PointLight", PointLightData, false>;
+export using DirectionalLight = BasicComponent<"DirectionalLight", DirectionalLightData, false>;
 
 } // namespace bembel::graphics

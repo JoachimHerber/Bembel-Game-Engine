@@ -34,17 +34,14 @@ bool GeometryRenderingStage::configure(xml::Element const* properties) {
 void GeometryRenderingStage::setScene(Scene* scene) {
     m_scene = scene;
     if(scene) {
-        m_scene->registerComponentType<GeometryComponent>();
-        m_scene->registerComponentType<PositionComponent>();
-        m_scene->registerComponentType<RotationComponent>();
+        m_scene->registerComponentType<Geometry>();
+        m_scene->registerComponentType<Transform>();
 
-        m_geometry_components = scene->getComponentContainer<GeometryComponent>();
-        m_position_components = scene->getComponentContainer<PositionComponent>();
-        m_rotation_components = scene->getComponentContainer<RotationComponent>();
+        m_geometrys  = scene->getComponentContainer<Geometry>();
+        m_transforms = scene->getComponentContainer<Transform>();
     } else {
-        m_geometry_components = nullptr;
-        m_position_components = nullptr;
-        m_rotation_components = nullptr;
+        m_geometrys  = nullptr;
+        m_transforms = nullptr;
     }
 }
 
@@ -64,30 +61,22 @@ void GeometryRenderingStage::execute(
 
     auto cam = m_pipline.getCamera();
 
-    auto const& entities            = m_scene->getEntitys();
-    auto const& position_components = m_position_components->getComponentData();
-    auto const& rotation_components = m_rotation_components->getComponentData();
-    auto const& geometry_components = m_geometry_components->getComponentData();
+    auto const& entities   = m_scene->getEntitys();
+    auto const& transforms = m_transforms->getComponentData();
+    auto const& geometrys  = m_geometrys->getComponentData();
 
     renderQueue.clearRendarData();
 
     for(usize entity = 0; entity < entities.size(); ++entity) {
-        if((entities[entity] & m_geometry_components->getComponentMask()) == 0) continue;
+        if((entities[entity] & m_geometrys->getComponentMask()) == 0) continue;
 
-        auto& geom = geometry_components[entity];
-        // clang-format off
-        mat4 transform = {
-            1.0f, 0.0f, 0.0f, 0.0f, 
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f
-        };
-        // clang-format on
-        if(entities[entity] & m_position_components->getComponentMask()) {
-            transform = glm::translate(transform, position_components[entity]);
-        }
-        if(entities[entity] & m_rotation_components->getComponentMask()) {
-            transform = transform * glm::mat4_cast(rotation_components[entity]);
+        auto& geom = geometrys[entity];
+
+        mat4 transform = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+        if(entities[entity] & m_transforms->getComponentMask()) {
+            transform = glm::translate(transform, transforms[entity].position);
+            transform = transform * glm::mat4_cast(transforms[entity].rotation);
+            transform = glm::scale(transform, vec3(transforms[entity].scale));
         }
         transform = glm::scale(transform, geom.scale);
 

@@ -1,5 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
+
+#include "bembel/pch.h"
 module bembel.graphics.pipeline;
 
 import bembel.base;
@@ -51,18 +53,18 @@ bool DeferredLightingStage::configure(xml::Element const* properties) {
 void DeferredLightingStage::setScene(Scene* scene) {
     m_scene = scene;
     if(scene) {
-        m_scene->registerComponentType<DirectionalLightComponent>();
-        m_scene->registerComponentType<PointLightComponent>();
-        m_scene->registerComponentType<PositionComponent>();
+        m_scene->registerComponentType<DirectionalLight>();
+        m_scene->registerComponentType<PointLight>();
+        m_scene->registerComponentType<Transform>();
 
-        m_dir_light_container   = m_scene->getComponentContainer<DirectionalLightComponent>();
-        m_point_light_container = m_scene->getComponentContainer<PointLightComponent>();
-        m_position_container    = m_scene->getComponentContainer<PositionComponent>();
+        m_dir_lights   = m_scene->getComponentContainer<DirectionalLight>();
+        m_point_lights = m_scene->getComponentContainer<PointLight>();
+        m_transforms   = m_scene->getComponentContainer<Transform>();
 
     } else {
-        m_dir_light_container   = nullptr;
-        m_point_light_container = nullptr;
-        m_position_container    = nullptr;
+        m_dir_lights   = nullptr;
+        m_point_lights = nullptr;
+        m_transforms   = nullptr;
     }
 }
 
@@ -131,7 +133,7 @@ void DeferredLightingStage::execute(GeometryRenderQueue&, std::vector<RendererPt
 }
 
 void DeferredLightingStage::applyDirectionalLights() {
-    ComponentMask mask = m_dir_light_container->getComponentMask();
+    ComponentMask mask = m_dir_lights->getComponentMask();
 
     auto shader = m_dir_light_shader.getAsset();
     if(!shader) return;
@@ -147,7 +149,7 @@ void DeferredLightingStage::applyDirectionalLights() {
 
     glm::mat3 normal_matrix = camera->getViewMatrix();
 
-    for(auto const& it : m_dir_light_container->getComponentData()) {
+    for(auto const& it : m_dir_lights->getComponentData()) {
         glm::vec3 dir = it.second.direction;
         dir           = normal_matrix * dir;
 
@@ -168,44 +170,40 @@ void DeferredLightingStage::applyDirectionalLights() {
     glUseProgram(0);
 }
 
-struct PointLight {
+struct PointLightRenderingData {
     float x, y, z;
     float bulb_radius;
     float r, g, b;
     float cutoff_radius;
+
+    PointLightRenderingData(In<vec4> pos, In<PointLightData> light)
+      : x{pos.x}
+      , y{pos.y}
+      , z{pos.z}
+      , bulb_radius{light.bulb_radius}
+      , r{light.color.r}
+      , g{light.color.g}
+      , b{light.color.b}
+      , cutoff_radius{light.cutoff_radius} {}
 };
 
 void DeferredLightingStage::applyPointLights() {
     auto shader = m_point_light_shader.getAsset();
     if(!shader) return;
 
-    ComponentMask mask =
-        m_point_light_container->getComponentMask() | m_position_container->getComponentMask();
+    ComponentMask mask = m_point_lights->getComponentMask() | m_transforms->getComponentMask();
 
     Camera* camera = m_pipline.getCamera().get();
 
-    std::vector<PointLight> point_lights;
-    for(auto const& it : m_point_light_container->getComponentData()) {
-        if((m_scene->getEntitys()[u64(it.first)] & mask) != mask)
+    std::vector<PointLightRenderingData> point_lights;
+    for(auto const& [entity, point_light] : m_point_lights->getComponentData()) {
+        if((m_scene->getEntitys()[to_underlying(entity)] & mask) != mask)
             continue; // this should not happen
 
-        PointLight light;
-
-        vec4 position = vec4(*(m_position_container->getComponent(it.first)), 1);
+        vec4 position = vec4(m_transforms->getComponent(entity)->position, 1);
         position      = camera->getViewMatrix() * position;
 
-        light.x = position.x;
-        light.y = position.y;
-        light.z = position.z;
-
-        light.bulb_radius = it.second.bulb_radius;
-
-        light.r = it.second.color.r;
-        light.g = it.second.color.g;
-        light.b = it.second.color.b;
-
-        light.cutoff_radius = it.second.cutoff_radius;
-        point_lights.push_back(light);
+        point_lights.emplace_back(position, point_light);
     }
 
     shader->use();
@@ -232,7 +230,8 @@ void DeferredLightingStage::applyPointLights() {
 
     for(size_t n = 0; n < point_lights.size(); n += m_buffer_size) {
         GLsizei num_lights = std::min(m_buffer_size, uint(point_lights.size() - n));
-        glBufferSubData(GL_ARRAY_BUFFER, 0, num_lights * sizeof(PointLight), &point_lights[n]
+        glBufferSubData(
+            GL_ARRAY_BUFFER, 0, num_lights * sizeof(PointLightRenderingData), &point_lights[n]
         );
 
         glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 10, num_lights);

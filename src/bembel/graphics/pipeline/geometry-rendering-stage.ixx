@@ -20,10 +20,9 @@ export class GeometryRenderingStage : public RenderingPipeline::Stage {
         override;
 
   private:
-    Scene*                        m_scene               = nullptr;
-    GeometryComponent::Container* m_geometry_components = nullptr;
-    PositionComponent::Container* m_position_components = nullptr;
-    RotationComponent::Container* m_rotation_components = nullptr;
+    Scene*                m_scene      = nullptr;
+    Geometry::Container*  m_geometrys  = nullptr;
+    Transform::Container* m_transforms = nullptr;
 };
 
 } // namespace bembel::graphics

@@ -12,9 +12,8 @@ using namespace bembel::kernel;
 bool initComponent(
     In<xml::Element const*> properties,
     InOut<AssetManager>     asset_mgr,
-    InOut<PointLightSource> component
+    InOut<PointLightData>   component
 ) {
-    component.bulb_radius = 1;
     xml::getAttribute(properties, "color", component.color);
     float intensity;
     if(xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;
@@ -26,9 +25,9 @@ bool initComponent(
 }
 
 bool initComponent(
-    In<xml::Element const*>       properties,
-    InOut<AssetManager>           asset_mgr,
-    InOut<DirectionalLightSource> component
+    In<xml::Element const*>     properties,
+    InOut<AssetManager>         asset_mgr,
+    InOut<DirectionalLightData> component
 ) {
     xml::getAttribute(properties, "color", component.color);
     float intensity;

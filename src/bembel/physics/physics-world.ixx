@@ -26,22 +26,19 @@ export class World {
         );
         m_world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 
-        scene->registerComponentType<PositionComponent>();
-        scene->registerComponentType<RotationComponent>();
-        scene->registerComponentType<RigidBodyComponent>(m_world.get());
+        scene->registerComponentType<Transform>();
+        scene->registerComponentType<RigidBody>(m_world.get());
 
-        m_position     = scene->getComponentContainer<PositionComponent>();
-        m_rotations    = scene->getComponentContainer<RotationComponent>();
-        m_rigid_bodies = scene->getComponentContainer<RigidBodyComponent>();
+        m_transformations = scene->getComponentContainer<Transform>();
+        m_rigid_bodies    = scene->getComponentContainer<RigidBody>();
     }
 
     virtual void update(double time_since_last_update) { //
         m_world->stepSimulation(1.f / 60.f, 10);
 
-        auto& entities    = m_scene->getEntitys();
-        auto& positions   = m_position->getComponentData();
-        auto& rotations   = m_rotations->getComponentData();
-        auto& rigid_bodys = m_rigid_bodies->getComponentData();
+        auto& entities        = m_scene->getEntitys();
+        auto& transformations = m_transformations->getComponentData();
+        auto& rigid_bodys     = m_rigid_bodies->getComponentData();
 
         for(usize entity = 0; entity < entities.size(); ++entity) {
             if((entities[entity] & m_rigid_bodies->getComponentMask()) == 0) continue;
@@ -50,13 +47,11 @@ export class World {
             if(rigid_bodys[entity].motion_state) {
                 rigid_bodys[entity].motion_state->getWorldTransform(trans);
             }
-            if((entities[entity] & m_position->getComponentMask()) != 0) {
-                auto origin       = trans.getOrigin();
-                positions[entity] = vec3(origin.getX(), origin.getY(), origin.getZ());
-            }
-            if((entities[entity] & m_rotations->getComponentMask()) != 0) {
-                auto rot          = trans.getRotation();
-                rotations[entity] = quat(rot.x(), rot.y(), rot.z(), rot.w());
+            if((entities[entity] & m_transformations->getComponentMask()) != 0) {
+                auto pos = trans.getOrigin();
+                auto rot = trans.getRotation();
+                transformations[entity].position = vec3{pos.getX(), pos.getY(), pos.getZ()};
+                transformations[entity].rotation = quat{rot.w(), rot.x(), rot.y(), rot.z()};
             }
         }
     }
@@ -70,9 +65,8 @@ export class World {
     std::unique_ptr<btSequentialImpulseConstraintSolver> m_solver;
     std::unique_ptr<btDiscreteDynamicsWorld>             m_world;
 
-    RigidBodyComponent::Container* m_rigid_bodies;
-    PositionComponent::Container*  m_position;
-    RotationComponent::Container*  m_rotations;
+    RigidBody::Container* m_rigid_bodies;
+    Transform::Container* m_transformations;
 };
 
 } // namespace bembel::physics

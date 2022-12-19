@@ -13,7 +13,7 @@ namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export class RigidBodyComponent {
+export class RigidBody {
   public:
     struct RigidBodyData {
         AssetHandle                           collision_shape;
@@ -27,9 +27,9 @@ export class RigidBodyComponent {
           : ComponentContainerBase{type_id}, m_scene{scene}, m_world{world} {}
         virtual ~Container() = default;
 
-        RigidBodyComponent createComponent(EntityID entity_id);
+        RigidBody createComponent(EntityID entity_id);
 
-        RigidBodyComponent createComponent(
+        RigidBody createComponent(
             EntityID entity_id, AssetHandle collision_shape, units::Kilogram mass
         );
 
@@ -39,7 +39,7 @@ export class RigidBodyComponent {
 
         auto& getComponentData() { return m_data; }
 
-        RigidBodyComponent getComponent(EntityID entity_id);
+        RigidBody getComponent(EntityID entity_id);
 
       private:
         bool createRigidBody(EntityID entity_id, AssetHandle collision_shape, btScalar mass);
@@ -51,17 +51,17 @@ export class RigidBodyComponent {
     };
 
   public:
-    RigidBodyComponent(Container* container = nullptr, RigidBodyData* data = nullptr)
+    RigidBody(Container* container = nullptr, RigidBodyData* data = nullptr)
       : m_container{container}, m_data{data} {}
-    RigidBodyComponent(RigidBodyComponent const&) = default;
-    RigidBodyComponent(RigidBodyComponent&&)      = default;
+    RigidBody(RigidBody const&) = default;
+    RigidBody(RigidBody&&)      = default;
 
-    RigidBodyComponent& operator=(RigidBodyComponent const&) = default;
-    RigidBodyComponent& operator=(RigidBodyComponent&&)      = default;
+    RigidBody& operator=(RigidBody const&) = default;
+    RigidBody& operator=(RigidBody&&)      = default;
 
     operator bool() const { return m_container && m_data; }
 
-    //void setPosition(vec3);
+    // void setPosition(vec3);
     void setIsKinematic();
 
     void setOrientation(quat);

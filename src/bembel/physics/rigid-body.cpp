@@ -13,14 +13,12 @@ namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-RigidBodyComponent RigidBodyComponent::Container::createComponent(EntityID entity_id) {
+RigidBody RigidBody::Container::createComponent(EntityID entity_id) {
     if(to_underlying(entity_id) >= m_data.size()) m_data.resize(to_underlying(entity_id) + 1);
     return {this, &(m_data[to_underlying(entity_id)])};
 }
 
-bool RigidBodyComponent::Container::createComponent(
-    EntityID entity_id, xml::Element const* properties
-) {
+bool RigidBody::Container::createComponent(EntityID entity_id, xml::Element const* properties) {
     std::string shape_name;
     double      mass;
     if(!xml::getAttribute(properties, "shape", shape_name)) return false;
@@ -34,7 +32,7 @@ bool RigidBodyComponent::Container::createComponent(
     return createRigidBody(entity_id, collision_shape, mass);
 }
 
-RigidBodyComponent RigidBodyComponent::Container::createComponent(
+RigidBody RigidBody::Container::createComponent(
     EntityID entity_id, AssetHandle collision_shape, units::Kilogram mass
 ) {
     if(createRigidBody(entity_id, collision_shape, mass.value)) {
@@ -43,7 +41,7 @@ RigidBodyComponent RigidBodyComponent::Container::createComponent(
     return {this, nullptr};
 }
 
-bool RigidBodyComponent::Container::deleteComponent(EntityID entity_id) {
+bool RigidBody::Container::deleteComponent(EntityID entity_id) {
     if(to_underlying(entity_id) > m_data.size()) {
         auto& component = m_data[to_underlying(entity_id)];
         if(component.rigid_body) m_world->removeCollisionObject(component.rigid_body.get());
@@ -56,35 +54,35 @@ bool RigidBodyComponent::Container::deleteComponent(EntityID entity_id) {
     return true;
 }
 
-RigidBodyComponent RigidBodyComponent::Container::getComponent(EntityID entity_id) {
+RigidBody RigidBody::Container::getComponent(EntityID entity_id) {
     assert(to_underlying(entity_id) < m_data.size());
     return {this, &m_data[to_underlying(entity_id)]};
 }
 
-bool RigidBodyComponent::Container::createRigidBody(
+bool RigidBody::Container::createRigidBody(
     EntityID entity_id, AssetHandle collision_shape, btScalar mass
 ) {
-    auto pos = m_scene->getComponent<PositionComponent>(entity_id);
-    auto rot = m_scene->getComponent<RotationComponent>(entity_id);
+    auto transform = m_scene->getComponent<Transform>(entity_id);
 
     auto shape = m_scene->getAssetManager().getAsset<CollisionShape>(collision_shape);
     if(!shape) return false;
 
-    btTransform transform;
-    transform.setIdentity();
-    if(pos) transform.setOrigin(btVector3(pos->x, pos->y, pos->z));
+    btTransform transformation;
+    transformation.setIdentity();
+    if(transform)
+        transformation.setOrigin(
+            btVector3(transform->position.x, transform->position.y, transform->position.z)
+        );
 
     btVector3 local_inertia(0, 0, 0);
     if(mass != 0) shape->getCollisionShape()->calculateLocalInertia(mass, local_inertia);
 
-    if(to_underlying(entity_id) >= m_data.size()) { //
-        m_data.resize(to_underlying(entity_id) + 1);
-    }
+    if(to_underlying(entity_id) >= m_data.size()) { m_data.resize(to_underlying(entity_id) + 1); }
 
     auto& component = m_data[to_underlying(entity_id)];
 
     component.collision_shape = collision_shape;
-    component.motion_state    = std::make_unique<btDefaultMotionState>(transform);
+    component.motion_state    = std::make_unique<btDefaultMotionState>(transformation);
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo(
         mass, component.motion_state.get(), shape->getCollisionShape(), local_inertia
@@ -98,14 +96,14 @@ bool RigidBodyComponent::Container::createRigidBody(
     return true;
 }
 
-void RigidBodyComponent::setIsKinematic() {
+void RigidBody::setIsKinematic() {
     if(m_data && m_data->rigid_body) {
         m_data->rigid_body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
         m_data->rigid_body->setActivationState(DISABLE_DEACTIVATION);
     }
 }
 
-void RigidBodyComponent::setOrientation(quat ori) {
+void RigidBody::setOrientation(quat ori) {
     if(m_data && m_data->motion_state) {
         btTransform trans;
         m_data->motion_state->getWorldTransform(trans);

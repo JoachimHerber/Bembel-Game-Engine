@@ -41,15 +41,14 @@ bool PhysicsExample::init() {
 
     m_stirring_stick = m_scene->createEntity();
 
-    m_scene->createComponent<PositionComponent>(m_stirring_stick, vec3(0, -0.75, 0));
-    m_scene->createComponent<RotationComponent>(m_stirring_stick);
-    m_scene->createComponent<GeometryComponent>(
+    m_scene->createComponent<Transform>(m_stirring_stick, vec3(0, -0.75, 0));
+    m_scene->createComponent<Geometry>(
         m_stirring_stick,
         m_engine.assets.getAssetHandle<GeometryModel>("stirring_stick"),
         vec3(4.5f, 0.5f, 0.1f)
     );
     m_scene
-        ->createComponent<RigidBodyComponent>(
+        ->createComponent<RigidBody>(
             m_stirring_stick,
             m_engine.assets.getAssetHandle<CollisionShape>("stirring_stick"),
             0.0_kg
@@ -72,7 +71,7 @@ void PhysicsExample::cleanup() {
 void PhysicsExample::update(double time) {
     m_rotation += time;
 
-    auto rb = m_scene->getComponent<RigidBodyComponent>(m_stirring_stick);
+    auto rb = m_scene->getComponent<RigidBody>(m_stirring_stick);
     if(rb) rb.setOrientation(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }
 

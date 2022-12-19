@@ -23,6 +23,6 @@ export bool initComponent(
     InOut<GeometryComponentData> component
 );
 
-export using GeometryComponent = StandardComponent<"Geometry", GeometryComponentData>;
+export using Geometry = BasicComponent<"Geometry", GeometryComponentData>;
 
 } // namespace bembel::graphics
