@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <utility>
 export module bembel.base:ObservableValue;
 
 import :Signal;
@@ -7,7 +7,7 @@ import :Types;
 
 namespace bembel::base {
 
-export template <std::equality_comparable T>
+export template <typename T>
 class ObservableValue final {
   public:
     ObservableValue() = default;

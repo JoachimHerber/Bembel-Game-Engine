@@ -1,7 +1,10 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-// glbinding/gl/gl.h must be included first
 #include <glbinding/glbinding.h>
+
+#include <memory>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 module bembel.kernel.display;
 
 import bembel.base;

@@ -1,7 +1,6 @@
 ﻿module;
 #include <algorithm>
-
-#include "bembel/pch.h"
+#include <string_view>
 module bembel.graphics.geometry;
 
 import bembel.base;
@@ -30,9 +29,9 @@ bool GeometryRenderQueue::addGeometryObject(GeometryModel* model, mat4 const& tr
         Material* mat = mat_map.material.getAsset();
         if(mesh == nullptr) continue;
 
-        unsigned first, count;
-        if(mesh->getSubMesh(mat_map.sub_mesh, first, count)) {
-            m_render_data.push_back({mesh, mat, first, count, transform});
+        auto sub_mesh = mesh->getSubMesh(mat_map.sub_mesh);
+        if(sub_mesh.has_value()) {
+            m_render_data.emplace_back(mesh, mat, sub_mesh.value(), transform);
         }
     }
     return true;

@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.gui.widgets:Button;
 
 import bembel.base;

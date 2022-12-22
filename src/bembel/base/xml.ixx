@@ -1,11 +1,8 @@
 module;
-#include "bembel/pch.h"
-export module bembel.base:Xml;
+#include <tinyxml2/tinyxml2.h>
 
-// clang-format off
-// clang-format trys to add spaces befor and after the '/' in <tinyxml2/tinyxml2.h> so we have to turn it of for tis section
-export import<tinyxml2/tinyxml2.h>;
-// clang-format on
+#include <string_view>
+export module bembel.base:Xml;
 
 import :Types;
 import :ObservableValue;
@@ -17,8 +14,8 @@ using Element  = tinyxml2::XMLElement;
 using Document = tinyxml2::XMLDocument;
 
 template <typename T>
-requires std::integral<T> || std::floating_point<T>
-bool setAttribute(In<Element*> node, In<std::string_view> name, T value) {
+    requires std::integral<T> || std::floating_point<T> bool
+setAttribute(In<Element*> node, In<std::string_view> name, T value) {
     if(!node) return false;
 
     std::string name_str{name};
@@ -81,8 +78,7 @@ bool getAttribute(
 class ElementIterator {
   public:
     ElementIterator(In<Element const*> element, In<std::string_view> name)
-      : m_element(element)
-      , m_name(name) {}
+      : m_element(element), m_name(name) {}
 
     ElementIterator begin() {
         if(m_name.empty()) {

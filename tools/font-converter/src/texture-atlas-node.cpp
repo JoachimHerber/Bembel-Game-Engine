@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <glm/glm.hpp>
+#include <memory>
 module bembel.tools.font_converter;
 
 namespace bembel::tools {
@@ -11,8 +12,7 @@ using bembel::kernel::Viewport;
 
 TextureAtlasNode::TextureAtlasNode(unsigned w, unsigned h) : pos(0, 0), size(w, h) {}
 TextureAtlasNode::TextureAtlasNode(unsigned x, unsigned y, unsigned w, unsigned h)
-  : pos(x, y)
-  , size(w, h) {}
+  : pos(x, y), size(w, h) {}
 
 TextureAtlasNode::~TextureAtlasNode() {}
 
@@ -21,7 +21,7 @@ TextureAtlasNode* TextureAtlasNode::getNode(unsigned w, unsigned h) {
 
     if(this->size.x < w || this->size.y < h) return nullptr; // to Small
 
-    glm::uvec2 div = this->size - glm::uvec2(w, h);
+    uvec2 div = this->size - uvec2(w, h);
 
     if(this->child1) {
         TextureAtlasNode* node;

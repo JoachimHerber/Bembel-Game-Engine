@@ -1,7 +1,7 @@
 ﻿module;
-#include <glbinding/gl/gl.h>
-
-#include "bembel/pch.h"
+#include <filesystem>
+#include <memory>
+#include <string_view>
 export module bembel.kernel.rendering:Shader;
 
 import bembel.base;
@@ -9,15 +9,10 @@ import bembel.kernel.assets;
 
 namespace bembel::kernel {
 using namespace bembel::base;
-using namespace gl;
 
 export class Shader final {
   public:
-    enum class Type {
-        VERTEX   = gl::GL_VERTEX_SHADER,
-        FRAGMENT = gl::GL_FRAGMENT_SHADER,
-        GEOMETRY = gl::GL_GEOMETRY_SHADER
-    };
+    enum class Type { VERTEX, FRAGMENT, GEOMETRY };
 
     Shader(Type type, uint handle);
     virtual ~Shader();
@@ -51,7 +46,7 @@ export class ShaderProgram final {
     ShaderProgram& operator&(ShaderProgram const&) = delete;
     ~ShaderProgram();
 
-    bool attachShader(AssetManager& asset_mgr, AssetHandle handle);
+    bool attachShader(InOut<AssetManager> asset_mgr, AssetHandle handle);
 
     void bindAttribLocation(std::string_view name, unsigned int index);
     void bindFragDataLocation(std::string_view name, unsigned int index);
@@ -63,11 +58,11 @@ export class ShaderProgram final {
     void getUniformBlockActiveUniformIndices(uint block_index, std::vector<int>* indices) const;
 
     int  getActiveUniformOffset(uint uniform_index) const;
-    void getActiveUniform(uint uniform_index, int* size, GLenum* type, std::string* name) const;
+    void getActiveUniform(uint uniform_index, int* size, uint* type, std::string* name) const;
 
-    bool setUniform(std::string_view name, float value);
-    bool setUniform(std::string_view name, int value);
-    bool setUniform(std::string_view name, glm::mat4 const& value);
+    bool setUniform(In<std::string_view> name, In<float> value);
+    bool setUniform(In<std::string_view> name, In<int> value);
+    bool setUniform(In<std::string_view> name, In<mat4> value);
 
     bool link();
 

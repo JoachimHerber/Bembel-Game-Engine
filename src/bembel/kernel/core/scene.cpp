@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <filesystem>
+#include <string_view>
 module bembel.kernel.core;
 
 import bembel.base;

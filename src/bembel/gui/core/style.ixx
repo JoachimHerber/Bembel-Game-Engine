@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.gui.core:Style;
 
 import bembel.base;
@@ -14,7 +14,7 @@ export class Style {
     Style()  = default;
     ~Style() = default;
 
-    void          setFont(Asset<Font> font) { m_font = font; }
+    void          setFont(Asset<Font> font) { m_font = std::move(font); }
     kernel::Font* getFont() const { return m_font.getAsset(); }
 
     void setTextureAtlas(Asset<TextureAtlas>);
@@ -54,7 +54,7 @@ export class Style {
 
         COUNT // for internal use only
     };
-    glm::tvec4<uint8_t> const& getColor(Colors color) const;
+    ColorRGBA const& getColor(Colors color) const;
 
     enum class Values : u32 {
         MIN_FONT_SIZE = 0,

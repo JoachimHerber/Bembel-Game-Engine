@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <limits>
+#include <string_view>
 module bembel.kernel.rendering;
 
 import bembel.base;

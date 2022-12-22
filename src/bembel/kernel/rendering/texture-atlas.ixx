@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
+#include <string_view>
 export module bembel.kernel.rendering:TextureAtlas;
 
 import bembel.base;
@@ -14,13 +15,7 @@ export class TextureAtlas final {
     TextureAtlas()  = default;
     ~TextureAtlas() = default;
 
-    bool loadTexture(std::string_view file) {
-        base::Image image;
-        if(!image.load(file)) return false;
-
-        m_main_texture->init(image);
-        return true;
-    }
+    bool loadTexture(std::string_view file);
 
     Texture* getMainTexture() const { return m_main_texture.get(); }
     Texture* getLooupTexture() const { return m_tex_coord_looup_texture.get(); }

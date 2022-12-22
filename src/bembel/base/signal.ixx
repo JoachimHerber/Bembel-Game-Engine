@@ -1,5 +1,6 @@
 module;
-#include "bembel/pch.h"
+#include <mutex>
+#include <vector>
 export module bembel.base:Signal;
 
 import :Slot;

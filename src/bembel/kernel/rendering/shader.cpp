@@ -1,7 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <memory>
 module bembel.kernel.rendering;
 
 import bembel.base;
@@ -71,7 +71,7 @@ std::unique_ptr<Shader> Shader::createAsset(
     AssetManager& asset_mgr, xml::Element const* properties
 ) {
     static Dictionary<Type> const shader_type_map{
-        {"GL_VERTEX_SHADER",   Type::VERTEX  },
+        {"GL_VERTEX_SHADER", Type::VERTEX},
         {"GL_FRAGMENT_SHADER", Type::FRAGMENT},
         {"GL_GEOMETRY_SHADER", Type::GEOMETRY},
     };
@@ -144,7 +144,7 @@ bool ShaderProgram::setUniform(std::string_view name, int value) {
     return true;
 }
 
-bool ShaderProgram::setUniform(std::string_view name, glm::mat4 const& value) {
+bool ShaderProgram::setUniform(std::string_view name, mat4 const& value) {
     GLint location = getUniformLocation(name);
     if(location == -1) return false;
 
@@ -278,16 +278,17 @@ GLint ShaderProgram::getActiveUniformOffset(GLuint uniform_index) const {
     return offset;
 }
 
-void ShaderProgram::getActiveUniform(
-    GLuint uniform_index, GLint* size, GLenum* type, std::string* name
-) const {
+void ShaderProgram::getActiveUniform(uint uniform_index, int* size, uint* type, std::string* name)
+    const {
     GLint name_length;
 
     glGetActiveUniformsiv(
         m_program_handle, 1, &uniform_index, GL_UNIFORM_NAME_LENGTH, &name_length
     );
     GLchar* buffer = new GLchar[name_length];
-    glGetActiveUniform(m_program_handle, uniform_index, name_length, nullptr, size, type, buffer);
+    glGetActiveUniform(
+        m_program_handle, uniform_index, name_length, nullptr, size, (GLenum*)type, buffer
+    );
 
     *name = buffer;
     delete[] buffer;

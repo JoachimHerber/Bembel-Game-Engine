@@ -1,5 +1,5 @@
 ﻿module;
-#include <tuple>
+#include <utility>
 export module bembel.kernel.core:Entity;
 
 import bembel.base;

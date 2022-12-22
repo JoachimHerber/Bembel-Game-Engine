@@ -1,8 +1,16 @@
 module;
-#include "bembel/pch.h"
-export module bembel.base:Types;
+#include <cstdint>
+#include <filesystem>
+#include <format>
+#include <map>
+#include <source_location>
+#include <span>
+#include <stdexcept>
+#include <string_view>
 
-export import glm;
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+export module bembel.base:Types;
 
 export namespace bembel::base {
 using u8    = uint8_t;
@@ -35,11 +43,24 @@ using glm::uvec2;
 using glm::uvec3;
 using glm::uvec4;
 
+using glm::tvec2;
+using glm::tvec3;
+using glm::tvec4;
+
 using ColorRGB  = glm::tvec3<u8>;
 using ColorRGBA = glm::tvec4<u8>;
 
 using glm::mat3;
 using glm::mat4;
+
+using glm::operator+;
+using glm::operator-;
+using glm::operator*;
+using glm::operator/;
+using glm::operator==;
+
+using glm::min;
+using glm::max;
 
 using glm::quat;
 
@@ -63,10 +84,11 @@ struct StringLiteral {
 template <typename T>
 struct PASS_BY_VALUE : std::bool_constant<std::is_trivially_copyable_v<T> && sizeof(T) < 4 * sizeof(int)>{}; // pass small trivially copyable Types by value
 
-template <>           struct PASS_BY_VALUE<std::string_view>     : std::true_type{};
-template <>           struct PASS_BY_VALUE<std::u8string_view>   : std::true_type{};
-template <typename T> struct PASS_BY_VALUE<std::span<T>>         : std::true_type{};
-template <>           struct PASS_BY_VALUE<std::source_location> : std::true_type{};
+template <>           struct PASS_BY_VALUE<std::string_view>      : std::true_type{};
+template <>           struct PASS_BY_VALUE<std::u8string_view>    : std::true_type{};
+template <typename T> struct PASS_BY_VALUE<std::span<T>>          : std::true_type{};
+template <>           struct PASS_BY_VALUE<std::source_location>  : std::true_type{};
+template <>           struct PASS_BY_VALUE<std::filesystem::path> : std::false_type{};
 
 template <typename T> using In    = std::conditional_t<PASS_BY_VALUE<T>::value, T, T const&>;
 template <typename T> using InOut = T&;
@@ -107,7 +129,7 @@ struct std::formatter<glm::vec4> : std::formatter<std::string> {
 
 export template <>
 struct std::formatter<glm::dvec2> : std::formatter<std::string> {
-    auto format(In<glm::dvec2>& v, format_context& ctx) {
+    auto format(In<glm::dvec2> v, format_context& ctx) {
         return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
     }
 };

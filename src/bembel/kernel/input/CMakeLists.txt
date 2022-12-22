@@ -1,13 +1,13 @@
 target_sources(Bembel
-	PRIVATE
-		input.ixx
+    PRIVATE
+        input.ixx
 
-		input-manager.ixx
+        input-manager.ixx
         input-device.ixx
-		mouse.ixx
-		mouse.cpp
+        mouse.ixx
+        mouse.cpp
         keyboard.ixx
-		keyboard.cpp
+        keyboard.cpp
 
-		CMakeLists.txt
+        CMakeLists.txt
 )

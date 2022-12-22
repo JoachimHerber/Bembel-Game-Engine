@@ -1,5 +1,9 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <format>
+#include <memory>
+#include <source_location>
+#include <string>
+#include <string_view>
 export module bembel.base:Logger;
 
 import :Types;

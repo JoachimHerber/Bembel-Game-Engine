@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <filesystem>
+#include <memory>
 //
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -106,12 +107,12 @@ void FontConverter::saveGlypes(xml::Element* root) {
         xml::setAttribute(glyph, "advance", it.getAdvance() / float(units_per_em));
 
         if(it.getExtendsMin() != it.getExtendsMax() && it.getTexCoordMin() != it.getTexCoordMax()) {
-            vec2      max = glypeScale * glm::vec2(it.getExtendsMax());
-            vec2      min = glypeScale * glm::vec2(it.getExtendsMin());
-            glm::vec4 extends{min.x, max.x, min.y, max.y};
+            vec2 max = glypeScale * vec2(it.getExtendsMax());
+            vec2 min = glypeScale * vec2(it.getExtendsMin());
+            vec4 extends{min.x, max.x, min.y, max.y};
             xml::setAttribute(glyph, "extends", extends);
 
-            glm::vec4 tex_coord = {
+            vec4 tex_coord = {
                 tex_coord_scale_u * it.getTexCoordMin().x,
                 tex_coord_scale_u * it.getTexCoordMax().x,
                 tex_coord_scale_v * it.getTexCoordMin().y,

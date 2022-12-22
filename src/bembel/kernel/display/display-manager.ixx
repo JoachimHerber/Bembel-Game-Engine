@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
 export module bembel.kernel.display:DisplayManager;
 
 import bembel.base;

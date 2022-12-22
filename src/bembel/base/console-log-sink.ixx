@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string>
+#include <string_view>
 export module bembel.base:ConsoleLogSink;
 
 import :Logger;

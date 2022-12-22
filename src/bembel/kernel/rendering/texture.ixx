@@ -1,7 +1,9 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <memory>
+#include <optional>
+#include <string_view>
 export module bembel.kernel.rendering:Texture;
 
 import bembel.base;
@@ -58,32 +60,32 @@ export class Texture final {
     ~Texture();
 
     void init(
-        MinFilter min_filter = MinFilter::LINEAR_LINEAR,
-        MagFilter mag_filter = MagFilter::LINEAR,
-        Wrap      warp_s     = Wrap::CLAMP_TO_EDGE,
-        Wrap      warp_t     = Wrap::CLAMP_TO_EDGE
+        In<MinFilter> min_filter = MinFilter::LINEAR_LINEAR,
+        In<MagFilter> mag_filter = MagFilter::LINEAR,
+        In<Wrap>      warp_s     = Wrap::CLAMP_TO_EDGE,
+        In<Wrap>      warp_t     = Wrap::CLAMP_TO_EDGE
     );
     void init(
-        uvec2 const& size,
-        MinFilter    min_filter = MinFilter::LINEAR_LINEAR,
-        MagFilter    mag_filter = MagFilter::LINEAR,
-        Wrap         warp_s     = Wrap::CLAMP_TO_EDGE,
-        Wrap         warp_t     = Wrap::CLAMP_TO_EDGE
+        In<uvec2>     size,
+        In<MinFilter> min_filter = MinFilter::LINEAR_LINEAR,
+        In<MagFilter> mag_filter = MagFilter::LINEAR,
+        In<Wrap>      warp_s     = Wrap::CLAMP_TO_EDGE,
+        In<Wrap>      warp_t     = Wrap::CLAMP_TO_EDGE
     );
     void init(
-        Image const& _data,
-        MinFilter    min_filter = MinFilter::LINEAR_LINEAR,
-        MagFilter    mag_filter = MagFilter::LINEAR,
-        Wrap         warp_s     = Wrap::CLAMP_TO_EDGE,
-        Wrap         warp_t     = Wrap::CLAMP_TO_EDGE
+        In<Image>     _data,
+        In<MinFilter> min_filter = MinFilter::LINEAR_LINEAR,
+        In<MagFilter> mag_filter = MagFilter::LINEAR,
+        In<Wrap>      warp_s     = Wrap::CLAMP_TO_EDGE,
+        In<Wrap>      warp_t     = Wrap::CLAMP_TO_EDGE
     );
     void cleanup();
 
     void bind() const;
     void release() const;
 
-    bool setSize(ivec2 const& size);
-    bool setData(Image const&, int mip_map_level = 0);
+    bool setSize(In<ivec2> size);
+    bool setData(In<Image>, In<int> mip_map_level = 0);
 
     uint   getTextureHandle() const { return m_handle; }
     Format getTextureFormat() const { return m_format; }

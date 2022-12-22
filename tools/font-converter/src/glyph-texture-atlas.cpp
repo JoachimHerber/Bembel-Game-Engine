@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <algorithm>
+#include <memory>
+#include <vector>
 module bembel.tools.font_converter;
 
 namespace bembel::tools {

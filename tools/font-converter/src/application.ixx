@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.tools.font_converter;
 
 import bembel;

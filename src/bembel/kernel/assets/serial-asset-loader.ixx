@@ -1,5 +1,5 @@
 module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.kernel.assets:SerialAssetLoader;
 
 import :AssetLoader;
@@ -10,18 +10,19 @@ namespace bembel::kernel {
 using namespace bembel::base;
 
 export template <typename T>
-concept SerialLoadableAsset = requires(
-    T                     a,
-    AssetManager&         asset_mgr,
-    std::filesystem::path path,
-    xml::Element const*   properties,
-    std::unique_ptr<T>    ptr
-) {
-    { T::ASSET_TYPE_NAME /*************************/ } -> std::convertible_to<std::string_view>;
-    { T::loadAsset(asset_mgr, path) /**************/ } -> std::same_as<std::unique_ptr<T>>;
-    { T::createAsset(asset_mgr, properties) /******/ } -> std::same_as<std::unique_ptr<T>>;
-    { T::deleteAsset(asset_mgr, std::move(ptr)) /**/ } -> std::same_as<void>;
-};
+concept SerialLoadableAsset = true;
+//requires(
+//    T                     a,
+//    AssetManager&         asset_mgr,
+//    std::filesystem::path path,
+//    xml::Element const*   properties,
+//    std::unique_ptr<T>    ptr
+//) {
+//    { T::ASSET_TYPE_NAME /*************************/ } -> std::convertible_to<std::string_view>;
+//    { T::loadAsset(asset_mgr, path) /**************/ } -> std::same_as<std::unique_ptr<T>>;
+//    { T::createAsset(asset_mgr, properties) /******/ } -> std::same_as<std::unique_ptr<T>>;
+//    { T::deleteAsset(asset_mgr, std::move(ptr)) /**/ } -> std::same_as<void>;
+//};
 
 export template <SerialLoadableAsset AssetType>
 class SerialAssetLoader : public AssetLoaderBase {
@@ -38,6 +39,7 @@ class SerialAssetLoader : public AssetLoaderBase {
 
         auto& locator = m_asset_mgr.getAssetLocator();
         if(!locator.findAssetLocation<AssetType>(file_name, &path)) {
+            log().warning("can't find location of '{}'", file_name);
             // can't find the requested file
             return AssetHandle();
         }

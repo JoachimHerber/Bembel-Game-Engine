@@ -1,4 +1,7 @@
-﻿import bembel.examples.rendering;
+﻿#include <windows.h>
+
+#include <filesystem>
+import bembel.examples.rendering;
 
 int main() {
     bembel::RenderingExample app;

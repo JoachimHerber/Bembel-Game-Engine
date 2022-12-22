@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
 export module bembel.tools.font_converter:TextureAtlasNode;
 
 import bembel;
@@ -18,8 +18,8 @@ export class TextureAtlasNode {
 
     TextureAtlasNode* getNode(unsigned w, unsigned h);
 
-    glm::uvec2 const& getPos() const;
-    glm::uvec2 const& getSize() const;
+    uvec2 const& getPos() const;
+    uvec2 const& getSize() const;
 
     void         setGlyph(Glyph*);
     Glyph const* getGlyph() const;
@@ -28,8 +28,8 @@ export class TextureAtlasNode {
     TextureAtlasNode const* getSecondChildNode() const;
 
   private:
-    glm::uvec2 pos;
-    glm::uvec2 size;
+    uvec2 pos;
+    uvec2 size;
 
     Glyph* glyph = nullptr;
 

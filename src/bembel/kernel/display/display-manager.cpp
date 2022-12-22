@@ -1,8 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-module bembel.kernel.display;
 
-import glfw;
+#include <memory>
+module bembel.kernel.display;
 
 import bembel.base;
 import bembel.kernel.assets;
@@ -42,7 +42,7 @@ void DisplayManager::updateWindows() {
         window->makeContextCurent();
 
         glDisable(GL_SCISSOR_TEST);
-        const glm::vec3& bg = window->background_color;
+        vec3 const bg = window->background_color;
         glClearColor(bg.r, bg.g, bg.b, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

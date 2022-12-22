@@ -1,5 +1,4 @@
 ﻿module;
-#include "bembel/pch.h"
 export module bembel.tools.font_converter:GlyphTextureAtlas;
 
 import bembel;

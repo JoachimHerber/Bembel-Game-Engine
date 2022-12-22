@@ -1,5 +1,4 @@
 module;
-#include "bembel/pch.h"
 module bembel.base;
 
 namespace bembel::base {

@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.kernel.core:StandardComponents;
 
 import bembel.base;
@@ -19,13 +19,11 @@ export struct TransformationData {
 export bool initComponent(
     xml::Element const* properties, AssetManager& asset_mgr, TransformationData& transform
 ) {
-    vec3 pos = {0, 0, 0};
-    if(!xml::getAttribute(properties, "position", pos)) {
-        xml::getAttribute(properties, "x", pos.x);
-        xml::getAttribute(properties, "y", pos.y);
-        xml::getAttribute(properties, "z", pos.z);
+    if(!xml::getAttribute(properties, "position", transform.position)) {
+       xml::getAttribute(properties, "x", transform.position.x);
+       xml::getAttribute(properties, "y", transform.position.y);
+       xml::getAttribute(properties, "z", transform.position.z);
     }
-    transform.position = pos;
 
     // quat rot = {1, 0, 0, 0};
     // if(xml::getAttribute(properties, "rotation", rot)) {

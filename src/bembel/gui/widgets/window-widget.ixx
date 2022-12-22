@@ -1,5 +1,4 @@
 ﻿module;
-#include "bembel/pch.h"
 export module bembel.gui.widgets:Window;
 
 import bembel.base;

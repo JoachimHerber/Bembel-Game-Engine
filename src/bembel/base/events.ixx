@@ -1,5 +1,8 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <mutex>
+#include <unordered_map>
+#include <vector>
+#include <typeindex>
 export module bembel.base:Events;
 
 import :Types;

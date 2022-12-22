@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <variant>
 module bembel.kernel.rendering;
 
 namespace bembel::kernel {

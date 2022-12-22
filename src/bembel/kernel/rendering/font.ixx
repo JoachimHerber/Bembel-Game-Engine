@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.kernel.rendering:Font;
 
 import bembel.base;

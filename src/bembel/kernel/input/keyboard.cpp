@@ -1,8 +1,9 @@
 ﻿module;
+#include <array>
+#include <string_view>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-
-#include "bembel/pch.h"
-module bembel.kernel.input:Keyboard;
+module bembel.kernel.input;
 
 import bembel.base;
 

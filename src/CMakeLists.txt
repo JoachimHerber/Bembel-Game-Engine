@@ -9,16 +9,16 @@ get_target_property( BEMBEL_SRC_FILES Bembel SOURCES )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/bembel PREFIX "bembel" FILES ${BEMBEL_SRC_FILES})
 
 target_sources(Bembel
-	PUBLIC
-		../dependencies/tinyxml2/tinyxml2.h
-		../dependencies/lodepng/lodepng.h
-	PRIVATE
-		../dependencies/tinyxml2/tinyxml2.cpp
-		../dependencies/lodepng/lodepng.cpp
+    PUBLIC
+        ../dependencies/tinyxml2/tinyxml2.h
+        ../dependencies/lodepng/lodepng.h
+    PRIVATE
+        ../dependencies/tinyxml2/tinyxml2.cpp
+        ../dependencies/lodepng/lodepng.cpp
 )
 source_group(dependencies PREFIX "bembel" FILES 
-	../dependencies/tinyxml2/tinyxml2.h
-	../dependencies/tinyxml2/tinyxml2.cpp
-	../dependencies/lodepng/lodepng.h
-	../dependencies/lodepng/lodepng.cpp
+    ../dependencies/tinyxml2/tinyxml2.h
+    ../dependencies/tinyxml2/tinyxml2.cpp
+    ../dependencies/lodepng/lodepng.h
+    ../dependencies/lodepng/lodepng.cpp
 )

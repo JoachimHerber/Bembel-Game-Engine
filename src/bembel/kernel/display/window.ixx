@@ -1,8 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
 export module bembel.kernel.display:Window;
-
-import glfw;
 
 import bembel.base;
 import bembel.kernel.assets;

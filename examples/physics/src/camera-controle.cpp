@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <GLFW/glfw3.h>
+
+#include <glm/gtc/quaternion.hpp>
 module bembel.examples.physics;
 
 namespace bembel {

@@ -1,7 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <glm/glm.hpp>
 module bembel.tools.font_converter;
 
 import bembel;

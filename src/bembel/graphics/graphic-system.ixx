@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
 export module bembel.graphics:System;
 
 import bembel.base;

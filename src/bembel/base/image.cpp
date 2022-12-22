@@ -1,7 +1,5 @@
 ﻿module;
 #include <lodepng/lodepng.h>
-
-#include "bembel/pch.h"
 module bembel.base;
 
 namespace bembel::base {

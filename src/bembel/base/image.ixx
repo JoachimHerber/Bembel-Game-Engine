@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <vector>
+#include <filesystem>
 export module bembel.base:Image;
 
 import :Types;

@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.kernel.input:InputDevice;
 
 import bembel.base;

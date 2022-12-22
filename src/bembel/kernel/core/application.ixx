@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <chrono>
 export module bembel.kernel.core:Application;
 
 import bembel.base;

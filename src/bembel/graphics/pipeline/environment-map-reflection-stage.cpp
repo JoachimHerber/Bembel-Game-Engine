@@ -1,5 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
+
+#include <glm/gtc/matrix_inverse.hpp>
+#include <utility>
 module bembel.graphics.pipeline;
 
 import bembel.base;
@@ -71,7 +74,7 @@ bool EnvironmentMapReflectionStage::initEnvironmentMap(
 }
 
 void EnvironmentMapReflectionStage::setShader(Asset<ShaderProgram> shader) {
-    m_shader_program = shader;
+    m_shader_program = std::move(shader);
 }
 
 void EnvironmentMapReflectionStage::setOutputTexture(std::string_view texture) {
@@ -132,7 +135,7 @@ bool EnvironmentMapReflectionStage::configure(xml::Element const* properties) {
     kernel::Asset<kernel::ShaderProgram> program;
     program.request(m_pipline.getAssetManager(), properties->FirstChildElement("Shader"));
 
-    setShader(program);
+    setShader(std::move(program));
 
     xml::Element const* env_map = properties->FirstChildElement("EnvironmentMap");
     std::string         left, right, bottom, top, back, front;

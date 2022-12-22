@@ -1,9 +1,8 @@
 ﻿module;
-#include <glbinding/gl/gl.h>
-export module bembel.kernel.rendering : FBO;
+export module bembel.kernel.rendering:FBO;
 
 import bembel.base;
-import : Texture;
+import :Texture;
 
 namespace bembel::kernel {
 using namespace bembel::base;
@@ -24,10 +23,8 @@ export class FrameBufferObject {
     void endRenderToTexture();
 
     void blitToBackBuffer(
-        const ivec2& source_min,
-        const ivec2& source_max,
-        const ivec2& target_min,
-        const ivec2& target_max);
+        In<ivec2> source_min, In<ivec2> source_max, In<ivec2> target_min, In<ivec2> target_max
+    );
 
   private:
     uint m_handle = 0;

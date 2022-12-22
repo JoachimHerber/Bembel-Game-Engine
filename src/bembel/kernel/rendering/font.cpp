@@ -1,5 +1,8 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
+#include <string>
+#include <string_view>
+#include <utility>
 module bembel.kernel.rendering;
 
 import bembel.base;
@@ -84,7 +87,10 @@ std::unique_ptr<Font> Font::createAsset(AssetManager& asset_mgr, xml::Element co
     if(!xml::getAttribute(properties, "texture", texture)) { return nullptr; }
 
     font->m_glyph_atlas_texture.request(asset_mgr, texture);
-    if(!font->m_glyph_atlas_texture) return nullptr;
+    if(!font->m_glyph_atlas_texture) {
+        log().error("Can't find texture for font");
+        return nullptr;
+    }
 
     if(!font->readGlyphs(properties->FirstChildElement("Glyphs"))) {
         log().error("Can't parse glyph informations");
@@ -103,8 +109,8 @@ std::unique_ptr<Font> Font::createAsset(AssetManager& asset_mgr, xml::Element co
 
     // compute ascender and descender
     for(auto it : font->m_glypths) {
-        font->m_ascender  = glm::max(font->m_ascender, it.extents_max.y);
-        font->m_descender = glm::min(font->m_descender, it.extents_min.y);
+        font->m_ascender  = max(font->m_ascender, it.extents_max.y);
+        font->m_descender = min(font->m_descender, it.extents_min.y);
     }
 
     return font;
@@ -119,7 +125,7 @@ bool Font::readGlyphs(xml::Element const* properties) {
         Glyph glyph;
         if(!xml::getAttribute(glyphProps, "advance", glyph.advance)) return false;
 
-        glm::vec4 tmp;
+        vec4 tmp;
         if(xml::getAttribute(glyphProps, "extends", tmp)) {
             glyph.extents_min = {tmp.x, tmp.z};
             glyph.extents_max = {tmp.y, tmp.w};

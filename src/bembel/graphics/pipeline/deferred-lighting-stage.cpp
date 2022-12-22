@@ -1,7 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <utility>
 module bembel.graphics.pipeline;
 
 import bembel.base;
@@ -19,10 +19,10 @@ DeferredLightingStage::DeferredLightingStage(RenderingPipeline& pipline)
 DeferredLightingStage::~DeferredLightingStage() {}
 
 void DeferredLightingStage::setDirLightShader(Asset<ShaderProgram> shader) {
-    m_dir_light_shader = shader;
+    m_dir_light_shader = std::move(shader);
 }
 void DeferredLightingStage::setPointLightShader(Asset<ShaderProgram> shader) {
-    m_point_light_shader = shader;
+    m_point_light_shader = std::move(shader);
 }
 
 bool DeferredLightingStage::configure(xml::Element const* properties) {
@@ -33,8 +33,8 @@ bool DeferredLightingStage::configure(xml::Element const* properties) {
     dir_light_shader.request(asset_mgr, properties->FirstChildElement("DirectionalLightProgram"));
     point_light_shader.request(asset_mgr, properties->FirstChildElement("PointLightShaderProgram"));
 
-    setDirLightShader(dir_light_shader);
-    setPointLightShader(point_light_shader);
+    setDirLightShader(std::move(dir_light_shader));
+    setPointLightShader(std::move(point_light_shader));
 
     std::string texture_name;
     if(xml::getAttribute(properties, "Output", "texture", texture_name))
@@ -141,17 +141,17 @@ void DeferredLightingStage::applyDirectionalLights() {
     shader->use();
     auto const camera = m_pipline.getCamera();
 
-    glm::mat4 inv_projection = camera->getInverseProjectionMatrix();
+    mat4 inv_projection = camera->getInverseProjectionMatrix();
 
     glUniformMatrix4fv(
         shader->getUniformLocation("uInverseProjectionMatrix"), 1, GL_FALSE, &inv_projection[0][0]
     );
 
-    glm::mat3 normal_matrix = camera->getViewMatrix();
+    mat3 normal_matrix = camera->getViewMatrix();
 
     for(auto const& it : m_dir_lights->getComponentData()) {
-        glm::vec3 dir = it.second.direction;
-        dir           = normal_matrix * dir;
+        vec3 dir = it.second.direction;
+        dir      = normal_matrix * dir;
 
         glUniform3f(
             shader->getUniformLocation("uLigthColor"),
@@ -197,7 +197,7 @@ void DeferredLightingStage::applyPointLights() {
 
     std::vector<PointLightRenderingData> point_lights;
     for(auto const& [entity, point_light] : m_point_lights->getComponentData()) {
-        if((m_scene->getEntitys()[to_underlying(entity)] & mask) != mask)
+        if((m_scene->getEntitys()[std::to_underlying(entity)] & mask) != mask)
             continue; // this should not happen
 
         vec4 position = vec4(m_transforms->getComponent(entity)->position, 1);

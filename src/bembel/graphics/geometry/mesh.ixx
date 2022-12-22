@@ -1,5 +1,8 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <filesystem>
+#include <memory>
+#include <optional>
+#include <string_view>
 export module bembel.graphics.geometry:Mesh;
 
 import bembel.base;
@@ -16,13 +19,19 @@ export class GeometryMesh {
     GeometryMesh(GeometryMesh&&)      = delete;
     ~GeometryMesh();
 
-    using GeometryMeshPtr = std::unique_ptr<GeometryMesh>;
+    struct SubMesh {
+        uint first_index;
+        uint num_indices;
+    };
+    std::optional<SubMesh> getSubMesh(std::string_view name);
+    uint                   getVAO() const;
 
-    bool getSubMesh(std::string_view name, uint& first_index, uint& num_indices);
-    uint getVAO() const;
-
-    static GeometryMeshPtr loadAsset(AssetManager& asset_mgr, std::filesystem::path file);
-    static GeometryMeshPtr createAsset(AssetManager& asset_mgr, xml::Element const* properties);
+    static std::unique_ptr<GeometryMesh> loadAsset(
+        AssetManager& asset_mgr, In<std::filesystem::path> file
+    );
+    static std::unique_ptr<GeometryMesh> createAsset(
+        AssetManager& asset_mgr, xml::Element const* properties
+    );
 
     static void deleteAsset(AssetManager& asset_mgr, std::unique_ptr<GeometryMesh> mesh);
 
@@ -31,7 +40,7 @@ export class GeometryMesh {
     using DefaultLoaderType = SerialAssetLoader<GeometryMesh>;
 
   private:
-    static GeometryMeshPtr createGeometryMesh(xml::Element const* properties);
+    static std::unique_ptr<GeometryMesh> createGeometryMesh(xml::Element const* properties);
 
     static bool parseVertexData(xml::Element const*, std::vector<float>&);
     static bool parseIndexData(xml::Element const*, std::vector<unsigned>&);
@@ -41,10 +50,6 @@ export class GeometryMesh {
     uint m_vbo = 0;
     uint m_ibo = 0;
 
-    struct SubMesh {
-        uint first_index;
-        uint num_indices;
-    };
     Dictionary<SubMesh> m_sub_meshs;
 };
 

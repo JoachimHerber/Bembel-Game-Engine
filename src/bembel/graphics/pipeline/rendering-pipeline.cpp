@@ -1,5 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
+
+#include <memory>
 module bembel.graphics.pipeline;
 
 import bembel.base;

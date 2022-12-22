@@ -1,7 +1,8 @@
 module;
 #include <bullet/btBulletDynamicsCommon.h>
 
-#include "bembel/pch.h"
+#include <cassert>
+#include <memory>
 module bembel.physics;
 
 import bembel.base;
@@ -14,8 +15,9 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 RigidBody RigidBody::Container::createComponent(EntityID entity_id) {
-    if(to_underlying(entity_id) >= m_data.size()) m_data.resize(to_underlying(entity_id) + 1);
-    return {this, &(m_data[to_underlying(entity_id)])};
+    if(std::to_underlying(entity_id) >= m_data.size())
+        m_data.resize(std::to_underlying(entity_id) + 1);
+    return {this, &(m_data[std::to_underlying(entity_id)])};
 }
 
 bool RigidBody::Container::createComponent(EntityID entity_id, xml::Element const* properties) {
@@ -36,14 +38,14 @@ RigidBody RigidBody::Container::createComponent(
     EntityID entity_id, AssetHandle collision_shape, units::Kilogram mass
 ) {
     if(createRigidBody(entity_id, collision_shape, mass.value)) {
-        return {this, &m_data[to_underlying(entity_id)]};
+        return {this, &m_data[std::to_underlying(entity_id)]};
     }
     return {this, nullptr};
 }
 
 bool RigidBody::Container::deleteComponent(EntityID entity_id) {
-    if(to_underlying(entity_id) > m_data.size()) {
-        auto& component = m_data[to_underlying(entity_id)];
+    if(std::to_underlying(entity_id) > m_data.size()) {
+        auto& component = m_data[std::to_underlying(entity_id)];
         if(component.rigid_body) m_world->removeCollisionObject(component.rigid_body.get());
 
         m_scene->getAssetManager().decrementAssetRefCount(component.collision_shape);
@@ -55,8 +57,8 @@ bool RigidBody::Container::deleteComponent(EntityID entity_id) {
 }
 
 RigidBody RigidBody::Container::getComponent(EntityID entity_id) {
-    assert(to_underlying(entity_id) < m_data.size());
-    return {this, &m_data[to_underlying(entity_id)]};
+    assert(std::to_underlying(entity_id) < m_data.size());
+    return {this, &m_data[std::to_underlying(entity_id)]};
 }
 
 bool RigidBody::Container::createRigidBody(
@@ -77,9 +79,11 @@ bool RigidBody::Container::createRigidBody(
     btVector3 local_inertia(0, 0, 0);
     if(mass != 0) shape->getCollisionShape()->calculateLocalInertia(mass, local_inertia);
 
-    if(to_underlying(entity_id) >= m_data.size()) { m_data.resize(to_underlying(entity_id) + 1); }
+    if(std::to_underlying(entity_id) >= m_data.size()) {
+        m_data.resize(std::to_underlying(entity_id) + 1);
+    }
 
-    auto& component = m_data[to_underlying(entity_id)];
+    auto& component = m_data[std::to_underlying(entity_id)];
 
     component.collision_shape = collision_shape;
     component.motion_state    = std::make_unique<btDefaultMotionState>(transformation);

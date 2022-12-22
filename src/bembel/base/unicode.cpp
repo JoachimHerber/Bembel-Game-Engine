@@ -1,5 +1,7 @@
 module;
-#include "bembel/pch.h"
+#include <array>
+#include <cuchar>
+#include <string_view>
 module bembel.base;
 
 namespace bembel::base {

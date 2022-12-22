@@ -1,5 +1,7 @@
 ﻿module;
+#include <filesystem>
 #include <string>
+#include <string_view>
 module bembel.examples.gui;
 
 import bembel.base;

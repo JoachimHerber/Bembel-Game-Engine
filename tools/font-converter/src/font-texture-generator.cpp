@@ -1,7 +1,9 @@
 module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <algorithm>
+#include <glm/glm.hpp>
+#include <memory>
 module bembel.tools.font_converter;
 
 import bembel;
@@ -207,7 +209,7 @@ void FontTextureGenerator::getIntersections(
 
         if(dir.y == 0) continue;
 
-        double dist = length(dir);
+        double dist = glm::length(dir);
         dir /= dist;
 
         double f = (y - line.start.y) / dir.y;

@@ -1,4 +1,6 @@
-﻿export module bembel.examples.gui;
+﻿module;
+#include <filesystem>
+export module bembel.examples.gui;
 
 import bembel;
 

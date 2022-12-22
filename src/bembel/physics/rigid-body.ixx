@@ -1,7 +1,7 @@
 module;
 #include <bullet/btBulletDynamicsCommon.h>
 
-#include "bembel/pch.h"
+#include <memory>
 export module bembel.physics:RigidBody;
 
 import bembel.base;

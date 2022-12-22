@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <cassert>
+#include <filesystem>
+#include <glm/glm.hpp>
 module bembel.gui.widgets;
 
 import bembel.base;

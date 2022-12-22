@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <limits>
+#include <string>
 export module bembel.gui.widgets:Slider;
 
 import bembel.base;
@@ -93,12 +94,7 @@ export class IntSliderWidget : public SliderWidget {
     void onSizeChanged(In<ivec2>, In<ivec2> new_size) { m_label.size = new_size; }
     void constrainSliderPos(InOut<double> pos);
 
-    void updateLable() {
-        std::string str  = std::to_string(m_value);
-        String      text = str;
-
-        m_label.setText(text);
-    }
+    void updateLable();
 
   private:
     LabelWidget m_label;

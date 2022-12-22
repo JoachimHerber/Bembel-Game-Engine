@@ -1,11 +1,11 @@
 target_sources(Bembel
-	PRIVATE
-       	gui.ixx
+    PRIVATE
+        gui.ixx
 
-       	gui-system.ixx
-		gui-system.cpp
+        gui-system.ixx
+        gui-system.cpp
 
-		CMakeLists.txt
+        CMakeLists.txt
 )
 add_subdirectory(core)
 add_subdirectory(widgets)

@@ -1,5 +1,9 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <algorithm>
+#include <cassert>
+#include <cctype>
+#include <memory>
+#include <string_view>
 module bembel.gui.widgets;
 
 import bembel.base;
@@ -92,14 +96,14 @@ void LabelWidget::View::draw(RenderBatchInterface& batch) {
 
     float border = 3;
 
-    glm::vec2 size = m_label.size.get();
+    vec2 size = m_label.size.get();
 
     float outline_margin = m_label.m_outline ? 0.05 : 0;
     float text_length    = m_label.m_text_length + outline_margin;
     float line_heigth    = font->getAscender() - font->getDescender() + outline_margin;
     float scale          = std::min(size.x / text_length, size.y / line_heigth);
 
-    glm::vec2 pos = glm::vec2(m_label.position.get());
+    vec2 pos = vec2(m_label.position.get());
     switch(m_label.m_alignment) {
         case LabelWidget::Alignment::Center:
             pos.x += 0.5f * (size.x - scale * m_label.m_text_length);

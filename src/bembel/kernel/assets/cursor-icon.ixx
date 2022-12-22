@@ -1,8 +1,9 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <filesystem>
+#include <string_view>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 export module bembel.kernel.assets:CursorIcon;
-
-import glfw;
 
 import bembel.base;
 
@@ -16,8 +17,7 @@ namespace bembel::kernel {
 export class CursorIcon {
   public:
     CursorIcon(GLFWcursor* cursor_imp, std::string_view name)
-      : m_cursor_imp{cursor_imp}
-      , m_name{name} {}
+      : m_cursor_imp{cursor_imp}, m_name{name} {}
     ~CursorIcon() = default;
 
     GLFWcursor*      getCursor() { return m_cursor_imp; }

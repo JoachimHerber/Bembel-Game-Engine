@@ -1,8 +1,10 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
+#include <string>
+#include <string_view>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 module bembel.kernel.assets;
-
-import glfw;
 
 import bembel.base;
 

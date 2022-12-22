@@ -1,5 +1,4 @@
 ﻿module;
-#include "bembel/pch.h"
 //
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -55,8 +54,8 @@ void Glyph::init(FT_Face& face, uint glyph_index, uint border) {
     if(!points.empty()) {
         m_extends_min = m_extends_max = points[0].pos;
         for(size_t n = 1; n < points.size(); ++n) {
-            m_extends_min = glm::min(m_extends_min, points[n].pos);
-            m_extends_max = glm::max(m_extends_max, points[n].pos);
+            m_extends_min = min(m_extends_min, points[n].pos);
+            m_extends_max = max(m_extends_max, points[n].pos);
         }
     }
     //  if (face->glyph->metrics.horiBearingY != _extendsMax.y)

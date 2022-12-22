@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
+#include <string_view>
+#include <utility>
 module bembel.graphics;
 
 import bembel.base;

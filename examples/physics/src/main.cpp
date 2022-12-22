@@ -1,3 +1,4 @@
+#include <string_view>
 import bembel.examples.physics;
 
 int main() {

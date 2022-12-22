@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <queue>
+#include <mutex>
 export module bembel.base:ConcurrentQueue;
 
 import :Types;

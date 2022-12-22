@@ -1,5 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
+
+#include <utility>
 export module bembel.graphics.geometry:Renderer;
 
 import bembel.base;
@@ -12,11 +14,10 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 export struct GeometryRenderData {
-    GeometryMesh* mesh;
-    Material*     material;
-    uint          first;
-    uint          count;
-    glm::mat4     transform;
+    GeometryMesh*         mesh;
+    Material*             material;
+    GeometryMesh::SubMesh sub_mesh;
+    mat4                  transform;
 };
 
 export class GeometryRendererBase {
@@ -24,8 +25,7 @@ export class GeometryRendererBase {
     using RendererId = uint;
 
     GeometryRendererBase(AssetManager& asset_mgr, RendererId id)
-      : m_asset_mgr{asset_mgr}
-      , m_id{id} {};
+      : m_asset_mgr{asset_mgr}, m_id{id} {};
     virtual ~GeometryRendererBase(){};
 
     RendererId getRendererID() const { return m_id; };
@@ -51,9 +51,9 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
         m_required_textures.emplace_back(texture_name, uniform_sampler_name);
     }
 
-    bool setShader(Asset<ShaderProgram> const& shader) {
+    bool setShader(Asset<ShaderProgram> shader) {
         if(updateUniformLocations(shader.getAsset())) {
-            m_shader = shader;
+            m_shader = std::move(shader);
             return true;
         }
         return false;
@@ -98,8 +98,7 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
         std::string uniform_sampler_name;
 
         RequiredTexture(std::string_view texture, std::string_view sampler)
-          : texture_name(texture)
-          , uniform_sampler_name(sampler) {}
+          : texture_name(texture), uniform_sampler_name(sampler) {}
     };
     std::vector<RequiredTexture> m_required_textures;
 };

@@ -1,5 +1,9 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <utility>
 module bembel.kernel.rendering;
 
 import bembel.base;
@@ -7,6 +11,14 @@ import bembel.kernel.assets;
 
 namespace bembel::kernel {
 using namespace bembel::base;
+
+bool TextureAtlas::loadTexture(std::string_view file) {
+    base::Image image;
+    if(!image.load(file)) return false;
+
+    m_main_texture->init(image);
+    return true;
+}
 
 std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(
     AssetManager& asset_mgr, std::filesystem::path file
@@ -42,13 +54,12 @@ std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(
 
     auto atlas = std::make_unique<TextureAtlas>();
     atlas->loadTexture(texture);
-
-    for(auto it : base::xml::IterateChildElements(properties, "Entry")) {
+    for(auto it : xml::IterateChildElements(properties, "Entry")) {
         std::string name;
         vec2        min;
         vec2        max;
-        if(base::xml::getAttribute(it, "name", name) && base::xml::getAttribute(it, "min", min)
-           && base::xml::getAttribute(it, "max", max)) {
+        if(xml::getAttribute(it, "name", name) && xml::getAttribute(it, "min", min)
+           && xml::getAttribute(it, "max", max)) {
             atlas->setEntry(name, min, max);
         }
     }

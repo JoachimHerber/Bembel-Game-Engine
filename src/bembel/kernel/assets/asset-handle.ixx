@@ -1,3 +1,6 @@
+module;
+#include <bit>
+#include <limits>
 export module bembel.kernel.assets:AssetHandle;
 
 import bembel.base;
@@ -6,18 +9,15 @@ namespace bembel::kernel {
 using namespace bembel::base;
 
 export struct AssetHandle final {
-    union {
-        struct {
-            u32 index;
-            u16 version;
-            u16 type_id;
-        };
-        u64 value = ~(base::u64)(0U);
-    };
+    u32 index   = std::numeric_limits<u32>::max();
+    u16 version = std::numeric_limits<u16>::max();
+    u16 type_id = std::numeric_limits<u16>::max();
+
+    operator u64() { return std::bit_cast<u64>(*this); }
 };
 
-export constexpr bool operator<(AssetHandle const& first, AssetHandle const& second) {
-    return first.value < second.value;
+export bool operator<(AssetHandle a, AssetHandle b) {
+    return u64(a) < u64(b);
 }
 
 } // namespace bembel::kernel

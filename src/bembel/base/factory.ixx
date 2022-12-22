@@ -1,5 +1,8 @@
 module;
-#include "bembel/pch.h"
+#include <functional>
+#include <memory>
+#include <string_view>
+#include <vector>
 export module bembel.base:Factory;
 
 import :Types;
@@ -41,10 +44,10 @@ class Factory {
     }
 
     template <typename T>
-    requires requires() {
-        { T::getTypeName() } -> std::convertible_to<std::string_view>;
+        requires requires() { { T::getTypeName() } -> std::convertible_to<std::string_view>; }
+    bool registerObjectGenerator() {
+        return registerObjectGenerator<T>(T::getTypeName());
     }
-    bool registerObjectGenerator() { return registerObjectGenerator<T>(T::getTypeName()); }
 
     ObjectPtr createObject(In<std::string_view> generator_name, TArgs... args) const {
         auto it = m_generators.find(generator_name);

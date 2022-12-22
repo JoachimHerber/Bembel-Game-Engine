@@ -4,7 +4,7 @@ module bembel.kernel.rendering;
 
 import bembel.base;
 
-import : FBO;
+import :FBO;
 
 namespace bembel::kernel {
 using namespace bembel::base;
@@ -18,22 +18,28 @@ namespace gl {
                 attachment,
                 static_cast<GLenum>(texture->getTextureTarget()),
                 texture->getTextureHandle(),
-                level);
+                level
+            );
         }
     }
 } // namespace gl
 
 FrameBufferObject::FrameBufferObject() : m_depth_attechment{nullptr, 0} {}
 
-FrameBufferObject::~FrameBufferObject() { cleanup(); }
+FrameBufferObject::~FrameBufferObject() {
+    cleanup();
+}
 
 void FrameBufferObject::init() {
     glGenFramebuffers(1, &(m_handle));
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_handle);
-    gl::setFramebufferTexture2D(GL_DEPTH_ATTACHMENT, m_depth_attechment.texture, m_depth_attechment.level);
+    gl::setFramebufferTexture2D(
+        GL_DEPTH_ATTACHMENT, m_depth_attechment.texture, m_depth_attechment.level
+    );
     for(unsigned n = 0; n < m_color_attechments.size(); ++n) {
         gl::setFramebufferTexture2D(
-            GL_COLOR_ATTACHMENT0 + n, m_color_attechments[n].texture, m_color_attechments[n].level);
+            GL_COLOR_ATTACHMENT0 + n, m_color_attechments[n].texture, m_color_attechments[n].level
+        );
     }
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -63,7 +69,8 @@ void FrameBufferObject::setDepthAttechment(Texture* texture, GLint level /*= 0*/
 }
 
 void FrameBufferObject::setColorAttechment(unsigned index, Texture* texture, GLint level /*= 0*/) {
-    while(m_color_attechments.size() <= index) m_color_attechments.push_back(Attechment{nullptr, 0});
+    while(m_color_attechments.size() <= index)
+        m_color_attechments.push_back(Attechment{nullptr, 0});
 
     m_color_attechments[index].texture = texture;
     m_color_attechments[index].level   = level;
@@ -95,10 +102,8 @@ void FrameBufferObject::endRenderToTexture() {
 }
 
 void FrameBufferObject::blitToBackBuffer(
-    const glm::ivec2& source_min,
-    const glm::ivec2& source_max,
-    const glm::ivec2& target_min,
-    const glm::ivec2& target_max) {
+    ivec2 source_min, ivec2 source_max, ivec2 target_min, ivec2 target_max
+) {
     glBindFramebufferEXT(GL_READ_FRAMEBUFFER, m_handle);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
@@ -112,7 +117,8 @@ void FrameBufferObject::blitToBackBuffer(
         target_max.x,
         target_max.y,
         GL_COLOR_BUFFER_BIT,
-        GL_LINEAR);
+        GL_LINEAR
+    );
     glBindFramebufferEXT(GL_READ_FRAMEBUFFER, 0);
 }
 

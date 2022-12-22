@@ -11,8 +11,7 @@ using namespace bembel::kernel;
 using namespace ::gl;
 
 Renderer::Renderer(AssetManager& asset_mgr, Widget& root_widget)
-  : m_asset_mgr{asset_mgr}
-  , m_root_widget{root_widget} {}
+  : m_asset_mgr{asset_mgr}, m_root_widget{root_widget} {}
 
 Renderer::~Renderer() {}
 
@@ -58,7 +57,7 @@ void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
     if(fontTexture == nullptr) return;
     if(atlasTexture == nullptr) return;
 
-    drawWidget(&m_root_widget, glm::vec2(0, 0), glm::vec2(0, 0), viewport_size, 0);
+    drawWidget(&m_root_widget, vec2(0, 0), vec2(0, 0), viewport_size, 0);
 
     shader->use();
     glUniform1i(shader->getUniformLocation("uFontTexture"), 0);
@@ -93,17 +92,17 @@ void Renderer::drawWidget(
 
     m_batch.setPositionOffset(parent_pos);
 
-    const ivec2 pos = parent_pos + widget->position.get();
-    const ivec2 min = glm::max(area_min, pos);
-    const ivec2 max = glm::min(area_max, pos + widget->size.get());
-    m_batch.setDrawArea(min, max);
+    const ivec2 pos        = parent_pos + widget->position.get();
+    const ivec2 widget_min = max(area_min, pos);
+    const ivec2 widget_max = min(area_max, pos + widget->size.get());
+    m_batch.setDrawArea(widget_min, widget_max);
 
     auto view = widget->getView();
     if(view) view->draw(m_batch);
 
     ++layer;
     for(auto& child_widget : widget->getChildWidgets())
-        drawWidget(child_widget, pos, min, max, layer);
+        drawWidget(child_widget, pos, widget_min, widget_max, layer);
 }
 
 } // namespace bembel::gui

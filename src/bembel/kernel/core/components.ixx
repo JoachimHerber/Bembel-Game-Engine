@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <cassert>
+#include <string_view>
+#include <utility>
 export module bembel.kernel.core:Components;
 
 import bembel.base;
@@ -22,9 +24,9 @@ class DefaultComponentContainer : public ComponentContainerBase {
 
     TComponentType createComponent(EntityID entity_id) {
         if constexpr(TDense) {
-            if(to_underlying(entity_id) >= m_components.size())
-                m_components.resize(to_underlying(entity_id) + 1);
-            return {&(m_components[to_underlying(entity_id)])};
+            if(std::to_underlying(entity_id) >= m_components.size())
+                m_components.resize(std::to_underlying(entity_id) + 1);
+            return {&(m_components[std::to_underlying(entity_id)])};
         } else {
             return {&(m_components[entity_id])};
         }
@@ -41,9 +43,9 @@ class DefaultComponentContainer : public ComponentContainerBase {
         TDataType component;
         if(initComponent(properties, m_scene->getAssetManager(), component)) {
             if constexpr(TDense) {
-                if(to_underlying(entity_id) >= m_components.size())
-                    m_components.resize(to_underlying(entity_id) + 1);
-                m_components[to_underlying(entity_id)] = component;
+                if(std::to_underlying(entity_id) >= m_components.size())
+                    m_components.resize(std::to_underlying(entity_id) + 1);
+                m_components[std::to_underlying(entity_id)] = component;
             } else {
                 m_components[entity_id] = component;
             }
@@ -69,8 +71,8 @@ class DefaultComponentContainer : public ComponentContainerBase {
 
     TComponentType getComponent(EntityID entity_id) {
         if constexpr(TDense) {
-            assert(to_underlying(entity_id) < m_components.size());
-            return &m_components[to_underlying(entity_id)];
+            assert(std::to_underlying(entity_id) < m_components.size());
+            return &m_components[std::to_underlying(entity_id)];
         } else {
             auto it = m_components.find(entity_id);
             if(it != m_components.end()) return {&(it->second)};

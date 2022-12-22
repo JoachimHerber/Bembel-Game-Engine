@@ -1,4 +1,6 @@
-﻿export module bembel.graphics.pipeline:GeometryRenderingStage;
+﻿module;
+#include <filesystem>
+export module bembel.graphics.pipeline:GeometryRenderingStage;
 
 import bembel.base;
 import bembel.kernel;

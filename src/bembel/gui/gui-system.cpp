@@ -1,12 +1,13 @@
 ﻿module;
 #include <GLFW/glfw3.h>
 
-#include "bembel/pch.h"
+#include <filesystem>
 module bembel.gui;
 
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
+import bembel.gui.widgets;
 
 namespace bembel::gui {
 using namespace bembel::base;

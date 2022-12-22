@@ -1,11 +1,10 @@
 ﻿module;
-#include "bembel/pch.h"
-export module bembel.kernel.rendering : TextLayout;
+export module bembel.kernel.rendering:TextLayout;
 
 import bembel.base;
 import bembel.kernel.assets;
-import : Font;
-import : Text;
+import :Font;
+import :Text;
 
 namespace bembel::kernel {
 using namespace bembel::base;
@@ -20,12 +19,13 @@ export class TextLayout final {
         vec2               pos;
 
         Glyph(Font::Glyph const* g, float x, float y) : glyph{g}, pos{x, y} {}
-        Glyph(Glyph&&) = default;
+        Glyph(Glyph&&)            = default;
         Glyph& operator=(Glyph&&) = default;
     };
 
     bool calculateSimpleLayout(
-        Text const& text, vec2 origin, float font_size, float max_line_length);
+        Text const& text, vec2 origin, float font_size, float max_line_length
+    );
 
     std::vector<Glyph> const& getGlyphs() const { return m_glyphs; }
 

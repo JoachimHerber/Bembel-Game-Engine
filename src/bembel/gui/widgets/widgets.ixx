@@ -1,5 +1,6 @@
 module;
-#include "bembel/pch.h"
+#include <string_view>
+#include <filesystem>
 export module bembel.gui.widgets;
 
 export import :Label;
@@ -14,7 +15,8 @@ export import :Window;
 import bembel.gui.core;
 
 export namespace bembel::gui {
-template <typename T> void registerWidgetTypeInFactory() {
+template <typename T>
+void registerWidgetTypeInFactory() {
     Widget::getFactory().registerObjectGenerator<T>(T::WIDGET_TYPE_NAME);
 }
 

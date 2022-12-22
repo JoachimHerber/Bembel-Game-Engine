@@ -1,4 +1,8 @@
-﻿module bembel.examples.rendering;
+﻿module;
+#include <GLFW/glfw3.h>
+
+#include <glm/gtc/quaternion.hpp>
+module bembel.examples.rendering;
 
 namespace bembel {
 using namespace bembel::base;

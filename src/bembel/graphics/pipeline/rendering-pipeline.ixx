@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <memory>
+#include <string_view>
 export module bembel.graphics.pipeline:RenderingPipeline;
 
 import bembel.base;
@@ -88,8 +89,7 @@ export class RenderingPipeline final {
 
   public:
     RenderingPipeline(AssetManager& asset_mgr, DisplayManager& display_mgr)
-      : m_asset_mgr{asset_mgr}
-      , m_display_mgr{display_mgr} {}
+      : m_asset_mgr{asset_mgr}, m_display_mgr{display_mgr} {}
     RenderingPipeline(RenderingPipeline const&)            = delete;
     RenderingPipeline& operator=(RenderingPipeline const&) = delete;
     ~RenderingPipeline()                                   = default;

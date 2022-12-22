@@ -1,9 +1,9 @@
 target_sources(Bembel
     PUBLIC
-        display-events.ixx
-        event-callbacks.ixx
-		input-events.ixx
-	PRIVATE
+       display-events.ixx
+       event-callbacks.ixx
+       input-events.ixx
+    PRIVATE
         event-callbacks.cpp
-		CMakeLists.txt
+        CMakeLists.txt
 )

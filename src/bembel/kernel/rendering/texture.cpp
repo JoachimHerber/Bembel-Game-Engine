@@ -1,7 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <memory>
+#include <source_location>
 module bembel.kernel.rendering;
 
 import bembel.base;
@@ -17,8 +18,9 @@ namespace gl {
         glBindTexture(static_cast<GLenum>(target), texture);
     }
     template <typename T>
-    inline void setTexParam(Texture::Target target, GLenum param, T value) requires
-        std::is_enum_v<T> || std::is_integral_v<T> || std::is_floating_point_v<T> {
+    inline void setTexParam(Texture::Target target, GLenum param, T value)
+        requires std::is_enum_v<T> || std::is_integral_v<T> || std::is_floating_point_v<T>
+    {
         if constexpr(std::is_enum_v<T> || std::is_integral_v<T>) {
             glTexParameteri(static_cast<GLenum>(target), param, static_cast<GLint>(value));
         } else {
@@ -59,7 +61,9 @@ Texture::~Texture() {
     cleanup();
 }
 
-void Texture::init(MinFilter min_filter, MagFilter mag_filter, Wrap warp_s, Wrap warp_t) {
+void Texture::init(
+    In<MinFilter> min_filter, In<MagFilter> mag_filter, In<Wrap> warp_s, In<Wrap> warp_t
+) {
     glGenTextures(1, &(m_handle));
     gl::bindTexture(m_target, m_handle);
     gl::setTexParam(m_target, GL_TEXTURE_MIN_FILTER, min_filter);
@@ -70,7 +74,11 @@ void Texture::init(MinFilter min_filter, MagFilter mag_filter, Wrap warp_s, Wrap
 }
 
 void Texture::init(
-    glm::uvec2 const& size, MinFilter min_filter, MagFilter mag_filter, Wrap warp_s, Wrap warp_t
+    In<uvec2>     size,
+    In<MinFilter> min_filter,
+    In<MagFilter> mag_filter,
+    In<Wrap>      warp_s,
+    In<Wrap>      warp_t
 ) {
     glGenTextures(1, &(m_handle));
     gl::bindTexture(m_target, m_handle);
@@ -89,7 +97,11 @@ void Texture::init(
     gl::bindTexture(m_target, 0);
 }
 void Texture::init(
-    Image const& image, MinFilter min_filter, MagFilter mag_filter, Wrap warp_s, Wrap warp_t
+    In<Image>     image,
+    In<MinFilter> min_filter,
+    In<MagFilter> mag_filter,
+    In<Wrap>      warp_s,
+    In<Wrap>      warp_t
 ) {
     glGenTextures(1, &(m_handle));
     gl::bindTexture(m_target, m_handle);
@@ -122,7 +134,7 @@ void Texture::release() const {
     gl::bindTexture(m_target, 0);
 }
 
-bool Texture::setSize(glm::ivec2 const& size) {
+bool Texture::setSize(In<ivec2> size) {
     if(m_handle == 0) return false;
 
     gl::bindTexture(m_target, m_handle);
@@ -131,7 +143,7 @@ bool Texture::setSize(glm::ivec2 const& size) {
     return true;
 }
 
-bool Texture::setData(base::Image const& image, GLint mipMapLevel) {
+bool Texture::setData(In<Image> image, In<int> mipMapLevel) {
     if(m_handle == 0) return false;
 
     gl::bindTexture(m_target, m_handle);
@@ -177,20 +189,20 @@ std::optional<Texture::Format> Texture::stringToTextureFormat(std::string_view f
         {"GL_DEPTH_COMPONENT32", Format::DEPTH_COMPONENT32},
         {"GL_DEPTH_COMPONENT24", Format::DEPTH_COMPONENT24},
         {"GL_DEPTH_COMPONENT16", Format::DEPTH_COMPONENT16},
-        {"GL_DEPTH_COMPONENT",   Format::DEPTH_COMPONENT  },
-        {"GL_RGBA",              Format::RGBA             },
-        {"GL_RGBA8",             Format::RGBA8            },
-        {"GL_RGBA16",            Format::RGBA16           },
-        {"GL_RGBA16F",           Format::RGBA16F          },
-        {"GL_RGBA32F",           Format::RGBA32F          },
-        {"GL_RGB",               Format::RGB              },
-        {"GL_RGB8",              Format::RGB8             },
-        {"GL_RGB16",             Format::RGB16            },
-        {"GL_RGB16F",            Format::RGB16F           },
-        {"GL_RGB32F",            Format::RGB32F           },
+        {"GL_DEPTH_COMPONENT", Format::DEPTH_COMPONENT},
+        {"GL_RGBA", Format::RGBA},
+        {"GL_RGBA8", Format::RGBA8},
+        {"GL_RGBA16", Format::RGBA16},
+        {"GL_RGBA16F", Format::RGBA16F},
+        {"GL_RGBA32F", Format::RGBA32F},
+        {"GL_RGB", Format::RGB},
+        {"GL_RGB8", Format::RGB8},
+        {"GL_RGB16", Format::RGB16},
+        {"GL_RGB16F", Format::RGB16F},
+        {"GL_RGB32F", Format::RGB32F},
 
-        {"GL_SRGB8",             Format::SRGB8            },
-        {"GL_SRGB8_ALPHA8",      Format::SRGB8_ALPHA8     },
+        {"GL_SRGB8", Format::SRGB8},
+        {"GL_SRGB8_ALPHA8", Format::SRGB8_ALPHA8},
     };
     auto it = mapping.find(format);
     if(it != mapping.end()) return it->second;

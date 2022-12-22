@@ -1,13 +1,14 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <filesystem>
+#include <set>
 export module bembel.kernel.core:Scene;
 
 import bembel.base;
 import bembel.kernel.assets;
 
-
 namespace bembel::kernel {
 using namespace bembel::base;
+
 export using ComponentTypeID = u64;
 export using ComponentMask   = u64;
 
@@ -73,34 +74,34 @@ export class Scene {
 
     template <Component T, typename... TArgs>
     T createComponent(EntityID id, TArgs&&... args) {
-        if(to_underlying(id) >= m_entities.size()) return {};
+        if(std::to_underlying(id) >= m_entities.size()) return {};
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) return {};
 
         auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 
-        m_entities[to_underlying(id)] |= container->getComponentMask();
+        m_entities[std::to_underlying(id)] |= container->getComponentMask();
         return container->createComponent(id, std::forward<TArgs>(args)...);
     }
 
     template <Component T>
     T getComponent(EntityID id) {
-        if(to_underlying(id) >= m_entities.size()) return nullptr; // invalided entity id
+        if(std::to_underlying(id) >= m_entities.size()) return nullptr; // invalided entity id
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) return nullptr; // component type does not exist
 
         auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 
-        if((m_entities[to_underlying(id)] & container->getComponentMask()) == 0)
+        if((m_entities[std::to_underlying(id)] & container->getComponentMask()) == 0)
             return nullptr; // entity doesn't have a component of the requested type
 
         return container->getComponent(id);
     }
     template <Component T>
     T acquireComponent(EntityID id) {
-        if(to_underlying(id) >= m_entities.size())
+        if(std::to_underlying(id) >= m_entities.size())
             throw Exeption("Tying to acquire component for invalid entity");
 
         auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
@@ -108,10 +109,10 @@ export class Scene {
 
         auto container = static_cast<typename T::Container*>(m_container[it->second].get());
 
-        if((m_entities[to_underlying(id)] & container->getComponentMask()) != 0)
+        if((m_entities[std::to_underlying(id)] & container->getComponentMask()) != 0)
             return container->getComponent(id);
 
-        m_entities[to_underlying(id)] |= container->getComponentMask();
+        m_entities[std::to_underlying(id)] |= container->getComponentMask();
         return container->createComponent(id);
     }
 

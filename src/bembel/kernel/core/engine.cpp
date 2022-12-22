@@ -1,13 +1,17 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include "bembel/pch.h"
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <Windows.h>
 module bembel.kernel.core;
-
-import glfw;
 
 import bembel.base;
 import bembel.kernel.assets;
+
+extern "C" {
+__declspec(dllexport) DWORD NvOptimusEnablement                = 1;
+__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
 
 namespace bembel::kernel {
 using namespace bembel::base;

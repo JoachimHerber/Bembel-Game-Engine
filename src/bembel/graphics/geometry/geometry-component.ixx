@@ -1,5 +1,4 @@
 ﻿module;
-#include "bembel/pch.h"
 export module bembel.graphics.geometry:Components;
 
 import bembel.base;

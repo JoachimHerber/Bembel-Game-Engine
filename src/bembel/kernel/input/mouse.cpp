@@ -1,7 +1,5 @@
 ﻿module;
-#include <GLFW/glfw3.h>
-
-#include "bembel/pch.h"
+#include <string_view>
 module bembel.kernel.input;
 
 import bembel.base;

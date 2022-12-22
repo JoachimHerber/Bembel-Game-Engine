@@ -1,5 +1,5 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string_view>
 module bembel.gui.core;
 
 import bembel.base;
@@ -80,9 +80,9 @@ void InputHandler::setButtons(
     setButton(Action::NAVIGATE_DOWN, navigate_down);
 }
 
-void InputHandler::onCursorMoved(glm::ivec2 cursor_pos) {
-    glm::ivec2 movement = cursor_pos - m_cursor_pos;
-    m_cursor_pos        = cursor_pos;
+void InputHandler::onCursorMoved(ivec2 cursor_pos) {
+    ivec2 movement = cursor_pos - m_cursor_pos;
+    m_cursor_pos   = cursor_pos;
 
     updateFocus();
 

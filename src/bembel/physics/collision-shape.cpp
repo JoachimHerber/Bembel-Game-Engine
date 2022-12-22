@@ -1,6 +1,7 @@
 module;
-#include "bembel/pch.h"
 #include <bullet/btBulletDynamicsCommon.h>
+
+#include <memory>
 module bembel.physics;
 
 import bembel.base;

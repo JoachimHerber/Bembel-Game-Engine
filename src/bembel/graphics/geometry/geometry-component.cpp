@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <string>
+#include <string_view>
 module bembel.graphics.geometry;
 
 import bembel.base;

@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <cassert>
+#include <filesystem>
 module bembel.gui.core;
 
 import bembel.base;
@@ -10,10 +11,10 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 void Style::setTextureAtlas(Asset<TextureAtlas> texture_atlas) {
-    m_texture_atlas = texture_atlas;
+    m_texture_atlas = std::move(texture_atlas);
 }
 
-glm::tvec4<uint8_t> const& Style::getColor(Colors color) const {
+ColorRGBA const& Style::getColor(Colors color) const {
     assert(color != Colors::COUNT);
     return m_colors[u32(color)];
 }
@@ -60,15 +61,20 @@ void Style::deleteAsset(AssetManager&, std::unique_ptr<Style>) {}
 std::unique_ptr<Style> Style::createStyle(AssetManager& asset_mgr, xml::Element const* properties) {
     if(!properties) return nullptr;
 
-    auto style = std::make_unique<Style>();
-
     Asset<kernel::TextureAtlas> texture_array;
-    if(texture_array.request(asset_mgr, properties->FirstChildElement("TextureAtlas")))
-        style->setTextureAtlas(std::move(texture_array));
-
+    if(!texture_array.request(asset_mgr, properties->FirstChildElement("TextureAtlas"))) {
+        log().error("Can't find TextureAtlas for gui::Style");
+        return nullptr;
+    }
     Asset<kernel::Font> font;
-    if(font.request(asset_mgr, properties->FirstChildElement("Font")))
-        style->setFont(std::move(font));
+    if(!font.request(asset_mgr, properties->FirstChildElement("Font"))) {
+        log().error("Can't find Font for gui::Style");
+        return nullptr;
+    }
+
+    auto style = std::make_unique<Style>();
+    style->setTextureAtlas(std::move(texture_array));
+    style->setFont(std::move(font));
 
     for(auto widget : xml::IterateChildElements(properties, "WidgetPrototype")) {}
 

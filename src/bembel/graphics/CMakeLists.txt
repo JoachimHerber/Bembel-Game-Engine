@@ -1,10 +1,10 @@
 target_sources(Bembel
-	PRIVATE
+    PRIVATE
         graphics.ixx
-	    graphic-system.ixx
-	    graphic-system.cpp
+        graphic-system.ixx
+        graphic-system.cpp
 
-		CMakeLists.txt
+        CMakeLists.txt
 )
 add_subdirectory(geometry)
 add_subdirectory(pipeline)

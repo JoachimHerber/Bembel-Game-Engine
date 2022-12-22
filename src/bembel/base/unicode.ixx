@@ -1,5 +1,7 @@
 module;
-#include "bembel/pch.h"
+#include <optional>
+#include <string>
+#include <string_view>
 export module bembel.base:Unicode;
 
 import :Types;
@@ -31,7 +33,8 @@ export class String {
   public:
     String() = default;
     template <typename T>
-    requires std::is_convertible_v<T, std::u8string> String(T&& str) : data{std::forward<T>(str)} {}
+        requires std::is_convertible_v<T, std::u8string>
+    String(T&& str) : data{std::forward<T>(str)} {}
     String(In<std::u8string_view> str) : data{str} {}
     String(In<std::string_view> str);
     String(In<std::string> str);
@@ -43,8 +46,8 @@ export class String {
     }
     String& operator=(std::string_view str);
 
-    operator std::u8string&() { return this->data; }
-    operator std::u8string_view() { return this->data; }
+//    operator std::u8string const&() { return this->data; }
+//    operator std::u8string_view() { return this->data; }
 
     class Iterator {
         friend class ::bembel::base::String;

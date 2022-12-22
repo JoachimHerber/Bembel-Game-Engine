@@ -59,7 +59,7 @@ void RenderingExample::update(double time) {
         m_camera->getYaw()
     );
 
-    m_label->setText(text);
+    m_label->setText(text.data);
 }
 
 void RenderingExample::handleEvent(kernel::WindowShouldCloseEvent const& event) {

@@ -1,4 +1,7 @@
-﻿export module bembel.examples.physics;
+﻿module;
+#include <string_view>
+#include <filesystem>
+export module bembel.examples.physics;
 
 import bembel;
 import :CameraControle;

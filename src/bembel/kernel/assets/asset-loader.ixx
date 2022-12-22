@@ -1,5 +1,5 @@
 module;
-#include "bembel/pch.h"
+#include <string_view>
 export module bembel.kernel.assets:AssetLoader;
 
 import bembel.base;

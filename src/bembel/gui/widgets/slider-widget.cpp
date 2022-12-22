@@ -1,5 +1,9 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <memory>
+#include <string>
 module bembel.gui.widgets;
 
 import bembel.base;
@@ -180,7 +184,7 @@ void IntSliderWidget::updateLable() {
     std::string str  = std::to_string(m_value);
     String      text = str;
 
-    m_label.setText(text);
+    m_label.setText(text.data);
 }
 
 } // namespace bembel::gui

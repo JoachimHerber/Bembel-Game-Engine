@@ -1,5 +1,9 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <array>
+#include <map>
+#include <string_view>
+#include <utility>
+#include <memory>
 //
 #include <ft2build.h>
 #include FT_FREETYPE_H

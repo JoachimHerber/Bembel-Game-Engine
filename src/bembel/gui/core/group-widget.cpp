@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <algorithm>
+#include <cctype>
+#include <string_view>
 module bembel.gui.core;
 
 import bembel.base;

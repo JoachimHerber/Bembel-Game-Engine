@@ -1,5 +1,9 @@
 module;
-#include "bembel/pch.h"
+#include <cassert>
+#include <functional>
+#include <memory>
+#include <string>
+#include <string_view>
 export module bembel.kernel.assets:AssetManager;
 
 import bembel.base;

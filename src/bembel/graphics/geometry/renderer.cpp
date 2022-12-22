@@ -1,7 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <memory>
+#include <utility>
 module bembel.graphics.geometry;
 
 import bembel.base;
@@ -28,7 +29,7 @@ bool DefaultGeometryRenderer::updateUniformLocations(ShaderProgram* shader) {
         MaterialParam param;
         param.offset = shader->getActiveUniformOffset(uniform_index);
         std::string name;
-        shader->getActiveUniform(uniform_index, &param.size, &param.type, &name);
+        shader->getActiveUniform(uniform_index, &param.size, (uint*)&param.type, &name);
 
         m_material_params[name]       = param;
         std::string param_name        = name.substr(name.find_last_of(".") + 1);
@@ -71,7 +72,7 @@ void DefaultGeometryRenderer::render(
             glBindBufferBase(GL_UNIFORM_BUFFER, 0, currentMaterial->getUniformBufferObject());
 
             GLenum active_texture = GL_TEXTURE0;
-            for(auto const& texture : currentMaterial->getTextures()) {
+            for(auto const& texture : currentMaterial->textures) {
                 if(!texture) {
                     log().warning("Texture handle is invalid");
                     continue;
@@ -94,7 +95,10 @@ void DefaultGeometryRenderer::render(
         glLoadIdentity();
         glMultMatrixf(&(it.transform[0][0]));
         glDrawElements(
-            GL_TRIANGLES, it.count, GL_UNSIGNED_INT, (void*)(it.first * sizeof(unsigned))
+            GL_TRIANGLES,
+            it.sub_mesh.num_indices,
+            GL_UNSIGNED_INT,
+            (void*)(it.sub_mesh.first_index * sizeof(unsigned))
         );
     }
 
@@ -123,11 +127,11 @@ bool DefaultGeometryRenderer::readMaterialParameter(
         case GL_FLOAT:
             return ReadMaterialParam<float>(properties, param_name, buffer + param.offset);
         case GL_FLOAT_VEC2:
-            return ReadMaterialParam<glm::vec2>(properties, param_name, buffer + param.offset);
+            return ReadMaterialParam<vec2>(properties, param_name, buffer + param.offset);
         case GL_FLOAT_VEC3:
-            return ReadMaterialParam<glm::vec3>(properties, param_name, buffer + param.offset);
+            return ReadMaterialParam<vec3>(properties, param_name, buffer + param.offset);
         case GL_FLOAT_VEC4:
-            return ReadMaterialParam<glm::vec4>(properties, param_name, buffer + param.offset);
+            return ReadMaterialParam<vec4>(properties, param_name, buffer + param.offset);
     }
     return false;
 }
@@ -150,7 +154,7 @@ std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element c
         }
         textures.push_back(std::move(texture));
     }
-    mat->setTextures(std::move(textures));
+    mat->textures = std::move(textures);
 
     std::vector<byte> data;
     data.resize(m_material_uniform_buffer_size);
@@ -189,7 +193,7 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
         renderer->addRequiredTexture(texture_name, sampler_uniform);
     }
 
-    if(!renderer->setShader(shader)) return nullptr;
+    if(!renderer->setShader(std::move(shader))) return nullptr;
 
     return std::move(renderer);
 }

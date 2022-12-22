@@ -1,5 +1,7 @@
 module;
-#include "bembel/pch.h"
+#include <fstream>
+#include <string_view>
+#include <vector>
 export module bembel.kernel.assets:AssetLocator;
 
 import bembel.base;

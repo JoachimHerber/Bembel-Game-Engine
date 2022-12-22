@@ -1,3 +1,5 @@
+#include <filesystem>
+
 import bembel.examples.gui;
 
 int main() {

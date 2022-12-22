@@ -1,5 +1,8 @@
 module;
-#include "bembel/pch.h"
+#include <memory>
+#include <stack>
+#include <string_view>
+#include <vector>
 export module bembel.kernel.assets:AssetContainer;
 
 import bembel.base;

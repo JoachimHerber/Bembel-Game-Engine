@@ -1,8 +1,8 @@
 target_sources(Bembel
-	PRIVATE
+    PRIVATE
         kernel.ixx
 
-		CMakeLists.txt
+        CMakeLists.txt
 )
 add_subdirectory(assets)
 add_subdirectory(display)

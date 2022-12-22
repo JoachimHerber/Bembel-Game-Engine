@@ -1,11 +1,9 @@
 ﻿export module bembel.kernel.input:InputManager;
 
-import bembel.base;
 import :Mouse;
 import :Keyboard;
 
 namespace bembel::kernel {
-using namespace bembel::base;
 
 export class InputManager {
   public:

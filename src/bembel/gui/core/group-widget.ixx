@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <utility>
+#include <memory>
 export module bembel.gui.core:GroupWidget;
 
 import bembel.base;
@@ -39,8 +40,10 @@ export class GroupWidget : public Widget {
         std::string_view widget_type_name, xml::Element const* properties = nullptr
     );
 
-    template <typename LayoutType, typename ... TArgs>
-    LayoutType* setLayout(TArgs&& ... args) requires std::is_base_of_v<Widget::Layout, LayoutType> {
+    template <typename LayoutType, typename... TArgs>
+    LayoutType* setLayout(TArgs&&... args)
+        requires std::is_base_of_v<Widget::Layout, LayoutType>
+    {
         m_layout = std::make_unique<LayoutType>(this, std::forward<TArgs>(args)...);
         return (LayoutType*)m_layout.get();
     }

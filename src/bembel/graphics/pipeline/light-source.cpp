@@ -1,5 +1,6 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <glm/glm.hpp>
+#include <string_view>
 module bembel.graphics.pipeline;
 
 import bembel.base;

@@ -1,5 +1,4 @@
 module;
-#include "bembel/pch.h"
 export module bembel.gui.widgets:TextInput;
 
 import bembel.base;

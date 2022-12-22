@@ -1,5 +1,4 @@
 ﻿module;
-#include "bembel/pch.h"
 export module bembel.kernel.display:Events;
 
 import bembel.base;

@@ -1,7 +1,8 @@
 module;
 #include <bullet/btBulletDynamicsCommon.h>
 
-#include "bembel/pch.h"
+#include <memory>
+#include <filesystem>
 export module bembel.physics:CollisionShape;
 
 import bembel.base;
@@ -54,9 +55,9 @@ class TCollisionShape : public CollisionShape {
     ~TCollisionShape() = default;
 
     btCollisionShape* getCollisionShape() override { return &m_shape; }
+
   private:
     T m_shape;
 };
-
 
 } // namespace bembel::physics

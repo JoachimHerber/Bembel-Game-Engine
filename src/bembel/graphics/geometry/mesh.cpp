@@ -1,7 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include "bembel/pch.h"
+#include <memory>
+#include <sstream>
 module bembel.graphics.geometry;
 
 import bembel.base;
@@ -16,20 +17,20 @@ GeometryMesh::GeometryMesh() {}
 
 GeometryMesh::~GeometryMesh() {}
 
-bool GeometryMesh::getSubMesh(std::string_view name, uint& first_index, uint& num_indices) {
+std::optional<GeometryMesh::SubMesh> GeometryMesh::getSubMesh(std::string_view name) {
     auto it = m_sub_meshs.find(name);
-    if(it == m_sub_meshs.end()) return false;
+    if(it == m_sub_meshs.end()) return {};
 
-    first_index = it->second.first_index;
-    num_indices = it->second.num_indices;
-    return true;
+    return it->second;
 }
 
 uint GeometryMesh::getVAO() const {
     return m_vao;
 }
 
-std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(AssetManager&, std::filesystem::path file) {
+std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(
+    AssetManager&, In<std::filesystem::path> file
+) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
