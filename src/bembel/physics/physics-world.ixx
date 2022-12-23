@@ -27,9 +27,6 @@ export class World {
     std::unique_ptr<btCollisionDispatcher>               m_dispatcher;
     std::unique_ptr<btSequentialImpulseConstraintSolver> m_solver;
     std::unique_ptr<btDiscreteDynamicsWorld>             m_world;
-
-    RigidBody::Container* m_rigid_bodies;
-    Transform::Container* m_transformations;
 };
 
 } // namespace bembel::physics

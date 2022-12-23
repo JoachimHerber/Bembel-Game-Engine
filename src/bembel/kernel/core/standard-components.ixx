@@ -33,6 +33,6 @@ export bool initComponent(
 }
 
 /// This Component stores the 3D position, roation and scale of an entity
-export using Transform = BasicComponent<"Transform", TransformationData>;
+export using Transform = BasicComponent<"Transform", TransformationData, ComponentContainer::FIXED_ADDRESS_VECTOR>;
 
 } // namespace bembel::kernel

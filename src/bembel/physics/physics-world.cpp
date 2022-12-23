@@ -24,32 +24,10 @@ World::World(std::shared_ptr<Scene> scene, vec3 gravity) : m_scene{scene} {
 
     scene->registerComponentType<Transform>();
     scene->registerComponentType<RigidBody>(m_world.get());
-
-    m_transformations = scene->getComponentContainer<Transform>();
-    m_rigid_bodies    = scene->getComponentContainer<RigidBody>();
 }
 
 void World::update(double time_since_last_update) {
     m_world->stepSimulation(1.f / 60.f, 10);
-
-    auto& entities        = m_scene->getEntitys();
-    auto& transformations = m_transformations->getComponentData();
-    auto& rigid_bodys     = m_rigid_bodies->getComponentData();
-
-    for(usize entity = 0; entity < entities.size(); ++entity) {
-        if((entities[entity] & m_rigid_bodies->getComponentMask()) == 0) continue;
-
-        btTransform trans;
-        if(rigid_bodys[entity].motion_state) {
-            rigid_bodys[entity].motion_state->getWorldTransform(trans);
-        }
-        if((entities[entity] & m_transformations->getComponentMask()) != 0) {
-            auto pos                         = trans.getOrigin();
-            auto rot                         = trans.getRotation();
-            transformations[entity].position = vec3{pos.getX(), pos.getY(), pos.getZ()};
-            transformations[entity].rotation = quat{rot.w(), rot.x(), rot.y(), rot.z()};
-        }
-    }
 }
 
 } // namespace bembel::physics

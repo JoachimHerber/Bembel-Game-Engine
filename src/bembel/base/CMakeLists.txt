@@ -1,24 +1,26 @@
 target_sources(Bembel
 	PRIVATE
         base.ixx
-		types.ixx
-		types.cpp
-		unicode.ixx
-		unicode.cpp
+        types.ixx
+        types.cpp
+        unicode.ixx
+        unicode.cpp
         concurrent-queue.ixx
         image.ixx
         image.cpp
-		xml.ixx
-		conversion.ixx
-		logger.ixx
+        xml.ixx
+        conversion.ixx
+        logger.ixx
         console-log-sink.ixx
-		console-log-sink.cpp
-		factory.ixx
-		signal.ixx
-		slot.ixx
-		events.ixx
-		observable-value.ixx
-		serialisation.ixx
+        console-log-sink.cpp
+        factory.ixx
+        signal.ixx
+        slot.ixx
+        events.ixx
+        observable-value.ixx
+        serialisation.ixx
+        memory.ixx
+        memory.cpp
 
-		CMakeLists.txt
+        CMakeLists.txt
 )

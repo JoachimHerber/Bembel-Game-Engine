@@ -69,13 +69,6 @@ bool RigidBody::Container::createRigidBody(
     auto shape = m_scene->getAssetManager().getAsset<CollisionShape>(collision_shape);
     if(!shape) return false;
 
-    btTransform transformation;
-    transformation.setIdentity();
-    if(transform)
-        transformation.setOrigin(
-            btVector3(transform->position.x, transform->position.y, transform->position.z)
-        );
-
     btVector3 local_inertia(0, 0, 0);
     if(mass != 0) shape->getCollisionShape()->calculateLocalInertia(mass, local_inertia);
 
@@ -86,7 +79,7 @@ bool RigidBody::Container::createRigidBody(
     auto& component = m_data[std::to_underlying(entity_id)];
 
     component.collision_shape = collision_shape;
-    component.motion_state    = std::make_unique<btDefaultMotionState>(transformation);
+    component.motion_state    = std::make_unique<MotionState>(transform);
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo(
         mass, component.motion_state.get(), shape->getCollisionShape(), local_inertia
@@ -104,15 +97,6 @@ void RigidBody::setIsKinematic() {
     if(m_data && m_data->rigid_body) {
         m_data->rigid_body->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
         m_data->rigid_body->setActivationState(DISABLE_DEACTIVATION);
-    }
-}
-
-void RigidBody::setOrientation(quat ori) {
-    if(m_data && m_data->motion_state) {
-        btTransform trans;
-        m_data->motion_state->getWorldTransform(trans);
-        trans.setRotation(btQuaternion(ori.x, ori.y, ori.z, ori.w));
-        m_data->motion_state->setWorldTransform(trans);
     }
 }
 

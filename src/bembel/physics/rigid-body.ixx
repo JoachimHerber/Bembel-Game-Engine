@@ -13,14 +13,41 @@ namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
+class MotionState : public btMotionState {
+  public:
+    MotionState(Transform t) : m_transform{t} {}
+
+    virtual void getWorldTransform(btTransform& center_of_mass_world_trans) const {
+        center_of_mass_world_trans.setOrigin(
+            {m_transform->position.x, m_transform->position.y, m_transform->position.z}
+        );
+        center_of_mass_world_trans.setRotation(
+            {m_transform->rotation.x,
+             m_transform->rotation.y,
+             m_transform->rotation.z,
+             m_transform->rotation.w}
+        );
+    }
+
+    virtual void setWorldTransform(btTransform const& center_of_mass_world_trans) {
+        auto pos              = center_of_mass_world_trans.getOrigin();
+        auto rot              = center_of_mass_world_trans.getRotation();
+        m_transform->position = vec3{pos.x(), pos.y(), pos.z()};
+        m_transform->rotation = quat{rot.w(), rot.x(), rot.y(), rot.z()};
+    }
+
+  private:
+    Transform m_transform;
+};
+
+struct RigidBodyData {
+    AssetHandle                  collision_shape;
+    std::unique_ptr<btRigidBody> rigid_body;
+    std::unique_ptr<MotionState> motion_state;
+};
+
 export class RigidBody {
   public:
-    struct RigidBodyData {
-        AssetHandle                           collision_shape;
-        std::unique_ptr<btRigidBody>          rigid_body;
-        std::unique_ptr<btDefaultMotionState> motion_state;
-    };
-
     class Container : public ComponentContainerBase {
       public:
         Container(ComponentTypeID type_id, Scene* scene, btDiscreteDynamicsWorld* world)
@@ -61,10 +88,7 @@ export class RigidBody {
 
     operator bool() const { return m_container && m_data; }
 
-    // void setPosition(vec3);
     void setIsKinematic();
-
-    void setOrientation(quat);
 
     static constexpr std::string_view COMPONENT_TYPE_NAME = "RigidBody";
 

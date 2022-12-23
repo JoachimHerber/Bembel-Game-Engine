@@ -1,6 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
+#include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -65,26 +66,26 @@ void GeometryRenderingStage::execute(
 
     auto cam = m_pipline.getCamera();
 
-    auto const& entities   = m_scene->getEntitys();
-    auto const& transforms = m_transforms->getComponentData();
-    auto const& geometrys  = m_geometrys->getComponentData();
+    auto const& entities  = m_scene->getEntitys();
+    auto const& geometrys = m_geometrys->getComponentData();
+    auto        transform = m_transforms->begin();
 
     renderQueue.clearRendarData();
 
-    for(usize entity = 0; entity < entities.size(); ++entity) {
+    for(usize entity = 0; entity < entities.size(); ++entity, ++transform) {
         if((entities[entity] & m_geometrys->getComponentMask()) == 0) continue;
 
         auto& geom = geometrys[entity];
 
-        mat4 transform = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+        mat4 model_matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
         if(entities[entity] & m_transforms->getComponentMask()) {
-            transform = glm::translate(transform, transforms[entity].position);
-            transform = transform * glm::mat4_cast(transforms[entity].rotation);
-            transform = glm::scale(transform, vec3(transforms[entity].scale));
+            model_matrix = glm::translate(model_matrix, transform->position);
+            model_matrix = model_matrix * glm::mat4_cast(transform->rotation);
+            model_matrix = glm::scale(model_matrix, vec3(transform->scale));
         }
-        transform = glm::scale(transform, geom.scale);
+        model_matrix = glm::scale(model_matrix, geom.scale);
 
-        renderQueue.addGeometryObject(geom.model, transform);
+        renderQueue.addGeometryObject(geom.model, model_matrix);
     }
 
     renderQueue.sortRenderData();

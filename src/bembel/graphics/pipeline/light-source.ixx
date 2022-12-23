@@ -32,7 +32,7 @@ export bool initComponent(
     InOut<DirectionalLightData> component
 );
 
-export using PointLight       = BasicComponent<"PointLight", PointLightData, false>;
-export using DirectionalLight = BasicComponent<"DirectionalLight", DirectionalLightData, false>;
+export using PointLight       = BasicComponent<"PointLight", PointLightData, ComponentContainer::MAP>;
+export using DirectionalLight = BasicComponent<"DirectionalLight", DirectionalLightData, ComponentContainer::MAP>;
 
 } // namespace bembel::graphics

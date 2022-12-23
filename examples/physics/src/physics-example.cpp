@@ -73,8 +73,8 @@ void PhysicsExample::cleanup() {
 void PhysicsExample::update(double time) {
     m_rotation += time;
 
-    auto rb = m_scene->getComponent<RigidBody>(m_stirring_stick);
-    if(rb) rb.setOrientation(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
+    auto transform = m_scene->getComponent<Transform>(m_stirring_stick);
+    if(transform) transform->rotation = quat(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }
 
 void PhysicsExample::handleEvent(const WindowShouldCloseEvent& event) {
