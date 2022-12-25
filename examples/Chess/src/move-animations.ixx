@@ -1,5 +1,4 @@
 module;
-#include "bembel/pch.h"
 export module bembel.examples.chess.move_animations;
 
 import bembel;

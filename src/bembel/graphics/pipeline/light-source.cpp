@@ -1,5 +1,6 @@
 ﻿module;
 #include <glm/glm.hpp>
+#include <memory>
 #include <string_view>
 module bembel.graphics.pipeline;
 
@@ -32,9 +33,26 @@ bool initComponent(
 ) {
     xml::getAttribute(properties, "color", component.color);
     float intensity;
-    if(base::xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;
+    if(xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;
     xml::getAttribute(properties, "direction", component.direction);
     component.direction = glm::normalize(component.direction);
+
+    uint shadow_resolution = 0;
+    if(xml::getAttribute(properties, "shadowResolution", shadow_resolution)) {
+        component.shadow_map = std::make_unique<Texture>(
+            Texture::Target::TEXTURE_2D, Texture::Format::DEPTH_COMPONENT32
+        );
+        component.shadow_map->init(
+            uvec2(shadow_resolution),
+            Texture::MinFilter::LINEAR,
+            Texture::MagFilter::LINEAR,
+            Texture::Wrap::CLAMP_TO_EDGE,
+            Texture::Wrap::CLAMP_TO_EDGE
+        );
+        component.shadow_fbo = std::make_unique<FrameBufferObject>();
+        component.shadow_fbo->setDepthAttechment(component.shadow_map.get());
+        component.shadow_fbo->init();
+    }
 
     return true;
 }

@@ -66,9 +66,13 @@ export class RenderingPipeline final {
         View(Texture* texture) : m_texture{texture} { m_fbo->setColorAttechment(0, texture); }
         ~View() = default;
 
-        void setViewArea(ivec2 const& pos, uvec2 const& size) {
-            m_view_area_pos  = pos;
-            m_view_area_size = size;
+        void setRelativeViewArea(In<vec2> pos, In<vec2> size) {
+            m_relative_view_area_pos  = pos;
+            m_relative_view_area_size = size;
+        }
+        void updateViewArea(In<ivec2> resolution) {
+            m_view_area_pos  = vec2(resolution) * m_relative_view_area_pos;
+            m_view_area_size = vec2(resolution) * m_relative_view_area_size;
         }
         ivec2 getViewAreaPosition() const { return m_view_area_pos; }
         uvec2 getViewAreaSize() const { return m_view_area_size; }
@@ -83,6 +87,9 @@ export class RenderingPipeline final {
 
         ivec2 m_view_area_pos  = {0, 0};
         uvec2 m_view_area_size = {1, 1};
+
+        vec2 m_relative_view_area_pos;
+        vec2 m_relative_view_area_size;
 
         std::unique_ptr<FrameBufferObject> m_fbo = std::make_unique<FrameBufferObject>();
     };

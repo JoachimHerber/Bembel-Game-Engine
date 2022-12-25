@@ -55,7 +55,7 @@ void main()
 		float cos_theta = max(dot(normal, l),0);
 	
 		vec3  F = Fresnel(cos_theta, mat.specular_color);
-	
+		
 		oColor = cos_theta*F*textureLod(uEnvironmentMap, 
 			(uInverseViewMatrix*vec4(l,0)).xyz, 8*mat.roughness).rgb;
 	}

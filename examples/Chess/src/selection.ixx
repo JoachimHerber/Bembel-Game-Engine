@@ -1,4 +1,5 @@
 ﻿module;
+#include <chrono>
 export module bembel.examples.chess.selection;
 
 import bembel;
@@ -40,8 +41,7 @@ export bool initComponent(xml::Element const*, AssetManager&, SelectionHighlight
     return true;
 }
 export using SelectionHighlightComponent =
-    StandardComponent<"SelectionHighlight", SelectionHighlight>;
-
+    BasicComponent<"SelectionHighlight", SelectionHighlight>;
 
 export class SelectionRenderingStage : public RenderingPipeline::Stage {
   public:
@@ -65,8 +65,8 @@ export class SelectionRenderingStage : public RenderingPipeline::Stage {
 
   private:
     struct GeometryObject {
-        glm::vec3      position;
-        glm::quat      rotation;
+        vec3           position;
+        quat           rotation;
         float          dist;
         GeometryModel* model;
         unsigned       state;
@@ -79,9 +79,8 @@ export class SelectionRenderingStage : public RenderingPipeline::Stage {
     std::unique_ptr<Texture> m_noise;
 
     Scene*                                  m_scene;
-    PositionComponent::Container*           m_position_components;
-    RotationComponent::Container*           m_rotation_components;
-    GeometryComponent::Container*           m_geometry_components;
+    Transform::Container*                   m_transform_components;
+    Geometry::Container*                    m_geometry_components;
     SelectionHighlightComponent::Container* m_highlight_components;
 
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;

@@ -60,7 +60,7 @@
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
-							<Input texture="reflectivity" />
+							<Input texture="material" />
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
 						<SelectionRenderingStage>

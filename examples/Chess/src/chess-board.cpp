@@ -1,5 +1,7 @@
 module;
-#include <bembel/pch.h>
+#include <cstdlib>
+#include <source_location>
+#include <string_view>
 module bembel.examples.chess.board;
 
 import bembel;
@@ -11,11 +13,10 @@ using namespace kernel;
 using namespace graphics;
 
 ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
-    m_scene->registerComponentType<GeometryComponent>();
-    m_scene->registerComponentType<PositionComponent>();
+    m_scene->registerComponentType<Geometry>();
+    m_scene->registerComponentType<Transform>();
     m_scene->registerComponentType<ChessPieceComponent>();
     m_scene->registerComponentType<SelectionHighlightComponent>();
-    m_scene->registerComponentType<RotationComponent>();
 
     AssetManager& asste_mgr = m_scene->getAssetManager();
     m_models[u8(PAWN)][u8(WHITE)].get(asste_mgr, "white.pawn");
@@ -38,10 +39,10 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
         for(unsigned v = 0; v < 8; ++v) {
             m_tiles[u][v] = TilesEntity{*m_scene};
 
-            auto& [pos, geom, highlight] = m_tiles[u][v];
-            *pos                         = vec3(2.0f * u, 0, 2.0f * v);
-            geom->model                  = (u + v) % 2 != 0 ? whiteTile : blackTile;
-            *highlight                   = SelectionHighlight::NO_HIGHLIGHT;
+            auto& [transform, geom, highlight] = m_tiles[u][v];
+            transform->position                = vec3(2.0f * u, 0, 2.0f * v);
+            geom->model                        = (u + v) % 2 != 0 ? whiteTile : blackTile;
+            *highlight                         = SelectionHighlight::NO_HIGHLIGHT;
         }
     }
     resetBoard();
@@ -107,16 +108,16 @@ void ChessBoard::createChessPiece(ivec2 pos, ChessPieceType type, ChessPlayer ow
 
     if(chess_piece) chess_piece.deleteEntity();
 
-    chess_piece                                        = ChessPieceEntity{*m_scene};
-    auto& [piece, position, rotation, geom, selection] = chess_piece;
+    chess_piece                               = ChessPieceEntity{*m_scene};
+    auto& [piece, transform, geom, selection] = chess_piece;
 
-    piece->type     = type;
-    piece->owner    = owner;
-    piece->position = pos;
-    *position       = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
-    *rotation       = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
-    geom->model     = m_models[type][owner].getHandle();
-    *selection      = SelectionHighlight::NO_HIGHLIGHT;
+    piece->type         = type;
+    piece->owner        = owner;
+    piece->position     = pos;
+    transform->position = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
+    transform->rotation = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
+    geom->model         = m_models[type][owner].getHandle();
+    *selection          = SelectionHighlight::NO_HIGHLIGHT;
 }
 
 bool ChessBoard::canCaptureEnPassant(ivec2 pos) {

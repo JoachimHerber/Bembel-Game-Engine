@@ -1,5 +1,6 @@
 module;
-#include <bembel/pch.h>
+#include <array>
+#include <string_view>
 export module bembel.examples.chess.board;
 
 import bembel;
@@ -23,19 +24,18 @@ export bool initComponent(xml::Element const*, AssetManager&, ChessPieceComponen
     return true;
 }
 export using ChessPieceComponent =
-    StandardComponent<"ChessPieceComponent", ChessPieceComponentData>;
+    BasicComponent<"ChessPieceComponent", ChessPieceComponentData>;
 
 class ChessBoard;
 
 export using ChessPieceEntity = Entity<
     ChessPieceComponent,
-    PositionComponent,
-    RotationComponent,
-    GeometryComponent,
+    Transform,
+    Geometry,
     SelectionHighlightComponent>;
 
 export using TilesEntity =
-    Entity<PositionComponent, GeometryComponent, SelectionHighlightComponent>;
+    Entity<Transform, Geometry, SelectionHighlightComponent>;
 
 export class ChessPiece {
   public:
@@ -59,8 +59,8 @@ export class ChessPiece {
     void  setBoardPosition(ivec2 pos);
     ivec2 getBoardPosition() { return m_entity.getComponent<ChessPieceComponent>()->position; }
 
-    vec3& getPosition() { return *(m_entity.getComponent<PositionComponent>()); }
-    void  setPosition(vec3 pos) { *(m_entity.getComponent<PositionComponent>()) = pos; }
+    vec3& getPosition() { return m_entity.getComponent<Transform>()->position; }
+    void  setPosition(vec3 pos) { m_entity.getComponent<Transform>()->position = pos; }
 
     SelectionHighlight getHighlight() {
         return *(m_entity.getComponent<SelectionHighlightComponent>());

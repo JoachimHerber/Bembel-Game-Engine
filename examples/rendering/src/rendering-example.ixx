@@ -21,7 +21,8 @@ export class RenderingExample : public kernel::Application {
 
     virtual void update(double time) override;
 
-    void         handleEvent(const kernel::WindowShouldCloseEvent&);
+    void         handleEvent(In<kernel::WindowShouldCloseEvent>);
+    void         handleEvent(In<kernel::FrameBufferResizeEvent>);
 
   private:
     GraphicSystem*                              m_graphic_system;

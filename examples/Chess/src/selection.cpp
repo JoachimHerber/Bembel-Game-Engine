@@ -1,9 +1,10 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
+#include <chrono>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <random>
-
-#include "bembel/pch.h"
 module bembel.examples.chess.selection;
 
 import bembel;
@@ -184,10 +185,13 @@ void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<Renderer
         }
 
         for(auto& mapping : it.model->getMateialMapping()) {
-            unsigned first, count;
-            if(currentMesh->getSubMesh(mapping.sub_mesh, first, count)) {
+            auto mesh = currentMesh->getSubMesh(mapping.sub_mesh);
+            if(mesh) {
                 glDrawElements(
-                    GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(first * sizeof(unsigned))
+                    GL_TRIANGLES,
+                    mesh.value().num_indices,
+                    GL_UNSIGNED_INT,
+                    (void*)(mesh.value().first_index * sizeof(unsigned))
                 );
             }
         }
@@ -200,13 +204,11 @@ void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<Renderer
 void SelectionRenderingStage::setScene(Scene* scene) {
     m_scene = scene;
     if(m_scene) {
-        m_position_components  = scene->getComponentContainer<PositionComponent>();
-        m_rotation_components  = scene->getComponentContainer<RotationComponent>();
-        m_geometry_components  = scene->getComponentContainer<GeometryComponent>();
+        m_transform_components = scene->getComponentContainer<Transform>();
+        m_geometry_components  = scene->getComponentContainer<Geometry>();
         m_highlight_components = scene->getComponentContainer<SelectionHighlightComponent>();
     } else {
-        m_position_components  = nullptr;
-        m_rotation_components  = nullptr;
+        m_transform_components = nullptr;
         m_geometry_components  = nullptr;
         m_highlight_components = nullptr;
     }
@@ -234,16 +236,15 @@ void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& 
 
     auto const& entitis = m_scene->getEntitys();
 
-    auto& positions  = m_position_components->getComponentData();
-    auto& rotations  = m_rotation_components->getComponentData();
+    auto  transform  = m_transform_components->begin();
     auto& geometry   = m_geometry_components->getComponentData();
     auto& highlights = m_highlight_components->getComponentData();
 
-    ComponentMask mask = m_position_components->getComponentMask()
+    ComponentMask mask = m_transform_components->getComponentMask()
                        | m_geometry_components->getComponentMask()
                        | m_highlight_components->getComponentMask();
 
-    for(usize entity = 0; entity < entitis.size(); ++entity) {
+    for(usize entity = 0; entity < entitis.size(); ++entity, ++transform) {
         if((entitis[entity] & mask) != mask) continue;
 
         if(highlights[entity] == SelectionHighlight::NO_HIGHLIGHT) continue;
@@ -251,14 +252,10 @@ void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& 
         GeometryModel* model = m_scene->getAsset<GeometryModel>(geometry[entity].model);
         if(model == nullptr) continue;
 
-        float dist = glm::length(camPos - (vec3)positions[entity]);
-
-        glm::quat roatation{1, 0, 0, 0};
-        if(entitis[entity] & m_rotation_components->getComponentMask())
-            roatation = rotations[entity];
+        float dist = glm::length(camPos - transform->position);
 
         objects.emplace_back(
-            positions[entity], roatation, dist, model, unsigned(highlights[entity]) - 1
+            transform->position, transform->rotation, dist, model, unsigned(highlights[entity]) - 1
         );
     }
 }

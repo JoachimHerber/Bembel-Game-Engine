@@ -55,7 +55,7 @@ class ComponentVector : public ComponentContainerBase {
             return {&m_components[std::to_underlying(entity_id)]};
         return {nullptr};
     }
-    
+
     auto begin() { return m_components.begin(); }
     auto end() { return m_components.end(); }
 
@@ -83,7 +83,7 @@ class ComponentMap : public ComponentContainerBase {
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
         TDataType component;
         if(initComponent(properties, m_scene->getAssetManager(), component)) {
-            m_components[entity_id] = component;
+            m_components[entity_id] = std::move(component);
             return true;
         }
         return false;
@@ -111,8 +111,7 @@ class ComponentMap : public ComponentContainerBase {
     std::map<EntityID, TDataType> m_components;
 };
 
-namespace{
-}
+namespace {}
 
 export template <typename TComponentType, typename TDataType>
 class FixedAddressComponentVector : public ComponentContainerBase {
@@ -120,7 +119,7 @@ class FixedAddressComponentVector : public ComponentContainerBase {
     static constexpr u64 ALLOCATION_GRANULARITY = 64 * 1024;
     static constexpr u64 COMPONENTS_PER_CHUNK   = ALLOCATION_GRANULARITY / sizeof(TDataType);
 
-    static constexpr bool USE_BIT_MASK = std::has_single_bit(COMPONENTS_PER_CHUNK);
+    static constexpr bool USE_BIT_MASK          = std::has_single_bit(COMPONENTS_PER_CHUNK);
     static constexpr bool USE_STD_ALIGNED_ALLOC = false;
 
     using Chunk = std::span<TDataType, COMPONENTS_PER_CHUNK>;
@@ -150,25 +149,19 @@ class FixedAddressComponentVector : public ComponentContainerBase {
     FixedAddressComponentVector(ComponentTypeID type_id, Scene* scene)
       : ComponentContainerBase{type_id}, m_scene{scene} {}
     ~FixedAddressComponentVector() {
-        for(Chunk it : m_components){ 
-            memory::free(it);
-        }
+        for(Chunk it : m_components) { memory::free(it); }
     }
     TDataType& operator[](EntityID entity_id) {
         auto [chunk, index] = getLocation(entity_id);
-        while(chunk >= m_components.size()) {
-            m_components.push_back(memory::alloc<TDataType>());
-        }
+        while(chunk >= m_components.size()) { m_components.push_back(memory::alloc<TDataType>()); }
         return m_components[chunk][index];
     }
 
-    TComponentType createComponent(EntityID entity_id) { return {&operator[](entity_id)}; }
-
     template <typename... TArgs>
     TComponentType createComponent(EntityID entity_id, TArgs&&... args) {
-        auto& component = operator[](entity_id);
-        component       = TDataType(std::forward<TArgs>(args)...);
-        return {&component};
+        auto* component = &operator[](entity_id);
+        new(component) TDataType(std::forward<TArgs>(args)...);
+        return {component};
     }
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
@@ -239,8 +232,8 @@ class BasicComponent {
     auto& operator*() { return *m_data; }
     auto* operator->() { return m_data; }
 
-    auto const& operator*()const { return *m_data; }
-    auto const* operator->()const { return m_data; }
+    auto const& operator*() const { return *m_data; }
+    auto const* operator->() const { return m_data; }
 
     static constexpr std::string_view COMPONENT_TYPE_NAME = TTypeName.value;
 

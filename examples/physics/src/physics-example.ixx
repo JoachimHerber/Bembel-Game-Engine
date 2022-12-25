@@ -1,6 +1,6 @@
 ﻿module;
-#include <string_view>
 #include <filesystem>
+#include <string_view>
 export module bembel.examples.physics;
 
 import bembel;
@@ -23,7 +23,8 @@ export class PhysicsExample : public kernel::Application {
 
     virtual void update(double time) override;
 
-    void handleEvent(const WindowShouldCloseEvent&);
+    void handleEvent(In<WindowShouldCloseEvent>);
+    void handleEvent(In<FrameBufferResizeEvent>);
 
   private:
     GraphicSystem* m_graphic_system;

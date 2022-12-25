@@ -63,10 +63,6 @@ void RenderingPipeline::View::draw(ivec2 const& viewport_position, uvec2 const& 
     );
 }
 
-// GraphicSystem& RenderingPipeline::getGraphicSystem() { return grapic_system; }
-
-// AssetManager& RenderingPipeline::getAssetManager() { return grapic_system.getAssetManager(); }
-
 void RenderingPipeline::setResulution(ivec2 const& value) {
     if(m_resolution == value) return;
 
@@ -74,6 +70,8 @@ void RenderingPipeline::setResulution(ivec2 const& value) {
     if(m_initalized) {
         for(auto& [name, texture] : m_textures) texture->setSize(value);
     }
+
+    for(auto& view : m_views) view->updateViewArea(m_resolution);
 }
 
 bool RenderingPipeline::configure(xml::Element const* properties) {
@@ -194,7 +192,8 @@ void RenderingPipeline::configureViews(xml::Element const* properties) {
         xml::getAttribute(viewProperties, "right", r);
         xml::getAttribute(viewProperties, "bottom", b);
         xml::getAttribute(viewProperties, "top", t);
-        view->setViewArea(vec2(m_resolution) * vec2(l, b), vec2(m_resolution) * vec2(r - l, t - b));
+        view->setRelativeViewArea(vec2(l, b), vec2(r - l, t - b));
+        view->updateViewArea(m_resolution);
 
         unsigned windowId, viewportId;
         if(xml::getAttribute(viewProperties, "window", windowId)

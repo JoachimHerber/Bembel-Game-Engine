@@ -13,11 +13,11 @@ export template <Component... TComponents>
 class Entity {
   public:
     Entity(/***********************/) : m_scene{nullptr}, m_id{EntityID::INVALID} {}
-    Entity(Scene& scene /**********/) : Entity{scene, scene.createEntity()} {}
+    Entity(Scene& scene /**********/) : m_scene{&scene}, m_id{scene.createEntity()} {
+        m_scene->createComponents<TComponents...>(m_id);
+    }
     Entity(Scene& scene, EntityID id) : m_scene{&scene}, m_id{id} {
-        if(m_scene && m_id != EntityID::INVALID) {
-            (m_scene->acquireComponent<TComponents>(m_id), ...);
-        }
+        if(m_id != EntityID::INVALID) { m_scene->createComponents<TComponents...>(m_id); }
     }
     Entity(Entity const& other) = default;
     Entity(Entity /**/&& other) = default;

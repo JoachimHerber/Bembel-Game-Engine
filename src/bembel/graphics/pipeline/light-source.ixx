@@ -1,4 +1,5 @@
 ﻿module;
+#include <memory>
 export module bembel.graphics.pipeline:LightSource;
 
 import bembel.base;
@@ -16,8 +17,10 @@ export struct PointLightData {
 };
 
 export struct DirectionalLightData {
-    vec3 color;
-    vec3 direction;
+    vec3                               color;
+    vec3                               direction;
+    std::unique_ptr<Texture>           shadow_map;
+    std::unique_ptr<FrameBufferObject> shadow_fbo;
 };
 
 export bool initComponent(
@@ -27,12 +30,13 @@ export bool initComponent(
 );
 
 export bool initComponent(
-    In<xml::Element const*>       properties,
-    InOut<AssetManager>           asset_mgr,
+    In<xml::Element const*>     properties,
+    InOut<AssetManager>         asset_mgr,
     InOut<DirectionalLightData> component
 );
 
-export using PointLight       = BasicComponent<"PointLight", PointLightData, ComponentContainer::MAP>;
-export using DirectionalLight = BasicComponent<"DirectionalLight", DirectionalLightData, ComponentContainer::MAP>;
+export using PointLight = BasicComponent<"PointLight", PointLightData, ComponentContainer::MAP>;
+export using DirectionalLight =
+    BasicComponent<"DirectionalLight", DirectionalLightData, ComponentContainer::MAP>;
 
 } // namespace bembel::graphics

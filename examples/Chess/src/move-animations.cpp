@@ -1,3 +1,6 @@
+module;
+#include <cmath>
+#include <string_view>
 module bembel.examples.chess.move_animations;
 
 namespace bembel::examples::chess {

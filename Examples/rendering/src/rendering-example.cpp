@@ -14,10 +14,12 @@ RenderingExample::RenderingExample() : kernel::Application() {
     m_graphic_system = m_engine.addSystem<GraphicSystem>();
     m_gui_system     = m_engine.addSystem<GuiSystem>();
     events::addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<FrameBufferResizeEvent>(this);
 }
 
 RenderingExample::~RenderingExample() {
     events::removeHandler<WindowShouldCloseEvent>(this);
+    events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
 bool RenderingExample::init() {
@@ -34,6 +36,7 @@ bool RenderingExample::init() {
     auto gui = m_gui_system->getGUI("main");
 
     m_label = gui->getWidget<LabelWidget>("Label");
+    m_label->setHasOutline(true);
 
     m_engine.initSystems();
     return true;
@@ -62,8 +65,10 @@ void RenderingExample::update(double time) {
     m_label->setText(text.data);
 }
 
-void RenderingExample::handleEvent(kernel::WindowShouldCloseEvent const& event) {
+void RenderingExample::handleEvent(In<WindowShouldCloseEvent> event) {
     quit();
 }
+
+void RenderingExample::handleEvent(In<FrameBufferResizeEvent> event) {}
 
 } // namespace bembel

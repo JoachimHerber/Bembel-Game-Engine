@@ -20,10 +20,12 @@ PhysicsExample::PhysicsExample() : Application() {
     m_gui_system     = m_engine.addSystem<GuiSystem>();
 
     events::addHandler<WindowShouldCloseEvent>(this);
+    events::addHandler<FrameBufferResizeEvent>(this);
 }
 
 PhysicsExample::~PhysicsExample() {
     events::removeHandler<WindowShouldCloseEvent>(this);
+    events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
 bool PhysicsExample::init() {
@@ -77,8 +79,12 @@ void PhysicsExample::update(double time) {
     if(transform) transform->rotation = quat(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }
 
-void PhysicsExample::handleEvent(const WindowShouldCloseEvent& event) {
+void PhysicsExample::handleEvent(In<WindowShouldCloseEvent> event) {
     quit();
+}
+
+void PhysicsExample::handleEvent(In<FrameBufferResizeEvent> event) {
+    m_graphic_system->getRenderingPipelines()[0]->setResulution(event.size);
 }
 
 } // namespace bembel::examples::physics

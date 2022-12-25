@@ -1,5 +1,5 @@
 module;
-#include "bembel/pch.h"
+#include <filesystem>
 export module bembel.examples.chess.logic;
 
 import bembel;
@@ -95,7 +95,7 @@ export class GameLogic {
         ChessPiece m_pice;
 
         std::vector<Move> m_moves;
-        std::size_t       m_selection = ~0;
+        u64               m_selection = ~0;
     };
 
     class PerformMove : public GameState {

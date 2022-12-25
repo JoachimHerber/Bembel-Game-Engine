@@ -1,4 +1,5 @@
-﻿import bembel.examples.chess;
+﻿#include <filesystem>
+import bembel.examples.chess;
 
 int main() {
     bembel::examples::chess::Application app;

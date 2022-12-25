@@ -18,7 +18,7 @@ bool initComponent(
     std::string model_name;
     if(!xml::getAttribute(properties, "model", model_name)) return false;
 
-    if(!xml::getAttribute(properties, "scale", geometry_component.scale)) return false;
+    xml::getAttribute(properties, "scale", geometry_component.scale);
 
     geometry_component.model = asset_mgr.getAssetHandle<GeometryModel>(model_name);
 

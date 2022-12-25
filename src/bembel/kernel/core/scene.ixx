@@ -84,6 +84,11 @@ export class Scene {
         m_entities[std::to_underlying(id)] |= container->getComponentMask();
         return container->createComponent(id, std::forward<TArgs>(args)...);
     }
+    
+    template <Component ... T>
+    bool  createComponents(EntityID id){
+        return ( ... && !!createComponent<T>(id));
+    }
 
     template <Component T>
     T getComponent(EntityID id) {

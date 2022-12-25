@@ -1,5 +1,7 @@
 module;
-#include "bembel/pch.h"
+#include <cmath>
+#include <memory>
+#include <string_view>
 module bembel.examples.chess.logic;
 
 import bembel;

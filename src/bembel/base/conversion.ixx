@@ -24,19 +24,19 @@ bool fromString(In<std::string_view> str, Out<bool> value) {
     return false;
 }
 
-bool fromString(In<std::string_view> str, Out<std::string> value) {
+bool fromString(In<std::string_view> str, std::string& value) {
     value = str;
     return true;
 }
 
-bool fromString(In<std::string_view> str, Out<String> value) {
+bool fromString(In<std::string_view> str, String& value) {
     value = str;
     return true;
 }
 
 template <typename T>
 requires std::integral<T>
-bool fromString(In<std::string_view> str, Out<T> value) {
+bool fromString(In<std::string_view> str, T& value) {
     auto result = std::from_chars(str.data(), str.data() + str.size(), value);
     
     if(result.ec == std::errc::invalid_argument) {
@@ -76,7 +76,7 @@ bool fromString(In<std::string_view> str, T& value) {
 
 template <typename T>
 requires std::integral<T> || std::floating_point<T>
-bool fromString(In<std::string_view> str, Out<tvec2<T>> value) {
+bool fromString(In<std::string_view> str, tvec2<T>& value) {
     auto delim_pos = str.find(' ');
     if(delim_pos == str.npos) {
         log().error("Can't parse string '{}'", str);
@@ -89,7 +89,7 @@ bool fromString(In<std::string_view> str, Out<tvec2<T>> value) {
 
 template <typename T>
 requires std::integral<T> || std::floating_point<T>
-bool fromString(In<std::string_view> str, Out<tvec3<T>> value) {
+bool fromString(In<std::string_view> str, tvec3<T>& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {
         log().error("Can't parse string '{}'", str);
@@ -108,7 +108,31 @@ bool fromString(In<std::string_view> str, Out<tvec3<T>> value) {
 
 template <typename T>
 requires std::integral<T> || std::floating_point<T>
-bool fromString(In<std::string_view> str, Out<tvec4<T>> value) {
+bool fromString(In<std::string_view> str, tvec4<T>& value) {
+    auto delim_pos_0 = str.find(' ');
+    if(delim_pos_0 == str.npos) {
+        log().error("Can't parse string '{}'", str);
+        return false;
+    }
+    auto delim_pos_1 = str.find(' ', delim_pos_0 + 1);
+    if(delim_pos_1 == str.npos) {
+        log().error("Can't parse string '{}'", str);
+        return false;
+    }
+
+    auto delim_pos_2 = str.find(' ', delim_pos_1 + 1);
+    if(delim_pos_2 == str.npos) {
+        log().error("Can't parse string '{}'", str);
+        return false;
+    }
+
+    return fromString(str.substr(/***********/ 0, delim_pos_0), value.x)
+        && fromString(str.substr(delim_pos_0 + 1, delim_pos_1), value.y)
+        && fromString(str.substr(delim_pos_1 + 1, delim_pos_2), value.z)
+        && fromString(str.substr(delim_pos_2 + 1 /**********/), value.w);
+}
+
+bool fromString(In<std::string_view> str, quat& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {
         log().error("Can't parse string '{}'", str);

@@ -1,5 +1,7 @@
 ﻿module;
-#include "bembel/pch.h"
+#include <glm/glm.hpp>
+#include <memory>
+#include <string_view>
 module bembel.examples.chess;
 
 import bembel;
@@ -33,15 +35,13 @@ bool Application::init() {
     m_camera = std::make_unique<CameraControle>(pipline->getCamera());
 
     m_scene = std::make_shared<Scene>(m_engine.assets);
-    m_scene->registerComponentType<DirectionalLightComponent>();
+    m_scene->registerComponentType<DirectionalLight>();
     m_scene->loadAssets("assets/assets.xml");
 
     m_chess_board = std::make_unique<ChessBoard>(m_scene.get());
 
     Entity<> ligth = {*m_scene, m_scene->createEntity()};
-    ligth.createComponent<DirectionalLightComponent>(
-        vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2))
-    );
+    ligth.createComponent<DirectionalLight>(vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2)));
 
     m_selection_ptr = std::make_unique<SelectionPointer>(pipline);
 
