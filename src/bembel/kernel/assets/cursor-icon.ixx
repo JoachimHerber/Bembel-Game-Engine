@@ -7,7 +7,6 @@ export module bembel.kernel.assets:CursorIcon;
 
 import bembel.base;
 
-import :AssetManager;
 import :SerialAssetLoader;
 
 using namespace bembel::base;
@@ -25,16 +24,14 @@ export class CursorIcon {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "CursorIcon";
 
-    static void createStandardCursors(AssetManager& asset_mgr);
+    static void createStandardCursors();
 
     static std::unique_ptr<CursorIcon> loadAsset(
-        AssetManager& asset_mgr, std::filesystem::path path
+        std::filesystem::path path
     );
     static std::unique_ptr<CursorIcon> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
+        xml::Element const* properties
     );
-
-    static void deleteAsset(AssetManager&, std::unique_ptr<CursorIcon>) {}
 
     using DefaultLoaderType = SerialAssetLoader<CursorIcon>;
 

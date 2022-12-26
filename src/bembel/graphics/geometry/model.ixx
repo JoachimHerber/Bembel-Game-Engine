@@ -25,21 +25,13 @@ export class GeometryModel {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "GeometryModel";
 
-    static std::unique_ptr<GeometryModel> loadAsset(
-        AssetManager& asset_mgr, std::filesystem::path file
-    );
-    static std::unique_ptr<GeometryModel> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
-
-    static void deleteAsset(AssetManager& asset_mgr, std::unique_ptr<GeometryModel> model);
+    static std::unique_ptr<GeometryModel> loadAsset(std::filesystem::path file);
+    static std::unique_ptr<GeometryModel> createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<GeometryModel>;
 
   private:
-    static std::unique_ptr<GeometryModel> createGeometryModel(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
+    static std::unique_ptr<GeometryModel> createGeometryModel(xml::Element const* properties);
 
   private:
     Asset<GeometryMesh>          m_mesh;

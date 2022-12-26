@@ -93,9 +93,8 @@ export class Texture final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "Texture";
 
-    static TexturePtr loadAsset(AssetManager& asset_mgr, std::filesystem::path file);
-    static TexturePtr createAsset(AssetManager& asset_mgr, xml::Element const* properties);
-    static void       deleteAsset(AssetManager& asset_mgr, std::unique_ptr<Texture> texture);
+    static TexturePtr loadAsset( std::filesystem::path file);
+    static TexturePtr createAsset( xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<Texture>;
 

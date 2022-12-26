@@ -24,8 +24,8 @@ export class GeometryRendererBase {
   public:
     using RendererId = uint;
 
-    GeometryRendererBase(AssetManager& asset_mgr, RendererId id)
-      : m_asset_mgr{asset_mgr}, m_id{id} {};
+    GeometryRendererBase( RendererId id)
+      :  m_id{id} {};
     virtual ~GeometryRendererBase(){};
 
     RendererId getRendererID() const { return m_id; };
@@ -37,14 +37,13 @@ export class GeometryRendererBase {
     virtual std::unique_ptr<Material> createMaterial(xml::Element const* propertiey) = 0;
 
   protected:
-    AssetManager&    m_asset_mgr;
     const RendererId m_id;
 };
 
 export class DefaultGeometryRenderer : public GeometryRendererBase {
   public:
-    DefaultGeometryRenderer(AssetManager& asset_mgr, uint id)
-      : GeometryRendererBase{asset_mgr, id} {}
+    DefaultGeometryRenderer(uint id)
+      : GeometryRendererBase{id} {}
     ~DefaultGeometryRenderer() = default;
 
     void addRequiredTexture(std::string_view texture_name, std::string_view uniform_sampler_name) {
@@ -52,7 +51,7 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
     }
 
     bool setShader(Asset<ShaderProgram> shader) {
-        if(updateUniformLocations(shader.getAsset())) {
+        if(updateUniformLocations(shader.get())) {
             m_shader = std::move(shader);
             return true;
         }
@@ -66,7 +65,7 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
     virtual std::unique_ptr<Material> createMaterial(xml::Element const* propertiey) override;
 
     static std::unique_ptr<DefaultGeometryRenderer> createRenderer(
-        xml::Element const*, AssetManager&, unsigned id
+        xml::Element const*, unsigned id
     );
 
   private:

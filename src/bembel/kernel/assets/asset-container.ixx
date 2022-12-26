@@ -86,6 +86,11 @@ class AssetContainer : public AssetContainerBase {
         return true;
     }
 
+    bool addAsset(AssetPtr asset, std::string_view alias) {
+        auto hndl = addAsset(std::move(asset));
+        return registerAssetAlias(hndl, alias);
+    }
+
     /**
      * removes an asset from the container
      * @param[in] handle

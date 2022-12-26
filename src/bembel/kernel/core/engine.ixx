@@ -34,8 +34,7 @@ export class Engine final {
     void pollEvents();
 
   public:
-    AssetManager   assets;
-    DisplayManager display = {assets};
+    DisplayManager display;
     InputManager   input;
 
   private:

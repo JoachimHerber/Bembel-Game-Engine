@@ -14,7 +14,7 @@ using namespace bembel::kernel;
 
 export class InputHandler {
   public:
-    InputHandler(AssetManager& asset_mgr, Widget& root_widget, Viewport::View& gui_view);
+    InputHandler( Widget& root_widget, Viewport::View& gui_view);
     InputHandler(const InputHandler&)            = delete;
     InputHandler& operator=(const InputHandler&) = delete;
     ~InputHandler();
@@ -74,7 +74,6 @@ export class InputHandler {
   private:
     using Buttons = std::array<InputDevice::Button*, 7>;
 
-    AssetManager&   m_asset_mgr;
     Widget&         m_root_widget;
     Viewport::View& m_gui_view; // the view of the gui, used to access the viewport/window
 

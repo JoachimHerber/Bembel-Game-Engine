@@ -44,8 +44,6 @@ export class RenderingPipeline final {
         }
 
       protected:
-        AssetManager& getAssetManager();
-
         void setInputTextures(std::vector<std::string> const&);
 
         void setDepthOutputTexture(std::string_view texture);
@@ -95,14 +93,10 @@ export class RenderingPipeline final {
     };
 
   public:
-    RenderingPipeline(AssetManager& asset_mgr, DisplayManager& display_mgr)
-      : m_asset_mgr{asset_mgr}, m_display_mgr{display_mgr} {}
+    RenderingPipeline(DisplayManager& display_mgr) : m_display_mgr{display_mgr} {}
     RenderingPipeline(RenderingPipeline const&)            = delete;
     RenderingPipeline& operator=(RenderingPipeline const&) = delete;
     ~RenderingPipeline()                                   = default;
-
-    // GraphicSystem& getGraphicSystem();
-    AssetManager& getAssetManager() { return m_asset_mgr; }
 
     void         setResulution(ivec2 const& value);
     ivec2 const& getResulution() const { return m_resolution; }
@@ -144,7 +138,6 @@ export class RenderingPipeline final {
     void configureCamera(xml::Element const*);
 
   private:
-    AssetManager&   m_asset_mgr;
     DisplayManager& m_display_mgr;
 
     glm::ivec2 m_resolution = {800, 600};

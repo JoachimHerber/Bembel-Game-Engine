@@ -30,7 +30,7 @@ Engine::Engine() {
 
     this->input.keyboard.initDefaultKeys();
 
-    CursorIcon::createStandardCursors(this->assets);
+    CursorIcon::createStandardCursors();
 }
 
 Engine::~Engine() {
@@ -90,7 +90,7 @@ bool Engine::loadSetting(std::filesystem::path file) {
     }
 
     xml::Element const* asset_dirs = root->FirstChildElement("AssetDirectories");
-    if(asset_dirs) this->assets.getAssetLocator().init(asset_dirs);
+    if(asset_dirs) AssetLocator::getInstance().init(asset_dirs);
 
     xml::Element const* display = root->FirstChildElement("Display");
     if(display) this->display.createWindows(display);

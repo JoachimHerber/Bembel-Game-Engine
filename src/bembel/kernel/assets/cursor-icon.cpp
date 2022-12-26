@@ -9,18 +9,19 @@ module bembel.kernel.assets;
 import bembel.base;
 
 import :CursorIcon;
-import :AssetManager;
 
 namespace bembel::kernel {
 using namespace bembel::base;
 
-void CursorIcon::createStandardCursors(AssetManager& asset_mgr) {
-    asset_mgr.registerAssetType<CursorIcon>();
+void CursorIcon::createStandardCursors() {
+    assets::registerAssetType<CursorIcon>();
 
     auto createStandardCursor = [&](int shape, std::string_view name) {
         auto cursor = glfwCreateStandardCursor(shape);
         if(cursor) {
-            asset_mgr.addAsset(std::make_unique<CursorIcon>(cursor, name), name);
+            Asset<CursorIcon>::getContainer()->addAsset(
+                std::make_unique<CursorIcon>(cursor, name), name
+            );
         } else {
             log().error("Failed to create StandardCursor {}", name);
         }
@@ -39,15 +40,11 @@ void CursorIcon::createStandardCursors(AssetManager& asset_mgr) {
     // createStandardCursor(GLFW_RESIZE_NESW_CURSOR, "RESIZE_NESW");
 }
 
-std::unique_ptr<CursorIcon> CursorIcon::loadAsset(
-    AssetManager& asset_mgr, std::filesystem::path path
-) {
+std::unique_ptr<CursorIcon> CursorIcon::loadAsset(std::filesystem::path path) {
     return nullptr;
 }
 
-std::unique_ptr<CursorIcon> CursorIcon::createAsset(
-    AssetManager& asset_mgr, xml::Element const* properties
-) {
+std::unique_ptr<CursorIcon> CursorIcon::createAsset(xml::Element const* properties) {
     return nullptr;
 }
 

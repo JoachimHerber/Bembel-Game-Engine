@@ -48,15 +48,11 @@ bool DefaultGeometryRenderer::updateUniformLocations(ShaderProgram* shader) {
 void DefaultGeometryRenderer::render(
     mat4 const& proj, mat4 const& view, std::vector<GeometryRenderData> const& data
 ) {
-    auto shader_pointer = m_shader.getAsset();
+    if(!m_shader) return;
 
-    if(!shader_pointer) return;
+    m_shader->use();
 
-    shader_pointer->use();
-
-    glUniformMatrix4fv(
-        shader_pointer->getUniformLocation("uProjectionMatrix"), 1, GL_FALSE, &proj[0][0]
-    );
+    glUniformMatrix4fv(m_shader->getUniformLocation("uProjectionMatrix"), 1, GL_FALSE, &proj[0][0]);
 
     GeometryMesh* currentMesh     = nullptr;
     Material*     currentMaterial = nullptr;
@@ -86,10 +82,10 @@ void DefaultGeometryRenderer::render(
         glm::mat4 modleView = view * it.transform;
 
         glUniformMatrix4fv(
-            shader_pointer->getUniformLocation("uModleViewMatrix"), 1, GL_FALSE, &(modleView[0][0])
+            m_shader->getUniformLocation("uModleViewMatrix"), 1, GL_FALSE, &(modleView[0][0])
         );
         glUniformMatrix4fv(
-            shader_pointer->getUniformLocation("uNormalMatrix"), 1, GL_FALSE, &(modleView[0][0])
+            m_shader->getUniformLocation("uNormalMatrix"), 1, GL_FALSE, &(modleView[0][0])
         );
 
         glLoadIdentity();
@@ -148,7 +144,7 @@ std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element c
         }
 
         Asset<Texture> texture;
-        if(!texture.request(m_asset_mgr, texture_name)) {
+        if(!texture.request(texture_name)) {
             log().error("Can't find reqired '{}' texture for material", it.texture_name);
             return nullptr;
         }
@@ -170,7 +166,7 @@ std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element c
 }
 
 std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer(
-    xml::Element const* properties, AssetManager& asset_mgr, unsigned id
+    xml::Element const* properties, unsigned id
 ) {
     auto shader_params = properties->FirstChildElement("ShaderProgram");
     if(shader_params == nullptr) {
@@ -179,11 +175,11 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
     }
 
     Asset<ShaderProgram> shader;
-    if(!shader.request(asset_mgr, shader_params)) {
+    if(!shader.request(shader_params)) {
         log().error("Could not load ShaderProgram for DefaultGeometryRenderer");
         return nullptr;
     }
-    auto renderer = std::make_unique<DefaultGeometryRenderer>(asset_mgr, id);
+    auto renderer = std::make_unique<DefaultGeometryRenderer>(id);
 
     for(auto it : xml::IterateChildElements(properties, "RequiredTexture")) {
         std::string texture_name, sampler_uniform;

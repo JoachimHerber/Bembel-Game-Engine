@@ -14,12 +14,12 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 GuiSystem::GuiSystem(Engine& engine) : System{"UserInterface"}, m_engine{engine} {
-    engine.assets.registerAssetType<Shader>();
-    engine.assets.registerAssetType<ShaderProgram>();
-    engine.assets.registerAssetType<TextureAtlas>();
-    engine.assets.registerAssetType<Texture>();
-    engine.assets.registerAssetType<Font>();
-    engine.assets.registerAssetType<Style>();
+    assets::registerAssetType<Shader>();
+    assets::registerAssetType<ShaderProgram>();
+    assets::registerAssetType<TextureAtlas>();
+    assets::registerAssetType<Texture>();
+    assets::registerAssetType<Font>();
+    assets::registerAssetType<Style>();
 
     registerWidgetTypesInFactory();
 }
@@ -67,7 +67,7 @@ GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
         return nullptr;
     }
 
-    m_guis.push_back(std::make_unique<GraphicalUserInterface>(m_engine.assets));
+    m_guis.push_back(std::make_unique<GraphicalUserInterface>());
 
     GraphicalUserInterface* gui = m_guis.back().get();
 

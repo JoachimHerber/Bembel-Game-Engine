@@ -13,7 +13,7 @@ using namespace bembel::base;
 
 export class DisplayManager final {
   public:
-    DisplayManager(AssetManager& asset_mgr);
+    DisplayManager();
     ~DisplayManager() { deleteAllWindows(); }
 
     Window* createWindow() {

@@ -25,7 +25,7 @@ export class Font final {
     float getAscender() const { return m_ascender; }
     float getDescender() const { return m_descender; }
 
-    Texture* getGlyphAtlasTexture() const { return m_glyph_atlas_texture.getAsset(); }
+    Texture* getGlyphAtlasTexture() const { return m_glyph_atlas_texture.get(); }
 
     GlyphIndex getGlyphIndex(char32_t character, bool bold, bool oblique) const;
 
@@ -46,9 +46,8 @@ export class Font final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "Font";
 
-    static std::unique_ptr<Font> loadAsset(AssetManager&, std::filesystem::path path);
-    static std::unique_ptr<Font> createAsset(AssetManager&, xml::Element const* properties);
-    static void                  deleteAsset(AssetManager&, std::unique_ptr<Font>);
+    static std::unique_ptr<Font> loadAsset(std::filesystem::path path);
+    static std::unique_ptr<Font> createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<Font>;
 

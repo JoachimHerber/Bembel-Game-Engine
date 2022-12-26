@@ -10,14 +10,9 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GeometryRenderQueue::GeometryRenderQueue(AssetManager& asset_mgr) : m_asset_mgr{asset_mgr} {}
+GeometryRenderQueue::GeometryRenderQueue() {}
 
 GeometryRenderQueue::~GeometryRenderQueue() {}
-
-bool GeometryRenderQueue::addGeometryObject(AssetHandle modelHndl, mat4 const& transform) {
-    auto* model = m_asset_mgr.getAsset<GeometryModel>(modelHndl);
-    return addGeometryObject(model, transform);
-}
 
 bool GeometryRenderQueue::addGeometryObject(GeometryModel* model, mat4 const& transform) {
     if(model == nullptr) return false;
@@ -26,7 +21,7 @@ bool GeometryRenderQueue::addGeometryObject(GeometryModel* model, mat4 const& tr
     if(mesh == nullptr) return false;
 
     for(auto const& mat_map : model->getMateialMapping()) {
-        Material* mat = mat_map.material.getAsset();
+        Material* mat = mat_map.material.get();
         if(mesh == nullptr) continue;
 
         auto sub_mesh = mesh->getSubMesh(mat_map.sub_mesh);

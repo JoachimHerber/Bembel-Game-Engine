@@ -15,7 +15,7 @@ export class Style {
     ~Style() = default;
 
     void          setFont(Asset<Font> font) { m_font = std::move(font); }
-    kernel::Font* getFont() const { return m_font.getAsset(); }
+    kernel::Font* getFont() const { return m_font.get(); }
 
     void setTextureAtlas(Asset<TextureAtlas>);
 
@@ -82,19 +82,13 @@ export class Style {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "GuiStyle";
 
-    static std::unique_ptr<Style> loadAsset(AssetManager& asset_mgr, std::filesystem::path file);
-
-    static std::unique_ptr<Style> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
-    static void deleteAsset(AssetManager& asset_mgr, std::unique_ptr<Style> _skin);
+    static std::unique_ptr<Style> loadAsset(std::filesystem::path file);
+    static std::unique_ptr<Style> createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = kernel::SerialAssetLoader<Style>;
 
   private:
-    static std::unique_ptr<Style> createStyle(
-        kernel::AssetManager& asset_mgr, base::xml::Element const* properties
-    );
+    static std::unique_ptr<Style> createStyle(xml::Element const* properties);
 
   private:
     Asset<TextureAtlas> m_texture_atlas;

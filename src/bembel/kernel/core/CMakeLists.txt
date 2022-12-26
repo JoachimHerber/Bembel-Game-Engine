@@ -7,7 +7,7 @@ target_sources(Bembel
         components.ixx
         entity.ixx
         system.ixx
-        standard-components.ixx
+        transform-component.ixx
         engine.ixx
         engine.cpp
         application.ixx

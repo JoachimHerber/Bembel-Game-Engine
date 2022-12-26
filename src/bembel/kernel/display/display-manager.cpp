@@ -14,7 +14,7 @@ namespace bembel::kernel {
 using namespace bembel::base;
 using namespace ::gl;
 
-DisplayManager::DisplayManager(AssetManager& asset_mgr) {
+DisplayManager::DisplayManager() {
     // glfwSetMonitorCallback(glfw_callbacks::MonitorCallback);
 }
 

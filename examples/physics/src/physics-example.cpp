@@ -36,7 +36,7 @@ bool PhysicsExample::init() {
 
     m_gui = m_gui_system->getGUI("main");
 
-    m_scene = std::make_shared<Scene>(m_engine.assets);
+    m_scene = std::make_shared<Scene>();
     m_graphic_system->getRenderingPipelines()[0]->setScene(m_scene);
     m_physics_system->addScene(m_scene);
 
@@ -47,15 +47,11 @@ bool PhysicsExample::init() {
 
     m_scene->createComponent<Transform>(m_stirring_stick, vec3(0, -0.75, 0));
     m_scene->createComponent<Geometry>(
-        m_stirring_stick,
-        m_engine.assets.getAssetHandle<GeometryModel>("stirring_stick"),
-        vec3(4.5f, 0.5f, 0.1f)
+        m_stirring_stick, Asset<GeometryModel>("stirring_stick"), vec3(4.5f, 0.5f, 0.1f)
     );
     m_scene
         ->createComponent<RigidBody>(
-            m_stirring_stick,
-            m_engine.assets.getAssetHandle<CollisionShape>("stirring_stick"),
-            0.0_kg
+            m_stirring_stick, Asset<CollisionShape>("stirring_stick"), 0.0_kg
         )
         .setIsKinematic();
 
@@ -68,7 +64,7 @@ void PhysicsExample::cleanup() {
     m_scene.reset();
 
     m_engine.shutdownSystems();
-    m_engine.assets.deleteUnusedAssets();
+    assets::deleteUnusedAssets();
     m_engine.display.closeOpenWindows();
 }
 

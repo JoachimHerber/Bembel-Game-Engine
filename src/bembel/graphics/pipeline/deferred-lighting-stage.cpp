@@ -26,12 +26,10 @@ void DeferredLightingStage::setPointLightShader(Asset<ShaderProgram> shader) {
 }
 
 bool DeferredLightingStage::configure(xml::Element const* properties) {
-    auto& asset_mgr = m_pipline.getAssetManager();
-
     Asset<ShaderProgram> dir_light_shader;
     Asset<ShaderProgram> point_light_shader;
-    dir_light_shader.request(asset_mgr, properties->FirstChildElement("DirectionalLightProgram"));
-    point_light_shader.request(asset_mgr, properties->FirstChildElement("PointLightShaderProgram"));
+    dir_light_shader.request(properties->FirstChildElement("DirectionalLightProgram"));
+    point_light_shader.request(properties->FirstChildElement("PointLightShaderProgram"));
 
     setDirLightShader(std::move(dir_light_shader));
     setPointLightShader(std::move(point_light_shader));
@@ -135,7 +133,7 @@ void DeferredLightingStage::execute(GeometryRenderQueue&, std::vector<RendererPt
 void DeferredLightingStage::applyDirectionalLights() {
     ComponentMask mask = m_dir_lights->getComponentMask();
 
-    auto shader = m_dir_light_shader.getAsset();
+    auto shader = m_dir_light_shader.get();
     if(!shader) return;
 
     shader->use();
@@ -188,7 +186,7 @@ struct PointLightRenderingData {
 };
 
 void DeferredLightingStage::applyPointLights() {
-    auto shader = m_point_light_shader.getAsset();
+    auto shader = m_point_light_shader.get();
     if(!shader) return;
 
     ComponentMask mask = m_point_lights->getComponentMask() | m_transforms->getComponentMask();

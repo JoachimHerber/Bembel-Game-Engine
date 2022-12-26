@@ -17,10 +17,6 @@ Factory<RenderingPipeline::Stage, RenderingPipeline&>& RenderingPipeline::Stage:
     return factory;
 }
 
-AssetManager& RenderingPipeline::Stage::getAssetManager() {
-    return m_pipline.getAssetManager();
-}
-
 void RenderingPipeline::Stage::setInputTextures(std::vector<std::string> const& textures) {
     m_textures.clear();
     for(size_t n = 0; n < textures.size(); ++n) {

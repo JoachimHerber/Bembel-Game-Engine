@@ -25,13 +25,11 @@ export struct DirectionalLightData {
 
 export bool initComponent(
     In<xml::Element const*> properties,
-    InOut<AssetManager>     asset_mgr,
     InOut<PointLightData>   component
 );
 
 export bool initComponent(
     In<xml::Element const*>     properties,
-    InOut<AssetManager>         asset_mgr,
     InOut<DirectionalLightData> component
 );
 

@@ -92,7 +92,7 @@ void EnvironmentMapReflectionStage::cleanup() {
 void EnvironmentMapReflectionStage::execute(GeometryRenderQueue&, std::vector<RendererPtr> const&) {
     if(!m_shader_program) return;
 
-    auto program = m_shader_program.getAsset();
+    auto program = m_shader_program.get();
     if(!program) return;
 
     m_fbo->beginRenderToTexture();
@@ -133,7 +133,7 @@ void EnvironmentMapReflectionStage::execute(GeometryRenderQueue&, std::vector<Re
 
 bool EnvironmentMapReflectionStage::configure(xml::Element const* properties) {
     kernel::Asset<kernel::ShaderProgram> program;
-    program.request(m_pipline.getAssetManager(), properties->FirstChildElement("Shader"));
+    program.request(properties->FirstChildElement("Shader"));
 
     setShader(std::move(program));
 

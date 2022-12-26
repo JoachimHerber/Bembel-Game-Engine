@@ -1,6 +1,6 @@
 ﻿module;
 #include <string_view>
-export module bembel.kernel.core:StandardComponents;
+export module bembel.kernel.core:Transform;
 
 import bembel.base;
 import bembel.kernel.assets;
@@ -17,7 +17,7 @@ export struct TransformationData {
 };
 
 export bool initComponent(
-    xml::Element const* properties, AssetManager& asset_mgr, TransformationData& transform
+    xml::Element const* properties, TransformationData& transform
 ) {
     if(!xml::getAttribute(properties, "position", transform.position)) {
         xml::getAttribute(properties, "x", transform.position.x);

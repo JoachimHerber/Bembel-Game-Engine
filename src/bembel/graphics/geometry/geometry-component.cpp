@@ -11,18 +11,15 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 bool initComponent(
-    In<xml::Element const*>      properties,
-    InOut<AssetManager>          asset_mgr,
-    InOut<GeometryComponentData> geometry_component
+    In<xml::Element const*> properties, InOut<GeometryComponentData> geometry_component
 ) {
     std::string model_name;
     if(!xml::getAttribute(properties, "model", model_name)) return false;
 
     xml::getAttribute(properties, "scale", geometry_component.scale);
 
-    geometry_component.model = asset_mgr.getAssetHandle<GeometryModel>(model_name);
-
-    return true;
+    geometry_component.model = Asset<GeometryModel>(model_name);
+    return geometry_component.model;
 }
 
 } // namespace bembel::graphics

@@ -12,8 +12,8 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-InputHandler::InputHandler(AssetManager& asset_mgr, Widget& root_widget, Viewport::View& gui_view)
-  : m_asset_mgr{asset_mgr}, m_root_widget{root_widget}, m_gui_view{gui_view} {
+InputHandler::InputHandler(Widget& root_widget, Viewport::View& gui_view)
+  : m_root_widget{root_widget}, m_gui_view{gui_view} {
     events::addHandler<TextInputEvent>(this);
 }
 
@@ -221,7 +221,7 @@ void InputHandler::updateCursorIcon() {
     auto window_id = vp->getWindowID();
 
     if(m_focus.handle != nullptr) {
-        CursorIcon* cursor = m_asset_mgr.getAsset<CursorIcon>(m_focus.handle->cursor);
+        CursorIcon* cursor = m_focus.handle->cursor.get();
         events::broadcast<SetCursorIconEvent>(cursor, window_id);
     } else {
         events::broadcast<SetCursorIconEvent>(nullptr, window_id);

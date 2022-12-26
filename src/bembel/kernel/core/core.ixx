@@ -6,4 +6,4 @@ export import :Entity;
 export import :System;
 export import :Engine;
 export import :Application;
-export import : StandardComponents;
+export import :Transform;

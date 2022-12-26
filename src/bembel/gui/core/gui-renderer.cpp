@@ -10,16 +10,15 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
 
-Renderer::Renderer(AssetManager& asset_mgr, Widget& root_widget)
-  : m_asset_mgr{asset_mgr}, m_root_widget{root_widget} {}
+Renderer::Renderer(Widget& root_widget) : m_root_widget{root_widget} {}
 
 Renderer::~Renderer() {}
 
 bool Renderer::init(In<xml::Element const*> properties) {
     if(!properties) return false;
 
-    m_shader.request(m_asset_mgr, properties->FirstChildElement("ShaderProgram"));
-    m_style.request(m_asset_mgr, properties->FirstChildElement("GuiStyle"));
+    m_shader.request(properties->FirstChildElement("ShaderProgram"));
+    m_style.request(properties->FirstChildElement("GuiStyle"));
 
     if(!m_shader || !m_style) return false;
 
@@ -38,8 +37,8 @@ bool Renderer::init(In<Asset<ShaderProgram>> shader, In<Asset<Style>> style) {
 }
 
 void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
-    auto style  = m_style.getAsset();
-    auto shader = m_shader.getAsset();
+    auto style  = m_style.get();
+    auto shader = m_shader.get();
 
     if(style == nullptr || shader == nullptr) return;
 
@@ -82,7 +81,7 @@ void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
 }
 
 Style* Renderer::getStyle() {
-    return m_style.getAsset();
+    return m_style.get();
 }
 
 void Renderer::drawWidget(

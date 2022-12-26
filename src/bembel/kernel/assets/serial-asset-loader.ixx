@@ -4,7 +4,7 @@ export module bembel.kernel.assets:SerialAssetLoader;
 
 import :AssetLoader;
 import :AssetContainer;
-import :AssetManager;
+import :AssetLocator;
 
 namespace bembel::kernel {
 using namespace bembel::base;
@@ -29,16 +29,13 @@ class SerialAssetLoader : public AssetLoaderBase {
   public:
     using ContainerType = AssetContainer<AssetType>;
 
-    SerialAssetLoader(AssetManager& asset_mgr, ContainerType* container)
-      : m_asset_mgr(asset_mgr)
-      , m_container(container) {}
+    SerialAssetLoader( ContainerType* container)
+      : m_container(container) {}
     virtual ~SerialAssetLoader() = default;
 
     AssetHandle requestAsset(std::string_view file_name) override {
         std::string path;
-
-        auto& locator = m_asset_mgr.getAssetLocator();
-        if(!locator.findAssetLocation<AssetType>(file_name, &path)) {
+        if(!AssetLocator::getInstance().findAssetLocation<AssetType>(file_name, &path)) {
             log().warning("can't find location of '{}'", file_name);
             // can't find the requested file
             return AssetHandle();
@@ -48,7 +45,7 @@ class SerialAssetLoader : public AssetLoaderBase {
         AssetHandle handle = m_container->getAssetHandle(path);
         if(!m_container->isHandelValid(handle)) {
             // we have to load the asset
-            std::unique_ptr<AssetType> asset = AssetType::loadAsset(m_asset_mgr, path);
+            std::unique_ptr<AssetType> asset = AssetType::loadAsset(path);
             if(!asset) return AssetHandle();
 
             handle = m_container->addAsset(std::move(asset));
@@ -80,7 +77,7 @@ class SerialAssetLoader : public AssetLoaderBase {
             return handle;
         }
 
-        std::unique_ptr<AssetType> asset = AssetType::createAsset(m_asset_mgr, properties);
+        std::unique_ptr<AssetType> asset = AssetType::createAsset(properties);
         if(!asset) return AssetHandle();
 
         AssetHandle handle = m_container->addAsset(std::move(asset));
@@ -94,7 +91,7 @@ class SerialAssetLoader : public AssetLoaderBase {
         if(m_container->isHandelValid(asset_handel)) {
             m_container->decrementAssetRefCount(asset_handel);
             if(m_container->getAssetRefCount(asset_handel) == 0) {
-                AssetType::deleteAsset(m_asset_mgr, m_container->removeAsset(asset_handel));
+                m_container->removeAsset(asset_handel);
                 return true;
             }
         }
@@ -105,12 +102,11 @@ class SerialAssetLoader : public AssetLoaderBase {
         std::vector<AssetHandle> unusedAssets;
         m_container->getUnusedAssets(unusedAssets);
         for(auto hndl : unusedAssets) {
-            AssetType::deleteAsset(m_asset_mgr, m_container->removeAsset(hndl));
+            m_container->removeAsset(hndl);
         }
     }
 
   protected:
-    AssetManager&  m_asset_mgr;
     ContainerType* m_container;
 };
 

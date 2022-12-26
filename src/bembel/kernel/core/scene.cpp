@@ -8,9 +8,7 @@ import bembel.base;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-Scene::~Scene() {
-    for(auto asset_handle : m_assets) { m_asste_mgr.releaseAsset(asset_handle); }
-}
+Scene::~Scene() {}
 
 EntityID Scene::createEntity() {
     if(m_unused_entity_ids.empty()) {
@@ -62,7 +60,10 @@ bool Scene::loadScene(std::filesystem::path file) {
     if(!root) return false;
 
     xml::Element const* assets = root->FirstChildElement("Assets");
-    for(auto asset : xml::IterateChildElements(assets)) { loadAsset(asset); }
+    for(auto it : xml::IterateChildElements(assets)) {
+        Asset<std::any> asset;
+        if(asset.request(it)) { m_assets.push_back(std::move(asset)); }
+    }
 
     xml::Element const* entities = root->FirstChildElement("Entities");
     for(auto entity : xml::IterateChildElements(entities, "Entity")) { createEntity(entity); }
@@ -86,14 +87,11 @@ bool Scene::loadAssets(std::filesystem::path file) {
         log().error("File '{}' has no root element 'Assets'", file_path_str);
         return false;
     }
-    for(auto it : xml::IterateChildElements(root)) { loadAsset(it); }
+    for(auto it : xml::IterateChildElements(root)) {
+        Asset<std::any> asset;
+        if(asset.request(it)) { m_assets.push_back(std::move(asset)); }
+    }
     return true;
-}
-
-void Scene::loadAsset(xml::Element const* properties) {
-    AssetHandle hndl = m_asste_mgr.requestAsset(properties->Value(), properties);
-
-    if(m_asste_mgr.isHandelValid(hndl)) { m_assets.emplace(hndl); }
 }
 
 } // namespace bembel::kernel

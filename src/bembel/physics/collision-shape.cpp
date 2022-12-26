@@ -19,9 +19,7 @@ std::unique_ptr<CollisionShape> CollisionShape::createSphere(float radius) {
     return std::make_unique<TCollisionShape<btSphereShape>>(radius);
 }
 
-std::unique_ptr<CollisionShape> CollisionShape::loadAsset(
-    AssetManager& asset_mgr, std::filesystem::path file
-) {
+std::unique_ptr<CollisionShape> CollisionShape::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -34,16 +32,14 @@ std::unique_ptr<CollisionShape> CollisionShape::loadAsset(
         log().error("File '{}' has no root element 'CollisionShape'", file_path);
         return nullptr;
     }
-    return CollisionShape::createCollisionShape(asset_mgr, root);
+    return CollisionShape::createCollisionShape(root);
 }
 
-std::unique_ptr<CollisionShape> CollisionShape::createAsset(
-    AssetManager& asset_mgr, xml::Element const* properties
-) {
-    return CollisionShape::createCollisionShape(asset_mgr, properties);
+std::unique_ptr<CollisionShape> CollisionShape::createAsset(xml::Element const* properties) {
+    return CollisionShape::createCollisionShape(properties);
 }
 
-void CollisionShape::deleteAsset(AssetManager& asset_mgr, std::unique_ptr<CollisionShape> model) {}
+void CollisionShape::deleteAsset(std::unique_ptr<CollisionShape>) {}
 
 void CollisionShape::initFactory() {
     auto& factory = CollisionShape::getFactory();
@@ -61,8 +57,7 @@ void CollisionShape::initFactory() {
     });
 }
 
-std::unique_ptr<CollisionShape> CollisionShape::createCollisionShape(
-    AssetManager& asset_mgr, xml::Element const* properties
+std::unique_ptr<CollisionShape> CollisionShape::createCollisionShape(xml::Element const* properties
 ) {
     std::string type;
     xml::getAttribute(properties, "type", type);

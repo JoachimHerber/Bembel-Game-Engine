@@ -70,7 +70,7 @@ export class InteractionHandle {
     ivec2                 position{0, 0};
     ivec2                 size{1, 1};
 
-    AssetHandle           cursor;
+    Asset<CursorIcon>           cursor;
 
   private:
     bool m_disabled = false;

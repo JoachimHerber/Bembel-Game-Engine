@@ -51,7 +51,7 @@ uint Shader::getHandle() const {
     return m_handle;
 }
 
-std::unique_ptr<Shader> Shader::loadAsset(AssetManager& asset_mgr, std::filesystem::path file) {
+std::unique_ptr<Shader> Shader::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -64,12 +64,10 @@ std::unique_ptr<Shader> Shader::loadAsset(AssetManager& asset_mgr, std::filesyst
         log().error("File '{}' has no root element 'Shader'", file_path);
         return nullptr;
     }
-    return createAsset(asset_mgr, root);
+    return createAsset(root);
 }
 
-std::unique_ptr<Shader> Shader::createAsset(
-    AssetManager& asset_mgr, xml::Element const* properties
-) {
+std::unique_ptr<Shader> Shader::createAsset(xml::Element const* properties) {
     static Dictionary<Type> const shader_type_map{
         {"GL_VERTEX_SHADER", Type::VERTEX},
         {"GL_FRAGMENT_SHADER", Type::FRAGMENT},
@@ -109,12 +107,11 @@ ShaderProgram::~ShaderProgram() {
     glDeleteProgram(m_program_handle);
 }
 
-bool ShaderProgram::attachShader(AssetManager& asset_mgr, AssetHandle handle) {
-    auto shader_ptr = asset_mgr.getAsset<Shader>(handle);
-    if(!shader_ptr) return false;
+bool ShaderProgram::attachShader(Asset<Shader> shader) {
+    if(!shader) return false;
 
-    glAttachShader(m_program_handle, shader_ptr->getHandle());
-    m_shader_handles.push_back(handle);
+    glAttachShader(m_program_handle, shader->getHandle());
+    m_shader_handles.push_back(std::move(shader));
     return true;
 }
 
@@ -185,9 +182,7 @@ bool ShaderProgram::use() {
     return true;
 }
 
-std::unique_ptr<ShaderProgram> ShaderProgram::loadAsset(
-    AssetManager& asset_mgr, std::filesystem::path file
-) {
+std::unique_ptr<ShaderProgram> ShaderProgram::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -200,32 +195,24 @@ std::unique_ptr<ShaderProgram> ShaderProgram::loadAsset(
         log().error("File '{}'  has no root element 'Shader'", file_path);
         return nullptr;
     }
-    auto pragram = createAsset(asset_mgr, root);
+    auto pragram = createAsset(root);
     if(!pragram) { log().error("Failed to create shader program from file '{}'", file_path); }
     return std::move(pragram);
 }
 
-std::unique_ptr<ShaderProgram> ShaderProgram::createAsset(
-    AssetManager& asset_mgr, xml::Element const* properties
-) {
+std::unique_ptr<ShaderProgram> ShaderProgram::createAsset(xml::Element const* properties) {
     auto programm = std::make_unique<ShaderProgram>();
 
     for(auto it : xml::IterateChildElements(properties, "Shader")) {
-        auto shader = asset_mgr.requestAsset<Shader>(it);
+        Asset<Shader> shader;
+        shader.request(it);
 
-        if(!programm->attachShader(asset_mgr, shader)) return nullptr;
+        if(!programm->attachShader(std::move(shader))) return nullptr;
     }
 
     if(!programm->link()) { return nullptr; }
 
     return std::move(programm);
-}
-
-void ShaderProgram::deleteAsset(AssetManager& asset_mgr, std::unique_ptr<ShaderProgram> program) {
-    std::vector<AssetHandle> shaders = program->m_shader_handles;
-    program.release();
-
-    for(auto shader_handle : shaders) asset_mgr.releaseAsset(shader_handle);
 }
 
 GLint ShaderProgram::getUniformLocation(std::string_view name) const {

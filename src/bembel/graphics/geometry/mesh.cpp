@@ -28,9 +28,7 @@ uint GeometryMesh::getVAO() const {
     return m_vao;
 }
 
-std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(
-    AssetManager&, In<std::filesystem::path> file
-) {
+std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(In<std::filesystem::path> file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -46,13 +44,9 @@ std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(
     return GeometryMesh::createGeometryMesh(root);
 }
 
-std::unique_ptr<GeometryMesh> GeometryMesh::createAsset(
-    AssetManager&, xml::Element const* properties
-) {
+std::unique_ptr<GeometryMesh> GeometryMesh::createAsset(xml::Element const* properties) {
     return GeometryMesh::createGeometryMesh(properties);
 }
-
-void GeometryMesh::deleteAsset(kernel::AssetManager&, std::unique_ptr<GeometryMesh>) {}
 
 std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element const* properties) {
     std::vector<float>    vertex_data;

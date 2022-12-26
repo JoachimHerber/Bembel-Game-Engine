@@ -28,7 +28,7 @@ export class GraphicalUserInterface {
         GraphicalUserInterface& m_gui;
     };
 
-    GraphicalUserInterface(AssetManager& asset_mgr);
+    GraphicalUserInterface();
     GraphicalUserInterface(GraphicalUserInterface const&)            = delete;
     GraphicalUserInterface& operator=(GraphicalUserInterface const&) = delete;
     ~GraphicalUserInterface();
@@ -41,8 +41,6 @@ export class GraphicalUserInterface {
     Widget*     getWidget(std::string_view path) const;
 
   public:
-    AssetManager& assets;
-
     View         view;
     InputHandler input;
     Renderer     renderer;

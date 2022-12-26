@@ -64,7 +64,7 @@ Font::Glyph const& Font::getGlypData(unsigned glyph_index) const {
     return unknow_glyph;
 }
 
-std::unique_ptr<Font> Font::loadAsset(AssetManager& asset_mgr, std::filesystem::path file) {
+std::unique_ptr<Font> Font::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -77,16 +77,16 @@ std::unique_ptr<Font> Font::loadAsset(AssetManager& asset_mgr, std::filesystem::
         log().error("'{}' has no root element 'Font'", file_path);
         return nullptr;
     }
-    return createAsset(asset_mgr, root);
+    return createAsset(root);
 }
 
-std::unique_ptr<Font> Font::createAsset(AssetManager& asset_mgr, xml::Element const* properties) {
+std::unique_ptr<Font> Font::createAsset(xml::Element const* properties) {
     auto font = std::make_unique<Font>();
 
     std::string texture;
     if(!xml::getAttribute(properties, "texture", texture)) { return nullptr; }
 
-    font->m_glyph_atlas_texture.request(asset_mgr, texture);
+    font->m_glyph_atlas_texture.request(texture);
     if(!font->m_glyph_atlas_texture) {
         log().error("Can't find texture for font");
         return nullptr;
@@ -115,8 +115,6 @@ std::unique_ptr<Font> Font::createAsset(AssetManager& asset_mgr, xml::Element co
 
     return font;
 }
-
-void Font::deleteAsset(AssetManager&, std::unique_ptr<Font>) {}
 
 bool Font::readGlyphs(xml::Element const* properties) {
     if(!properties) return false;

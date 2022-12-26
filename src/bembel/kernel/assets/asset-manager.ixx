@@ -16,12 +16,16 @@ import :AssetContainer;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-export class AssetManager final {
-  public:
-  public:
+class AssetManager final {
+  private:
     AssetManager()  = default;
     ~AssetManager() = default;
 
+  public:
+    static AssetManager& getInstance() {
+        static AssetManager instance;
+        return instance;
+    }
     /**
      * Adds an asset.
      * The added asset will be managed by the asset manager and its
@@ -135,9 +139,8 @@ export class AssetManager final {
         u16 type_id = u16(m_asset_type_map.size());
 
         auto container = std::make_unique<AssetContainer<AssetType>>(type_id);
-        auto loader    = std::make_unique<typename AssetType::DefaultLoaderType>(
-            *this, container.get(), args...
-        );
+        auto loader =
+            std::make_unique<typename AssetType::DefaultLoaderType>(container.get(), args...);
 
         m_asset_type_map.emplace(AssetType::ASSET_TYPE_NAME, type_id);
         m_asset_container.push_back(std::move(container));
@@ -153,15 +156,13 @@ export class AssetManager final {
         u16 type_id = m_asset_type_map.size();
 
         auto container = std::make_unique<AssetContainer<AssetType>>(type_id);
-        auto loader    = std::make_unique<AssetLoaderType>(*this, container.get(), args...);
+        auto loader    = std::make_unique<AssetLoaderType>(container.get(), args...);
 
         m_asset_type_map.emplace(AssetType::ASSET_TYPE_NAME, type_id);
         m_asset_container.push_back(std::move(container));
         m_asset_loader.push_back(std::move(loader));
         return true;
     }
-
-    AssetLocator& getAssetLocator() { return m_asset_locator; }
 
   private:
     template <typename AssetType>
@@ -173,7 +174,6 @@ export class AssetManager final {
     }
 
   private:
-    AssetLocator    m_asset_locator;
     Dictionary<u16> m_asset_type_map;
 
     std::vector<std::unique_ptr<AssetContainerBase>> m_asset_container;

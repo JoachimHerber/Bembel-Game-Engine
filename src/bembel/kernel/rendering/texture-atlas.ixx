@@ -38,13 +38,11 @@ export class TextureAtlas final {
     static constexpr std::string_view ASSET_TYPE_NAME = "TextureAtlas";
 
     static std::unique_ptr<TextureAtlas> loadAsset(
-        AssetManager& asset_mgr, std::filesystem::path file_name
+         std::filesystem::path file_name
     );
     static std::unique_ptr<TextureAtlas> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
+        xml::Element const* properties
     );
-
-    static void deleteAsset(AssetManager& asset_mgr, std::unique_ptr<TextureAtlas> mesh);
 
     using DefaultLoaderType = SerialAssetLoader<TextureAtlas>;
 

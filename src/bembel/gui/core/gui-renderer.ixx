@@ -13,7 +13,7 @@ using namespace bembel::kernel;
 
 export class Renderer {
   public:
-    Renderer(AssetManager& asset_mgr, Widget& root_widget);
+    Renderer( Widget& root_widget);
     ~Renderer();
 
     bool init(In<xml::Element const*> properties);
@@ -27,7 +27,6 @@ export class Renderer {
     void drawWidget(Widget* widget, ivec2 parent_pos, ivec2 area_min, ivec2 area_max, int layer);
 
   protected:
-    AssetManager& m_asset_mgr;
     Widget&       m_root_widget;
 
     RenderBatch m_batch;

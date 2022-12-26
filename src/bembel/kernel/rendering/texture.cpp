@@ -161,9 +161,7 @@ bool Texture::setData(In<Image> image, In<int> mipMapLevel) {
     return true;
 }
 
-std::unique_ptr<Texture> Texture::loadAsset(
-    kernel::AssetManager& asset_mgr, std::filesystem::path file
-) {
+std::unique_ptr<Texture> Texture::loadAsset(std::filesystem::path file) {
     base::Image image;
 
     if(image.load(file)) {
@@ -174,15 +172,11 @@ std::unique_ptr<Texture> Texture::loadAsset(
     return nullptr;
 }
 
-std::unique_ptr<Texture> Texture::createAsset(
-    kernel::AssetManager& asset_mgr, xml::Element const* properties
-) {
+std::unique_ptr<Texture> Texture::createAsset(xml::Element const* properties) {
     std::string file;
-    if(xml::getAttribute(properties, "file", file)) { return Texture::loadAsset(asset_mgr, file); }
+    if(xml::getAttribute(properties, "file", file)) { return Texture::loadAsset(file); }
     return nullptr;
 }
-
-void Texture::deleteAsset(kernel::AssetManager& asset_mgr, std::unique_ptr<Texture> texture) {}
 
 std::optional<Texture::Format> Texture::stringToTextureFormat(std::string_view format) {
     static Dictionary<Format> const mapping{

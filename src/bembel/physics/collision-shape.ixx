@@ -1,8 +1,8 @@
 module;
 #include <bullet/btBulletDynamicsCommon.h>
 
-#include <memory>
 #include <filesystem>
+#include <memory>
 export module bembel.physics:CollisionShape;
 
 import bembel.base;
@@ -26,23 +26,17 @@ export class CollisionShape {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "CollisionShape";
 
-    static std::unique_ptr<CollisionShape> loadAsset(
-        AssetManager& asset_mgr, std::filesystem::path file
-    );
-    static std::unique_ptr<CollisionShape> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
+    static std::unique_ptr<CollisionShape> loadAsset(std::filesystem::path file);
+    static std::unique_ptr<CollisionShape> createAsset(xml::Element const* properties);
 
-    static void deleteAsset(AssetManager& asset_mgr, std::unique_ptr<CollisionShape> model);
+    static void deleteAsset(std::unique_ptr<CollisionShape> model);
 
     using DefaultLoaderType = SerialAssetLoader<CollisionShape>;
 
     static void initFactory();
 
   private:
-    static std::unique_ptr<CollisionShape> createCollisionShape(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
+    static std::unique_ptr<CollisionShape> createCollisionShape(xml::Element const* properties);
 
     static Factory<CollisionShape, xml::Element const*>& getFactory();
 };

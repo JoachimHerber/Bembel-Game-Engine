@@ -27,13 +27,11 @@ export class GeometryMesh {
     uint                   getVAO() const;
 
     static std::unique_ptr<GeometryMesh> loadAsset(
-        AssetManager& asset_mgr, In<std::filesystem::path> file
+         In<std::filesystem::path> file
     );
     static std::unique_ptr<GeometryMesh> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
+         xml::Element const* properties
     );
-
-    static void deleteAsset(AssetManager& asset_mgr, std::unique_ptr<GeometryMesh> mesh);
 
     static constexpr std::string_view ASSET_TYPE_NAME = "GeometryMesh";
 

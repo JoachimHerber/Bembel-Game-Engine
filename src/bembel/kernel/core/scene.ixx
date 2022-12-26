@@ -1,6 +1,7 @@
 ﻿module;
 #include <filesystem>
-#include <set>
+#include <vector>
+#include <stack>
 export module bembel.kernel.core:Scene;
 
 import bembel.base;
@@ -37,12 +38,10 @@ concept Component = true; /* requires() {
 
 export class Scene {
   public:
-    Scene(AssetManager& asste_mgr) : m_asste_mgr{asste_mgr} {}
+    Scene()                        = default;
     Scene(Scene const&)            = delete;
     Scene& operator=(Scene const&) = delete;
     ~Scene();
-
-    AssetManager& getAssetManager() { return m_asste_mgr; }
 
     template <Component T, typename... TArgs>
     void registerComponentType(TArgs&&... args) {
@@ -84,10 +83,10 @@ export class Scene {
         m_entities[std::to_underlying(id)] |= container->getComponentMask();
         return container->createComponent(id, std::forward<TArgs>(args)...);
     }
-    
-    template <Component ... T>
-    bool  createComponents(EntityID id){
-        return ( ... && !!createComponent<T>(id));
+
+    template <Component... T>
+    bool createComponents(EntityID id) {
+        return (... && !!createComponent<T>(id));
     }
 
     template <Component T>
@@ -123,20 +122,7 @@ export class Scene {
 
     std::vector<ComponentMask> const& getEntitys() const;
 
-    template <typename AssetType>
-    AssetHandle getAssetHandle(std::string_view name) {
-        return m_asste_mgr.getAssetHandle<AssetType>(name);
-    }
-
-    template <typename AssetType>
-    AssetType* getAsset(AssetHandle handle, bool return_dummy_if_handle_invalid = true) {
-        return m_asste_mgr.getAsset<AssetType>(handle, return_dummy_if_handle_invalid);
-    }
-
     bool loadAssets(std::filesystem::path file);
-
-  private:
-    void loadAsset(xml::Element const*);
 
   private:
     using ContainerPtr = std::unique_ptr<ComponentContainerBase>;
@@ -147,8 +133,7 @@ export class Scene {
     Dictionary<ComponentTypeID> m_component_type_map;
     std::vector<ContainerPtr>   m_container;
 
-    AssetManager&         m_asste_mgr;
-    std::set<AssetHandle> m_assets;
+    std::vector<Asset<std::any>> m_assets;
 };
 
 } // namespace bembel::kernel

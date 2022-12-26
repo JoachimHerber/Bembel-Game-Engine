@@ -17,8 +17,8 @@ class MaterialLoader final : public AssetLoaderBase {
   public:
     using ContainerType = AssetContainer<Material>;
 
-    MaterialLoader(AssetManager& asset_mgr, ContainerType* container, GraphicSystem* graphic_system)
-      : m_graphic_system(graphic_system), m_asset_mgr(asset_mgr), m_container(container) {}
+    MaterialLoader(ContainerType* container, GraphicSystem* graphic_system)
+      : m_graphic_system(graphic_system), m_container(container) {}
     virtual ~MaterialLoader() = default;
 
     AssetHandle requestAsset(std::string_view filename) override {
@@ -81,17 +81,15 @@ class MaterialLoader final : public AssetLoaderBase {
 
   private:
     GraphicSystem* m_graphic_system;
-    AssetManager&  m_asset_mgr;
     ContainerType* m_container;
 };
 
-GraphicSystem::GraphicSystem(Engine& engine)
-  : System("Graphics"), m_engine{engine}, m_geometry_render_queue{engine.assets} {
-    engine.assets.registerAssetType<Material, MaterialLoader>(this);
-    engine.assets.registerAssetType<GeometryMesh>();
-    engine.assets.registerAssetType<GeometryModel>();
-    engine.assets.registerAssetType<Shader>();
-    engine.assets.registerAssetType<ShaderProgram>();
+GraphicSystem::GraphicSystem(Engine& engine) : System("Graphics"), m_engine{engine} {
+    assets::registerAssetType<Material, MaterialLoader>(this);
+    assets::registerAssetType<GeometryMesh>();
+    assets::registerAssetType<GeometryModel>();
+    assets::registerAssetType<Shader>();
+    assets::registerAssetType<ShaderProgram>();
 
     using Stage = RenderingPipeline::Stage;
     Stage::registerStageType<GeometryRenderingStage>("DeferredGeometryStage");
@@ -104,7 +102,7 @@ GraphicSystem::~GraphicSystem() {
 }
 
 RenderingPipeline* GraphicSystem::createRenderingPipline() {
-    m_pipelines.push_back(std::make_unique<RenderingPipeline>(m_engine.assets, m_engine.display));
+    m_pipelines.push_back(std::make_unique<RenderingPipeline>(m_engine.display));
     return m_pipelines.back().get();
 }
 
@@ -153,9 +151,8 @@ void GraphicSystem::configureRenderer(xml::Element const* properties) {
     if(!properties) return;
 
     for(auto renderer_properties : xml::IterateChildElements(properties)) {
-        RendererPtr renderer = DefaultGeometryRenderer::createRenderer(
-            renderer_properties, m_engine.assets, uint(m_renderer.size())
-        );
+        RendererPtr renderer =
+            DefaultGeometryRenderer::createRenderer(renderer_properties, uint(m_renderer.size()));
 
         if(renderer) {
             std::string name;
@@ -170,7 +167,7 @@ void GraphicSystem::configurePipelines(xml::Element const* properties) {
     if(!properties) return;
 
     for(auto pipeline_properties : xml::IterateChildElements(properties, "RenderingPipeline")) {
-        auto pipline = std::make_unique<RenderingPipeline>(m_engine.assets, m_engine.display);
+        auto pipline = std::make_unique<RenderingPipeline>(m_engine.display);
         if(!pipline->configure(pipeline_properties)) pipline.reset();
 
         m_pipelines.push_back(std::move(pipline));

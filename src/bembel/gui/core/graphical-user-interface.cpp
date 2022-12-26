@@ -12,12 +12,8 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GraphicalUserInterface::GraphicalUserInterface(AssetManager& asset_mgr)
-  : assets{asset_mgr}
-  , view{*this}
-  , input{asset_mgr, root_widget, view}
-  , renderer{asset_mgr, root_widget}
-  , root_widget{*this} {
+GraphicalUserInterface::GraphicalUserInterface()
+  : view{*this}, input{root_widget, view}, renderer{root_widget}, root_widget{*this} {
     this->root_widget.setName("Root");
 }
 

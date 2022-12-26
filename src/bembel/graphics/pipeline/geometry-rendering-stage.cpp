@@ -85,7 +85,7 @@ void GeometryRenderingStage::execute(
         }
         model_matrix = glm::scale(model_matrix, geom.scale);
 
-        renderQueue.addGeometryObject(geom.model, model_matrix);
+        renderQueue.addGeometryObject(geom.model.get(), model_matrix);
     }
 
     renderQueue.sortRenderData();

@@ -20,9 +20,7 @@ bool TextureAtlas::loadTexture(std::string_view file) {
     return true;
 }
 
-std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(
-    AssetManager& asset_mgr, std::filesystem::path file
-) {
+std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -35,18 +33,16 @@ std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(
         log().error("File '{}' has no root element 'TextureAtlas'", file_path);
         return nullptr;
     }
-    auto atlas = TextureAtlas::createAsset(asset_mgr, root);
+    auto atlas = TextureAtlas::createAsset(root);
     if(!atlas) { log().error("Failed to create TextureAtlas from file '{}'", file_path); }
     return std::move(atlas);
 }
 
-std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(
-    AssetManager& asset_mgr, xml::Element const* properties
-) {
+std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(xml::Element const* properties) {
     if(!properties->Attribute("texture")) return nullptr;
 
     std::string texture;
-    if(!asset_mgr.getAssetLocator().findAssetLocation<Texture>(
+    if(!AssetLocator::getInstance().findAssetLocation<Texture>(
            properties->Attribute("texture"), &texture
        )) {
         return nullptr;
@@ -66,7 +62,5 @@ std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(
 
     return atlas;
 }
-
-void TextureAtlas::deleteAsset(AssetManager& asset_mgr, std::unique_ptr<TextureAtlas> mesh) {}
 
 } // namespace bembel::kernel

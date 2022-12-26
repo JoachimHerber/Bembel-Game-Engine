@@ -11,11 +11,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-bool initComponent(
-    In<xml::Element const*> properties,
-    InOut<AssetManager>     asset_mgr,
-    InOut<PointLightData>   component
-) {
+bool initComponent(In<xml::Element const*> properties, InOut<PointLightData> component) {
     xml::getAttribute(properties, "color", component.color);
     float intensity;
     if(xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;
@@ -26,11 +22,7 @@ bool initComponent(
     return true;
 }
 
-bool initComponent(
-    In<xml::Element const*>     properties,
-    InOut<AssetManager>         asset_mgr,
-    InOut<DirectionalLightData> component
-) {
+bool initComponent(In<xml::Element const*> properties, InOut<DirectionalLightData> component) {
     xml::getAttribute(properties, "color", component.color);
     float intensity;
     if(xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;

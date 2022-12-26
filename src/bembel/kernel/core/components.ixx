@@ -36,7 +36,7 @@ class ComponentVector : public ComponentContainerBase {
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
         TDataType component;
-        if(initComponent(properties, m_scene->getAssetManager(), component)) {
+        if(initComponent(properties, component)) {
             if(std::to_underlying(entity_id) >= m_components.size()) {
                 m_components.resize(std::to_underlying(entity_id) + 1);
             }
@@ -82,7 +82,7 @@ class ComponentMap : public ComponentContainerBase {
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
         TDataType component;
-        if(initComponent(properties, m_scene->getAssetManager(), component)) {
+        if(initComponent(properties, component)) {
             m_components[entity_id] = std::move(component);
             return true;
         }
@@ -166,7 +166,7 @@ class FixedAddressComponentVector : public ComponentContainerBase {
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
         TDataType component;
-        if(initComponent(properties, m_scene->getAssetManager(), component)) {
+        if(initComponent(properties, component)) {
             operator[](entity_id) = component;
             return true;
         }

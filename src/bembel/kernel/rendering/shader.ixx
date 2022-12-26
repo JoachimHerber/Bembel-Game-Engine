@@ -23,12 +23,8 @@ export class Shader final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "Shader";
 
-    static std::unique_ptr<Shader> loadAsset(AssetManager& asset_mgr, std::filesystem::path path);
-    static std::unique_ptr<Shader> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
-
-    static void deleteAsset(AssetManager&, std::unique_ptr<Shader>) {}
+    static std::unique_ptr<Shader> loadAsset(std::filesystem::path path);
+    static std::unique_ptr<Shader> createAsset(xml::Element const* properties);
 
     static std::unique_ptr<Shader> createShader(Type type, std::string_view source);
 
@@ -46,7 +42,7 @@ export class ShaderProgram final {
     ShaderProgram& operator&(ShaderProgram const&) = delete;
     ~ShaderProgram();
 
-    bool attachShader(InOut<AssetManager> asset_mgr, AssetHandle handle);
+    bool attachShader(Asset<Shader> handle);
 
     void bindAttribLocation(std::string_view name, unsigned int index);
     void bindFragDataLocation(std::string_view name, unsigned int index);
@@ -70,20 +66,14 @@ export class ShaderProgram final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "ShaderProgram";
 
-    static std::unique_ptr<ShaderProgram> loadAsset(
-        AssetManager& asset_mgr, std::filesystem::path path
-    );
-    static std::unique_ptr<ShaderProgram> createAsset(
-        AssetManager& asset_mgr, xml::Element const* properties
-    );
-
-    static void deleteAsset(AssetManager&, std::unique_ptr<ShaderProgram>);
+    static std::unique_ptr<ShaderProgram> loadAsset(std::filesystem::path path);
+    static std::unique_ptr<ShaderProgram> createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<ShaderProgram>;
 
   private:
-    uint                     m_program_handle;
-    std::vector<AssetHandle> m_shader_handles;
+    uint                       m_program_handle;
+    std::vector<Asset<Shader>> m_shader_handles;
 
     bool m_ready_to_use = false;
 

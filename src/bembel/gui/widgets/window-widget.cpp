@@ -26,17 +26,12 @@ WindowWidget::WindowWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_resize_handle_bottom_right);
     m_interaction_handles.push_back(&m_resize_handle_right);
 
-    auto const hand_cursor      = m_gui.assets.getAssetHandle<CursorIcon>("Hand");
-    auto const h_resize_cursor  = m_gui.assets.getAssetHandle<CursorIcon>("HResize");
-    auto const v_resize_cursor  = m_gui.assets.getAssetHandle<CursorIcon>("VResize");
-    auto const crosshair_cursor = m_gui.assets.getAssetHandle<CursorIcon>("Crosshair");
-
-    m_top_handle.cursor                  = hand_cursor;
-    m_resize_handle_left.cursor          = h_resize_cursor;
-    m_resize_handle_bottom_left.cursor   = crosshair_cursor;
-    m_resize_handle_bottom_center.cursor = v_resize_cursor;
-    m_resize_handle_bottom_right.cursor  = crosshair_cursor;
-    m_resize_handle_right.cursor         = h_resize_cursor;
+    m_top_handle.cursor                  = Asset<CursorIcon>("Hand");
+    m_resize_handle_left.cursor          = Asset<CursorIcon>("HResize");
+    m_resize_handle_bottom_left.cursor   = Asset<CursorIcon>("Crosshair");
+    m_resize_handle_bottom_center.cursor = Asset<CursorIcon>("VResize");
+    m_resize_handle_bottom_right.cursor  = Asset<CursorIcon>("Crosshair");
+    m_resize_handle_right.cursor         = Asset<CursorIcon>("HResize");
 
     this->size.change_signal.bind(this, &WindowWidget::onSizeChanged);
 

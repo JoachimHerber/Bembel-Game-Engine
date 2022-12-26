@@ -10,9 +10,14 @@ namespace bembel::kernel {
 using namespace bembel::base;
 
 export class AssetLocator final {
-  public:
+  private:
     AssetLocator()  = default;
     ~AssetLocator() = default;
+  public:
+    static AssetLocator& getInstance(){
+        static AssetLocator instance;
+        return instance;
+    }
 
     bool init(xml::Element const* properties) {
         for(auto it : xml::IterateChildElements(properties, "AssetDirectory")) {

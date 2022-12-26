@@ -8,6 +8,7 @@ import bembel.base;
 import bembel.kernel;
 
 import :Units;
+import :CollisionShape;
 
 namespace bembel::physics {
 using namespace bembel::base;
@@ -41,7 +42,7 @@ class MotionState : public btMotionState {
 };
 
 struct RigidBodyData {
-    AssetHandle                  collision_shape;
+    Asset<CollisionShape>        collision_shape;
     std::unique_ptr<btRigidBody> rigid_body;
     std::unique_ptr<MotionState> motion_state;
 };
@@ -57,7 +58,7 @@ export class RigidBody {
         RigidBody createComponent(EntityID entity_id);
 
         RigidBody createComponent(
-            EntityID entity_id, AssetHandle collision_shape, units::Kilogram mass
+            EntityID entity_id, Asset<CollisionShape> collision_shape, units::Kilogram mass
         );
 
         bool createComponent(EntityID entity_id, xml::Element const* properties) override;
@@ -69,7 +70,7 @@ export class RigidBody {
         RigidBody getComponent(EntityID entity_id);
 
       private:
-        bool createRigidBody(EntityID entity_id, AssetHandle collision_shape, btScalar mass);
+        bool createRigidBody(EntityID entity_id, Asset<CollisionShape> collision_shape, btScalar mass);
 
       private:
         Scene*                     m_scene;

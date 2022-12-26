@@ -36,7 +36,7 @@ TextureAtlas::Entry const* Style::getTextureCoords(std::string_view name) const 
     return m_texture_atlas ? m_texture_atlas->getEntry(name) : nullptr;
 }
 
-std::unique_ptr<Style> Style::loadAsset(AssetManager& asset_mgr, std::filesystem::path file) {
+std::unique_ptr<Style> Style::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -49,25 +49,23 @@ std::unique_ptr<Style> Style::loadAsset(AssetManager& asset_mgr, std::filesystem
         log().error("File '{}' has no root element 'GuiSkin'", file_path);
         return nullptr;
     }
-    return Style::createStyle(asset_mgr, root);
+    return Style::createStyle(root);
 }
 
-std::unique_ptr<Style> Style::createAsset(AssetManager& asset_mgr, xml::Element const* properties) {
-    return Style::createStyle(asset_mgr, properties);
+std::unique_ptr<Style> Style::createAsset(xml::Element const* properties) {
+    return Style::createStyle(properties);
 }
 
-void Style::deleteAsset(AssetManager&, std::unique_ptr<Style>) {}
-
-std::unique_ptr<Style> Style::createStyle(AssetManager& asset_mgr, xml::Element const* properties) {
+std::unique_ptr<Style> Style::createStyle(xml::Element const* properties) {
     if(!properties) return nullptr;
 
     Asset<kernel::TextureAtlas> texture_array;
-    if(!texture_array.request(asset_mgr, properties->FirstChildElement("TextureAtlas"))) {
+    if(!texture_array.request(properties->FirstChildElement("TextureAtlas"))) {
         log().error("Can't find TextureAtlas for gui::Style");
         return nullptr;
     }
     Asset<kernel::Font> font;
-    if(!font.request(asset_mgr, properties->FirstChildElement("Font"))) {
+    if(!font.request(properties->FirstChildElement("Font"))) {
         log().error("Can't find Font for gui::Style");
         return nullptr;
     }
