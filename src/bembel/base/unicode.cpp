@@ -23,18 +23,18 @@ namespace utf8 {
             return {buffer.data(), 1};
         } else if(pc < 0x0000'0800) {
             buffer[0] = char8_t(0b1100'0000 | (0b0001'1111 & (pc >> 6)));
-            buffer[0] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 0)));
+            buffer[1] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 0)));
             return {buffer.data(), 2};
         } else if(pc < 0x0001'0000) {
             buffer[0] = char8_t(0b1110'0000 | (0b0000'1111 & (pc >> 12)));
-            buffer[0] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 6)));
-            buffer[0] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 0)));
+            buffer[1] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 6)));
+            buffer[2] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 0)));
             return {buffer.data(), 3};
         } else if(pc < 0x0011'0000) {
             buffer[0] = char8_t(0b1111'0000 | (0b0000'0111 & (pc >> 18)));
-            buffer[0] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 12)));
-            buffer[0] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 6)));
-            buffer[0] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 0)));
+            buffer[1] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 12)));
+            buffer[2] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 6)));
+            buffer[3] = char8_t(0b1000'0000 | (0b0011'1111 & (pc >> 0)));
             return {buffer.data(), 4};
         }
         return {};
