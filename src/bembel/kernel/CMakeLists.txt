@@ -1,4 +1,7 @@
 target_sources(Bembel
+	PUBLIC
+		kernel.natvis
+		
     PRIVATE
         kernel.ixx
 

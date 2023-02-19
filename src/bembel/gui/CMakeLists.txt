@@ -1,4 +1,7 @@
 target_sources(Bembel
+	PUBLIC
+		gui.natvis
+		
     PRIVATE
         gui.ixx
 

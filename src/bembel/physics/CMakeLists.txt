@@ -1,4 +1,7 @@
 target_sources(Bembel
+	PUBLIC
+		physics.natvis
+		
 	PRIVATE
         physics.ixx
 		

@@ -12,6 +12,7 @@ target_sources(Bembel
     PUBLIC
         ../dependencies/tinyxml2/tinyxml2.h
         ../dependencies/lodepng/lodepng.h
+        ../dependencies/glm.natvis
     PRIVATE
         ../dependencies/tinyxml2/tinyxml2.cpp
         ../dependencies/lodepng/lodepng.cpp
@@ -21,4 +22,5 @@ source_group(dependencies PREFIX "bembel" FILES
     ../dependencies/tinyxml2/tinyxml2.cpp
     ../dependencies/lodepng/lodepng.h
     ../dependencies/lodepng/lodepng.cpp
+    ../dependencies/glm.natvis
 )

@@ -1,4 +1,7 @@
 target_sources(Bembel
+	PUBLIC
+		base.natvis
+		
 	PRIVATE
         base.ixx
         types.ixx
@@ -21,6 +24,6 @@ target_sources(Bembel
         serialisation.ixx
         memory.ixx
         memory.cpp
-
+		
         CMakeLists.txt
 )

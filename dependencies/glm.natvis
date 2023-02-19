@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="glm::vec&lt;2,*,*&gt;">
+    <DisplayString>{{{x}, {y}}}</DisplayString>
+  </Type>
+  <Type Name="glm::vec&lt;3,*,*&gt;">
+    <DisplayString>{{{x}, {y}, {z}}}</DisplayString>
+  </Type>
+  <Type Name="glm::vec&lt;4,*,*&gt;">
+    <DisplayString>{{{x}, {y}, {z}; {w}}}</DisplayString>
+  </Type>
+  <Type Name="glm::mat&lt;2,2,*,*&gt;">
+    <DisplayString>{{{value[0].x}, {value[0].y}; {value[1].x}, {value[1].y}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">value[0]</Item>
+      <Item Name="[1]">value[1]</Item>
+    </Expand>
+  </Type>
+  <Type Name="glm::mat&lt;3,3,*,*&gt;">
+    <DisplayString>{{{value[0].x}, {value[0].y}, {value[0].z}; {value[1].x}, {value[1].y}, {value[1].z}; {value[2].x}, {value[2].y}, {value[2].z}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">value[0]</Item>
+      <Item Name="[1]">value[1]</Item>
+      <Item Name="[2]">value[2]</Item>
+    </Expand>
+  </Type>
+  <Type Name="glm::mat&lt;4,4,*,*&gt;">
+    <DisplayString>{{{value[0].x}, {value[0].y}, {value[0].z}, {value[0].w}; {value[1].x}, {value[1].y}, {value[1].z}, {value[1].w}; {value[2].x}, {value[2].y}, {value[2].z}, {value[2].w};{value[3].x}, {value[3].y}, {value[3].z}, {value[3].w}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">value[0]</Item>
+      <Item Name="[1]">value[1]</Item>
+      <Item Name="[2]">value[2]</Item>
+      <Item Name="[3]">value[3]</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>
