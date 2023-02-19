@@ -34,9 +34,9 @@ bool Application::init() {
 
     m_camera = std::make_unique<CameraControle>(pipline->getCamera());
 
-    m_scene = std::make_shared<Scene>(m_engine.assets);
+    m_scene = std::make_shared<Scene>();
     m_scene->registerComponentType<DirectionalLight>();
-    m_scene->loadAssets("assets/assets.xml");
+    m_scene->loadAssets("scenes/assets.xml");
 
     m_chess_board = std::make_unique<ChessBoard>(m_scene.get());
 
@@ -65,7 +65,7 @@ void Application::cleanup() {
     m_scene.reset();
 
     m_engine.shutdownSystems();
-    m_engine.assets.deleteUnusedAssets();
+    //m_engine.assets.deleteUnusedAssets();
     m_engine.display.closeOpenWindows();
 }
 

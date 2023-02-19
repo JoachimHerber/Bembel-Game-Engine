@@ -1,8 +1,8 @@
 <Scene>
   <Assets>
-    <Material name="sphere" renderer="default" emission="0 0 0" albedo="0.8 0.1 0.1" roughness="0.8" metallic="0.1" f0="0.04"/>
-    <Material name="floor"  renderer="default" emission="0 0 0" albedo="0.1 0.8 0.1" roughness="0.5" metallic="0.1" f0="0.04"/>
-    <Material name="wall"   renderer="default" emission="0 0 0" albedo="0.1 0.1 0.8" roughness="0.5" metallic="0.1" f0="0.04"/>
+    <Material name="sphere" renderer="default" emission="0 0 0" albedo="0.8 0.1 0.1" roughness="0.5" metallic="0.8" f0="0.04"/>
+    <Material name="floor"  renderer="default" emission="0 0 0" albedo="0.1 0.8 0.1" roughness="0.5" metallic="0.3" f0="0.04"/>
+    <Material name="wall"   renderer="default" emission="0 0 0" albedo="0.1 0.1 0.8" roughness="0.5" metallic="0.3" f0="0.04"/>
     <CollisionShape name="floor"  type="box" size="5.0 0.1 5.0"/>
     <CollisionShape name="wall_1" type="box" size="0.1 2.0 5.0"/>
     <CollisionShape name="wall_2" type="box" size="5.0 2.0 0.1"/>
@@ -23,7 +23,7 @@
   </Assets>
   <Entities>
     <Entity>
-        <DirectionalLight color="1.0 1.0 1.0" intensity="5.0" direction="-0.3 -1 -0.2"/>
+        <DirectionalLight color="1.0 1.0 1.0" intensity="5.0" direction="-0.3 -1 -0.2" shadowResolution="2048"/>
     </Entity>
     <Entity>
       <Transform x="0" y="-1.0" z="0"/>

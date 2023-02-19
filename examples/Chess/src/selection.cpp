@@ -133,8 +133,7 @@ void SelectionRenderingStage::cleanup() {
 }
 
 void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<RendererPtr> const&) {
-    auto program = m_shader_program.getAsset();
-    if(!program) return;
+    if(!m_shader_program) return;
 
     m_fbo->beginRenderToTexture();
 
@@ -144,7 +143,7 @@ void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<Renderer
     glEnable(GL_TEXTURE_3D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    program->use();
+    m_shader_program->use();
     m_noise->bind();
 
     auto         cam  = m_pipline.getCamera();
@@ -153,9 +152,9 @@ void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<Renderer
     milliseconds ms   = duration_cast<milliseconds>(high_resolution_clock::now() - m_start_time);
     float        time = 0.001f * (ms.count());
 
-    program->setUniform("uNoise", 0);
-    program->setUniform("uProjectionMatrix", proj);
-    program->setUniform("uTime", time);
+    m_shader_program->setUniform("uNoise", 0);
+    m_shader_program->setUniform("uProjectionMatrix", proj);
+    m_shader_program->setUniform("uTime", time);
 
     std::vector<GeometryObject> geometry;
 
@@ -171,9 +170,9 @@ void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<Renderer
 
         modelView = view * glm::translate(glm::mat4(1), it.position) * glm::mat4_cast(it.rotation);
 
-        program->setUniform("uState", int(it.state));
-        program->setUniform("uModleViewMatrix", modelView);
-        program->setUniform("uNormalMatrix", modelView);
+        m_shader_program->setUniform("uState", int(it.state));
+        m_shader_program->setUniform("uModleViewMatrix", modelView);
+        m_shader_program->setUniform("uNormalMatrix", modelView);
 
         auto mesh = it.model->getMesh();
 
@@ -215,10 +214,8 @@ void SelectionRenderingStage::setScene(Scene* scene) {
 }
 
 bool SelectionRenderingStage::configure(xml::Element const* properties) {
-    auto& asset_mgr = m_pipline.getAssetManager();
-
     Asset<ShaderProgram> program;
-    program.request(asset_mgr, properties->FirstChildElement("Shader"));
+    program.request(properties->FirstChildElement("Shader"));
 
     setShader(std::move(program));
 
@@ -249,7 +246,7 @@ void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& 
 
         if(highlights[entity] == SelectionHighlight::NO_HIGHLIGHT) continue;
 
-        GeometryModel* model = m_scene->getAsset<GeometryModel>(geometry[entity].model);
+        GeometryModel* model = geometry[entity].model.get();
         if(model == nullptr) continue;
 
         float dist = glm::length(camPos - transform->position);

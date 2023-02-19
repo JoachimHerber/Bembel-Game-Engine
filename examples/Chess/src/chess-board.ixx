@@ -20,7 +20,7 @@ export struct ChessPieceComponentData {
     ivec2          position;
     bool           has_moved = false;
 };
-export bool initComponent(xml::Element const*, AssetManager&, ChessPieceComponentData&) {
+export bool initComponent(xml::Element const*, ChessPieceComponentData&) {
     return true;
 }
 export using ChessPieceComponent =

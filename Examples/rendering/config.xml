@@ -1,20 +1,21 @@
 <Bembel>
 	<AssetDirectories>
-		<AssetDirectory directory="assets"/>
-		<AssetDirectory directory="assets/gui"/>
-		<AssetDirectory directory="assets/shader"/>
+		<AssetDirectory directory="../assets"/>
+		<AssetDirectory directory="../assets/gui"/>
+		<AssetDirectory directory="../assets/shader"/>
 	</AssetDirectories>
 	<Display>
 		<Window title="Rendering Test">
 			<DisplayMode mode = "Windowed">
-				<Size width="800" height="600" />
-				<AspectRatio numerator="4" denominator="3" />
+				<Size width="1000" height="800" />
+				<AspectRatio numerator="5" denominator="4" />
 			</DisplayMode>
 			<Viewports>
-				<Viewport relativ_position="0 0" relativ_size="0.75 1"/>
-				<Viewport relativ_position="0.75 0.0000000" relativ_size="0.25 0.3333333"/>
-				<Viewport relativ_position="0.75 0.3333333" relativ_size="0.25 0.3333333"/>
-				<Viewport relativ_position="0.75 0.6666666" relativ_size="0.25 0.3333333"/>
+				<Viewport relativ_position="0 0" relativ_size="0.8 1"/>
+				<Viewport relativ_position="0.8 0.75" relativ_size="0.20 0.25"/>
+				<Viewport relativ_position="0.8 0.50" relativ_size="0.20 0.25"/>
+				<Viewport relativ_position="0.8 0.25" relativ_size="0.20 0.25"/>
+				<Viewport relativ_position="0.8 0.00" relativ_size="0.20 0.25"/>
 			</Viewports>
 		</Window>
 	</Display>
@@ -22,11 +23,18 @@
 		<Graphics>
 			<Renderer>
 				<GeometryRenderer name="default" >
-					<ShaderProgram file_name="default-geom-render.shader-program" />
+					<GeometyPassShader>
+						<Shader file="default-geomety-pass.vert"/>
+						<Shader file="default-geomety-pass.frag"/>
+					</GeometyPassShader>
+					<ShadowPassShader>
+						<Shader file="default-shadow-pass.vert"/>
+						<Shader file="default-shadow-pass.frag"/>
+					</ShadowPassShader>
 				</GeometryRenderer>
 			</Renderer>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="600" vertical_resolution="600">
+				<RenderingPipeline horizontal_resolution="800" vertical_resolution="800">
 					<Textures>
 						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
 						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
@@ -43,8 +51,18 @@
 							<ColorOutput texture="normal"   attachment="3"/>
 						</DeferredGeometryStage>
 						<DeferredLightingStage>
-							<DirectionalLightProgram file_name="dir-light.shader-program" />
-							<PointLightShaderProgram file_name="point-light.shader-program" />
+							<DirectionalLightProgram>
+								<Shader file="dir-light.vert"/>
+								<Shader file="cook-torrance.frag"/>
+								<Shader file="read-geom-data.frag"/>
+								<Shader file="dir-light.frag"/>
+							</DirectionalLightProgram>
+							<PointLightShaderProgram>
+								<Shader file="point-light.vert"/>
+								<Shader file="cook-torrance.frag"/>
+								<Shader file="read-geom-data.frag"/>
+								<Shader file="point-light.frag"/>
+							</PointLightShaderProgram>
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
@@ -53,14 +71,18 @@
 						</DeferredLightingStage>
 						<EnvironmentMapReflectionStage>
 							<EnvironmentMap
-								left   = "assets/skybox/X-.png"
-								right  = "assets/skybox/X+.png"
-								bottom = "assets/skybox/Y-.png"
-								top    = "assets/skybox/Y+.png"
-								back   = "assets/skybox/Z+.png"
-								front  = "assets/skybox/Z-.png"
+								left   = "skybox/X-.png"
+								right  = "skybox/X+.png"
+								bottom = "skybox/Y-.png"
+								top    = "skybox/Y+.png"
+								back   = "skybox/Z+.png"
+								front  = "skybox/Z-.png"
 							/>
-							<Shader file_name="environment-map-reflections.shader-program" />
+							<Shader>
+								<Shader file="environment-map-reflections.vert"/>
+								<Shader file="read-geom-data.frag"/>
+								<Shader file="environment-map-reflections.frag"/>
+							</Shader>
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
@@ -76,7 +98,7 @@
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
-						<Projection fild_of_view="75" aspect_ration="1" near="0.1" far="100.0" />
+						<Projection fild_of_view="75" aspect_ration="1" near="0.1" far="50.0" />
 					</Camera>
 				</RenderingPipeline>
 			</RenderingPipelines>
@@ -84,11 +106,18 @@
 		<UserInterface>
 			<GUI name="main" window="0" viewport="0">
 				<Renderer>
-					<ShaderProgram file_name="gui.shader-program" />
+					<ShaderProgram>
+						<Shader file="gui.vert"/>
+						<Shader file="gui.frag"/>
+					</ShaderProgram>
 					<GuiStyle file_name="dark_gui_style.xml" />
 				</Renderer>
-				<Widgets >
-					<Label name="Label" size="500 24" position="8 8" text="Hello World" alignment="left"/>
+				<Widgets>
+					<Label name="Label" size="500 28" position="8 36" text="Hello World" alignment="left" outline="true"/>
+					<Label              size="50 28"  position="8 8"  text="Light:"      alignment="left" outline="true"/>
+					
+					<IntSlider name="Pitch" size="100 28" position="55 8"  label="Pitch: " min="-90" max="90" value="-80" unit="°"/>
+					<IntSlider name="Yaw"   size="100 28" position="160 8" label="Yaw: "   min="-180" max="180" value="0" unit="°"/>
 				</Widgets>
 			</GUI>
 		</UserInterface>

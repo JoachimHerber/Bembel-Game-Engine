@@ -1,4 +1,6 @@
 ﻿module;
+#include <glbinding/gl/gl.h>
+
 #include <format>
 #include <memory>
 #include <string>
@@ -9,6 +11,7 @@ using namespace graphics;
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::gui;
+using namespace ::gl;
 
 RenderingExample::RenderingExample() : kernel::Application() {
     m_graphic_system = m_engine.addSystem<GraphicSystem>();
@@ -28,15 +31,35 @@ bool RenderingExample::init() {
     m_camera =
         std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
 
-    m_scenes.push_back(std::make_shared<kernel::Scene>(m_engine.assets));
-    m_graphic_system->getRenderingPipelines()[0]->setScene(m_scenes[0]);
+    m_scene = std::make_shared<kernel::Scene>();
+    m_graphic_system->getRenderingPipelines()[0]->setScene(m_scene);
 
-    m_scenes[0]->loadScene("scenes/material-test.scene");
+    m_scene->loadScene("scenes/material-test.scene");
+    auto shadow_map = std::make_unique<ShadowMap>(2048);
+    m_view          = std::make_unique<ShadowDebugView>(
+        //m_graphic_system->getRenderingPipelines()[0]->getTexture("depth"), 
+        &shadow_map->texture,
+        2048
+    );
+
+    m_light = Entity<>(*m_scene);
+    m_light.createComponent<DirectionalLight>(
+        vec3(3.f, 3.f, 3.f), //
+        vec3(0.f, -1.f, 0.f),
+        std::move(shadow_map)
+    );
+
+    m_engine.display.getWindow(0)->getViewport(4)->addView(m_view.get());
 
     auto gui = m_gui_system->getGUI("main");
 
     m_label = gui->getWidget<LabelWidget>("Label");
-    m_label->setHasOutline(true);
+
+    m_light_slider_pitch = gui->getWidget<IntSliderWidget>("Pitch");
+    m_light_slider_yaw   = gui->getWidget<IntSliderWidget>("Yaw");
+
+    m_light_slider_pitch->value_update_signal.bind(this, &RenderingExample::updateLightDir);
+    m_light_slider_yaw->value_update_signal.bind(this, &RenderingExample::updateLightDir);
 
     m_engine.initSystems();
     return true;
@@ -44,22 +67,24 @@ bool RenderingExample::init() {
 
 void RenderingExample::cleanup() {
     m_camera.reset();
-    m_scenes.clear();
+    m_scene.reset();
     m_engine.shutdownSystems();
-    m_engine.assets.deleteUnusedAssets();
+    assets::deleteUnusedAssets();
     m_engine.display.closeOpenWindows();
 }
 
 void RenderingExample::update(double time) {
-    m_camera->update(time);
+    //m_camera->update(time);
+
+    static constexpr float RAD_TO_DEG = 180 / 3.14159265359;
 
     bembel::base::String text = std::format(
-        "Cam: pos=({:.3}; {:.3}; {:.3}) pitch={:.3} yaw={:.3}",
+        "Cam: pos=({:.2}; {:.2}; {:.2}) pitch={:2}° yaw={:3}°",
         m_camera->getPosition().x,
         m_camera->getPosition().y,
         m_camera->getPosition().z,
-        m_camera->getPitch(),
-        m_camera->getYaw()
+        int(RAD_TO_DEG * m_camera->getPitch()),
+        int(RAD_TO_DEG * m_camera->getYaw())
     );
 
     m_label->setText(text.data);
@@ -71,4 +96,55 @@ void RenderingExample::handleEvent(In<WindowShouldCloseEvent> event) {
 
 void RenderingExample::handleEvent(In<FrameBufferResizeEvent> event) {}
 
+void RenderingExample::updateLightDir(In<i64>) {
+    static constexpr float DEG_TO_RAD = 3.14159265359 / 180;
+
+    float pitch = DEG_TO_RAD * m_light_slider_pitch->getValue();
+    float yaw   = DEG_TO_RAD * m_light_slider_yaw->getValue();
+
+    auto light = m_light.getComponent<DirectionalLight>();
+
+    light->direction = vec3(   //
+        cos(pitch) * cos(yaw), //
+        sin(pitch),
+        cos(pitch) * sin(yaw)
+    );
+}
+
+RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolution)
+  : m_texture{texture}, m_resolution{resolution} {
+    Asset<Shader> vert;
+    if(!vert.request("shadow-debug-view.vert")) return;
+
+    Asset<Shader> frag;
+    if(!frag.request("shadow-debug-view.frag")) return;
+
+    m_shader = std::make_unique<ShaderProgram>();
+    m_shader->attachShader(std::move(vert));
+    m_shader->attachShader(std::move(frag));
+    if(!m_shader->link()) { 
+        m_shader.reset();
+    }
+}
+void RenderingExample::ShadowDebugView::draw(
+    ivec2 const& viewport_position, uvec2 const& viewport_size
+) {
+    if(!m_shader) return;
+    glViewport(viewport_position.x, viewport_position.y, viewport_size.x, viewport_size.y);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_ALPHA_TEST);
+
+    m_shader->use();
+    glActiveTexture(GL_TEXTURE0);
+    m_texture->bind();
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    m_texture->release();
+}
 } // namespace bembel

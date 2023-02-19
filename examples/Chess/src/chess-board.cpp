@@ -18,22 +18,22 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
     m_scene->registerComponentType<ChessPieceComponent>();
     m_scene->registerComponentType<SelectionHighlightComponent>();
 
-    AssetManager& asste_mgr = m_scene->getAssetManager();
-    m_models[u8(PAWN)][u8(WHITE)].get(asste_mgr, "white.pawn");
-    m_models[u8(PAWN)][u8(BLACK)].get(asste_mgr, "black.pawn");
-    m_models[u8(ROOK)][u8(WHITE)].get(asste_mgr, "white.rook");
-    m_models[u8(ROOK)][u8(BLACK)].get(asste_mgr, "black.rook");
-    m_models[u8(KNIGHT)][u8(WHITE)].get(asste_mgr, "white.knight");
-    m_models[u8(KNIGHT)][u8(BLACK)].get(asste_mgr, "black.knight");
-    m_models[u8(BISHOP)][u8(WHITE)].get(asste_mgr, "white.bishop");
-    m_models[u8(BISHOP)][u8(BLACK)].get(asste_mgr, "black.bishop");
-    m_models[u8(QUEEN)][u8(WHITE)].get(asste_mgr, "white.queen");
-    m_models[u8(QUEEN)][u8(BLACK)].get(asste_mgr, "black.queen");
-    m_models[u8(KING)][u8(WHITE)].get(asste_mgr, "white.king");
-    m_models[u8(KING)][u8(BLACK)].get(asste_mgr, "black.king");
+    m_models[u8(PAWN)][u8(WHITE)].request( "white.pawn");
+    m_models[u8(PAWN)][u8(BLACK)].request("black.pawn");
+    m_models[u8(ROOK)][u8(WHITE)].request("white.rook");
+    m_models[u8(ROOK)][u8(BLACK)].request("black.rook");
+    m_models[u8(KNIGHT)][u8(WHITE)].request("white.knight");
+    m_models[u8(KNIGHT)][u8(BLACK)].request("black.knight");
+    m_models[u8(BISHOP)][u8(WHITE)].request("white.bishop");
+    m_models[u8(BISHOP)][u8(BLACK)].request("black.bishop");
+    m_models[u8(QUEEN)][u8(WHITE)].request("white.queen");
+    m_models[u8(QUEEN)][u8(BLACK)].request("black.queen");
+    m_models[u8(KING)][u8(WHITE)].request("white.king");
+    m_models[u8(KING)][u8(BLACK)].request("black.king");
 
-    auto whiteTile = m_scene->getAssetHandle<GeometryModel>("white.tile");
-    auto blackTile = m_scene->getAssetHandle<GeometryModel>("black.tile");
+    
+    Asset<GeometryModel> whiteTile{"white.tile"};
+    Asset<GeometryModel> blackTile{"black.tile"};
 
     for(unsigned u = 0; u < 8; ++u) {
         for(unsigned v = 0; v < 8; ++v) {
@@ -116,7 +116,7 @@ void ChessBoard::createChessPiece(ivec2 pos, ChessPieceType type, ChessPlayer ow
     piece->position     = pos;
     transform->position = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
     transform->rotation = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
-    geom->model         = m_models[type][owner].getHandle();
+    geom->model         = m_models[type][owner];
     *selection          = SelectionHighlight::NO_HIGHLIGHT;
 }
 

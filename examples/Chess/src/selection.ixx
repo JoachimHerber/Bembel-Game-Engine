@@ -37,7 +37,7 @@ export class SelectionPointer {
 };
 
 export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECTED };
-export bool initComponent(xml::Element const*, AssetManager&, SelectionHighlight&) {
+export bool initComponent(xml::Element const*, SelectionHighlight&) {
     return true;
 }
 export using SelectionHighlightComponent =

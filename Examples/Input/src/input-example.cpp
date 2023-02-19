@@ -37,13 +37,13 @@ bool InputExample::init() {
     keyboard.getKey(Keyboard::LEFT)->release_signal.bind(this, &InputExample::pervCursor);
     keyboard.getKey(Keyboard::RIGHT)->release_signal.bind(this, &InputExample::nextCursor);
 
-    auto& asset_mgr = m_engine.assets;
-    cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("Arrow"));
-    cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("IBeam"));
-    cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("Crosshair"));
-    cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("Hand"));
-    cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("HResize"));
-    cursor.push_back(asset_mgr.getAssetHandle<CursorIcon>("VResize"));
+    m_cursor.resize(6);
+    m_cursor[0].request("Arrow");
+    m_cursor[1].request("IBeam");
+    m_cursor[2].request("Crosshair");
+    m_cursor[3].request("Hand");
+    m_cursor[4].request("HResize");
+    m_cursor[5].request("VResize");
     return true;
 }
 
@@ -54,72 +54,72 @@ void InputExample::cleanup() {
 
 void InputExample::update(double time) {}
 
-void InputExample::handleEvent(const WindowShouldCloseEvent& event) {
+void InputExample::handleEvent(In<WindowShouldCloseEvent> event) {
     quit();
 }
 
-void InputExample::handleEvent(const KeyPressEvent& event) {
+void InputExample::handleEvent(In<KeyPressEvent> event) {
     log().info("[Key Pressed] {}|{}", event.key_id, event.scancode);
 }
 
-void InputExample::handleEvent(const KeyRepeatEvent& event) {
+void InputExample::handleEvent(In<KeyRepeatEvent> event) {
     log().info("[Key Repeated] {}|{}", event.key_id, event.scancode);
 }
 
-void InputExample::handleEvent(const KeyReleaseEvent& event) {
+void InputExample::handleEvent(In<KeyReleaseEvent> event) {
     log().info("[Key Released] {}|{}", event.key_id, event.scancode);
 }
 
-void InputExample::handleEvent(const TextInputEvent& event) {
+void InputExample::handleEvent(In<TextInputEvent> event) {
     log().info("[TextInput] {}", (unsigned char)(event.character));
 }
 
-void InputExample::handleEvent(const MouseButtonPressEvent& event) {
+void InputExample::handleEvent(In<MouseButtonPressEvent> event) {
     log().info("[Mouse Button Pressed] {}", event.button_id);
 }
 
-void InputExample::handleEvent(const MouseButtonRepeatEvent& event) {
+void InputExample::handleEvent(In<MouseButtonRepeatEvent> event) {
     log().info("[Mouse Button Repeated] {}", event.button_id);
 }
 
-void InputExample::handleEvent(const MouseButtonReleaseEvent& event) {
+void InputExample::handleEvent(In<MouseButtonReleaseEvent> event) {
     log().info("[Mouse Button Released] {}", event.button_id);
 }
 
-void InputExample::handleEvent(const CursorMovedEvent& event) {
+void InputExample::handleEvent(In<CursorMovedEvent> event) {
     log().info("[Cursor Moved] {}", event.position);
 }
 
-void InputExample::handleEvent(const CursorEnteredEvent& event) {
+void InputExample::handleEvent(In<CursorEnteredEvent> event) {
     log().info("[Cursor Entered] window[{}]", event.window->getWindowID());
 }
 
-void InputExample::handleEvent(const CursorLeftEvent& event) {
+void InputExample::handleEvent(In<CursorLeftEvent> event) {
     log().info("[Cursor Left] window[{}]", event.window->getWindowID());
 }
 
-void InputExample::handleEvent(const ScrollEvent& event) {
+void InputExample::handleEvent(In<ScrollEvent> event) {
     log().info("[Scroll] ({}; {})", event.x, event.y);
 }
 
-void InputExample::handleEvent(const InputDeviceButtonPressEvent& event) {
+void InputExample::handleEvent(In<InputDeviceButtonPressEvent> event) {
     log().info("[ButtonPress] {}", event.button->getName());
 }
 
-void InputExample::handleEvent(const InputDeviceButtonReleaseEvent& event) {
+void InputExample::handleEvent(In<InputDeviceButtonReleaseEvent> event) {
     log().info("[ButtonRelease] {}", event.button->getName());
 }
 
 void InputExample::pervCursor() {
-    current_cursor = (current_cursor - 1) % cursor.size();
+    m_current_cursor = (m_current_cursor - 1) % m_cursor.size();
 
-    CursorIcon* cursor = m_engine.assets.getAsset<CursorIcon>(this->cursor[current_cursor]);
+    CursorIcon* cursor = m_cursor[m_current_cursor].get();
     events::broadcast(kernel::SetCursorIconEvent{cursor, WindowId(0)});
 }
 void InputExample::nextCursor() {
-    current_cursor = (current_cursor + 1) % cursor.size();
+    m_current_cursor = (m_current_cursor + 1) % m_cursor.size();
 
-    CursorIcon* cursor = m_engine.assets.getAsset<CursorIcon>(this->cursor[current_cursor]);
+    CursorIcon* cursor = m_cursor[m_current_cursor].get();
     events::broadcast(kernel::SetCursorIconEvent{cursor, WindowId(0)});
 }
 

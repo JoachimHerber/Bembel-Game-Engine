@@ -40,7 +40,7 @@ bool PhysicsExample::init() {
     m_graphic_system->getRenderingPipelines()[0]->setScene(m_scene);
     m_physics_system->addScene(m_scene);
 
-    m_scene->loadAssets("assets/assets.xml");
+    m_scene->loadAssets("scenes/assets.xml");
     m_scene->loadScene("scenes/physics-demo.scene");
 
     m_stirring_stick = m_scene->createEntity();

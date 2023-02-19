@@ -1,4 +1,3 @@
-<Shader type="GL_FRAGMENT_SHADER">
 #version 330
 
 struct Material
@@ -38,8 +37,8 @@ vec3 Fresnel(float cos_theta, vec3 F0)
 float NormalDistribution(float roughness, float cos_phi)
 {
 	// GGX
-	float alpha = roughness * roughness;
-    float alpha_sqr = alpha * alpha;
+	float alpha       = roughness * roughness;
+    float alpha_sqr   = alpha * alpha;
 	float cos_phi_sqr = cos_phi*cos_phi;
 	
 	float nominator   = alpha_sqr;
@@ -88,4 +87,3 @@ vec3 BRDF(vec3 n, vec3 l, vec3 v, Material mat)
 	vec3 diffuse  = (1-F)*mat.diffuse_color/kPI;
 	return cos_theta*(specular + diffuse);	
 }
-</Shader>

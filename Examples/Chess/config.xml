@@ -1,8 +1,8 @@
 <Bembel>
 	<AssetDirectories>
-		<AssetDirectory directory="assets"/>
-		<AssetDirectory directory="assets/gui"/>
-		<AssetDirectory directory="assets/shader"/>
+		<AssetDirectory directory="../assets"/>
+		<AssetDirectory directory="../assets/gui"/>
+		<AssetDirectory directory="../assets/shader"/>
 	</AssetDirectories>
 	<Display>
 		<Window title="Chess">
@@ -18,7 +18,14 @@
 		<Graphics>
 			<Renderer>
 				<GeometryRenderer name="default" >
-					<ShaderProgram file_name="default-geom-render.shader-program" />
+					<GeometyPassShader>
+						<Shader file="default-geomety-pass.vert"/>
+						<Shader file="default-geomety-pass.frag"/>
+					</GeometyPassShader>
+					<ShadowPassShader>
+						<Shader file="default-shadow-pass.vert"/>
+						<Shader file="default-shadow-pass.frag"/>
+					</ShadowPassShader>
 				</GeometryRenderer>
 			</Renderer>
 			<RenderingPipelines>
@@ -39,8 +46,18 @@
 							<ColorOutput texture="normal"   attachment="3"/>
 						</DeferredGeometryStage>
 						<DeferredLightingStage>
-							<DirectionalLightProgram file_name="dir-light.shader-program" />
-							<PointLightShaderProgram file_name="point-light.shader-program" />
+							<DirectionalLightProgram>
+								<Shader file="dir-light.vert"/>
+								<Shader file="cook-torrance.frag"/>
+								<Shader file="read-geom-data.frag"/>
+								<Shader file="dir-light.frag"/>
+							</DirectionalLightProgram>
+							<PointLightShaderProgram>
+								<Shader file="point-light.vert"/>
+								<Shader file="cook-torrance.frag"/>
+								<Shader file="read-geom-data.frag"/>
+								<Shader file="point-light.frag"/>
+							</PointLightShaderProgram>
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
@@ -49,14 +66,18 @@
 						</DeferredLightingStage>
 						<EnvironmentMapReflectionStage>
 							<EnvironmentMap
-								left   = "assets/skybox/X-.png"
-								right  = "assets/skybox/X+.png"
-								bottom = "assets/skybox/Y-.png"
-								top    = "assets/skybox/Y+.png"
-								back   = "assets/skybox/Z+.png"
-								front  = "assets/skybox/Z-.png"
+								left   = "skybox/X-.png"
+								right  = "skybox/X+.png"
+								bottom = "skybox/Y-.png"
+								top    = "skybox/Y+.png"
+								back   = "skybox/Z+.png"
+								front  = "skybox/Z-.png"
 							/>
-							<Shader file_name="environment-map-reflections.shader-program" />
+							<Shader>
+								<Shader file="environment-map-reflections.vert"/>
+								<Shader file="read-geom-data.frag"/>
+								<Shader file="environment-map-reflections.frag"/>
+							</Shader>
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
@@ -64,7 +85,10 @@
 							<Input texture="normal" />
 						</EnvironmentMapReflectionStage>
 						<SelectionRenderingStage>
-							<Shader file_name="selection.shader-program" />
+							<Shader>
+								<Shader file="selection.vert"/>
+								<Shader file="selection.frag"/>
+							</Shader>
 							<ColorOutput texture="light"/>
 							<DepthOutput texture="depth"/>
 						</SelectionRenderingStage>
