@@ -22,6 +22,24 @@ bool initComponent(In<xml::Element const*> properties, InOut<PointLightData> com
     return true;
 }
 
+ShadowMap::ShadowMap(uint resolution, uint cascadeds)
+  : resolution{resolution}
+  , texture{Texture::Target::TEXTURE_2D, Texture::Format::DEPTH_COMPONENT24} {
+
+    assert(0 < cascadeds && cascadeds <= MAX_CASCADEDS);
+    //world_to_light_space.resize(cascadeds);
+
+    texture.init(
+        uvec2(resolution),
+        Texture::MinFilter::NEAREST,
+        Texture::MagFilter::NEAREST,
+        Texture::Wrap::REPEAT,
+        Texture::Wrap::REPEAT
+    );
+    fbo.setDepthAttechment(&texture);
+    fbo.init();
+}
+
 bool initComponent(In<xml::Element const*> properties, InOut<DirectionalLightData> component) {
     xml::getAttribute(properties, "color", component.color);
     float intensity;
@@ -31,19 +49,7 @@ bool initComponent(In<xml::Element const*> properties, InOut<DirectionalLightDat
 
     uint shadow_resolution = 0;
     if(xml::getAttribute(properties, "shadowResolution", shadow_resolution)) {
-        component.shadow_map = std::make_unique<Texture>(
-            Texture::Target::TEXTURE_2D, Texture::Format::DEPTH_COMPONENT32
-        );
-        component.shadow_map->init(
-            uvec2(shadow_resolution),
-            Texture::MinFilter::LINEAR,
-            Texture::MagFilter::LINEAR,
-            Texture::Wrap::CLAMP_TO_EDGE,
-            Texture::Wrap::CLAMP_TO_EDGE
-        );
-        component.shadow_fbo = std::make_unique<FrameBufferObject>();
-        component.shadow_fbo->setDepthAttechment(component.shadow_map.get());
-        component.shadow_fbo->init();
+        component.shadow_map = std::make_unique<ShadowMap>(shadow_resolution);
     }
 
     return true;

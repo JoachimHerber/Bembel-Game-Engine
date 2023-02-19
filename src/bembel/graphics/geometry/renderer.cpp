@@ -45,14 +45,14 @@ bool DefaultGeometryRenderer::updateUniformLocations(ShaderProgram* shader) {
     return true;
 }
 
-void DefaultGeometryRenderer::render(
-    mat4 const& proj, mat4 const& view, std::vector<GeometryRenderData> const& data
+void DefaultGeometryRenderer::renderGeometry(
+    In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
 ) {
-    if(!m_shader) return;
+    if(!m_geomety_pass_shader) return;
+    glCullFace(GL_BACK);
 
-    m_shader->use();
-
-    glUniformMatrix4fv(m_shader->getUniformLocation("uProjectionMatrix"), 1, GL_FALSE, &proj[0][0]);
+    m_geomety_pass_shader->use();
+    m_geomety_pass_shader->setUniform("uProjectionMatrix", proj);
 
     GeometryMesh* currentMesh     = nullptr;
     Material*     currentMaterial = nullptr;
@@ -81,15 +81,46 @@ void DefaultGeometryRenderer::render(
 
         glm::mat4 modleView = view * it.transform;
 
-        glUniformMatrix4fv(
-            m_shader->getUniformLocation("uModleViewMatrix"), 1, GL_FALSE, &(modleView[0][0])
-        );
-        glUniformMatrix4fv(
-            m_shader->getUniformLocation("uNormalMatrix"), 1, GL_FALSE, &(modleView[0][0])
-        );
+        m_geomety_pass_shader->setUniform("uModleViewMatrix", modleView);
+        m_geomety_pass_shader->setUniform("uNormalMatrix", modleView);
 
-        glLoadIdentity();
-        glMultMatrixf(&(it.transform[0][0]));
+        glDrawElements(
+            GL_TRIANGLES,
+            it.sub_mesh.num_indices,
+            GL_UNSIGNED_INT,
+            (void*)(it.sub_mesh.first_index * sizeof(unsigned))
+        );
+    }
+
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindVertexArray(0);
+    glUseProgram(0);
+}
+
+void DefaultGeometryRenderer::renderShadows(
+    In<mat4> view_proj, In<std::vector<GeometryRenderData>> data
+) {
+    if(!m_depth_pass_shader) return;
+    glCullFace(GL_FRONT);
+
+    m_depth_pass_shader->use();
+
+    m_depth_pass_shader->setUniform("uProjectionMatrix", view_proj);
+
+    GeometryMesh* currentMesh = nullptr;
+    for(auto const& it : data) {
+        if(!it.mesh) continue;
+
+        if(it.mesh != currentMesh) {
+            currentMesh = it.mesh;
+            glBindVertexArray(currentMesh->getVAO());
+        }
+        glUniformMatrix4fv(
+            m_depth_pass_shader->getUniformLocation("uModleViewMatrix"),
+            1,
+            GL_FALSE,
+            &(it.transform[0][0])
+        );
         glDrawElements(
             GL_TRIANGLES,
             it.sub_mesh.num_indices,
@@ -168,15 +199,14 @@ std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element c
 std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer(
     xml::Element const* properties, unsigned id
 ) {
-    auto shader_params = properties->FirstChildElement("ShaderProgram");
-    if(shader_params == nullptr) {
-        log().error("Can't create DefaultGeometryRenderer: ShaderProgram parameter is missing");
+    Asset<ShaderProgram> geomety_pass_shader;
+    if(!geomety_pass_shader.request(properties->FirstChildElement("GeometyPassShader"))) {
+        log().error("Could not load ShaderProgram for geomety pass of DefaultGeometryRenderer");
         return nullptr;
     }
-
-    Asset<ShaderProgram> shader;
-    if(!shader.request(shader_params)) {
-        log().error("Could not load ShaderProgram for DefaultGeometryRenderer");
+    Asset<ShaderProgram> shadow_pass_shader;
+    if(!shadow_pass_shader.request(properties->FirstChildElement("ShadowPassShader"))) {
+        log().error("Could not load ShaderProgram for shadow pass of DefaultGeometryRenderer");
         return nullptr;
     }
     auto renderer = std::make_unique<DefaultGeometryRenderer>(id);
@@ -189,7 +219,8 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
         renderer->addRequiredTexture(texture_name, sampler_uniform);
     }
 
-    if(!renderer->setShader(std::move(shader))) return nullptr;
+    if(!renderer->setShaders(std::move(geomety_pass_shader), std::move(shadow_pass_shader)))
+        return nullptr;
 
     return std::move(renderer);
 }

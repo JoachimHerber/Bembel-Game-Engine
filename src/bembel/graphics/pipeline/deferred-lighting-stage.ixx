@@ -28,6 +28,10 @@ export class DeferredLightingStage : public RenderingPipeline::Stage {
         override;
 
   private:
+    void updateShadowMaps(
+        GeometryRenderQueue& render_queue, std::vector<RendererPtr> const& renderer
+    );
+    void initRenderQueueForShadowPass(GeometryRenderQueue& render_queue);
     void applyDirectionalLights();
     void applyPointLights();
 

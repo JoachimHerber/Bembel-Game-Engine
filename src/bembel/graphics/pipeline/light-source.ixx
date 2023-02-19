@@ -16,21 +16,27 @@ export struct PointLightData {
     float cutoff_radius;
 };
 
-export struct DirectionalLightData {
-    vec3                               color;
-    vec3                               direction;
-    std::unique_ptr<Texture>           shadow_map;
-    std::unique_ptr<FrameBufferObject> shadow_fbo;
+export struct ShadowMap {
+    uint              resolution;
+    Texture           texture;
+    FrameBufferObject fbo;
+    mat4              world_to_light_space;
+
+    static inline constexpr uint MAX_CASCADEDS = 4;
+
+    ShadowMap(uint resolution, uint cascadeds = 1);
 };
 
-export bool initComponent(
-    In<xml::Element const*> properties,
-    InOut<PointLightData>   component
-);
+export struct DirectionalLightData {
+    vec3                       color;
+    vec3                       direction;
+    std::unique_ptr<ShadowMap> shadow_map;
+};
+
+export bool initComponent(In<xml::Element const*> properties, InOut<PointLightData> component);
 
 export bool initComponent(
-    In<xml::Element const*>     properties,
-    InOut<DirectionalLightData> component
+    In<xml::Element const*> properties, InOut<DirectionalLightData> component
 );
 
 export using PointLight = BasicComponent<"PointLight", PointLightData, ComponentContainer::MAP>;

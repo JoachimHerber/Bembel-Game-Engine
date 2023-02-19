@@ -30,8 +30,12 @@ export class GeometryRendererBase {
 
     RendererId getRendererID() const { return m_id; };
 
-    virtual void render(
-        mat4 const& proj, mat4 const& view, std::vector<GeometryRenderData> const& data
+    virtual void renderGeometry(
+        In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
+    ) = 0;
+
+    virtual void renderShadows(
+        In<mat4> view_proj, In<std::vector<GeometryRenderData>> data
     ) = 0;
 
     virtual std::unique_ptr<Material> createMaterial(xml::Element const* propertiey) = 0;
@@ -50,16 +54,21 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
         m_required_textures.emplace_back(texture_name, uniform_sampler_name);
     }
 
-    bool setShader(Asset<ShaderProgram> shader) {
-        if(updateUniformLocations(shader.get())) {
-            m_shader = std::move(shader);
+    bool setShaders(Asset<ShaderProgram> geom_pass, Asset<ShaderProgram> depth_pass) {
+        if(updateUniformLocations(geom_pass.get())) {
+            m_geomety_pass_shader = std::move(geom_pass);
+            m_depth_pass_shader = std::move(depth_pass);
             return true;
         }
         return false;
     }
 
-    virtual void render(
-        mat4 const& proj, mat4 const& view, std::vector<GeometryRenderData> const& data
+    virtual void renderGeometry(
+        In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
+    ) override;
+
+    virtual void renderShadows(
+        In<mat4> view_proj, In<std::vector<GeometryRenderData>> data
     ) override;
 
     virtual std::unique_ptr<Material> createMaterial(xml::Element const* propertiey) override;
@@ -85,7 +94,8 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
     );
 
   private:
-    Asset<ShaderProgram> m_shader;
+    Asset<ShaderProgram> m_geomety_pass_shader;
+    Asset<ShaderProgram> m_depth_pass_shader;
 
     uint m_material_uniform_block_index;
     uint m_material_uniform_buffer_size;

@@ -23,8 +23,10 @@ EnvironmentMapReflectionStage::~EnvironmentMapReflectionStage() {}
 
 namespace {
     bool loadCubeMapSide(GLenum target, std::string_view file) {
+        auto  path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
+
         Image image;
-        if(!image.load(file, false)) return false;
+        if(!path || !image.load(path.value(), false)) return false;
 
         glTexImage2D(
             target,
