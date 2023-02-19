@@ -13,7 +13,7 @@ using namespace bembel::gui;
 
 export class FontTextureGenerator {
   public:
-    FontTextureGenerator(AssetManager&);
+    FontTextureGenerator();
 
     void setResolution(uvec2);
 
@@ -39,8 +39,6 @@ export class FontTextureGenerator {
     void drawGlypeOutline(TextureAtlasNode const*, double line_width);
 
   private:
-    AssetManager& m_asset_mgr;
-
     Asset<ShaderProgram> m_shader;
 
     std::unique_ptr<FrameBufferObject> m_fbo;

@@ -1,5 +1,6 @@
 module;
-#include <fstream>
+#include <filesystem>
+#include <optional>
 #include <string_view>
 #include <vector>
 export module bembel.kernel.assets:AssetLocator;
@@ -13,83 +14,38 @@ export class AssetLocator final {
   private:
     AssetLocator()  = default;
     ~AssetLocator() = default;
-  public:
-    static AssetLocator& getInstance(){
-        static AssetLocator instance;
-        return instance;
-    }
 
-    bool init(xml::Element const* properties) {
-        for(auto it : xml::IterateChildElements(properties, "AssetDirectory")) {
-            std::string dir, asset_type;
-            xml::getAttribute(it, "directory", dir);
-            if(xml::getAttribute(it, "asset_type", asset_type))
-                addAssetDirectory(asset_type, dir);
-            else
-                addGenericAssetDirectory(dir);
-        }
-        return true;
-    }
+  public:
+    static AssetLocator& getInstance();
+
+    bool init(xml::Element const* properties);
 
     template <typename AssetType>
-    void addAssetDirectory(std::string_view directory) {
+    void addAssetDirectory(In<std::filesystem::path> directory) {
         return addAssetDirectory(AssetType::ASSET_TYPE_NAME, directory);
     }
 
-    void addAssetDirectory(std::string_view asset_type_name, std::string_view directory) {
-        auto it = m_type_specivic_asset_directories.find(asset_type_name);
-        if(it != m_type_specivic_asset_directories.end()) {
-            it->second.emplace_back(directory);
-        } else {
-            std::vector<std::string> dirs{};
-            dirs.emplace_back(directory);
-            m_type_specivic_asset_directories.emplace(asset_type_name, std::move(dirs));
-        }
-    }
+    void addAssetDirectory(std::string_view asset_type_name, In<std::filesystem::path> directory);
 
-    void addGenericAssetDirectory(std::string_view directory) {
-        m_generic_asset_directories.emplace_back(directory);
-    }
+    void addGenericAssetDirectory(In<std::filesystem::path> directory);
 
     template <typename AssetType>
-    bool findAssetLocation(std::string_view file_name, std::string* full_file_path) {
-        return findAssetLocation(AssetType::ASSET_TYPE_NAME, file_name, full_file_path);
+    std::optional<std::filesystem::path> findAssetLocation(In<std::string_view> file_name) {
+        return findAssetLocation(AssetType::ASSET_TYPE_NAME, file_name);
     }
 
-    bool findAssetLocation(
-        const std::string_view asset_type_name,
-        std::string_view       file_name,
-        std::string*           full_file_path
-    ) {
-        auto it = m_type_specivic_asset_directories.find(asset_type_name);
-        if(it != m_type_specivic_asset_directories.end()) {
-            if(locateFile(it->second, file_name, full_file_path)) return true;
-        }
-        return locateFile(m_generic_asset_directories, file_name, full_file_path);
-    }
+    std::optional<std::filesystem::path> findAssetLocation(
+        const std::string_view asset_type_name, std::string_view file_name
+    );
 
   private:
-    bool locateFile(
-        std::vector<std::string> const& directories,
-        std::string_view                fileName,
-        std::string*                    full_file_path
-    ) {
-        for(std::string const& dir : directories) {
-            std::string path = dir + "/";
-            path += fileName;
-            std::ifstream infile(path.c_str());
-            if(infile.good()) {
-                if(full_file_path != nullptr) *full_file_path = path;
-
-                return true;
-            }
-        }
-        return false;
-    }
+    std::optional<std::filesystem::path> locateFile(
+        std::vector<std::filesystem::path> const& directories, std::string_view file_name
+    );
 
   private:
-    Dictionary<std::vector<std::string>> m_type_specivic_asset_directories;
-    std::vector<std::string>             m_generic_asset_directories;
+    Dictionary<std::vector<std::filesystem::path>> m_type_specivic_asset_directories;
+    std::vector<std::filesystem::path>             m_generic_asset_directories;
 };
 
 } // namespace bembel::kernel

@@ -12,10 +12,8 @@ using namespace bembel::kernel;
 using namespace bembel::gui;
 using namespace ::gl;
 
-FontView::FontView(
-    AssetManager& asset_mgr, GlyphTextureAtlas& texture_atlas, FontTextureGenerator& texture_gen
-)
-  : m_asset_mgr{asset_mgr}, m_texture_atlas{texture_atlas}, m_texture_gen{texture_gen} {}
+FontView::FontView(GlyphTextureAtlas& texture_atlas, FontTextureGenerator& texture_gen)
+  : m_texture_atlas{texture_atlas}, m_texture_gen{texture_gen} {}
 
 FontView::~FontView() {}
 

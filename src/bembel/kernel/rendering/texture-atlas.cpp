@@ -12,7 +12,7 @@ import bembel.kernel.assets;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-bool TextureAtlas::loadTexture(std::string_view file) {
+bool TextureAtlas::loadTexture(std::filesystem::path file) {
     base::Image image;
     if(!image.load(file)) return false;
 
@@ -41,15 +41,12 @@ std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(std::filesystem::path file
 std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(xml::Element const* properties) {
     if(!properties->Attribute("texture")) return nullptr;
 
-    std::string texture;
-    if(!AssetLocator::getInstance().findAssetLocation<Texture>(
-           properties->Attribute("texture"), &texture
-       )) {
-        return nullptr;
-    }
+    std::string_view file = properties->Attribute("texture");
+    auto             path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
+    if(!path) { return nullptr; }
 
     auto atlas = std::make_unique<TextureAtlas>();
-    atlas->loadTexture(texture);
+    atlas->loadTexture(path.value());
     for(auto it : xml::IterateChildElements(properties, "Entry")) {
         std::string name;
         vec2        min;

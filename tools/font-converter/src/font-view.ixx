@@ -13,7 +13,7 @@ using namespace bembel::gui;
 
 export class FontView : public Viewport::View {
   public:
-    FontView(AssetManager&, GlyphTextureAtlas&, FontTextureGenerator&);
+    FontView(GlyphTextureAtlas&, FontTextureGenerator&);
     ~FontView();
 
     void setFont(FontFamily*);
@@ -21,7 +21,6 @@ export class FontView : public Viewport::View {
     virtual void draw(ivec2 const& viewport_position, uvec2 const& viewport_size) override;
 
   private:
-    AssetManager&         m_asset_mgr;
     GlyphTextureAtlas&    m_texture_atlas;
     FontTextureGenerator& m_texture_gen;
 

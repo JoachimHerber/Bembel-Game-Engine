@@ -89,7 +89,20 @@ void Texture::init(
 
     if(m_format == Format::DEPTH_COMPONENT || m_format == Format::DEPTH_COMPONENT16
        || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32) {
-        gl::setTexImage2D(m_target, 0, m_format, size.x, size.y, Format::DEPTH_COMPONENT);
+        std::vector<uint> data;
+        data.resize(size.x * size.y);
+        for(uint& it : data) it = rand();
+
+        gl::setTexImage2D(
+            m_target,
+            0,
+            m_format,
+            size.x,
+            size.y,
+            Format::DEPTH_COMPONENT,
+            GL_UNSIGNED_INT,
+            data.data()
+        );
     } else {
         gl::setTexImage2D(m_target, 0, m_format, size.x, size.y);
     }

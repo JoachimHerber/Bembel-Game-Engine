@@ -7,6 +7,7 @@ target_sources(Bembel
         asset-handle.ixx
         asset-loader.ixx
         asset-locator.ixx
+        asset-locator.cpp
         serial-asset-loader.ixx
 
         cursor-icon.ixx

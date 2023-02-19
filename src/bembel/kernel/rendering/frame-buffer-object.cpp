@@ -92,8 +92,12 @@ void FrameBufferObject::beginRenderToTexture() {
     for(unsigned n = 0; n < m_color_attechments.size(); ++n) {
         if(m_color_attechments[n].texture) draw_buffers.push_back(GL_COLOR_ATTACHMENT0 + n);
     }
-
-    glDrawBuffers(GLsizei(draw_buffers.size()), &draw_buffers[0]);
+    if(!draw_buffers.empty()) {
+        glDrawBuffers(GLsizei(draw_buffers.size()), &draw_buffers[0]);
+    } else {
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+    }
 }
 
 void FrameBufferObject::endRenderToTexture() {
@@ -117,7 +121,7 @@ void FrameBufferObject::blitToBackBuffer(
         target_max.x,
         target_max.y,
         GL_COLOR_BUFFER_BIT,
-        GL_LINEAR
+        GL_NEAREST
     );
     glBindFramebufferEXT(GL_READ_FRAMEBUFFER, 0);
 }

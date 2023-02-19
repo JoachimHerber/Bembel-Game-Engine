@@ -130,14 +130,26 @@ IntSliderWidget::IntSliderWidget(Widget& parent, i64 min, i64 max, bool logarith
     size.change_signal.bind(this, &IntSliderWidget::onSizeChanged);
     position_constrain_signal.bind(this, &IntSliderWidget::constrainSliderPos);
 
-    updateLable();
+    updateLabel();
 
-    m_label.setName("Lable");
+    m_label.setName("Label");
     m_label.setAlignment(LabelWidget::Alignment::Center);
 }
 
 bool IntSliderWidget::configure(xml::Element const* properties) {
-    return false;
+    Widget::configure(properties);
+    if(!properties) return true;
+
+    xml::getAttribute(properties, "unit", m_unit);
+    xml::getAttribute(properties, "label", m_prefix);
+
+    xml::getAttribute(properties, "min", m_min);
+    xml::getAttribute(properties, "max", m_max);
+    i64 value = (m_min + m_max) / 2;
+    xml::getAttribute(properties, "value", value);
+    setValue(value);
+
+    return true;
 }
 
 void IntSliderWidget::setValue(i64 value) {
@@ -154,7 +166,7 @@ void IntSliderWidget::setValue(i64 value) {
     }
     if(m_value != old_value) {
         value_update_signal.emit(m_value);
-        updateLable();
+        updateLabel();
     }
 }
 
@@ -176,13 +188,14 @@ void IntSliderWidget::constrainSliderPos(InOut<double> pos) {
     if(new_value != m_value) {
         m_value = new_value;
         value_update_signal.emit(m_value);
-        updateLable();
+        updateLabel();
     }
 }
 
-void IntSliderWidget::updateLable() {
+void IntSliderWidget::updateLabel() {
     std::string str  = std::to_string(m_value);
     String      text = str;
+    text.data        = m_prefix.data + text.data + m_unit.data;
 
     m_label.setText(text.data);
 }

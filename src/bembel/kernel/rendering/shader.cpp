@@ -1,6 +1,7 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
+#include <fstream>
 #include <memory>
 module bembel.kernel.rendering;
 
@@ -52,6 +53,19 @@ uint Shader::getHandle() const {
 }
 
 std::unique_ptr<Shader> Shader::loadAsset(std::filesystem::path file) {
+    std::string extension = file.extension().string();
+    if(extension == ".vert" || extension == ".frag") {
+        std::ifstream fs{file};
+
+        fs.seekg(0, std::ios::end);
+        size_t      size = fs.tellg();
+        std::string source(size, ' ');
+        fs.seekg(0);
+        fs.read(source.data(), size);
+
+        return createShader(extension == ".vert" ? Type::VERTEX : Type::FRAGMENT, source);
+    }
+
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -68,6 +82,12 @@ std::unique_ptr<Shader> Shader::loadAsset(std::filesystem::path file) {
 }
 
 std::unique_ptr<Shader> Shader::createAsset(xml::Element const* properties) {
+    std::string file;
+    if(xml::getAttribute(properties, "file", file)) {
+        auto path = AssetLocator::getInstance().findAssetLocation<Shader>(file);
+        if(path) return Shader::loadAsset(path.value());
+    }
+
     static Dictionary<Type> const shader_type_map{
         {"GL_VERTEX_SHADER", Type::VERTEX},
         {"GL_FRAGMENT_SHADER", Type::FRAGMENT},

@@ -17,10 +17,11 @@ export class Texture final {
     using TexturePtr = std::unique_ptr<Texture>;
 
     enum class Target : uint {
-        TEXTURE_1D = gl::GL_TEXTURE_1D,
-        TEXTURE_2D = gl::GL_TEXTURE_2D,
-        TEXTURE_3D = gl::GL_TEXTURE_3D,
-        CUBE_MAP   = gl::GL_TEXTURE_CUBE_MAP
+        TEXTURE_1D       = gl::GL_TEXTURE_1D,
+        TEXTURE_2D       = gl::GL_TEXTURE_2D,
+        TEXTURE_3D       = gl::GL_TEXTURE_3D,
+        TEXTURE_2D_ARRAY = gl::GL_TEXTURE_2D_ARRAY,
+        CUBE_MAP         = gl::GL_TEXTURE_CUBE_MAP
     };
     enum class Format : uint {
         DEPTH_COMPONENT   = gl::GL_DEPTH_COMPONENT,
@@ -93,8 +94,8 @@ export class Texture final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "Texture";
 
-    static TexturePtr loadAsset( std::filesystem::path file);
-    static TexturePtr createAsset( xml::Element const* properties);
+    static TexturePtr loadAsset(std::filesystem::path file);
+    static TexturePtr createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<Texture>;
 

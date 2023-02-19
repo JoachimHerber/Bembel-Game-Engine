@@ -17,7 +17,7 @@ using bembel::base::uvec2;
 
 export class FontConverter {
   public:
-    FontConverter(bembel::kernel::AssetManager&);
+    FontConverter();
     ~FontConverter();
 
     GlyphTextureAtlas& getGlyphTextureAtlas() { return m_texture_atlas; }

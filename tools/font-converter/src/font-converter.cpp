@@ -12,7 +12,7 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::gui;
 
-FontConverter::FontConverter(AssetManager& asset_mgr) : m_texture_generator{asset_mgr} {
+FontConverter::FontConverter() : m_texture_generator{} {
     FT_Init_FreeType(&m_library);
 }
 

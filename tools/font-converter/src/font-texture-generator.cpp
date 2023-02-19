@@ -14,8 +14,8 @@ using namespace bembel::kernel;
 using namespace bembel::gui;
 using namespace ::gl;
 
-FontTextureGenerator::FontTextureGenerator(AssetManager& asset_mgr) : m_asset_mgr{asset_mgr} {
-    m_shader.request(asset_mgr, "gen_dist_field.glsl");
+FontTextureGenerator::FontTextureGenerator() {
+    m_shader.request("gen_dist_field.glsl");
 
     m_texture = std::make_unique<Texture>(Texture::Target::TEXTURE_2D);
     m_texture->init(m_resolution);

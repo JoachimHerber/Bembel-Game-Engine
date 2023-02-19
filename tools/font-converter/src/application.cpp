@@ -27,7 +27,7 @@ Application::~Application() {
 }
 
 bool Application::init() {
-    auto& asset_locator = m_engine.assets.getAssetLocator();
+    auto& asset_locator = AssetLocator::getInstance();
     asset_locator.addGenericAssetDirectory("../assets");
     asset_locator.addGenericAssetDirectory("../assets/gui");
     asset_locator.addGenericAssetDirectory("../assets/shader");
@@ -46,7 +46,7 @@ bool Application::init() {
 
     m_main_window->open("Font Converter");
 
-    m_converter = std::make_unique<FontConverter>(m_engine.assets);
+    m_converter = std::make_unique<FontConverter>();
     m_converter->font_family_added_signal.bind(this, &Application::onFontFamilyAdded);
 
     if(!initUserInterface()) return false;
@@ -54,7 +54,7 @@ bool Application::init() {
     m_main_window->getViewport(1)->addView(&m_gui->view);
 
     m_font_view = std::make_unique<FontView>(
-        m_engine.assets, m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator()
+        m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator()
     );
     m_main_window->getViewport(0)->addView(m_font_view.get());
 
@@ -102,8 +102,8 @@ bool Application::initUserInterface() {
     Asset<ShaderProgram> gui_shader;
     Asset<gui::Style>    gui_style;
 
-    gui_shader.request(m_engine.assets, "gui.shader-program");
-    gui_style.request(m_engine.assets, "dark_gui_style.xml");
+    gui_shader.request("gui.shader-program");
+    gui_style.request("dark_gui_style.xml");
 
     if(!gui_shader || !gui_style) return false;
 

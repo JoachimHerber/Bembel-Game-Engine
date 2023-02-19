@@ -15,7 +15,7 @@ export class TextureAtlas final {
     TextureAtlas()  = default;
     ~TextureAtlas() = default;
 
-    bool loadTexture(std::string_view file);
+    bool loadTexture(std::filesystem::path file);
 
     Texture* getMainTexture() const { return m_main_texture.get(); }
     Texture* getLooupTexture() const { return m_tex_coord_looup_texture.get(); }
@@ -37,12 +37,8 @@ export class TextureAtlas final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "TextureAtlas";
 
-    static std::unique_ptr<TextureAtlas> loadAsset(
-         std::filesystem::path file_name
-    );
-    static std::unique_ptr<TextureAtlas> createAsset(
-        xml::Element const* properties
-    );
+    static std::unique_ptr<TextureAtlas> loadAsset(std::filesystem::path file_name);
+    static std::unique_ptr<TextureAtlas> createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<TextureAtlas>;
 

@@ -14,7 +14,7 @@ using namespace bembel::kernel;
 
 export class SliderWidget : public Widget {
   public:
-    static constexpr std::string_view WIDGET_TYPE_NAME = "SliderWidget";
+    static constexpr std::string_view WIDGET_TYPE_NAME = "Slider";
 
   public:
     SliderWidget(Widget& parent);
@@ -70,7 +70,7 @@ export class SliderWidgetView : public Widget::View {
 
 export class IntSliderWidget : public SliderWidget {
   public:
-    static constexpr std::string_view WIDGET_TYPE_NAME = "IntSliderWidget";
+    static constexpr std::string_view WIDGET_TYPE_NAME = "IntSlider";
 
   public:
     IntSliderWidget(
@@ -94,7 +94,7 @@ export class IntSliderWidget : public SliderWidget {
     void onSizeChanged(In<ivec2>, In<ivec2> new_size) { m_label.size = new_size; }
     void constrainSliderPos(InOut<double> pos);
 
-    void updateLable();
+    void updateLabel();
 
   private:
     LabelWidget m_label;
@@ -104,6 +104,9 @@ export class IntSliderWidget : public SliderWidget {
 
     bool               m_logarithmic;
     std::optional<i64> m_step;
+
+    String m_unit;
+    String m_prefix;
 
     i64 m_value;
 };

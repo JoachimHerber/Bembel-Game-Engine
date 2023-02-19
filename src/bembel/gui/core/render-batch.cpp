@@ -82,7 +82,7 @@ void RenderBatch::draw() {
     // draw instances
     glBindVertexArray(m_vao);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_instances.size());
-
+    glBindVertexArray(0);
     // clear data
     m_instances.clear();
 }

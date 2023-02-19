@@ -36,6 +36,8 @@ bool LabelWidget::configure(base::xml::Element const* properties) {
     }
 
     m_view = std::make_unique<LabelWidget::View>(*this);
+
+    updateGlyphs();
     return true;
 }
 
