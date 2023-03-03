@@ -37,9 +37,8 @@ bool RenderingExample::init() {
     m_scene->loadScene("scenes/material-test.scene");
     auto shadow_map = std::make_unique<ShadowMap>(2048);
     m_view          = std::make_unique<ShadowDebugView>(
-        //m_graphic_system->getRenderingPipelines()[0]->getTexture("depth"), 
-        &shadow_map->texture,
-        2048
+        m_graphic_system->getRenderingPipelines()[0]->getTexture("depth"), 800
+        //&shadow_map->texture, 2048
     );
 
     m_light = Entity<>(*m_scene);

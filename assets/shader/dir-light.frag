@@ -1,4 +1,5 @@
 #version 330
+#extension GL_ARB_shading_language_420pack: enable
 
 uniform vec3 uLigthColor;
 uniform vec3 uLigthDir;
@@ -39,7 +40,7 @@ void main()
 		vec3 lightDir = normalize(uLigthDir);
 		vec3 light = max(uLigthColor*BRDF(normal, -lightDir, -normalize(position.xyz), mat),vec3(0));
 		
-		if(uHasShadow){
+		if(uHasShadow != 0){
 			vec4 fragPosLightSpace = uShadowMatrix * uInverseViewMatrix* vec4(position.xyz, 1);
 			vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 			projCoords = projCoords * 0.5 + 0.5; 
