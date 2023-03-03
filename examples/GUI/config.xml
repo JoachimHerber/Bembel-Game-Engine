@@ -3,6 +3,7 @@
     <AssetDirectory directory="../assets"/>
     <AssetDirectory directory="../assets/gui"/>
     <AssetDirectory directory="../assets/shader"/>
+    <AssetDirectory directory="../assets/fonts"/>
   </AssetDirectories>
   <Display>
     <Window title="GUI Test">

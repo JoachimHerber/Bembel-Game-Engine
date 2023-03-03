@@ -4,7 +4,6 @@
 export module bembel.base:ConsoleLogSink;
 
 import :Logger;
-import :Unicode;
 
 namespace bembel::base {
 

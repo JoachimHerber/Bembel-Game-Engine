@@ -31,6 +31,7 @@ bool Application::init() {
     asset_locator.addGenericAssetDirectory("../assets");
     asset_locator.addGenericAssetDirectory("../assets/gui");
     asset_locator.addGenericAssetDirectory("../assets/shader");
+    asset_locator.addGenericAssetDirectory("../assets/fonts");
 
     auto display_mode = std::make_shared<WindowDisplayMode>();
     display_mode->setWidth(1200);
@@ -225,7 +226,7 @@ void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     load_file_button     = root.createChildWidget<ButtonWidget>(u8"Load");
     load_file_error      = root.createChildWidget<LabelWidget>();
 
-    load_file_path_input->text = String(u8"fonts/FreeSans.ttf");
+    load_file_path_input->text = String(u8"fonts/AtkinsonHyperlegible-Regular.ttf");
     load_file_error->setTextColor(ColorRGBA{255, 0, 0, 255});
 
     font_selections_label = root.createChildWidget<LabelWidget>(u8"Font:");

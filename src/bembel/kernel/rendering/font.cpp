@@ -84,7 +84,10 @@ std::unique_ptr<Font> Font::createAsset(xml::Element const* properties) {
     auto font = std::make_unique<Font>();
 
     std::string texture;
-    if(!xml::getAttribute(properties, "texture", texture)) { return nullptr; }
+    if(!xml::getAttribute(properties, "texture", texture)) {
+        log().error("Can't find texture for font");
+        return nullptr;
+    }
 
     font->m_glyph_atlas_texture.request(texture);
     if(!font->m_glyph_atlas_texture) {
@@ -127,8 +130,6 @@ bool Font::readGlyphs(xml::Element const* properties) {
         if(xml::getAttribute(glyphProps, "extends", tmp)) {
             glyph.extents_min = {tmp.x, tmp.z};
             glyph.extents_max = {tmp.y, tmp.w};
-        } else {
-            return false;
         }
         if(base::xml::getAttribute(glyphProps, "texCoord", tmp)) {
             glyph.tex_coords_min = {tmp.x, tmp.z};

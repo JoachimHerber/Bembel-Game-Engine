@@ -1,4 +1,4 @@
 <GuiSkin>
-	<Font file_name="arial.xml"/>
+	<Font file_name="atkinson-hyperlegible.xml"/>
 	<TextureAtlas file_name="gui_textures.xml"/>
 </GuiSkin>

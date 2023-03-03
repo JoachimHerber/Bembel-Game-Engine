@@ -24,8 +24,8 @@ export class RenderBatchInterface {
         Font::Glyph const& glyph,
         vec2 const&        pos,
         float              scale,
-        float              threshold_min = 0.45f,
-        float              threshold_max = 0.55f
+        float              threshold_min = 0.48f,
+        float              threshold_max = 0.52f
     ) = 0;
 };
 

@@ -1,7 +1,4 @@
 /build
 *.dll
 Bembel.ilk
-tools/fonts/*.ttf
-tools/fonts/*.otf
-tools/fonts/*.png
-tools/fonts/*.xml
+tools/fonts/*
