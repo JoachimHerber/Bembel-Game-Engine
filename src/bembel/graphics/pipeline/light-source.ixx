@@ -1,5 +1,6 @@
 ﻿module;
 #include <memory>
+#include <vector>
 export module bembel.graphics.pipeline:LightSource;
 
 import bembel.base;
@@ -16,21 +17,10 @@ export struct PointLightData {
     float cutoff_radius;
 };
 
-export struct ShadowMap {
-    uint              resolution;
-    Texture           texture;
-    FrameBufferObject fbo;
-    mat4              world_to_light_space;
-
-    static inline constexpr uint MAX_CASCADEDS = 4;
-
-    ShadowMap(uint resolution, uint cascadeds = 1);
-};
-
 export struct DirectionalLightData {
-    vec3                       color;
-    vec3                       direction;
-    std::unique_ptr<ShadowMap> shadow_map;
+    vec3 color;
+    vec3 direction;
+    bool cast_shadow = true;
 };
 
 export bool initComponent(In<xml::Element const*> properties, InOut<PointLightData> component);

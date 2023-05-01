@@ -2,6 +2,7 @@
 
 export import :Camera;
 export import :LightSource;
+export import :ShadowMap;
 export import :RenderingPipeline;
 export import :GeometryRenderingStage;
 export import :DeferredLightingStage;

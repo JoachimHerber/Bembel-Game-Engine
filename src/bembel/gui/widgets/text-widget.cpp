@@ -81,7 +81,7 @@ void TextWidget::View::draw(RenderBatchInterface& batch) {
 
     batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
     for(auto& g : m_widget.m_layout.getGlyphs()) {
-        batch.drawGlyph(*g.glyph, g.pos + position, m_widget.m_fontSize, 0.20f, 0.30f);
+        batch.drawGlyph(*g.glyph, g.pos + position, m_widget.m_fontSize, 0.15f, 0.20f);
     }
     if(m_widget.text_color.has_value()) {
         batch.setColor(m_widget.text_color.value());

@@ -144,7 +144,7 @@ void GraphicSystem::shutdown() {
 }
 
 void GraphicSystem::update(double) {
-    for(auto& pipline : m_pipelines) pipline->update(m_geometry_render_queue, m_renderer);
+    for(auto& pipline : m_pipelines) pipline->update(m_renderer);
 }
 
 void GraphicSystem::configureRenderer(xml::Element const* properties) {

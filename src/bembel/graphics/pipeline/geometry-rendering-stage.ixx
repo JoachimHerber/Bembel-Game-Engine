@@ -18,13 +18,14 @@ export class GeometryRenderingStage : public RenderingPipeline::Stage {
 
     virtual bool configure(xml::Element const*) override;
     virtual void setScene(Scene*) override;
-    virtual void execute(GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer)
-        override;
+    virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
   private:
     Scene*                m_scene      = nullptr;
     Geometry::Container*  m_geometrys  = nullptr;
     Transform::Container* m_transforms = nullptr;
+
+    GeometryRenderQueue m_render_queue;
 };
 
 } // namespace bembel::graphics

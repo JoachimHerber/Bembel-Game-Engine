@@ -23,7 +23,9 @@ export class DisplayModeBase {
 
 export class WindowDisplayMode : public DisplayModeBase {
   public:
-    WindowDisplayMode()  = default;
+    WindowDisplayMode() = default;
+    WindowDisplayMode(In<uvec2> size, bool resizable)
+      : m_width{size.x}, m_height{size.y}, m_resizable{resizable} {}
     ~WindowDisplayMode() = default;
 
     u32  getWidth() const { return m_width; }

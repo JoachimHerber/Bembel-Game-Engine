@@ -1,4 +1,5 @@
 ﻿module;
+#include <optional>
 export module bembel.kernel.rendering:FBO;
 
 import bembel.base;
@@ -10,14 +11,21 @@ using namespace bembel::base;
 export class FrameBufferObject {
   public:
     FrameBufferObject();
+    FrameBufferObject(FrameBufferObject&&)      = default;
+    FrameBufferObject(FrameBufferObject const&) = delete;
     ~FrameBufferObject();
+
+    FrameBufferObject& operator=(FrameBufferObject&&)      = default;
+    FrameBufferObject& operator=(FrameBufferObject const&) = delete;
 
     void init();
     void cleanup();
 
     void removeAllAttechments();
-    void setDepthAttechment(Texture* texture, int level = 0);
-    void setColorAttechment(unsigned index, Texture* texture, int level = 0);
+    void setDepthAttechment(Texture* texture, int level = 0, std::optional<int> layer = {});
+    void setColorAttechment(
+        uint index, Texture* texture, int level = 0, std::optional<int> layer = {}
+    );
 
     void beginRenderToTexture();
     void endRenderToTexture();
@@ -30,8 +38,9 @@ export class FrameBufferObject {
     uint m_handle = 0;
 
     struct Attechment {
-        Texture* texture;
-        int      level;
+        Texture*           texture;
+        int                level;
+        std::optional<int> layer;
     };
 
     Attechment              m_depth_attechment;

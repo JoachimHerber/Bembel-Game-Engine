@@ -150,11 +150,9 @@ RenderingPipeline::View* RenderingPipeline::createView(std::string_view texture_
     return m_views.back().get();
 }
 
-void RenderingPipeline::update(
-    GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer
-) {
+void RenderingPipeline::update(In<std::span<const RendererPtr>> renderer) {
     gl::glViewport(0, 0, m_resolution.x, m_resolution.y);
-    for(auto& stage : m_render_stages) stage->execute(renderQueue, renderer);
+    for(auto& stage : m_render_stages) { stage->execute(renderer); }
 }
 
 void RenderingPipeline::configureTextures(xml::Element const* properties) {

@@ -31,8 +31,7 @@ export class EnvironmentMapReflectionStage : public RenderingPipeline::Stage {
     virtual bool configure(xml::Element const*) override;
     virtual void init() override;
     virtual void cleanup() override;
-    virtual void execute(GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer)
-        override;
+    virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
   private:
     std::unique_ptr<Texture> m_environment_map;

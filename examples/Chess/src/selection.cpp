@@ -132,7 +132,7 @@ void SelectionRenderingStage::cleanup() {
     m_shader_program.release();
 }
 
-void SelectionRenderingStage::execute(GeometryRenderQueue&, std::vector<RendererPtr> const&) {
+void SelectionRenderingStage::execute(In<std::span<const RendererPtr>>) {
     if(!m_shader_program) return;
 
     m_fbo->beginRenderToTexture();

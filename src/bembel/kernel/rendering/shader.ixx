@@ -59,6 +59,8 @@ export class ShaderProgram final {
     bool setUniform(In<std::string_view> name, In<float> value);
     bool setUniform(In<std::string_view> name, In<int> value);
     bool setUniform(In<std::string_view> name, In<mat4> value);
+    bool setUniform(In<std::string_view> name, In<std::span<const mat4>> value);
+    bool setUniform(In<std::string_view> name, In<std::span<const float>> value);
 
     bool link();
 

@@ -30,7 +30,7 @@ export class RenderingExample : public kernel::Application {
   private:
     class ShadowDebugView : public Viewport::View {
       public:
-        ShadowDebugView(Texture* texture, u64 resolution);
+        ShadowDebugView(Texture* texture, u64 resolution, uint layer);
         ~ShadowDebugView() = default;
 
         void draw(ivec2 const& viewport_position, uvec2 const& viewport_size) override;
@@ -39,6 +39,7 @@ export class RenderingExample : public kernel::Application {
         std::unique_ptr<ShaderProgram> m_shader;
         Texture*                       m_texture;
         u64                            m_resolution;
+        uint                           m_layer;
     };
 
     GraphicSystem*   m_graphic_system;
@@ -47,7 +48,7 @@ export class RenderingExample : public kernel::Application {
     IntSliderWidget* m_light_slider_pitch;
     IntSliderWidget* m_light_slider_yaw;
 
-    std::unique_ptr<ShadowDebugView> m_view;
+    std::array<std::unique_ptr<ShadowDebugView>, 3> m_views;
 
     std::unique_ptr<CameraControle> m_camera;
 

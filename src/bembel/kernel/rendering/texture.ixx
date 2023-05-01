@@ -74,6 +74,13 @@ export class Texture final {
         In<Wrap>      warp_t     = Wrap::CLAMP_TO_EDGE
     );
     void init(
+        In<uvec3>     size,
+        In<MinFilter> min_filter = MinFilter::LINEAR_LINEAR,
+        In<MagFilter> mag_filter = MagFilter::LINEAR,
+        In<Wrap>      warp_s     = Wrap::CLAMP_TO_EDGE,
+        In<Wrap>      warp_t     = Wrap::CLAMP_TO_EDGE
+    );
+    void init(
         In<Image>     _data,
         In<MinFilter> min_filter = MinFilter::LINEAR_LINEAR,
         In<MagFilter> mag_filter = MagFilter::LINEAR,

@@ -49,13 +49,38 @@ namespace gl {
             data
         );
     }
+    inline void setTexImage3D(
+        Texture::Target target,
+        Texture::Format internalformat,
+        uint            width,
+        uint            height,
+        uint            depth,
+        Texture::Format format = Texture::Format::RGBA,
+        GLenum          type   = GL_FLOAT,
+        void const*     data   = nullptr
+    ) {
+        glTexImage3D(
+            static_cast<GLenum>(target),
+            0,
+            static_cast<GLint>(internalformat),
+            width,
+            height,
+            depth,
+            0,
+            static_cast<GLenum>(format),
+            type,
+            data
+        );
+    }
     inline void generateMipmap(Texture::Target target) {
         glGenerateMipmap(static_cast<GLenum>(target));
     }
 
 } // namespace gl
 
-Texture::Texture(Target target, Format format) : m_target(target), m_format(format), m_handle(0) {}
+Texture::Texture(Target target, Format format) : m_target(target), m_format(format), m_handle(0) {
+    glGenTextures(1, &(m_handle));
+}
 
 Texture::~Texture() {
     cleanup();
@@ -64,7 +89,6 @@ Texture::~Texture() {
 void Texture::init(
     In<MinFilter> min_filter, In<MagFilter> mag_filter, In<Wrap> warp_s, In<Wrap> warp_t
 ) {
-    glGenTextures(1, &(m_handle));
     gl::bindTexture(m_target, m_handle);
     gl::setTexParam(m_target, GL_TEXTURE_MIN_FILTER, min_filter);
     gl::setTexParam(m_target, GL_TEXTURE_MAG_FILTER, mag_filter);
@@ -80,7 +104,6 @@ void Texture::init(
     In<Wrap>      warp_s,
     In<Wrap>      warp_t
 ) {
-    glGenTextures(1, &(m_handle));
     gl::bindTexture(m_target, m_handle);
     gl::setTexParam(m_target, GL_TEXTURE_MIN_FILTER, min_filter);
     gl::setTexParam(m_target, GL_TEXTURE_MAG_FILTER, mag_filter);
@@ -89,19 +112,8 @@ void Texture::init(
 
     if(m_format == Format::DEPTH_COMPONENT || m_format == Format::DEPTH_COMPONENT16
        || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32) {
-        std::vector<uint> data;
-        data.resize(size.x * size.y);
-        for(uint& it : data) it = rand();
-
         gl::setTexImage2D(
-            m_target,
-            0,
-            m_format,
-            size.x,
-            size.y,
-            Format::DEPTH_COMPONENT,
-            GL_UNSIGNED_INT,
-            data.data()
+            m_target, 0, m_format, size.x, size.y, Format::DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr
         );
     } else {
         gl::setTexImage2D(m_target, 0, m_format, size.x, size.y);
@@ -109,6 +121,30 @@ void Texture::init(
     gl::generateMipmap(m_target);
     gl::bindTexture(m_target, 0);
 }
+
+void Texture::init(
+    In<uvec3>     size,
+    In<MinFilter> min_filter,
+    In<MagFilter> mag_filter,
+    In<Wrap>      warp_s,
+    In<Wrap>      warp_t
+) {
+    gl::bindTexture(m_target, m_handle);
+    gl::setTexParam(m_target, GL_TEXTURE_MIN_FILTER, min_filter);
+    gl::setTexParam(m_target, GL_TEXTURE_MAG_FILTER, mag_filter);
+    gl::setTexParam(m_target, GL_TEXTURE_WRAP_S, warp_s);
+    gl::setTexParam(m_target, GL_TEXTURE_WRAP_T, warp_t);
+
+    if(m_format == Format::DEPTH_COMPONENT || m_format == Format::DEPTH_COMPONENT16
+       || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32) {
+        gl::setTexImage3D(m_target, m_format, size.x, size.y, size.z, Format::DEPTH_COMPONENT);
+    } else {
+        gl::setTexImage3D(m_target, m_format, size.x, size.y, size.z);
+    }
+    gl::generateMipmap(m_target);
+    gl::bindTexture(m_target, 0);
+}
+
 void Texture::init(
     In<Image>     image,
     In<MinFilter> min_filter,
@@ -116,7 +152,6 @@ void Texture::init(
     In<Wrap>      warp_s,
     In<Wrap>      warp_t
 ) {
-    glGenTextures(1, &(m_handle));
     gl::bindTexture(m_target, m_handle);
     gl::setTexParam(m_target, GL_TEXTURE_MIN_FILTER, min_filter);
     gl::setTexParam(m_target, GL_TEXTURE_MAG_FILTER, mag_filter);

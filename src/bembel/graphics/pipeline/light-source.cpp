@@ -1,6 +1,7 @@
 ﻿module;
 #include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 #include <string_view>
 module bembel.graphics.pipeline;
 
@@ -22,24 +23,6 @@ bool initComponent(In<xml::Element const*> properties, InOut<PointLightData> com
     return true;
 }
 
-ShadowMap::ShadowMap(uint resolution, uint cascadeds)
-  : resolution{resolution}
-  , texture{Texture::Target::TEXTURE_2D, Texture::Format::DEPTH_COMPONENT24} {
-
-    assert(0 < cascadeds && cascadeds <= MAX_CASCADEDS);
-    //world_to_light_space.resize(cascadeds);
-
-    texture.init(
-        uvec2(resolution),
-        Texture::MinFilter::NEAREST,
-        Texture::MagFilter::NEAREST,
-        Texture::Wrap::REPEAT,
-        Texture::Wrap::REPEAT
-    );
-    fbo.setDepthAttechment(&texture);
-    fbo.init();
-}
-
 bool initComponent(In<xml::Element const*> properties, InOut<DirectionalLightData> component) {
     xml::getAttribute(properties, "color", component.color);
     float intensity;
@@ -47,10 +30,7 @@ bool initComponent(In<xml::Element const*> properties, InOut<DirectionalLightDat
     xml::getAttribute(properties, "direction", component.direction);
     component.direction = glm::normalize(component.direction);
 
-    uint shadow_resolution = 0;
-    if(xml::getAttribute(properties, "shadowResolution", shadow_resolution)) {
-        component.shadow_map = std::make_unique<ShadowMap>(shadow_resolution);
-    }
+    xml::getAttribute(properties, "cast_shadow", component.cast_shadow);
 
     return true;
 }

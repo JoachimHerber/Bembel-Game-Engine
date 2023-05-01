@@ -40,8 +40,7 @@ export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECT
 export bool initComponent(xml::Element const*, SelectionHighlight&) {
     return true;
 }
-export using SelectionHighlightComponent =
-    BasicComponent<"SelectionHighlight", SelectionHighlight>;
+export using SelectionHighlightComponent = BasicComponent<"SelectionHighlight", SelectionHighlight>;
 
 export class SelectionRenderingStage : public RenderingPipeline::Stage {
   public:
@@ -60,8 +59,7 @@ export class SelectionRenderingStage : public RenderingPipeline::Stage {
     virtual void cleanup() override;
 
     virtual void setScene(Scene*) override;
-    virtual void execute(GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer)
-        override;
+    virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
   private:
     struct GeometryObject {

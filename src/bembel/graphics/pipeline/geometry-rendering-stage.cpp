@@ -50,9 +50,7 @@ void GeometryRenderingStage::setScene(Scene* scene) {
     }
 }
 
-void GeometryRenderingStage::execute(
-    GeometryRenderQueue& render_queue, std::vector<RendererPtr> const& renderer
-) {
+void GeometryRenderingStage::execute(In<std::span<const RendererPtr>> renderer) {
     if(!m_scene) return;
 
     m_fbo->beginRenderToTexture();
@@ -70,7 +68,7 @@ void GeometryRenderingStage::execute(
     auto const& geometrys = m_geometrys->getComponentData();
     auto        transform = m_transforms->begin();
 
-    render_queue.clearRendarData();
+    m_render_queue.clearRendarData();
 
     for(usize entity = 0; entity < entities.size(); ++entity, ++transform) {
         if((entities[entity] & m_geometrys->getComponentMask()) == 0) continue;
@@ -85,13 +83,13 @@ void GeometryRenderingStage::execute(
         }
         model_matrix = glm::scale(model_matrix, geom.scale);
 
-        render_queue.addGeometryObject(geom.model.get(), model_matrix);
+        m_render_queue.addGeometryObject(geom.model.get(), model_matrix);
     }
 
-    render_queue.sortRenderData();
+    m_render_queue.sortRenderData();
     for(auto& it : renderer) {
         it->renderGeometry(
-            cam->getProjectionMatrix(), cam->getViewMatrix(), render_queue.getRenderData()
+            cam->getProjectionMatrix(), cam->getViewMatrix(), m_render_queue.getRenderData()
         );
     }
     m_fbo->endRenderToTexture();

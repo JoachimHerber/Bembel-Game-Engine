@@ -1,6 +1,8 @@
 ﻿module;
 #include <memory>
+#include <span>
 #include <string_view>
+#include <vector>
 export module bembel.graphics.pipeline:RenderingPipeline;
 
 import bembel.base;
@@ -27,9 +29,7 @@ export class RenderingPipeline final {
         virtual void cleanup() { m_fbo->cleanup(); }
 
         using RendererPtr = std::shared_ptr<GeometryRendererBase>;
-        virtual void execute(
-            GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer
-        ) = 0;
+        virtual void execute(In<std::span<const RendererPtr>> renderer) = 0;
 
         using RendertingStageFactory = Factory<Stage, RenderingPipeline&>;
         static RendertingStageFactory& getFactory();
@@ -125,11 +125,18 @@ export class RenderingPipeline final {
         return static_cast<StageType*>(m_render_stages.back().get());
     }
 
+    template <typename StageType>
+    StageType* getRenderingStage(usize index) {
+        return index < m_render_stages.size()
+                 ? dynamic_cast<StageType*>(m_render_stages[index].get())
+                 : nullptr;
+    }
+
     View*                                     createView(std::string_view texture_name);
     std::vector<std::unique_ptr<View>> const& getViews() const { return m_views; }
 
     using RendererPtr = std::shared_ptr<GeometryRendererBase>;
-    void update(GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer);
+    void update(In<std::span<const RendererPtr>> renderer);
 
   private:
     void configureTextures(xml::Element const*);

@@ -169,6 +169,23 @@ bool ShaderProgram::setUniform(std::string_view name, mat4 const& value) {
     return true;
 }
 
+bool ShaderProgram::setUniform(std::string_view name, In<std::span<const mat4>> value) {
+    GLint location = getUniformLocation(name);
+    if(location == -1) return false;
+
+    glUniformMatrix4fv(location, value.size(), gl::GL_FALSE, (const GLfloat*)value.data());
+    return true;
+}
+
+bool ShaderProgram::setUniform(std::string_view name, In<std::span<const float>> value) {
+    GLint location = getUniformLocation(name);
+    if(location == -1) return false;
+
+    glUniform1fv(location, value.size(), (const GLfloat*)value.data());
+    return true;
+}
+
+
 bool ShaderProgram::link() {
     if(m_shader_handles.empty()) return false;
 

@@ -29,8 +29,6 @@ export class GraphicSystem : public kernel::System {
     RenderingPipeline*                       createRenderingPipline();
     std::vector<RenderingPipelinePtr> const& getRenderingPipelines();
 
-    GeometryRenderQueue& getGeometryRenderQueue() { return m_geometry_render_queue; }
-
     virtual bool configure(xml::Element const*) override;
 
     virtual bool init() override;
@@ -48,8 +46,6 @@ export class GraphicSystem : public kernel::System {
     std::vector<RenderingPipelinePtr> m_pipelines;
 
     Dictionary<size_t> m_renderer_map;
-
-    GeometryRenderQueue m_geometry_render_queue;
 };
 
 export struct InitGraphicResourcesEvent {};

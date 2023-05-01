@@ -7,7 +7,7 @@
 module bembel.examples.rendering;
 
 namespace bembel {
-using namespace graphics;
+using namespace bembel::graphics;
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::gui;
@@ -31,24 +31,27 @@ bool RenderingExample::init() {
     m_camera =
         std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
 
-    m_scene = std::make_shared<kernel::Scene>();
-    m_graphic_system->getRenderingPipelines()[0]->setScene(m_scene);
+    auto& rendering_piupeline = m_graphic_system->getRenderingPipelines()[0];
+    auto* lighting_stage      = rendering_piupeline->getRenderingStage<DeferredLightingStage>(1);
+    if(!lighting_stage) return false;
 
+    m_scene = std::make_shared<kernel::Scene>();
+    rendering_piupeline->setScene(m_scene);
     m_scene->loadScene("scenes/material-test.scene");
-    auto shadow_map = std::make_unique<ShadowMap>(2048);
-    m_view          = std::make_unique<ShadowDebugView>(
-        m_graphic_system->getRenderingPipelines()[0]->getTexture("depth"), 800
-        //&shadow_map->texture, 2048
-    );
+
+    lighting_stage->setDirLightShadowResolution(1024);
+    auto& shadow_map = lighting_stage->getDirectionalLightShadowMap();
+
+    m_views[0] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 0);
+    m_views[1] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 1);
+    m_views[2] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 2);
 
     m_light = Entity<>(*m_scene);
-    m_light.createComponent<DirectionalLight>(
-        vec3(3.f, 3.f, 3.f), //
-        vec3(0.f, -1.f, 0.f),
-        std::move(shadow_map)
-    );
+    m_light.createComponent<DirectionalLight>(vec3(3.f, 3.f, 3.f), vec3(0.f, -1.f, 0.f), true);
 
-    m_engine.display.getWindow(0)->getViewport(4)->addView(m_view.get());
+    m_engine.display.getWindow(0)->getViewport(4)->addView(m_views[0].get());
+    m_engine.display.getWindow(0)->getViewport(5)->addView(m_views[1].get());
+    m_engine.display.getWindow(0)->getViewport(6)->addView(m_views[2].get());
 
     auto gui = m_gui_system->getGUI("main");
 
@@ -73,7 +76,7 @@ void RenderingExample::cleanup() {
 }
 
 void RenderingExample::update(double time) {
-    //m_camera->update(time);
+    // m_camera->update(time);
 
     static constexpr float RAD_TO_DEG = 180 / 3.14159265359;
 
@@ -110,8 +113,8 @@ void RenderingExample::updateLightDir(In<i64>) {
     );
 }
 
-RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolution)
-  : m_texture{texture}, m_resolution{resolution} {
+RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolution, uint layer)
+  : m_texture{texture}, m_resolution{resolution}, m_layer{layer} {
     Asset<Shader> vert;
     if(!vert.request("shadow-debug-view.vert")) return;
 
@@ -121,16 +124,14 @@ RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolut
     m_shader = std::make_unique<ShaderProgram>();
     m_shader->attachShader(std::move(vert));
     m_shader->attachShader(std::move(frag));
-    if(!m_shader->link()) { 
-        m_shader.reset();
-    }
+    if(!m_shader->link()) { m_shader.reset(); }
 }
 void RenderingExample::ShadowDebugView::draw(
     ivec2 const& viewport_position, uvec2 const& viewport_size
 ) {
     if(!m_shader) return;
     glViewport(viewport_position.x, viewport_position.y, viewport_size.x, viewport_size.y);
-    
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glDisable(GL_CULL_FACE);
@@ -139,6 +140,7 @@ void RenderingExample::ShadowDebugView::draw(
     glDisable(GL_ALPHA_TEST);
 
     m_shader->use();
+    m_shader->setUniform("uLayer", int(m_layer));
     glActiveTexture(GL_TEXTURE0);
     m_texture->bind();
 

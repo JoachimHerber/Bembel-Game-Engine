@@ -22,7 +22,7 @@ void glfw_error_callback(int error, char const* description) {
 }
 
 Engine::Engine() {
-    if(glfwInit() == GL_FALSE) {
+    if(!glfwInit()) {
         log().error("Failed to initialize GLFW");
         throw std::exception();
     }

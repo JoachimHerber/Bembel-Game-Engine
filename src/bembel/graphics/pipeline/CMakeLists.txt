@@ -4,6 +4,8 @@ target_sources(Bembel
         camera.cpp
         light-source.ixx
         light-source.cpp
+        shadow-map.ixx
+        shadow-map.cpp
         pipeline.ixx
         rendering-pipeline.ixx
         rendering-pipeline.cpp
@@ -11,6 +13,8 @@ target_sources(Bembel
         geometry-rendering-stage.cpp
         deferred-lighting-stage.ixx
         deferred-lighting-stage.cpp
+        deferred-lighting-stage-dir-lights.cpp
+        deferred-lighting-stage-point-lights.cpp
         environment-map-reflection-stage.ixx
         environment-map-reflection-stage.cpp
         CMakeLists.txt

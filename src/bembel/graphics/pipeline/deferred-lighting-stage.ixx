@@ -5,6 +5,7 @@ import bembel.kernel;
 import bembel.graphics.geometry;
 import :RenderingPipeline;
 import :LightSource;
+import :ShadowMap;
 
 namespace bembel::graphics {
 using namespace bembel::base;
@@ -18,35 +19,50 @@ export class DeferredLightingStage : public RenderingPipeline::Stage {
     void setDirLightShader(Asset<ShaderProgram>);
     void setPointLightShader(Asset<ShaderProgram>);
 
+    void setDirLightShadowResolution(uint resolution);
+    void setDirLightShadowCascadeDistances(In<std::span<const float>> cascades);
+
     virtual bool configure(xml::Element const*) override;
 
     virtual void setScene(Scene*) override;
 
     virtual void init() override;
     virtual void cleanup() override;
-    virtual void execute(GeometryRenderQueue& renderQueue, std::vector<RendererPtr> const& renderer)
-        override;
+    virtual void execute(In<std::span<const RendererPtr>> renderer) override;
+
+    ShadowMap& getDirectionalLightShadowMap() { return m_dir_lights.shadows; }
 
   private:
     void updateShadowMaps(
-        GeometryRenderQueue& render_queue, std::vector<RendererPtr> const& renderer
+        In<std::span<const RendererPtr>>         renderer,
+        In<std::span<const std::array<vec4, 8>>> frustum_corners
     );
-    void initRenderQueueForShadowPass(GeometryRenderQueue& render_queue);
-    void applyDirectionalLights();
-    void applyPointLights();
+    void initRenderQueueForShadowPass();
+    void applyDirectionalLights(In<std::span<const RendererPtr>> renderer);
+    void applyPointLights(In<std::span<const RendererPtr>> renderer);
+
+    void beginRenderToTexture();
+    void endRenderToTexture();
 
   private:
-    Asset<ShaderProgram> m_dir_light_shader;
-    Asset<ShaderProgram> m_point_light_shader;
+    struct PointLights {
+        Asset<ShaderProgram> shader;
+        uint                 vao         = 0;
+        uint                 vbo         = 0;
+        uint                 buffer_size = 0;
+    };
 
-    uint m_vao         = 0;
-    uint m_vbo         = 0;
-    uint m_buffer_size = 0;
+    struct DirectionalLights {
+        Asset<ShaderProgram> shader;
+        ShadowMap            shadows           = {Texture::Target::TEXTURE_2D_ARRAY};
+        std::vector<float>   cascade_distances = {0.01f, 5.0f, 15.0f, 100.0f};
+    };
 
-    Scene*                       m_scene        = nullptr;
-    DirectionalLight::Container* m_dir_lights   = nullptr;
-    PointLight::Container*       m_point_lights = nullptr;
-    Transform::Container*        m_transforms   = nullptr;
+    PointLights       m_point_lights;
+    DirectionalLights m_dir_lights;
+    Scene*            m_scene = nullptr;
+
+    GeometryRenderQueue m_render_queue;
 };
 
 } // namespace bembel::graphics

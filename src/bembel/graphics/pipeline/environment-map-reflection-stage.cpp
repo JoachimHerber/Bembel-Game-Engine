@@ -23,7 +23,7 @@ EnvironmentMapReflectionStage::~EnvironmentMapReflectionStage() {}
 
 namespace {
     bool loadCubeMapSide(GLenum target, std::string_view file) {
-        auto  path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
+        auto path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
 
         Image image;
         if(!path || !image.load(path.value(), false)) return false;
@@ -91,7 +91,7 @@ void EnvironmentMapReflectionStage::cleanup() {
     m_fbo->cleanup();
 }
 
-void EnvironmentMapReflectionStage::execute(GeometryRenderQueue&, std::vector<RendererPtr> const&) {
+void EnvironmentMapReflectionStage::execute(In<std::span<const RendererPtr>>) {
     if(!m_shader_program) return;
 
     auto program = m_shader_program.get();
