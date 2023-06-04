@@ -46,7 +46,7 @@ export class ChessPiece {
     ChessPiece& operator=(ChessPiece const&) = default;
     ChessPiece& operator=(ChessPiece&&)      = default;
 
-    bool operator==(ChessPiece const& other) {
+    bool operator==(ChessPiece const& other) const {
         return m_board == other.m_board && m_entity == other.m_entity;
     }
 

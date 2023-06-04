@@ -15,7 +15,7 @@ using Document = tinyxml2::XMLDocument;
 
 template <typename T>
     requires std::integral<T> || std::floating_point<T> bool
-setAttribute(In<Element*> node, In<std::string_view> name, T value) {
+setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T value) {
     if(!node) return false;
 
     std::string name_str{name};
@@ -24,60 +24,54 @@ setAttribute(In<Element*> node, In<std::string_view> name, T value) {
 }
 
 template <typename T>
-bool setAttribute(In<Element*> node, In<std::string_view> name, const T& value) {
+bool setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T&& value) {
     if(!node) return false;
 
     std::string name_str{name};
-    node->SetAttribute(name_str.c_str(), conversion::toString(value).c_str());
+
+    if constexpr(IsObservableValue<T>::value) {
+        node->SetAttribute(name_str.c_str(), conversion::toString(value.get()).c_str());
+    } else {
+        node->SetAttribute(name_str.c_str(), conversion::toString(std::forward<T>(value)).c_str());
+    }
     return true;
 }
+
 template <typename T>
-bool getAttribute(In<Element const*> node, In<std::string_view> name, T& value) {
+bool getAttribute(In<not_null_ptr<const Element>> node, In<std::string_view> name, T& value) {
     if(!node) return false;
 
     std::string name_str{name};
     char const* attrib = node->Attribute(name_str.c_str());
+
     if(!attrib) return false;
 
-    return conversion::fromString(attrib, value);
-}
-
-template <typename T>
-bool setAttribute(In<Element*> node, In<std::string_view> name, ObservableValue<T> const& value) {
-    if(!node) return false;
-
-    std::string name_str{name};
-    node->SetAttribute(name_str.c_str(), conversion::toString(value.get()).c_str());
-    return true;
-}
-
-template <typename T>
-bool getAttribute(In<Element const*> node, In<std::string_view> name, ObservableValue<T>& value) {
-    if(!node) return false;
-
-    std::string name_str{name};
-    char const* attrib = node->Attribute(name_str.c_str());
-    if(!attrib) return false;
-
-    T tmp = value.get();
-    if(!conversion::fromString(attrib, tmp)) return false;
-    value.set(tmp);
-    return true;
+    if constexpr(IsObservableValue<T>::value) {
+        typename T::Type tmp = value.get();
+        if(!conversion::fromString(attrib, tmp)) return false;
+        value.set(tmp);
+        return true;
+    } else {
+        return conversion::fromString(attrib, value);
+    }
 }
 
 template <typename T>
 bool getAttribute(
-    In<Element const*> node, In<std::string_view> child_node, In<std::string_view> name, T& value
+    In<not_null_ptr<const Element>> node,
+    In<std::string_view>            child_node,
+    In<std::string_view>            name,
+    T&                              value
 ) {
     if(!node) return false;
 
     std::string child_node_str{child_node};
     return getAttribute<T>(node->FirstChildElement(child_node_str.c_str()), name, value);
 }
-
+template <typename T = Element>
 class ElementIterator {
   public:
-    ElementIterator(In<Element const*> element, In<std::string_view> name)
+    ElementIterator(In<not_null_ptr<T>> element, In<std::string_view> name)
       : m_element(element), m_name(name) {}
 
     ElementIterator begin() {
@@ -89,7 +83,7 @@ class ElementIterator {
     }
     ElementIterator end() { return ElementIterator(nullptr, ""); }
 
-    Element const* operator*() { return m_element; }
+    T const* operator*() { return m_element; }
 
     bool operator!=(ElementIterator const& other) {
         if(m_element != other.m_element) return true;
@@ -105,12 +99,20 @@ class ElementIterator {
     }
 
   private:
-    Element const*    m_element;
+    not_null_ptr<T>   m_element;
     const std::string m_name;
 };
 
-ElementIterator IterateChildElements(In<Element const*> element, In<std::string_view> name = "") {
+ElementIterator<Element> IterateChildElements(
+    In<not_null_ptr<Element>> element, In<std::string_view> name = ""
+) {
     return ElementIterator(element, name);
+}
+
+ElementIterator<const Element> IterateChildElements(
+    In<not_null_ptr<const Element>> element, In<std::string_view> name = ""
+) {
+    return ElementIterator<const Element>(element, name);
 }
 
 } // namespace bembel::base::xml

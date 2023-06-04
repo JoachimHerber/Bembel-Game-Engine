@@ -25,7 +25,7 @@ class Entity {
     Entity& operator=(Entity const& other) = default;
     Entity& operator=(Entity /**/&& other) = default;
 
-    bool operator==(Entity other) { return m_scene == other.m_scene && m_id == other.m_id; }
+    bool operator==(Entity other) const { return m_scene == other.m_scene && m_id == other.m_id; }
          operator bool() { return m_id != EntityID::INVALID; }
 
     template <class ComponentType>

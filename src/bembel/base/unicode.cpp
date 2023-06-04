@@ -149,19 +149,20 @@ String::String(In<std::string> str) {
 }
 
 String& String::operator=(In<std::string_view> str) {
+    std::string_view remaining = str;
     std::mbstate_t state{};
 
     this->data.reserve(str.size());
 
     utf8::CodePoint cp;
-    while(std::size_t rc = std::mbrtoc32(&cp, str.data(), str.size(), &state)) {
+    while(std::size_t rc = std::mbrtoc32(&cp, remaining.data(), remaining.size(), &state)) {
         auto encoding = utf8::encode(cp);
         if(encoding.empty()) return *this;
 
         this->data += encoding;
 
-        if(rc >= str.size()) break;
-        str = str.substr(rc);
+        if(rc >= remaining.size()) break;
+        remaining = remaining.substr(rc);
     }
     return *this;
 }

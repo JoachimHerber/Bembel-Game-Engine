@@ -16,6 +16,7 @@ class ObservableValue final {
     ObservableValue(TArgs&&... args) : m_value(std::forward<TArgs>(args)...) {}
     ~ObservableValue() = default;
 
+    using Type = T;
     /**
      * ChangeSignals are used to signalize changes to an ObservableValue.
      * Signale arguments:
@@ -66,4 +67,8 @@ class ObservableValue final {
     T m_value;
 };
 
+template <typename T>
+struct IsObservableValue : std::false_type {};
+template <typename T>
+struct IsObservableValue<ObservableValue<T>> : std::true_type {};
 } // namespace bembel::base

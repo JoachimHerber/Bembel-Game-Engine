@@ -24,8 +24,8 @@ export class DisplayModeBase {
 export class WindowDisplayMode : public DisplayModeBase {
   public:
     WindowDisplayMode() = default;
-    WindowDisplayMode(In<uvec2> size, bool resizable)
-      : m_width{size.x}, m_height{size.y}, m_resizable{resizable} {}
+    WindowDisplayMode(In<uvec2> size, bool resizable = true, bool decorated = true)
+      : m_width{size.x}, m_height{size.y}, m_resizable{resizable}, m_decorated{decorated} {}
     ~WindowDisplayMode() = default;
 
     u32  getWidth() const { return m_width; }
@@ -60,6 +60,7 @@ export class WindowDisplayMode : public DisplayModeBase {
     u32 m_aspect_ratio_denom = 0;
 
     bool m_resizable = true;
+    bool m_decorated = true;
 
     static bool registerd;
 };

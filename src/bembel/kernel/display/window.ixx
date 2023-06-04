@@ -22,22 +22,30 @@ export class Window {
     ~Window();
 
     DisplayModePtr getDisplayMode() const { return m_display_mode; }
-    void           setDisplayMode(DisplayModePtr val) { m_display_mode = val; }
+    void           setDisplayMode(Copy<DisplayModePtr> val) { m_display_mode = std::move(val); }
 
-    void init(xml::Element const* properties);
+    void init(In<not_null_ptr<const xml::Element>> properties);
 
-    void open(std::string_view titel);
+    void open(In<std::string_view> titel);
     void close();
 
     WindowId getWindowID() const { return m_window_id; }
 
     bool isOpend() { return m_window_impl != nullptr; }
 
+    ivec2 getWindowPosition() const;
+    void  setWindowPosition(In<ivec2> pos);
+
     ivec2 getWindowSize() const;
+    void  setWindowSize(In<ivec2> size);
+
     ivec2 getFrameBufferSize() const;
 
-    bool setIconify(bool b);
     bool setVisible(bool b);
+
+    void iconify();
+    void maximize();
+    void restore();
 
     bool getShouldClose() const;
     bool setShouldClose(bool should_close);
@@ -60,10 +68,10 @@ export class Window {
     void makeContextCurent();
     void swapBuffers();
 
-    void updateViewports(In<ivec2> frambuffer_size) {
+    void updateViewports(In<ivec2> framebuffer_size) {
         for(auto& viewport : m_viewports) {
-            viewport->updatePosition(frambuffer_size);
-            viewport->updateSize(frambuffer_size);
+            viewport->updatePosition(framebuffer_size);
+            viewport->updateSize(framebuffer_size);
         }
     }
 

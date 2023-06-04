@@ -26,17 +26,17 @@ void ConsoleLogSink::writeMessage(
 
     std::string indent;
     indent.resize(indentation * 2LL, ' ');
-
-    for(bool first_line = true; !message.empty(); first_line = false) {
-        auto             line_brack = message.find('\n');
-        std::string_view line       = message.substr(0, line_brack);
+    std::string_view remaining = message;
+    for(bool first_line = true; !remaining.empty(); first_line = false) {
+        auto             line_brack = remaining.find('\n');
+        std::string_view line       = remaining.substr(0, line_brack);
         std::cout.write(indent.data(), indent.size());
         if(first_line) { std::cout.write(m_prefix.data(), m_prefix.size()); }
         std::cout.write(line.data(), line.size());
         std::cout.write("\n", 1);
         if(line_brack == std::string_view::npos) break;
 
-        message = message.substr(line_brack + 1);
+        remaining = remaining.substr(line_brack + 1);
     }
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);

@@ -38,6 +38,7 @@ GLFWwindow* WindowDisplayMode::creatWindow(std::string_view title, GLFWwindow* s
     // GLFWwindow
     glfwWindowHint(GLFW_RESIZABLE, m_resizable);
     glfwWindowHint(GLFW_SRGB_CAPABLE, true);
+    glfwWindowHint(GLFW_DECORATED, m_decorated);
 
     std::string title_str{title};
     GLFWwindow* window =

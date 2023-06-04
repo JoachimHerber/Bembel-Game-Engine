@@ -2,7 +2,10 @@
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
 
+#include <filesystem>
 #include <memory>
+#include <span>
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 module bembel.kernel.display;
@@ -14,6 +17,8 @@ using namespace gl;
 
 namespace bembel::kernel {
 using namespace bembel::base;
+
+using namespace std::string_view_literals;
 
 namespace event_callbacks {
     Window* getWindow(GLFWwindow* glfw) {
@@ -58,7 +63,7 @@ namespace event_callbacks {
     void framebufferSizeCallback(GLFWwindow* glfw, int w, int h) {
         auto window = getWindow(glfw);
 
-        vec2 framebuffer_size(w, h);
+        ivec2 framebuffer_size(w, h);
 
         events::broadcast<FrameBufferResizeEvent>(window, framebuffer_size);
         window->updateViewports(framebuffer_size);
@@ -99,15 +104,15 @@ namespace event_callbacks {
     void cursorPositionCallback(GLFWwindow* glfw, double x, double y) {
         auto window = getWindow(glfw);
 
-        events::broadcast(CursorMovedEvent{window, glm::vec2(x, y)});
+        events::broadcast(CursorMovedEvent{window, vec2(x, y)});
 
         auto& viewports = window->getViewports();
         for(auto it = viewports.rbegin(); it != viewports.rend(); ++it) {
             Viewport* vp = it->get();
             if(!vp->isEnabled()) continue;
 
-            glm::vec2 pos = glm::vec2(x, y) - glm::vec2(vp->getPosition());
-            pos.y         = vp->getSize().y - pos.y;
+            vec2 pos = vec2(x, y) - vec2(vp->getPosition());
+            pos.y    = vp->getSize().y - pos.y;
             vp->onCurserMove(pos);
         }
     }
@@ -130,9 +135,9 @@ namespace event_callbacks {
     void dropCallback(GLFWwindow* glfw, int count, char const** files) {
         auto window = getWindow(glfw);
 
-        std::vector<std::string> file_names;
-        for(int i = 0; i < count; ++i) file_names.push_back(files[i]);
-        events::broadcast(FileDropEvent{window, std::move(file_names)});
+        std::vector<std::filesystem::path> file_paths;
+        for(int i = 0; i < count; ++i) file_paths.emplace_back(files[i]);
+        events::broadcast(FileDropEvent{window, std::move(file_paths)});
     }
 
     void monitorCallback(GLFWmonitor* glfw, int) {
@@ -151,7 +156,7 @@ Window::~Window() {
     close();
 }
 
-void Window::init(base::xml::Element const* properties) {
+void Window::init(In<not_null_ptr<const xml::Element>> properties) {
     if(!properties) return;
 
     std::string mode;
@@ -161,7 +166,7 @@ void Window::init(base::xml::Element const* properties) {
         m_display_mode->configure(disp_mode);
     }
 
-    xml::getAttribute(properties, "background_color", this->background_color);
+    xml::getAttribute<vec3>(properties, "background_color"sv, this->background_color);
 
     auto* viewports = properties->FirstChildElement("Viewports");
     if(viewports) {
@@ -255,10 +260,24 @@ Viewport& Window::createViewport(
     return *m_viewports.back();
 }
 
+ivec2 Window::getWindowPosition() const {
+    ivec2 pos;
+    glfwGetWindowPos(m_window_impl, &pos.x, &pos.y);
+    return pos;
+}
+
+void Window::setWindowPosition(In<ivec2> pos) {
+    glfwSetWindowPos(m_window_impl, pos.x, pos.y);
+}
+
 ivec2 Window::getWindowSize() const {
     ivec2 size;
     glfwGetWindowSize(m_window_impl, &size.x, &size.y);
     return size;
+}
+
+void Window::setWindowSize(In<ivec2> size) {
+    glfwSetWindowSize(m_window_impl, size.x, size.y);
 }
 
 ivec2 Window::getFrameBufferSize() const {
@@ -267,13 +286,16 @@ ivec2 Window::getFrameBufferSize() const {
     return size;
 }
 
-bool Window::setIconify(bool b) {
-    if(b)
-        glfwIconifyWindow(m_window_impl);
-    else
-        glfwRestoreWindow(m_window_impl);
+void Window::iconify() {
+    glfwIconifyWindow(m_window_impl);
+}
 
-    return true;
+void Window::maximize() {
+    glfwMaximizeWindow(m_window_impl);
+}
+
+void Window::restore() {
+    glfwRestoreWindow(m_window_impl);
 }
 
 bool Window::setVisible(bool b) {

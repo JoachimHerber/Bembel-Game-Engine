@@ -8,8 +8,8 @@
 	<Display>
 		<Window title="Physics Demo">
 			<DisplayMode mode = "Windowed">
-				<Size width="800" height="600" />
-				<AspectRatio numerator="4" denominator="3" />
+				<Size width="1600" height="900" />
+				<AspectRatio numerator="16" denominator="9" />
 			</DisplayMode>
 			<Viewports>
 				<Viewport relativ_position="0 0" relativ_size="1 1" />
@@ -31,7 +31,7 @@
 				</GeometryRenderer>
 			</Renderer>
 			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="600" vertical_resolution="600">
+				<RenderingPipeline horizontal_resolution="6100" vertical_resolution="900">
 					<Textures>
 						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
 						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
@@ -60,6 +60,11 @@
 								<Shader file="read-geom-data.frag"/>
 								<Shader file="point-light.frag"/>
 							</PointLightShaderProgram>
+							<DirectionalShadows resolution="2048">
+								<Cascade max_distance="15" />
+								<Cascade max_distance="50" />
+								<Cascade max_distance="100"/>
+							</DirectionalShadows>
 							<Output texture="light"/>
 							<Input texture="depth" />
 							<Input texture="albedo" />
@@ -95,7 +100,7 @@
 					</Views>
 					<Camera>
 						<Position x="0" y="0" z="0" />
-						<Projection fild_of_view="75" aspect_ration="1" near="0.1" far="100.0" />
+						<Projection fild_of_view="75" aspect_ration="1.77777777778" near="0.1" far="100.0" />
 					</Camera>
 				</RenderingPipeline>
 			</RenderingPipelines>
