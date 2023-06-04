@@ -70,6 +70,8 @@ export class Style {
         CHECKBOX_SIZE,
         CHECKBOX_LABLE_MARGIN,
         SLIDER_HANDLE_WIDTH,
+        TAB_BAR_HEIGHT,
+        TAB_MARGIN,
         COUNT // for internal use only
     };
 
@@ -146,6 +148,8 @@ export class Style {
         16,  // CHECKBOX_SIZE
         4,   // CHECKBOX_LABLE_MARGIN
         16,  // SLIDER_HANDLE_WIDTH
+        32,  // TAB_BAR_HEIGHT
+        16   // TAB_MARGIN
     };
 };
 

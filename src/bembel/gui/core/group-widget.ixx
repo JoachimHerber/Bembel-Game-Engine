@@ -1,6 +1,7 @@
 ﻿module;
 #include <utility>
 #include <memory>
+#include <optional>
 export module bembel.gui.core:GroupWidget;
 
 import bembel.base;
@@ -52,6 +53,8 @@ export class GroupWidget : public Widget {
         if(m_layout) m_layout->updateLayout();
     }
 
+    std::optional<ColorRGBA> background_color;
+
   private:
     void onSizeChanged(In<ivec2>, In<ivec2>);
 
@@ -61,4 +64,14 @@ export class GroupWidget : public Widget {
     std::unique_ptr<Widget::Layout> m_layout;
 };
 
+export class SimpleGroupWidgetView : public Widget::View {
+  public:
+    SimpleGroupWidgetView(GroupWidget& widget) : m_widget{widget} {}
+    ~SimpleGroupWidgetView() = default;
+
+    void draw(RenderBatchInterface& batch) override;
+
+  private:
+    GroupWidget& m_widget;
+};
 } // namespace bembel::gui

@@ -26,5 +26,8 @@ target_sources(Bembel
 		window-widget.ixx
 		window-widget.cpp
 		
+		tab-group-widget.ixx
+		tab-group-widget.cpp
+		
 		CMakeLists.txt
 )

@@ -33,6 +33,11 @@ WindowWidget::WindowWidget(Widget& parent) : Widget{parent} {
     m_resize_handle_bottom_right.cursor  = Asset<CursorIcon>("Crosshair");
     m_resize_handle_right.cursor         = Asset<CursorIcon>("HResize");
 
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+    m_title_bar.background_color   = style->getColor(Style::Colors::WINDOW_BACKGROUND);
+    m_window_area.background_color = style->getColor(Style::Colors::MENU_BAR_BACKGROUND);
+
     this->size.change_signal.bind(this, &WindowWidget::onSizeChanged);
 
     // clang-format off
@@ -223,7 +228,7 @@ void WindowWidget::updateLayout() {
     int window_area_width  = width - 2 * border_width;
     //
 
-    m_title_bar.position                   = ivec2{/*****/ border_width, height - title_bar_height};
+    m_title_bar.position                   = ivec2{/****************/ 0, height - title_bar_height};
     m_window_area.position                 = ivec2{/*****/ border_width, /**********/ border_width};
     m_top_handle.position                  = ivec2{/****************/ 0, height - title_bar_height};
     m_resize_handle_left.position          = ivec2{/****************/ 0, /**********/ border_width};
@@ -232,7 +237,7 @@ void WindowWidget::updateLayout() {
     m_resize_handle_bottom_right.position  = ivec2{width - border_width, /*********************/ 0};
     m_resize_handle_right.position         = ivec2{width - border_width, /**********/ border_width};
 
-    m_title_bar.size                   = ivec2{width - 2 * border_width, /******/ title_bar_height};
+    m_title_bar.size                   = ivec2{/****************/ width, /******/ title_bar_height};
     m_window_area.size                 = ivec2{/****/ window_area_width, /****/ window_area_height};
     m_top_handle.size                  = ivec2{/****************/ width, /******/ title_bar_height};
     m_resize_handle_left.size          = ivec2{/*********/ border_width, /****/ window_area_height};
@@ -249,9 +254,9 @@ void SimpleWindowWidgetView::draw(RenderBatchInterface& batch) {
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
 
-    //  y3 ┏━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┓
-    //     ┃ ┃                  Title Bar                  ┃ ┃
-    //  y2 ┃ ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫ ┃
+    //  y3 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    //     ┃                    Title Bar                    ┃
+    //  y2 ┣━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━┫
     //     ┃ ┃                                             ┃ ┃
     //     ┃ ┃                                             ┃ ┃
     //     ┃ ┃                                             ┃ ┃
@@ -276,19 +281,11 @@ void SimpleWindowWidgetView::draw(RenderBatchInterface& batch) {
     float y2 = y3 - title_bar_height;
     float y1 = y0 + border_width;
 
-    // Title Bar
-    batch.setColor(style->getColor(Style::Colors::WINDOW_BACKGROUND));
-    batch.drawRectangle({x1, y1}, {x2, y2});
-
-    // Window Area
-    batch.setColor(style->getColor(Style::Colors::MENU_BAR_BACKGROUND));
-    batch.drawRectangle({x1, y2}, {x2, y3});
-
     // Border
     batch.setColor(style->getColor(Style::Colors::WINDOW_BORDER));
-    batch.drawRectangle({x0, y0}, {x1, y3});
+    batch.drawRectangle({x0, y0}, {x1, y2});
     batch.drawRectangle({x1, y0}, {x2, y1});
-    batch.drawRectangle({x2, y0}, {x3, y3});
+    batch.drawRectangle({x2, y0}, {x3, y2});
 }
 
 } // namespace bembel::gui

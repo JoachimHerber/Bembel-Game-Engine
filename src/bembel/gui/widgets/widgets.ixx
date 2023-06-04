@@ -11,6 +11,7 @@ export import :Text;
 export import :CheckBox;
 export import :RadioButton;
 export import :Window;
+export import :Tabs;
 
 import bembel.gui.core;
 
@@ -29,6 +30,7 @@ void registerWidgetTypesInFactory() {
     registerWidgetTypeInFactory<IntSliderWidget>();
     registerWidgetTypeInFactory<CheckBoxWidget>();
     registerWidgetTypeInFactory<WindowWidget>();
+    registerWidgetTypeInFactory<TabGroupWidget>();
 }
 
 } // namespace bembel::gui

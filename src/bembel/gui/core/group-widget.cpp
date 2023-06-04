@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cctype>
 #include <string_view>
+#include <memory>
 module bembel.gui.core;
 
 import bembel.base;
@@ -18,6 +19,8 @@ GroupWidget::GroupWidget(GraphicalUserInterface& gui) : Widget{gui} {
 
 GroupWidget::GroupWidget(Widget& parent) : Widget{parent} {
     size.change_signal.bind(this, &GroupWidget::onSizeChanged);
+
+    m_view = std::make_unique<SimpleGroupWidgetView>(*this);
 }
 
 GroupWidget::~GroupWidget() {}
@@ -72,6 +75,16 @@ uint GroupWidget::getMinHeight() const {
 
 void GroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     if(m_layout) m_layout->updateLayout(new_size);
+}
+void SimpleGroupWidgetView::draw(RenderBatchInterface& batch) {
+    if(m_widget.background_color) {
+        batch.setColor(m_widget.background_color.value());
+
+        auto pos  = m_widget.position.get();
+        auto size = m_widget.size.get();
+
+        batch.drawRectangle(pos, pos + size);
+    }
 }
 
 } // namespace bembel::gui
