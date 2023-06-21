@@ -4,7 +4,6 @@
 export module bembel.base:Image;
 
 import :Types;
-import :Unicode;
 
 export namespace bembel::base {
 

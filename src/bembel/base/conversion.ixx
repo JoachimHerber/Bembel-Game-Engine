@@ -7,7 +7,6 @@ export module bembel.base:Conversion;
 
 import :Types;
 import :Logger;
-import :Unicode;
 
 export namespace bembel::base::conversion {
 
@@ -25,11 +24,6 @@ bool fromString(In<std::string_view> str, Out<bool> value) {
 }
 
 bool fromString(In<std::string_view> str, std::string& value) {
-    value = str;
-    return true;
-}
-
-bool fromString(In<std::string_view> str, String& value) {
     value = str;
     return true;
 }

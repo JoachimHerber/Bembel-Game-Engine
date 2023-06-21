@@ -1,13 +1,16 @@
 module;
+#include <string>
 export module bembel.gui.widgets:TextInput;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 export class TextInputWidget : public Widget {
   public:
@@ -28,13 +31,13 @@ export class TextInputWidget : public Widget {
     bool isHovered() const { return m_handle.isHovered(); }
     bool isSelected() const { return m_handle.isSelected(); }
 
-    ObservableValue<String> text;
+    ObservableValue<std::u8string> text;
 
   protected:
-    virtual void onSizeChanged(In<ivec2>, In<ivec2>);
-    virtual void onAction(InteractionHandle::Action, ivec2);
-    virtual void onTextInput(char32_t);
-    virtual void onTextChanged(In<String>, In<String>);
+    void onSizeChanged(In<ivec2>, In<ivec2>);
+    void onAction(InteractionHandle::Action, ivec2);
+    void onTextInput(char32_t);
+    void onTextChanged(In<std::u8string>, In<std::u8string>);
 
     void copy();
     void paste();
@@ -48,7 +51,7 @@ export class TextInputWidget : public Widget {
 
         void draw(RenderBatchInterface& batch) override;
 
-        void updateGlyphs(In<String> str);
+        void updateGlyphs(In<std::u8string> str);
 
       protected:
         virtual void drawBackground(

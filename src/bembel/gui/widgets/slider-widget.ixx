@@ -5,12 +5,14 @@ export module bembel.gui.widgets:Slider;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 import :Label;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 export class SliderWidget : public Widget {
   public:
@@ -105,8 +107,8 @@ export class IntSliderWidget : public SliderWidget {
     bool               m_logarithmic;
     std::optional<i64> m_step;
 
-    String m_unit;
-    String m_prefix;
+    std::u8string m_unit;
+    std::u8string m_prefix;
 
     i64 m_value;
 };

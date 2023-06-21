@@ -4,10 +4,12 @@ module bembel.gui.core;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 using namespace ::gl;
 
 void setupVertexAttribute(

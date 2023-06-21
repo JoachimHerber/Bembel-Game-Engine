@@ -95,6 +95,8 @@ void TabGroupWidget::updateLayout() {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
+    if(m_tabs.empty()) return;
+
     int bar_height   = int(style->getValue(Style::Values::TAB_BAR_HEIGHT));
     int border_width = int(style->getValue(Style::Values::INPUT_BORDER_WIDTH));
     int text_margin  = int(style->getValue(Style::Values::BUTTON_TEXT_MARGIN));

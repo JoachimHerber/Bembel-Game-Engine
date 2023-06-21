@@ -5,10 +5,12 @@ module bembel.gui.core;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 void Style::setTextureAtlas(Asset<TextureAtlas> texture_atlas) {
     m_texture_atlas = std::move(texture_atlas);
@@ -59,12 +61,12 @@ std::unique_ptr<Style> Style::createAsset(xml::Element const* properties) {
 std::unique_ptr<Style> Style::createStyle(xml::Element const* properties) {
     if(!properties) return nullptr;
 
-    Asset<kernel::TextureAtlas> texture_array;
+    Asset<TextureAtlas> texture_array;
     if(!texture_array.request(properties->FirstChildElement("TextureAtlas"))) {
         log().error("Can't find TextureAtlas for gui::Style");
         return nullptr;
     }
-    Asset<kernel::Font> font;
+    Asset<Font> font;
     if(!font.request(properties->FirstChildElement("Font"))) {
         log().error("Can't find Font for gui::Style");
         return nullptr;

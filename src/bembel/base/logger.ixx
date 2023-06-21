@@ -7,7 +7,6 @@
 export module bembel.base:Logger;
 
 import :Types;
-import :Unicode;
 
 namespace bembel::base {
 

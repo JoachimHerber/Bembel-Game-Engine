@@ -4,11 +4,13 @@ export module bembel.gui.widgets:Label;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 export class LabelWidget : public Widget {
   public:
@@ -27,7 +29,7 @@ export class LabelWidget : public Widget {
 
     enum class Alignment { Left, Center, Right };
 
-    String const&            getText() const { return m_text; }
+    std::u8string_view       getText() const { return m_text; }
     std::optional<ColorRGBA> getTextColor() const { return m_text_color; }
     Alignment                getAlignment() const { return m_alignment; }
     bool                     getHasOutline() const { return m_outline; }
@@ -57,14 +59,13 @@ export class LabelWidget : public Widget {
       private:
         LabelWidget& m_label;
     };
-
     struct Glyph {
         unsigned index;
         float    x;
     };
 
   private:
-    String                   m_text;
+    std::u8string            m_text;
     std::optional<ColorRGBA> m_text_color;
     Alignment                m_alignment = Alignment::Left;
     bool                     m_outline   = false;

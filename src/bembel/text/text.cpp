@@ -1,14 +1,14 @@
 ﻿module;
 #include <limits>
 #include <string_view>
-module bembel.kernel.rendering;
+module bembel.text;
 
 import bembel.base;
 
-namespace bembel::kernel {
+namespace bembel::text {
 using namespace bembel::base;
 
-bool Text::parse(In<String> text) {
+bool Text::parse(In<std::u8string_view> text) {
     if(!m_font) return false;
 
     m_text.clear();
@@ -23,7 +23,7 @@ bool Text::parse(In<String> text) {
 
     std::string format;
 
-    for(auto it = text.begin(); it; ++it) {
+    for(utf8::Iterator it = text; it; ++it) {
         char32_t c = *it;
         if(c != '[' && c != ' ' && c != '\t' && c != '\n') {
             GlyphIndex i = m_font->getGlyphIndex(c, bold, oblique);
@@ -73,4 +73,4 @@ bool Text::applyFormating(std::string_view format, bool& bold, bool& oblique) {
     return false;
 }
 
-} // namespace bembel::kernel
+} // namespace bembel::text

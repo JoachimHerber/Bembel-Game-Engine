@@ -1,13 +1,16 @@
 ﻿module;
+#include <string>
 export module bembel.gui.widgets:Text;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 export class TextWidget : public Widget {
   public:
@@ -24,11 +27,11 @@ export class TextWidget : public Widget {
 
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
-    ObservableValue<String> text;
-    std::optional<ColorRGBA>     text_color;
+    ObservableValue<std::u8string> text;
+    std::optional<ColorRGBA>       text_color;
 
   private:
-    void onTextChanged(In<String>, In<String>);
+    void onTextChanged(In<std::u8string>, In<std::u8string>);
     void onSizeChanged(In<ivec2>, In<ivec2>);
 
     void recalculateLayout(In<ivec2>);

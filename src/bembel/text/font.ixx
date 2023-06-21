@@ -1,14 +1,15 @@
 ﻿module;
 #include <string_view>
-export module bembel.kernel.rendering:Font;
+#include <span>
+#include <memory>
+export module bembel.text:Font;
 
 import bembel.base;
-import bembel.kernel.assets;
+import bembel.kernel;
 
-import :Texture;
-
-namespace bembel::kernel {
+namespace bembel::text {
 using namespace bembel::base;
+using namespace bembel::kernel;
 
 export using GlyphIndex = uint;
 
@@ -73,4 +74,4 @@ export class Font final {
     KernigMap m_kernig;
 };
 
-} // namespace bembel::kernel
+} // namespace bembel::text

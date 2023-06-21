@@ -1,12 +1,14 @@
 ﻿module;
 #include <variant>
-export module bembel.kernel.rendering:Text;
+#include <string_view>
+export module bembel.text:Text;
 
 import bembel.base;
-import bembel.kernel.assets;
+import bembel.kernel;
 import :Font;
+import :Unicode;
 
-namespace bembel::kernel {
+namespace bembel::text {
 using namespace bembel::base;
 
 export class Text final {
@@ -17,7 +19,7 @@ export class Text final {
     void        setFont(Font* font) { m_font = font; }
     Font const* getFont() const { return m_font; }
 
-    bool parse(In<String> text);
+    bool parse(In<std::u8string_view> text);
 
     enum Alignment : u32 { LEFT, RIGHT, CENTER, BLOCK };
 
@@ -48,4 +50,4 @@ export class Text final {
     std::vector<TextElement> m_text;
 };
 
-} // namespace bembel::kernel
+} // namespace bembel::text

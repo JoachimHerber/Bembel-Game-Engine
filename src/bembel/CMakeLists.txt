@@ -7,6 +7,7 @@ target_sources(Bembel
 #add_subdirectory(3rd-party)
 add_subdirectory(base)
 add_subdirectory(kernel)
+add_subdirectory(text)
 add_subdirectory(graphics)
 add_subdirectory(gui)
 add_subdirectory(physics)

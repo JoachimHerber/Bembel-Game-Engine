@@ -7,7 +7,6 @@ export module bembel.base:Xml;
 import :Types;
 import :ObservableValue;
 import :Conversion;
-import :Unicode;
 
 export namespace bembel::base::xml {
 using Element  = tinyxml2::XMLElement;
@@ -31,6 +30,10 @@ bool setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T&&
 
     if constexpr(IsObservableValue<T>::value) {
         node->SetAttribute(name_str.c_str(), conversion::toString(value.get()).c_str());
+    } else if constexpr(std::is_same_v<std::remove_cv_t<T>, std::u8string>) {
+        node->SetAttribute(
+            name_str.c_str(), value.c_str()
+        ); // TinyXML-2 assumes all inputs and outputs are UTF-8
     } else {
         node->SetAttribute(name_str.c_str(), conversion::toString(std::forward<T>(value)).c_str());
     }
@@ -50,6 +53,9 @@ bool getAttribute(In<not_null_ptr<const Element>> node, In<std::string_view> nam
         typename T::Type tmp = value.get();
         if(!conversion::fromString(attrib, tmp)) return false;
         value.set(tmp);
+        return true;
+    } else if constexpr(std::is_same_v<std::remove_cv_t<T>, std::u8string>) {
+        value = (char8_t)attrib; // TinyXML-2 assumes all inputs and outputs are UTF-8
         return true;
     } else {
         return conversion::fromString(attrib, value);

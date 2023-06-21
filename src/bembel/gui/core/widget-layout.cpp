@@ -240,19 +240,19 @@ void RelativeWidgetLayout::updateLayout(In<vec2> size) {
     for(auto& elem : m_elements) {
         if(elem.widget->isHidden()) continue;
 
-        vec2 pos  = size * elem.rel_pos + elem.pos_offset;
-        vec2 size = size * elem.rel_size + elem.size_offset;
+        vec2 elem_pos = size * elem.rel_pos + elem.pos_offset;
+        vec2 elem_size = size * elem.rel_size + elem.size_offset;
 
-        size.x = std::max<int>(size.x, elem.widget->getMinWidth());
-        size.y = std::max<int>(size.y, elem.widget->getMinHeight());
+        elem_size.x = std::max<int>(elem_size.x, elem.widget->getMinWidth());
+        elem_size.y = std::max<int>(elem_size.y, elem.widget->getMinHeight());
 
         // size.x -= p.margin.left + p.margin.right;
         // size.y -= p.margin.bottom + p.margin.top;
         // pos.x += p.margin.left;
         // pos.y += p.margin.bottom;
 
-        elem.widget->position.set(pos);
-        elem.widget->size.set(size);
+        elem.widget->position.set(elem_pos);
+        elem.widget->size.set(elem_size);
     }
 }
 

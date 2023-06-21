@@ -6,12 +6,14 @@ module bembel.gui;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 import bembel.gui.widgets;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 GuiSystem::GuiSystem(Engine& engine) : System{"UserInterface"}, m_engine{engine} {
     assets::registerAssetType<Shader>();

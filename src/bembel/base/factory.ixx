@@ -6,7 +6,6 @@ module;
 export module bembel.base:Factory;
 
 import :Types;
-import :Unicode;
 
 export namespace bembel::base {
 

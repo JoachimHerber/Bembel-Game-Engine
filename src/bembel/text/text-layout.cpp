@@ -1,8 +1,8 @@
 ﻿module;
 #include <variant>
-module bembel.kernel.rendering;
+module bembel.text;
 
-namespace bembel::kernel {
+namespace bembel::text {
 using namespace bembel::base;
 
 bool TextLayout::calculateSimpleLayout(

@@ -2,10 +2,12 @@
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 export enum InstanceType : u8 { RECTANGLE = 0, GLYPH = 1, ICON = 2 };
 

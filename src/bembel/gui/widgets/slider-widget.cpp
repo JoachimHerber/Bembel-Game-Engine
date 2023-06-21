@@ -8,11 +8,13 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 SliderWidget::SliderWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);
@@ -193,11 +195,10 @@ void IntSliderWidget::constrainSliderPos(InOut<double> pos) {
 }
 
 void IntSliderWidget::updateLabel() {
-    std::string str  = std::to_string(m_value);
-    String      text = str;
-    text.data        = m_prefix.data + text.data + m_unit.data;
+    auto          str  = utf8::fromLocaleEncoding(std::to_string(m_value));
+    std::u8string text = m_prefix + str.value() + m_unit;
 
-    m_label.setText(text.data);
+    m_label.setText(text);
 }
 
 } // namespace bembel::gui

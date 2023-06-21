@@ -11,12 +11,5 @@ target_sources(Bembel
         texture-atlas.ixx
         texture-atlas.cpp
 
-        font.ixx
-        font.cpp
-        text.ixx
-        text.cpp
-        text-layout.ixx
-        text-layout.cpp
-
         CMakeLists.txt
 )

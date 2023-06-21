@@ -74,7 +74,7 @@ uint GroupWidget::getMinHeight() const {
 }
 
 void GroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
-    if(m_layout) m_layout->updateLayout(new_size);
+    if(m_layout) m_layout->updateLayout(vec2{new_size});
 }
 void SimpleGroupWidgetView::draw(RenderBatchInterface& batch) {
     if(m_widget.background_color) {

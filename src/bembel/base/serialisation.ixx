@@ -8,7 +8,6 @@ export module bembel.base:Serialisation;
 import :Types;
 import :ObservableValue;
 import :Conversion;
-import :Unicode;
 import :Xml;
 
 namespace bembel::base {

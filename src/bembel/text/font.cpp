@@ -3,11 +3,11 @@
 #include <string>
 #include <string_view>
 #include <utility>
-module bembel.kernel.rendering;
+module bembel.text;
 
 import bembel.base;
 
-namespace bembel::kernel {
+namespace bembel::text {
 using namespace bembel::base;
 
 GlyphIndex Font::getGlyphIndex(char32_t character, bool bold, bool oblique) const {
@@ -177,4 +177,4 @@ bool Font::readKerning(xml::Element const* properties) {
     return true;
 }
 
-} // namespace bembel::kernel
+} // namespace bembel::text

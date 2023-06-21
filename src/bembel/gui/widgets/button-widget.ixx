@@ -26,8 +26,8 @@ export class ButtonWidget : public Widget {
 
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
-    String const& getText() const { return m_label.getText(); }
-    void          setText(std::u8string_view text) { m_label.setText(text); }
+    std::u8string_view getText() const { return m_label.getText(); }
+    void               setText(std::u8string_view text) { m_label.setText(text); }
 
     void disable() {
         m_handle.disable();

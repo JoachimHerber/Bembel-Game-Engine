@@ -43,9 +43,8 @@ export class CheckBoxWidget : public Widget {
 
     bool isSelected() const { return state.get() == State::SELECTED; }
 
-    String const& getText() const { return m_label.getText(); }
-
-    void setText(std::u8string_view text) { m_label.setText(text); }
+    std::u8string_view getText() const { return m_label.getText(); }
+    void               setText(std::u8string_view text) { m_label.setText(text); }
 
   protected:
     void onSizeChanged(In<ivec2>, In<ivec2>);

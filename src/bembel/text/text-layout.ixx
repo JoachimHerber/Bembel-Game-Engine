@@ -1,12 +1,12 @@
 ﻿module;
-export module bembel.kernel.rendering:TextLayout;
+export module bembel.text:TextLayout;
 
 import bembel.base;
 import bembel.kernel.assets;
 import :Font;
 import :Text;
 
-namespace bembel::kernel {
+namespace bembel::text {
 using namespace bembel::base;
 
 export class TextLayout final {
@@ -34,4 +34,4 @@ export class TextLayout final {
     vec2               m_origin;
 };
 
-} // namespace bembel::kernel
+} // namespace bembel::text

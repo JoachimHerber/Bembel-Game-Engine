@@ -4,18 +4,20 @@ export module bembel.gui.core:Style;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 export class Style {
   public:
     Style()  = default;
     ~Style() = default;
 
-    void          setFont(Asset<Font> font) { m_font = std::move(font); }
-    kernel::Font* getFont() const { return m_font.get(); }
+    void  setFont(Asset<Font> font) { m_font = std::move(font); }
+    Font* getFont() const { return m_font.get(); }
 
     void setTextureAtlas(Asset<TextureAtlas>);
 

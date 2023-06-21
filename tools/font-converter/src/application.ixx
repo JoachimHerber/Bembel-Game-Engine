@@ -44,7 +44,7 @@ export class Application : public kernel::Application {
     bool initUserInterface();
 
     void lodeFontFile();
-    void onFontFilePathChanged(In<String>, In<String>);
+    void onFontFilePathChanged(In<std::u8string>, In<std::u8string>);
     void onFontFamilyAdded(In<std::u8string_view> name);
     void onSelectFontFamily(int index);
     void onTextureResulutionUpdate(i64 res);

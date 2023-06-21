@@ -131,7 +131,7 @@ bool Application::initUserInterface() {
 }
 
 void Application::lodeFontFile() {
-    std::filesystem::path path = m_widgets.load_file_path_input->text.get().data;
+    std::filesystem::path path = m_widgets.load_file_path_input->text.get();
     if(!std::filesystem::exists(path)) {
         m_widgets.load_file_error->setText(u8"File dosn't exist");
         return;
@@ -142,7 +142,7 @@ void Application::lodeFontFile() {
     }
 }
 
-void Application::onFontFilePathChanged(In<String>, In<String>) {
+void Application::onFontFilePathChanged(In<std::u8string>, In<std::u8string>) {
     m_widgets.load_file_error->setText(u8"");
 }
 
@@ -226,7 +226,7 @@ void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     load_file_button     = root.createChildWidget<ButtonWidget>(u8"Load");
     load_file_error      = root.createChildWidget<LabelWidget>();
 
-    load_file_path_input->text = String(u8"fonts/AtkinsonHyperlegible-Regular.ttf");
+    load_file_path_input->text = std::u8string(u8"fonts/AtkinsonHyperlegible-Regular.ttf");
     load_file_error->setTextColor(ColorRGBA{255, 0, 0, 255});
 
     font_selections_label = root.createChildWidget<LabelWidget>(u8"Font:");

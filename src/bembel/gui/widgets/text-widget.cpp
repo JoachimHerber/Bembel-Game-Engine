@@ -6,11 +6,13 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 TextWidget::TextWidget(Widget& parent) : Widget{parent} {
     text.change_signal.bind(this, &TextWidget::onTextChanged);
@@ -24,7 +26,7 @@ bool TextWidget::configure(xml::Element const* properties) {
 
     auto content = properties->FirstChildElement("Content");
     if(content) {
-        String text = std::u8string_view((char8_t*)content->GetText());
+        std::u8string text = (char8_t*)content->GetText();
         this->text.set(text);
     }
 
@@ -42,7 +44,7 @@ uint TextWidget::getMinHeight() const {
     return 0;
 }
 
-void TextWidget::onTextChanged(In<String>, In<String> new_text) {
+void TextWidget::onTextChanged(In<std::u8string>, In<std::u8string> new_text) {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();

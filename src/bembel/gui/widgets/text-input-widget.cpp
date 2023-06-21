@@ -7,11 +7,13 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 TextInputWidget::TextInputWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);
@@ -33,7 +35,7 @@ bool TextInputWidget::configure(xml::Element const* properties) {
     auto content = properties->FirstChildElement("Content");
     if(content) {
         char8_t* text = (char8_t*)content->GetText();
-        this->text.set(std::u8string_view(text));
+        this->text.set(std::u8string(text));
     }
 
     return true;
@@ -56,16 +58,16 @@ void TextInputWidget::onAction(InteractionHandle::Action action, ivec2 cursor_po
         case InteractionHandle::Action::INTERACT: break;
         case InteractionHandle::Action::DELETE:
             if(m_cursor_pos < text.get().size()) {
-                String tmp = this->text.get();
-                tmp.eraseCodePoint(m_cursor_pos);
+                std::u8string tmp = this->text.get();
+                utf8::eraseCodePoint(tmp, m_cursor_pos);
                 this->text.set(tmp);
             }
             break;
         case InteractionHandle::Action::BACKSPACE:
             if(m_cursor_pos > 0) {
-                String tmp = this->text.get();
+                std::u8string tmp = this->text.get();
                 --m_cursor_pos;
-                tmp.eraseCodePoint(m_cursor_pos);
+                utf8::eraseCodePoint(tmp, m_cursor_pos);
                 this->text.set(tmp);
             }
             break;
@@ -79,13 +81,13 @@ void TextInputWidget::onAction(InteractionHandle::Action action, ivec2 cursor_po
 }
 
 void TextInputWidget::onTextInput(char32_t c) {
-    String tmp = this->text.get();
-    tmp.insertCodePoint(m_cursor_pos, c);
+    std::u8string tmp = this->text.get();
+    utf8::insertCodePoint(tmp, m_cursor_pos, c);
     ++m_cursor_pos;
     this->text.set(tmp);
 }
 
-void TextInputWidget::onTextChanged(In<String>, In<String> str) {
+void TextInputWidget::onTextChanged(In<std::u8string>, In<std::u8string> str) {
     if(m_view) ((View*)m_view.get())->updateGlyphs(str);
 }
 
@@ -93,7 +95,7 @@ void TextInputWidget::copy() {}
 
 void TextInputWidget::paste() {}
 
-void TextInputWidget::View::updateGlyphs(In<String> str) {
+void TextInputWidget::View::updateGlyphs(In<std::u8string> str) {
     auto style = m_widget.getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
@@ -104,7 +106,7 @@ void TextInputWidget::View::updateGlyphs(In<String> str) {
     for(unsigned prev_index = Font::INVALIDE_GLYPH_INDEX; char32_t c : str) {
         auto const glyph_index = font->getGlyphIndex(c, false, false);
 
-        if(prev_index != kernel::Font::INVALIDE_GLYPH_INDEX)
+        if(prev_index != Font::INVALIDE_GLYPH_INDEX)
             m_advance += font->getKernig(prev_index, glyph_index);
 
         m_glyphs.emplace_back(glyph_index, m_advance);

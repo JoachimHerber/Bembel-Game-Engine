@@ -8,11 +8,13 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::text;
 
 LabelWidget::LabelWidget(Widget& parent, std::u8string_view text) : Widget{parent}, m_text{text} {
     m_view = std::make_unique<LabelWidget::View>(*this);
@@ -75,12 +77,12 @@ void LabelWidget::updateGlyphs() {
 
     m_glyphs.clear();
     m_text_length       = 0;
-    unsigned prev_index = kernel::Font::INVALIDE_GLYPH_INDEX;
+    unsigned prev_index = Font::INVALIDE_GLYPH_INDEX;
     for(char32_t c : m_text) {
         unsigned index = font->getGlyphIndex(c, false, false);
-        if(index == kernel::Font::INVALIDE_GLYPH_INDEX) continue;
+        if(index == Font::INVALIDE_GLYPH_INDEX) continue;
 
-        if(prev_index != kernel::Font::INVALIDE_GLYPH_INDEX) {
+        if(prev_index != Font::INVALIDE_GLYPH_INDEX) {
             m_text_length += font->getKernig(prev_index, index);
         }
         if(c != ' ') m_glyphs.emplace_back(index, m_text_length);
