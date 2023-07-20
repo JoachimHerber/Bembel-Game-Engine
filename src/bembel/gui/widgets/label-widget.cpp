@@ -15,6 +15,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::text;
+using namespace bembel::text::i18n;
 
 LabelWidget::LabelWidget(Widget& parent, std::u8string_view text) : Widget{parent}, m_text{text} {
     m_view = std::make_unique<LabelWidget::View>(*this);
@@ -78,7 +79,7 @@ void LabelWidget::updateGlyphs() {
     m_glyphs.clear();
     m_text_length       = 0;
     unsigned prev_index = Font::INVALIDE_GLYPH_INDEX;
-    for(char32_t c : m_text) {
+    for(char32_t c : utf8::Iterate(m_text)) {
         unsigned index = font->getGlyphIndex(c, false, false);
         if(index == Font::INVALIDE_GLYPH_INDEX) continue;
 

@@ -15,6 +15,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::text;
+using namespace bembel::text::i18n;
 
 SliderWidget::SliderWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);
@@ -142,9 +143,6 @@ bool IntSliderWidget::configure(xml::Element const* properties) {
     Widget::configure(properties);
     if(!properties) return true;
 
-    xml::getAttribute(properties, "unit", m_unit);
-    xml::getAttribute(properties, "label", m_prefix);
-
     xml::getAttribute(properties, "min", m_min);
     xml::getAttribute(properties, "max", m_max);
     i64 value = (m_min + m_max) / 2;
@@ -195,10 +193,7 @@ void IntSliderWidget::constrainSliderPos(InOut<double> pos) {
 }
 
 void IntSliderWidget::updateLabel() {
-    auto          str  = utf8::fromLocaleEncoding(std::to_string(m_value));
-    std::u8string text = m_prefix + str.value() + m_unit;
-
-    m_label.setText(text);
+    m_label.setText(m_text(m_value));
 }
 
 } // namespace bembel::gui

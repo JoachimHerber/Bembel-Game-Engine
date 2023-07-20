@@ -107,8 +107,7 @@ export class IntSliderWidget : public SliderWidget {
     bool               m_logarithmic;
     std::optional<i64> m_step;
 
-    std::u8string m_unit;
-    std::u8string m_prefix;
+    i18n::String<i64> m_text = u8"{1}";
 
     i64 m_value;
 };

@@ -1,5 +1,6 @@
 ﻿module;
 #include <string>
+#include <optional>
 export module bembel.gui.widgets:Text;
 
 import bembel.base;

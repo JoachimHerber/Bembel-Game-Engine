@@ -2,6 +2,8 @@
 #include <string_view>
 #include <span>
 #include <memory>
+#include <filesystem>
+#include <map>
 export module bembel.text:Font;
 
 import bembel.base;

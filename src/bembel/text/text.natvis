@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-	<Type Name="bembel::base::Signal&lt;*&gt;">
-		<DisplayString Condition="m_slots.size() == 0">{{}}</DisplayString>
-		<DisplayString Condition="m_slots.size() == 1">{{{m_slots[0]}}}</DisplayString>
-		<DisplayString                                >{{{m_slots[0]}, ...}}</DisplayString>
-	</Type>
-	<Type Name="bembel::base::Delegate&lt;*&gt;">
-		<DisplayString Condition="m_target == nullptr">{{nullptr}}</DisplayString>
-		<DisplayString                                >{m_target}</DisplayString>
-	</Type>
+
 </AutoVisualizer>

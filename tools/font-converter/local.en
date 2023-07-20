@@ -1,0 +1,21 @@
+number_format.decimal_separator: .
+number_format.group_separator: ,
+
+widgets.labels.load_file:          Load Font File:
+widgets.button.load_file:          Load
+widgets.labels.font:               Font:
+widgets.checkbox.default:          Default
+widgets.checkbox.oblique:          Oblique
+widgets.checkbox.bold:             Bold
+widgets.checkbox.bold_oblique:     Bold & Oblique
+widgets.labels.character_sets:     Character Sets:
+widgets.checkbox.basic_latin:      Basic Latin
+widgets.checkbox.latin_supplement: Latin-1 Supplement
+widgets.checkbox.latin_extended_a: Latin Extended-A
+widgets.checkbox.latin_extended_b: Latin Extended-B
+widgets.labels.other_chars:        Other Chars:
+widgets.labels.sdf_texture:        SDF Texture:
+widgets.labels.resolution:         Resolution:
+widgets.labels.max_distance:       Max distance:
+widgets.button.convert_font:       Convert Font
+widgets.button.save_font:          Save Font

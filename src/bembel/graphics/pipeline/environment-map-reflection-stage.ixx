@@ -1,4 +1,6 @@
-﻿export module bembel.graphics.pipeline:EnvironmentMapReflectionStage;
+﻿module;
+#include <string>
+export module bembel.graphics.pipeline:EnvironmentMapReflectionStage;
 
 import bembel.base;
 import bembel.kernel;

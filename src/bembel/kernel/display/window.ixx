@@ -1,5 +1,6 @@
 ﻿module;
 #include <memory>
+#include <string>
 export module bembel.kernel.display:Window;
 
 import bembel.base;

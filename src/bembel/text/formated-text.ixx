@@ -5,8 +5,8 @@ export module bembel.text:Text;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.text.i18n;
 import :Font;
-import :Unicode;
 
 namespace bembel::text {
 using namespace bembel::base;

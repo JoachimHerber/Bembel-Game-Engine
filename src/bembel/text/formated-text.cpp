@@ -23,7 +23,7 @@ bool Text::parse(In<std::u8string_view> text) {
 
     std::string format;
 
-    for(utf8::Iterator it = text; it; ++it) {
+    for(i18n::utf8::Iterator it = text; it; ++it) {
         char32_t c = *it;
         if(c != '[' && c != ' ' && c != '\t' && c != '\n') {
             GlyphIndex i = m_font->getGlyphIndex(c, bold, oblique);

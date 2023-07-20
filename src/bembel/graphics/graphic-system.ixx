@@ -1,5 +1,6 @@
 ﻿module;
 #include <memory>
+#include <string>
 export module bembel.graphics:System;
 
 import bembel.base;

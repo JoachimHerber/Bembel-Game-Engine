@@ -14,6 +14,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::text;
+using namespace bembel::text::i18n;
 
 TextInputWidget::TextInputWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);

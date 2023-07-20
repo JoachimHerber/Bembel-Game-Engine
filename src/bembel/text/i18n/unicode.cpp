@@ -2,9 +2,9 @@ module;
 #include <array>
 #include <cuchar>
 #include <string_view>
-module bembel.text;
+module bembel.text.i18n;
 
-namespace bembel::text {
+namespace bembel::text::i18n {
 using namespace bembel::base;
 
 constexpr utf8::Encoding utf8::getEncoding(CodeUnit cu) noexcept {
@@ -160,4 +160,4 @@ std::optional<std::u8string> utf8::fromLocaleEncoding(In<std::string_view> str) 
     return out;
 }
 
-} // namespace bembel::text
+} // namespace bembel::text::i18n

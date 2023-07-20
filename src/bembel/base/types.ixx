@@ -77,6 +77,8 @@ struct StringLiteral {
     consteval StringLiteral(const char (&str)[N]) { std::copy_n(str, N, value); }
 
     char value[N];
+
+    constexpr operator std::string_view() const { return {value, N - 1}; }
 };
 
 // clang-format off

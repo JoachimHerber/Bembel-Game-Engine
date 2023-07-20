@@ -4,16 +4,15 @@ target_sources(Bembel
 		
 	PRIVATE
         text.ixx
-		
-        unicode.ixx
-        unicode.cpp
-		
+				
         font.ixx
         font.cpp
-        text_.ixx
-        text.cpp
+        formated-text.ixx
+        formated-text.cpp
         text-layout.ixx
         text-layout.cpp
 		
         CMakeLists.txt
 )
+
+add_subdirectory(i18n)

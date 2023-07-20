@@ -8,6 +8,7 @@ namespace bembel::tools {
 using namespace bembel::base;
 using namespace bembel::gui;
 using namespace bembel::kernel;
+using namespace bembel::text::i18n::literals;
 
 Application::Application() : kernel::Application() {
     m_gui_system = m_engine.addSystem<GuiSystem>();
@@ -32,6 +33,9 @@ bool Application::init() {
     asset_locator.addGenericAssetDirectory("../assets/gui");
     asset_locator.addGenericAssetDirectory("../assets/shader");
     asset_locator.addGenericAssetDirectory("../assets/fonts");
+
+    //text::i18n::Localisation::DEFAULT->load("font-converter/local.en");
+    text::i18n::Localisation::DEFAULT->load("font-converter/local.de");
 
     auto display_mode = std::make_shared<WindowDisplayMode>();
     display_mode->setWidth(1200);
@@ -219,55 +223,55 @@ void Application::onTextureResulutionUpdate(i64 res) {
 void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     auto& root = gui->root_widget;
 
-    load_file_label = root.createChildWidget<LabelWidget>(u8"Load Font File:");
+    load_file_label = root.createChildWidget<LabelWidget>("widgets.labels.load_file"_i18n);
     load_file_label->setHasOutline(true);
 
     load_file_path_input = root.createChildWidget<TextInputWidget>();
-    load_file_button     = root.createChildWidget<ButtonWidget>(u8"Load");
+    load_file_button     = root.createChildWidget<ButtonWidget>("widgets.button.load_file"_i18n);
     load_file_error      = root.createChildWidget<LabelWidget>();
 
     load_file_path_input->text = std::u8string(u8"fonts/AtkinsonHyperlegible-Regular.ttf");
     load_file_error->setTextColor(ColorRGBA{255, 0, 0, 255});
 
-    font_selections_label = root.createChildWidget<LabelWidget>(u8"Font:");
+    font_selections_label = root.createChildWidget<LabelWidget>("widgets.labels.font"_i18n);
     font_selections_label->setHasOutline(true);
 
     font_family_selections = root.createChildWidget<RadioButtonGroupWidget>();
-    type_face_selection[0] = root.createChildWidget<CheckBoxWidget>(u8"Default");
-    type_face_selection[1] = root.createChildWidget<CheckBoxWidget>(u8"Oblique");
-    type_face_selection[2] = root.createChildWidget<CheckBoxWidget>(u8"Bold");
-    type_face_selection[3] = root.createChildWidget<CheckBoxWidget>(u8"Bold & Oblique");
+    type_face_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.default"_i18n);
+    type_face_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.oblique"_i18n);
+    type_face_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold"_i18n);
+    type_face_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold_oblique"_i18n);
 
     type_face_selection[0]->disable();
     type_face_selection[1]->disable();
     type_face_selection[2]->disable();
     type_face_selection[3]->disable();
 
-    char_set_label = root.createChildWidget<LabelWidget>(u8"Character Sets:");
+    char_set_label = root.createChildWidget<LabelWidget>("widgets.labels.character_sets"_i18n);
     char_set_label->setHasOutline(true);
 
-    char_set_selection[0] = root.createChildWidget<CheckBoxWidget>(u8"Basic Latin");
-    char_set_selection[1] = root.createChildWidget<CheckBoxWidget>(u8"Latin-1 Supplement");
-    char_set_selection[2] = root.createChildWidget<CheckBoxWidget>(u8"Latin Extended-A");
-    char_set_selection[3] = root.createChildWidget<CheckBoxWidget>(u8"Latin Extended-B");
+    char_set_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.basic_latin"_i18n);
+    char_set_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_supplement"_i18n);
+    char_set_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_a"_i18n);
+    char_set_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_b"_i18n);
 
     char_set_selection[0]->state = CheckBoxWidget::State::SELECTED;
 
-    additional_chars_label = root.createChildWidget<LabelWidget>(u8"Other Chars:");
+    additional_chars_label = root.createChildWidget<LabelWidget>("widgets.labels.other_chars"_i18n);
     additional_chars_input = root.createChildWidget<TextInputWidget>();
 
-    sdf_label = root.createChildWidget<LabelWidget>(u8"SDF Texture:");
+    sdf_label = root.createChildWidget<LabelWidget>("widgets.labels.sdf_texture"_i18n);
     sdf_label->setHasOutline(true);
 
-    texture_size_label  = root.createChildWidget<LabelWidget>(u8"Resolution:");
+    texture_size_label  = root.createChildWidget<LabelWidget>("widgets.labels.resolution"_i18n);
     texture_size_slider = root.createChildWidget<IntSliderWidget>(256, 4 * 1024, true);
-    sdf_max_dist_label  = root.createChildWidget<LabelWidget>(u8"Max distance:");
+    sdf_max_dist_label  = root.createChildWidget<LabelWidget>("widgets.labels.max_distance"_i18n);
     sdf_max_dist_slider = root.createChildWidget<IntSliderWidget>(2, 16);
 
-    convert_font_button = root.createChildWidget<ButtonWidget>(u8"Convert Font");
+    convert_font_button = root.createChildWidget<ButtonWidget>("widgets.button.convert_font"_i18n);
     convert_font_button->disable();
 
-    save_font_button = root.createChildWidget<ButtonWidget>(u8"Save Font");
+    save_font_button = root.createChildWidget<ButtonWidget>("widgets.button.save_font"_i18n);
     save_font_button->disable();
 
     save_file_error = root.createChildWidget<LabelWidget>();

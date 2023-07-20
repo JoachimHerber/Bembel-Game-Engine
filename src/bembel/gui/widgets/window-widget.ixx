@@ -1,4 +1,5 @@
 ﻿module;
+#include <string>
 export module bembel.gui.widgets:Window;
 
 import bembel.base;

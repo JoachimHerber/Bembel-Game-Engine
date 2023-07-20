@@ -2,11 +2,12 @@ module;
 #include <optional>
 #include <string>
 #include <string_view>
-export module bembel.text:Unicode;
+#include <iostream>
+export module bembel.text.i18n:Unicode;
 
 import bembel.base;
 
-namespace bembel::text {
+namespace bembel::text::i18n {
 using namespace bembel::base;
 
 export namespace utf8 {
@@ -71,3 +72,7 @@ export namespace utf8 {
 } // namespace utf8
 
 } // namespace bembel::text
+
+export std::ostream& operator<<(std::ostream& out, std::u8string_view str) {
+    return out << bembel::text::i18n::utf8::toLocaleEncoding(str).value_or("");
+}

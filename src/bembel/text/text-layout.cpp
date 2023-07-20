@@ -1,5 +1,7 @@
 ﻿module;
 #include <variant>
+#include <span>
+#include <string>
 module bembel.text;
 
 namespace bembel::text {

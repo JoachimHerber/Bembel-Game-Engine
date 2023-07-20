@@ -1,6 +1,7 @@
 module;
 #include <bullet/btBulletDynamicsCommon.h>
 
+#include <vector>
 #include <memory>
 export module bembel.physics:RigidBody;
 
