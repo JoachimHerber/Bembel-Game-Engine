@@ -1,9 +1,6 @@
 target_sources(Bembel
 	PRIVATE
         i18n.ixx
-				
-        unicode.ixx
-        unicode.cpp
 		
         number-format.ixx
         number-format.cpp

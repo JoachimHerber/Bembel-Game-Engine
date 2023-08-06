@@ -18,7 +18,7 @@ export class PhysicsExample : public kernel::Application {
     PhysicsExample();
     ~PhysicsExample();
 
-    virtual bool init() override;
+    virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
     virtual void update(double time) override;

@@ -4,12 +4,12 @@ module;
 #include <string_view>
 #include <tuple>
 #include <vector>
-export module bembel.text.i18n:Localisation;
+export module bembel.kernel.i18n:Localisation;
 
 import bembel.base;
 import :NumberFormat;
 
-namespace bembel::text::i18n {
+namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
 export enum class TranslationKeyIndex : uint { INVALID = std::numeric_limits<uint>::max() };
@@ -65,8 +65,8 @@ namespace literals {
     }
 } // namespace literals
 
-} // namespace bembel::text::i18n
+} // namespace bembel::kernel::i18n
 
-export bool operator!(bembel::text::i18n::Localisation::Error e) {
-    return e != bembel::text::i18n::Localisation::Error::Ok;
+export bool operator!(bembel::kernel::i18n::Localisation::Error e) {
+    return e != bembel::kernel::i18n::Localisation::Error::Ok;
 }

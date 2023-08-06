@@ -3,6 +3,7 @@
 #include <span>
 #include <string_view>
 #include <utility>
+#include <bit>
 export module bembel.kernel.core:Components;
 
 import bembel.base;

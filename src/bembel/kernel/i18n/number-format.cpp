@@ -2,17 +2,25 @@
 #include <array>
 #include <set>
 #include <string>
-module bembel.text.i18n;
+#include <nlohmann/json.hpp>
+module bembel.kernel.i18n;
 
 import bembel.base;
 
-namespace bembel::text::i18n {
+namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
+NumberFormat& NumberFormat::operator=(In<json> j) {
+    if(j.is_object() && j.contains("decimal_separator")) {
+        m_decimal_separator = j["decimal_separator"].get<std::u8string>();
+    }
+    if(j.is_object() && j.contains("group_separator")) {
+         m_group_separator = j["group_separator"].get<std::u8string>();
+    }
+    return *this;
+}
 
-void NumberFormat::format(
-    In<u64> value, InOut<std::u8string> str
-) {
+void NumberFormat::format(In<u64> value, InOut<std::u8string> str) {
     // clang-format off
     static constexpr std::array<u64, 20> POWERS_OF_10 = {
                                  1,

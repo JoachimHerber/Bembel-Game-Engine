@@ -20,7 +20,7 @@ set( ProjectSources
 	src/font-texture-generator.ixx
 	src/font-texture-generator.cpp
 	src/glyph.ixx
-	src/glyph.cpp 
+	src/glyph.cpp
 	src/glyph-texture-atlas.ixx
 	src/glyph-texture-atlas.cpp
 	src/texture-atlas-node.ixx

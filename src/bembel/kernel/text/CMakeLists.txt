@@ -14,5 +14,3 @@ target_sources(Bembel
 		
         CMakeLists.txt
 )
-
-add_subdirectory(i18n)

@@ -1,0 +1,67 @@
+<Assets>
+	<Material 
+		name      = "white_chess_piece"
+		renderer  = "default"
+		albedo    = "0.5 0.5 0.5"
+		roughness = "0.99"
+		metallic  = "0.05"
+		f0        = "0.04"
+	/>
+	<Material 
+		name      = "black_chess_piece"
+		renderer  = "default"
+		albedo    = "0.550 0.556 0.554"
+		roughness = "0.05"
+		metallic  = "0.95"
+		f0        = "0.04"
+	/>
+	
+	<GeometryModel name="white.tile" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="tile" />
+	</GeometryModel>
+	<GeometryModel name="black.tile" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="tile" />
+	</GeometryModel>
+	
+	<GeometryModel name="white.king" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="king" />
+	</GeometryModel>
+	<GeometryModel name="black.king" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="king" />
+	</GeometryModel>
+	
+	<GeometryModel name="white.queen" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="queen" />
+	</GeometryModel>
+	<GeometryModel name="black.queen" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="queen" />
+	</GeometryModel>
+	
+	<GeometryModel name="white.bishop" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="bishop" />
+	</GeometryModel>
+	<GeometryModel name="black.bishop" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="bishop" />
+	</GeometryModel>
+	
+	<GeometryModel name="white.knight" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="knight" />
+	</GeometryModel>
+	<GeometryModel name="black.knight" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="knight" />
+	</GeometryModel>
+	
+	<GeometryModel name="white.pawn" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="pawn" />
+	</GeometryModel>
+	<GeometryModel name="black.pawn" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="pawn" />
+	</GeometryModel>
+	
+	<GeometryModel name="white.rook" mesh="chess.mesh.xml" >
+		<MaterialMapping material="white_chess_piece" submesh="rook" />
+	</GeometryModel>
+	<GeometryModel name="black.rook" mesh="chess.mesh.xml" >
+		<MaterialMapping material="black_chess_piece" submesh="rook" />
+	</GeometryModel>
+</Assets>

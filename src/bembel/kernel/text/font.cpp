@@ -3,14 +3,14 @@
 #include <string>
 #include <string_view>
 #include <utility>
-module bembel.text;
+module bembel.kernel.text;
 
 import bembel.base;
 
-namespace bembel::text {
+namespace bembel::kernel {
 using namespace bembel::base;
 
-GlyphIndex Font::getGlyphIndex(char32_t character, bool bold, bool oblique) const {
+GlyphIndex SdfFont::getGlyphIndex(char32_t character, bool bold, bool oblique) const {
     auto const& char_map = m_char_maps
         [bold ? (oblique ? CharMapIndex::BoldOblique : CharMapIndex::Bold)
               : (oblique ? CharMapIndex::Oblique : CharMapIndex::Default)];
@@ -23,13 +23,13 @@ GlyphIndex Font::getGlyphIndex(char32_t character, bool bold, bool oblique) cons
     }
 }
 
-float Font::getAdvance(GlyphIndex glyph_index) const {
+float SdfFont::getAdvance(GlyphIndex glyph_index) const {
     if(glyph_index >= m_glypths.size()) return 0.0f;
 
     return m_glypths[glyph_index].advance;
 }
 
-float Font::getAdvance(std::span<GlyphIndex> glyph_indices) const {
+float SdfFont::getAdvance(std::span<GlyphIndex> glyph_indices) const {
     float    advance    = 0.0f;
     unsigned prev_glyph = 0;
     for(unsigned glyph : glyph_indices) {
@@ -42,7 +42,7 @@ float Font::getAdvance(std::span<GlyphIndex> glyph_indices) const {
     return advance;
 }
 
-float Font::getKernig(GlyphIndex left, GlyphIndex right) const {
+float SdfFont::getKernig(GlyphIndex left, GlyphIndex right) const {
     auto key = std::make_pair(left, right);
     auto it  = m_kernig.find(key);
     if(it != m_kernig.end()) { return it->second; }
@@ -50,21 +50,15 @@ float Font::getKernig(GlyphIndex left, GlyphIndex right) const {
     return 0.0f;
 }
 
-Font::Glyph const& Font::getGlypData(unsigned glyph_index) const {
+SdfFont::Glyph const& SdfFont::getGlypData(unsigned glyph_index) const {
     if(glyph_index < m_glypths.size()) return m_glypths[glyph_index];
 
-    static constexpr Glyph unknow_glyph{
-        0.f,
-        {0.0f, 0.0f},
-        {0.0f, 0.0f},
-        {0.0f, 0.0f},
-        {0.0f, 0.0f},
-    };
+    static const Glyph unknow_glyph{0.f, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {}};
 
     return unknow_glyph;
 }
 
-std::unique_ptr<Font> Font::loadAsset(std::filesystem::path file) {
+std::unique_ptr<SdfFont> SdfFont::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -80,22 +74,31 @@ std::unique_ptr<Font> Font::loadAsset(std::filesystem::path file) {
     return createAsset(root);
 }
 
-std::unique_ptr<Font> Font::createAsset(xml::Element const* properties) {
-    auto font = std::make_unique<Font>();
+std::unique_ptr<SdfFont> SdfFont::createAsset(xml::Element const* properties) {
+    auto font = std::make_unique<SdfFont>();
 
     std::string texture;
     if(!xml::getAttribute(properties, "texture", texture)) {
-        log().error("Can't find texture for font");
+        log().error("<Font>-Element is missing property 'texture'");
         return nullptr;
     }
-
+    uint resolution;
+    if(!xml::getAttribute(properties, "resolution", resolution)) {
+        log().error("<Font>-Element is missing property 'resolution'");
+        return nullptr;
+    }
+    uint units_per_em;
+    if(!xml::getAttribute(properties, "units_per_em", units_per_em)) {
+        log().error("<Font>-Element is missing property 'units_per_em'");
+        return nullptr;
+    }
     font->m_glyph_atlas_texture.request(texture);
     if(!font->m_glyph_atlas_texture) {
         log().error("Can't find texture for font");
         return nullptr;
     }
 
-    if(!font->readGlyphs(properties->FirstChildElement("Glyphs"))) {
+    if(!font->readGlyphs(properties->FirstChildElement("Glyphs"), resolution, units_per_em)) {
         log().error("Can't parse glyph informations");
         return nullptr;
     }
@@ -119,28 +122,37 @@ std::unique_ptr<Font> Font::createAsset(xml::Element const* properties) {
     return font;
 }
 
-bool Font::readGlyphs(xml::Element const* properties) {
+bool SdfFont::readGlyphs(xml::Element const* properties, In<uint> resolution, In<uint> units_per_em) {
     if(!properties) return false;
+
+    double glyph_scale = 1.0 / units_per_em;
+    double uv_scale    = 1.0 / resolution;
 
     for(auto glyphProps : xml::IterateChildElements(properties, "Glyph")) {
         Glyph glyph;
         if(!xml::getAttribute(glyphProps, "advance", glyph.advance)) return false;
+        glyph.advance *= glyph_scale;
 
-        vec4 tmp;
-        if(xml::getAttribute(glyphProps, "extends", tmp)) {
-            glyph.extents_min = {tmp.x, tmp.z};
-            glyph.extents_max = {tmp.y, tmp.w};
+        vec4 ext, tc;
+        if(xml::getAttribute(glyphProps, "extends", ext) && base::xml::getAttribute(glyphProps, "texCoord", tc)) {
+            glyph.extents_min    = {ext.x * glyph_scale, ext.y * glyph_scale};
+            glyph.extents_max    = {ext.z * glyph_scale, ext.w * glyph_scale};
+            glyph.tex_coords_min = {tc.x * uv_scale, tc.y * uv_scale};
+            glyph.tex_coords_max = {tc.z * uv_scale, tc.w * uv_scale};
         }
-        if(base::xml::getAttribute(glyphProps, "texCoord", tmp)) {
-            glyph.tex_coords_min = {tmp.x, tmp.z};
-            glyph.tex_coords_max = {tmp.y, tmp.w};
+        for(auto it : xml::IterateChildElements(glyphProps, "SubGlyph")) {
+            int  glyph_index;
+            dvec2 pos;
+            xml::getAttribute(it, "glyph", glyph_index);
+            xml::getAttribute(it, "position", pos);
+            glyph.subglyphs.emplace_back(glyph_index, glyph_scale * pos);
         }
-        this->m_glypths.push_back(glyph);
+        this->m_glypths.push_back(std::move(glyph));
     }
     return true;
 }
 
-bool Font::readCharMap(base::xml::Element const* properties) {
+bool SdfFont::readCharMap(base::xml::Element const* properties) {
     if(!properties) return false;
 
     for(auto entry : xml::IterateChildElements(properties, "Entry")) {
@@ -160,7 +172,7 @@ bool Font::readCharMap(base::xml::Element const* properties) {
     return true;
 }
 
-bool Font::readKerning(xml::Element const* properties) {
+bool SdfFont::readKerning(xml::Element const* properties) {
     if(!properties) return false;
 
     for(auto entry : xml::IterateChildElements(properties, "Entry")) {
@@ -177,4 +189,4 @@ bool Font::readKerning(xml::Element const* properties) {
     return true;
 }
 
-} // namespace bembel::text
+} // namespace bembel::kernel

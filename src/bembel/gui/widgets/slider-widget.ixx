@@ -5,14 +5,12 @@ export module bembel.gui.widgets:Slider;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 import :Label;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 
 export class SliderWidget : public Widget {
   public:

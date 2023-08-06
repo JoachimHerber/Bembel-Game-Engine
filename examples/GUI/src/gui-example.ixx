@@ -11,7 +11,7 @@ export class GuiExample : public kernel::Application {
     GuiExample();
     ~GuiExample();
 
-    virtual bool init() override;
+    virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
     virtual void update(double time) override;

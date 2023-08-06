@@ -23,8 +23,7 @@ void FontView::setFont(FontFamily* font) {
 
 void FontView::draw(ivec2 const& viewport_position, uvec2 const& viewport_size) {
     m_texture_gen.getFBO()->blitToBackBuffer(
-        {0, 0},
-        m_texture_gen.getResolution(),
+        {0, 0}, uvec2{m_texture_gen.getResolution()},
         viewport_position,
         viewport_position + ivec2(viewport_size)
     );
@@ -37,7 +36,7 @@ void FontView::draw(ivec2 const& viewport_position, uvec2 const& viewport_size) 
     glOrtho(0.f, 1.f, 0.f, 1.f, -1.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glScalef(1.f / m_texture_gen.getResolution().x, 1.f / m_texture_gen.getResolution().y, 1.f);
+    glScalef(1.f / m_texture_gen.getResolution(), 1.f / m_texture_gen.getResolution(), 1.f);
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);

@@ -1,6 +1,8 @@
 ﻿module;
 #include <filesystem>
+#include <glm/glm.hpp>
 #include <memory>
+#include <type_traits>
 //
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -42,7 +44,7 @@ bool FontConverter::loade(In<std::filesystem::path> path) {
     return true;
 }
 
-void FontConverter::setResolution(uvec2 res) {
+void FontConverter::setResolution(uint res) {
     m_texture_atlas.setResolution(res);
     m_texture_generator.setResolution(res);
 }
@@ -57,10 +59,9 @@ bool FontConverter::save(In<std::filesystem::path> path) {
 
     xml::Element* root = doc.NewElement("Font");
     doc.InsertEndChild(root);
-
-    xml::Element* texture = doc.NewElement("Texture");
-    root->InsertEndChild(texture);
-    texture->SetAttribute("file", (path.string() + ".png").c_str());
+    root->SetAttribute("texture", std::string(path.string() + ".png").c_str());
+    xml::setAttribute(root, "resolution", m_texture_generator.getResolution());
+    xml::setAttribute(root, "units_per_em", m_selected_font_family->getUnitsPerEM());
 
     xml::Element* glyphs = doc.NewElement("Glyphs");
     root->InsertEndChild(glyphs);
@@ -79,45 +80,46 @@ bool FontConverter::save(In<std::filesystem::path> path) {
     return true;
 }
 
-void FontConverter::converSelectedFont(
-    std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces, double max_dist
-) {
+void FontConverter::converSelectedFont(std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces) {
     m_characters = std::move(characters);
     m_faces.fill(false);
     for(auto it : faces) { m_faces[std::to_underlying(it)] = true; }
 
     if(m_selected_font_family) {
-        m_selected_font_family->parseGlypes(m_characters, faces);
+        uint max_dist = 2 * m_selected_font_family->getUnitsPerEM() / 10;
 
-        m_texture_atlas.update(m_selected_font_family->getGlyphs());
-        m_texture_generator.generateTexture(*m_selected_font_family, m_texture_atlas, max_dist);
+        m_selected_font_family->parseGlypes(m_characters, faces, max_dist);
+
+        m_texture_atlas.update(m_selected_font_family->getGlyphs(), m_selected_font_family->getUnitsPerEM());
+        m_texture_generator.generateTexture(
+            *m_selected_font_family, m_texture_atlas, max_dist
+        );
     }
 }
 
 void FontConverter::saveGlypes(xml::Element* root) {
-    unsigned units_per_em      = m_selected_font_family->getUnitsPerEM();
-    float    glypeScale        = 1.f / float(units_per_em);
-    float    tex_coord_scale_u = m_texture_atlas.getTexCoordScaleU();
-    float    tex_coord_scale_v = m_texture_atlas.getTexCoordScaleV();
-
     for(auto& it : m_selected_font_family->getGlyphs()) {
         xml::Element* glyph = root->GetDocument()->NewElement("Glyph");
         root->InsertEndChild(glyph);
 
-        xml::setAttribute(glyph, "advance", it.getAdvance() / float(units_per_em));
+        xml::setAttribute(glyph, "advance", it.getAdvance());
 
         if(it.getExtendsMin() != it.getExtendsMax() && it.getTexCoordMin() != it.getTexCoordMax()) {
-            vec2 max = glypeScale * vec2(it.getExtendsMax());
-            vec2 min = glypeScale * vec2(it.getExtendsMin());
-            vec4 extends{min.x, max.x, min.y, max.y};
+            vec2 max = vec2(it.getExtendsMax());
+            vec2 min = vec2(it.getExtendsMin());
+            vec4 extends{min.x, min.y, max.x, max.y};
             xml::setAttribute(glyph, "extends", extends);
 
             vec4 tex_coord = {
-                tex_coord_scale_u * it.getTexCoordMin().x,
-                tex_coord_scale_u * it.getTexCoordMax().x,
-                tex_coord_scale_v * it.getTexCoordMin().y,
-                tex_coord_scale_v * it.getTexCoordMax().y};
+                it.getTexCoordMin().x, it.getTexCoordMin().y, it.getTexCoordMax().x, it.getTexCoordMax().y};
             xml::setAttribute(glyph, "texCoord", tex_coord);
+        }
+        for(auto& sub_glyph : it.getSubGlyphs()) {
+            xml::Element* sub_glyph_elem = root->GetDocument()->NewElement("SubGlyph");
+            glyph->InsertEndChild(sub_glyph_elem);
+
+            xml::setAttribute(sub_glyph_elem, "glyph", int(sub_glyph.index));
+            xml::setAttribute(sub_glyph_elem, "position", sub_glyph.position);
         }
     }
 }
@@ -133,11 +135,11 @@ void FontConverter::saveCharMap(xml::Element* root) {
         if(glypes[0] || glypes[1] || glypes[2] || glypes[3]) {
             xml::Element* entry = root->GetDocument()->NewElement("Entry");
             root->InsertEndChild(entry);
-            xml::setAttribute(entry, "char", c);
-            if(m_faces[0] && glypes[0]) xml::setAttribute(entry, "glyph", glypes[0]);
-            if(m_faces[1] && glypes[1]) xml::setAttribute(entry, "glyph_oblique", glypes[1]);
-            if(m_faces[2] && glypes[2]) xml::setAttribute(entry, "glyph_bold", glypes[2]);
-            if(m_faces[3] && glypes[3]) xml::setAttribute(entry, "glyph_bold_oblique", glypes[3]);
+            xml::setAttribute(entry, "char", u32(c));
+            if(m_faces[0] && glypes[0]) xml::setAttribute(entry, "glyph", u64(glypes[0]));
+            if(m_faces[1] && glypes[1]) xml::setAttribute(entry, "glyph_oblique", u64(glypes[1]));
+            if(m_faces[2] && glypes[2]) xml::setAttribute(entry, "glyph_bold", u64(glypes[2]));
+            if(m_faces[3] && glypes[3]) xml::setAttribute(entry, "glyph_bold_oblique", u64(glypes[3]));
         }
     }
 }
@@ -148,8 +150,8 @@ void FontConverter::saveKerning(xml::Element* root) {
         xml::Element* entry = root->GetDocument()->NewElement("Entry");
         root->InsertEndChild(entry);
 
-        xml::setAttribute(entry, "left", it.first.first);
-        xml::setAttribute(entry, "right", it.first.second);
+        xml::setAttribute(entry, "left", u32(it.first.first));
+        xml::setAttribute(entry, "right", u32(it.first.second));
         xml::setAttribute(entry, "kerning", it.second * scale);
     }
 }

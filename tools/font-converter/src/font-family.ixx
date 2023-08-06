@@ -30,7 +30,7 @@ export class FontFamily {
 
     bool hasFace(FaceType type) { return m_faces[std::to_underlying(type)] != nullptr; }
 
-    bool parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces);
+    bool parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces, uint border);
 
     size_t getGlypheID(char32_t, bool, bool);
 
@@ -50,7 +50,7 @@ export class FontFamily {
         Face(FT_Face face) : face{face} {}
 
         FT_Face face;
-        CharMap charMap;
+        CharMap char_map;
     };
 
   private:

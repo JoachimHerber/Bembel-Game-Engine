@@ -4,18 +4,16 @@
 #include <cmath>
 #include <memory>
 #include <string>
+#include <bit>
 module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
-using namespace bembel::text::i18n;
 
 SliderWidget::SliderWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);

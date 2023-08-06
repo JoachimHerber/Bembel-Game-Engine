@@ -31,7 +31,7 @@ export class Application : public kernel::Application {
     Application();
     ~Application();
 
-    virtual bool init() override;
+    virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
     virtual void update(double time) override;
@@ -82,9 +82,6 @@ export class Application : public kernel::Application {
 
         LabelWidget*     texture_size_label;
         IntSliderWidget* texture_size_slider;
-
-        LabelWidget*     sdf_max_dist_label;
-        IntSliderWidget* sdf_max_dist_slider;
 
         ButtonWidget* convert_font_button;
         ButtonWidget* save_font_button;

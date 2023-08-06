@@ -2,10 +2,9 @@ module;
 #include <array>
 #include <cuchar>
 #include <string_view>
-module bembel.text.i18n;
+module bembel.base;
 
-namespace bembel::text::i18n {
-using namespace bembel::base;
+namespace bembel::base {
 
 constexpr utf8::Encoding utf8::getEncoding(CodeUnit cu) noexcept {
     if((cu & 0b1000'0000) == 0) return Encoding::SINGLE_BYTE_CHARACTER;
@@ -102,8 +101,8 @@ usize utf8::getNumCodePoints(In<std::u8string_view> str) {
 }
 
 bool utf8::eraseCodePoint(InOut<std::u8string> str, size_t position) {
-    size_t   n  = 0;
-    Iterator it = {str};
+    size_t   n = 0;
+    Iterator it{str};
     while(it && n < position) { ++it, ++n; }
     if(!it) return false;
 
@@ -113,8 +112,8 @@ bool utf8::eraseCodePoint(InOut<std::u8string> str, size_t position) {
 }
 
 bool utf8::insertCodePoint(InOut<std::u8string> str, size_t position, utf8::CodePoint c) {
-    size_t   n  = 0;
-    Iterator it = {str};
+    size_t   n = 0;
+    Iterator it{str};
     while(it && n < position) { ++it, ++n; }
     if(n != position) { return false; }
     if(it) {
@@ -160,4 +159,4 @@ std::optional<std::u8string> utf8::fromLocaleEncoding(In<std::string_view> str) 
     return out;
 }
 
-} // namespace bembel::text::i18n
+} // namespace bembel::base

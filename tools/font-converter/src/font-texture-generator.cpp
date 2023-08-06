@@ -18,21 +18,19 @@ FontTextureGenerator::FontTextureGenerator() {
     m_shader.request("gen_dist_field.glsl");
 
     m_texture = std::make_unique<Texture>(Texture::Target::TEXTURE_2D);
-    m_texture->init(m_resolution);
+    m_texture->init(uvec2{m_resolution});
 
     m_fbo = std::make_unique<FrameBufferObject>();
     m_fbo->setColorAttechment(0, m_texture.get());
     m_fbo->init();
 }
 
-void FontTextureGenerator::setResolution(uvec2 resolution) {
+void FontTextureGenerator::setResolution(uint resolution) {
     m_resolution = resolution;
-    m_texture->setSize(resolution);
+    m_texture->setSize(uvec2{resolution});
 }
 
-void FontTextureGenerator::generateTexture(
-    FontFamily& font, GlyphTextureAtlas& texture_atlas, double line_width
-) {
+void FontTextureGenerator::generateTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist) {
     glUseProgram(0);
 
     float oldViewport[4];
@@ -42,15 +40,15 @@ void FontTextureGenerator::generateTexture(
     glClear(GL_COLOR_BUFFER_BIT);
 
     glDisable(GL_SCISSOR_TEST);
-    glViewport(0, 0, m_resolution.x, m_resolution.y);
+    glViewport(0, 0, m_resolution, m_resolution);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.f, 1.f, 0.f, 1.f, -1.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glScalef(1.f / m_resolution.x, 1.f / m_resolution.y, 1.f);
+    glScalef(1.f / m_resolution, 1.f / m_resolution, 1.f);
 
-    renderToTexture(font, texture_atlas, line_width);
+    renderToTexture(font, texture_atlas, max_dist);
 
     glEnable(GL_SCISSOR_TEST);
     m_fbo->endRenderToTexture();
@@ -59,13 +57,13 @@ void FontTextureGenerator::generateTexture(
 
 bool FontTextureGenerator::saveTexture(std::filesystem::path path) {
     std::vector<ColorRGB> buffer;
-    buffer.resize(m_resolution.x * m_resolution.y);
+    buffer.resize(m_resolution * m_resolution);
 
     m_texture->bind();
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
     m_texture->release();
 
-    Image output{m_resolution.x, m_resolution.y, 1};
+    Image output{m_resolution, m_resolution, 1};
 
     u8* p = output.getData();
     for(ColorRGB c : buffer) {
@@ -82,42 +80,35 @@ bool FontTextureGenerator::saveTexture(std::filesystem::path path) {
     return output.save(path, true);
 }
 
-void FontTextureGenerator::renderToTexture(
-    FontFamily& font, GlyphTextureAtlas& texture_atlas, double line_width
-) {
+void FontTextureGenerator::renderToTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist) {
     glDisable(GL_BLEND);
     glLineWidth(1);
     glColor4f(0, 1, 0, 1);
     glBegin(GL_LINES);
 
-    for(int i = 0; i < m_resolution.y; ++i) {
-        float y = (i + 0.5f);
-
+    for(int i = 0; i < m_resolution; ++i) {
         Intersections intersections;
-        getIntersections(y, texture_atlas.getRoot(), intersections);
+        getIntersections(i, texture_atlas.getRoot(), intersections);
 
         std::sort(
             intersections.begin(),
             intersections.end(),
-            [](Intersection const& first, Intersection const& second) {
-                return first.pos < second.pos;
-            }
+            [](Intersection const& first, Intersection const& second) { return first.pos < second.pos; }
         );
 
         float        start = 0.0f;
         int          c     = 0;
         Intersection last  = {-1, false};
         for(auto& it : intersections) {
-            if(abs(last.pos - it.pos) < 0.01 && last.direction == it.direction)
-                continue; // ignore duplicates.
+            if(abs(last.pos - it.pos) < 0.01 && last.direction == it.direction) continue; // ignore duplicates.
 
             if(c == 0) start = it.pos;
 
             c += it.direction ? 1 : -1;
 
             if(c == 0) {
-                glVertex3f(start, y, 0);
-                glVertex3f(it.pos, y, 0);
+                glVertex3f(start, i + 0.5, 0);
+                glVertex3f(it.pos, i + 0.5, 0);
             }
             last = it;
         }
@@ -128,7 +119,7 @@ void FontTextureGenerator::renderToTexture(
     glBlendEquation(GL_MAX);
 
     m_shader->use();
-    drawGlypeOutline(texture_atlas.getRoot(), line_width);
+    drawGlypeOutline(texture_atlas.getRoot(), max_dist * double(texture_atlas.getScaleFactor()));
     glUseProgram(0);
 
     glBlendEquation(GL_FUNC_ADD);
@@ -143,83 +134,100 @@ void FontTextureGenerator::drawGlypeOutline(TextureAtlasNode const* node, double
     auto glyph = node->getGlyph();
     if(!glyph) return;
 
-    for(auto& it : glyph->getOutline()) {
-        dvec2 start = it.start;
-        dvec2 end   = it.end;
+    for(auto& contour : glyph->getOutline()) {
+        dvec2 start = contour.back();
 
         start -= dvec2(glyph->getExtendsMin());
-        end -= dvec2(glyph->getExtendsMin());
         start /= dvec2(glyph->getSize());
-        end /= dvec2(glyph->getSize());
         start *= dvec2(glyph->getTexCoordMax() - glyph->getTexCoordMin());
-        end *= dvec2(glyph->getTexCoordMax() - glyph->getTexCoordMin());
         start += dvec2(glyph->getTexCoordMin());
-        end += dvec2(glyph->getTexCoordMin());
 
-        dvec2 X = line_width * glm::normalize(start - end);
-        dvec2 Y = {X.y, -X.x};
+        for(dvec2 end : contour) {
+            end -= dvec2(glyph->getExtendsMin());
+            end /= dvec2(glyph->getSize());
+            end *= dvec2(glyph->getTexCoordMax() - glyph->getTexCoordMin());
+            end += dvec2(glyph->getTexCoordMin());
 
-        glBegin(GL_TRIANGLE_STRIP);
-        glTexCoord2f(+1.f, +1.f);
-        glVertex3f(start.x + X.x + Y.x, start.y + X.y + Y.y, 0.f);
-        glTexCoord2f(+1.f, -1.f);
-        glVertex3f(start.x + X.x - Y.x, start.y + X.y - Y.y, 0.f);
+            dvec2 X = line_width * glm::normalize(start - end);
+            dvec2 Y = {X.y, -X.x};
 
-        glTexCoord2f(-0.f, +1.f);
-        glVertex3f(start.x + Y.x, start.y + Y.y, 0.f);
-        glTexCoord2f(-0.f, -1.f);
-        glVertex3f(start.x - Y.x, start.y - Y.y, 0.f);
+            glBegin(GL_TRIANGLE_STRIP);
+            glTexCoord2f(+1.f, +1.f);
+            glVertex3f(start.x + X.x + Y.x, start.y + X.y + Y.y, 0.f);
+            glTexCoord2f(+1.f, -1.f);
+            glVertex3f(start.x + X.x - Y.x, start.y + X.y - Y.y, 0.f);
 
-        glTexCoord2f(-0.f, +1.f);
-        glVertex3f(end.x + Y.x, end.y + Y.y, 0.f);
-        glTexCoord2f(-0.f, -1.f);
-        glVertex3f(end.x - Y.x, end.y - Y.y, 0.f);
+            glTexCoord2f(-0.f, +1.f);
+            glVertex3f(start.x + Y.x, start.y + Y.y, 0.f);
+            glTexCoord2f(-0.f, -1.f);
+            glVertex3f(start.x - Y.x, start.y - Y.y, 0.f);
 
-        glTexCoord2f(-1.f, +1.f);
-        glVertex3f(end.x - X.x + Y.x, end.y - X.y + Y.y, 0.f);
-        glTexCoord2f(-1.f, -1.f);
-        glVertex3f(end.x - X.x - Y.x, end.y - X.y - Y.y, 0.f);
-        glEnd();
+            glTexCoord2f(-0.f, +1.f);
+            glVertex3f(end.x + Y.x, end.y + Y.y, 0.f);
+            glTexCoord2f(-0.f, -1.f);
+            glVertex3f(end.x - Y.x, end.y - Y.y, 0.f);
+
+            glTexCoord2f(-1.f, +1.f);
+            glVertex3f(end.x - X.x + Y.x, end.y - X.y + Y.y, 0.f);
+            glTexCoord2f(-1.f, -1.f);
+            glVertex3f(end.x - X.x - Y.x, end.y - X.y - Y.y, 0.f);
+            glEnd();
+
+            start = end;
+        }
     }
 }
 
-void FontTextureGenerator::getIntersections(
-    double y, TextureAtlasNode const* node, Intersections& intersections
-) {
-    if(!node) return; // node dos not exist
-    if(node->getPos().y > y || node->getPos().y + node->getSize().y < y)
+void FontTextureGenerator::getIntersections(int row, TextureAtlasNode const* node, Intersections& intersections) {
+    if(!node) return; // node doesn't exist
+    if(row < node->getPos().y || node->getPos().y + node->getSize().y < row)
         return; // the y-position is outside of the node area
 
-    getIntersections(y, node->getFirstChildNode(), intersections);
-    getIntersections(y, node->getSecondChildNode(), intersections);
+    getIntersections(row, node->getFirstChildNode(), intersections);
+    getIntersections(row, node->getSecondChildNode(), intersections);
 
     auto glyph = node->getGlyph();
     if(!glyph) return;
 
-    y -= node->getPos().y;
-    y /= node->getSize().y;
-    y *= glyph->getSize().y;
+    double y = row + 0.5 - node->getPos().y;
+    y        = y * glyph->getSize().y / node->getSize().y;
     y += glyph->getExtendsMin().y;
 
-    for(auto& line : glyph->getOutline()) {
-        if(line.end.y < y && line.start.y < y) continue;
-        if(line.end.y > y && line.start.y > y) continue;
-
-        vec2 dir = line.end - line.start;
-
-        if(dir.y == 0) continue;
-
-        double dist = glm::length(dir);
-        dir /= dist;
-
-        double f = (y - line.start.y) / dir.y;
-        double x = f * dir.x + line.start.x;
+    auto mapX = [&](double x) {
         x -= glyph->getExtendsMin().x;
         x /= glyph->getSize().x;
         x *= node->getSize().x;
         x += node->getPos().x;
+        return x;
+    };
 
-        intersections.push_back({x, dir.y < 0 ? true : false});
+    for(auto& contour : glyph->getOutline()) {
+        uint n = contour.size();
+        for(uint i = 0; i < n; ++i) {
+            ivec2 start = contour[i];
+            ivec2 end   = contour[(i + 1) % n];
+            if(start.y == y) {
+                ivec2 prev = contour[(i + n - 1) % n];
+                if(prev.y == y) continue;
+                for(int j = 2; end.y == y && i < n; ++i) end = contour[(i + j) % n];
+                if(prev.y < y && y < end.y) intersections.emplace_back(mapX(start.x), false);
+                if(end.y < y && y < prev.y) intersections.emplace_back(mapX(start.x), true);
+            }
+            else if((start.y < y && y < end.y) || (end.y < y && y < start.y)) {
+                vec2 dir = end - start;
+
+                double dist = glm::length(dir);
+                dir /= dist;
+
+                double f = (y - start.y) / dir.y;
+                double x = f * dir.x + start.x;
+
+                intersections.emplace_back(mapX(x), dir.y < 0 ? true : false);
+            }
+        }
+        if(intersections.size() % 2 != 0) {
+            log().error(""); //
+        }
     }
 }
 

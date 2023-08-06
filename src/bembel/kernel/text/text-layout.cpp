@@ -2,15 +2,15 @@
 #include <variant>
 #include <span>
 #include <string>
-module bembel.text;
+module bembel.kernel.text;
 
-namespace bembel::text {
+namespace bembel::kernel {
 using namespace bembel::base;
 
 bool TextLayout::calculateSimpleLayout(
     Text const& text, vec2 origin, float font_size, float max_line_length
 ) {
-    Font const* const font = text.getFont();
+    SdfFont const* const font = text.getFont();
 
     if(!font) return false;
 
@@ -74,7 +74,7 @@ bool TextLayout::calculateSimpleLayout(
             for(GlyphIndex prev = 0; GlyphIndex glyphIndex : glyphs) {
                 if(w.advance != 0) w.advance += font_size * font->getKernig(prev, glyphIndex);
 
-                m_glyphs.emplace_back(&font->getGlypData(glyphIndex), w.advance, 0.0f);
+                m_glyphs.emplace_back(glyphIndex, w.advance, 0.0f);
                 w.advance += font_size * font->getAdvance(glyphIndex);
                 prev = glyphIndex;
             }

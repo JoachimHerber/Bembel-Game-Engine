@@ -4,21 +4,15 @@ module bembel.gui.core;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 using namespace ::gl;
 
-void setupVertexAttribute(
-    GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset
-) {
+void setupVertexAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset) {
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(
-        index, size, type, normalized, sizeof(InstanceData), (void*)(uintptr_t)offset
-    );
+    glVertexAttribPointer(index, size, type, normalized, sizeof(InstanceData), (void*)(uintptr_t)offset);
     glVertexAttribDivisor(index, 1);
 }
 
@@ -76,9 +70,7 @@ void RenderBatch::draw() {
         glBufferData(GL_ARRAY_BUFFER, m_buffer_size, nullptr, GL_STREAM_DRAW);
     }
     // upload data
-    glBufferSubData(
-        GL_ARRAY_BUFFER, 0, sizeof(InstanceData) * m_instances.size(), &(m_instances[0])
-    );
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(InstanceData) * m_instances.size(), &(m_instances[0]));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // draw instances
@@ -102,9 +94,7 @@ void RenderBatch::drawRectangle(vec2 min, vec2 max) {
     addInstance(min, max, {0.0f, 0.0f}, {1.0f, 1.0f}, InstanceType::RECTANGLE);
 }
 
-void RenderBatch::drawIcon(
-    glm::vec2 min, glm::vec2 max, glm::vec2 tex_coords_min, glm::vec2 tex_coords_max
-) {
+void RenderBatch::drawIcon(glm::vec2 min, glm::vec2 max, glm::vec2 tex_coords_min, glm::vec2 tex_coords_max) {
     min += m_position_offset;
     max += m_position_offset;
 
@@ -140,29 +130,37 @@ void RenderBatch::drawText(const kernel::TextLayout& text, glm::vec2 pos, float 
 }
 //*/
 
-void RenderBatch::drawGlyph(
-    Font::Glyph const& glyph, vec2 const& pos, float scale, float threshold_min, float threshold_max
-) {
-    vec2 min    = glyph.extents_min * scale + pos + m_position_offset;
-    vec2 max    = glyph.extents_max * scale + pos + m_position_offset;
-    vec2 tc_min = glyph.tex_coords_min;
-    vec2 tc_max = glyph.tex_coords_max;
-    if(!clampToViewArea(min, max, tc_min, tc_max)) return;
+void RenderBatch::drawGlyph(GlyphIndex glyph_index, vec2 const& pos, float scale, bool outline) {
+    if(!m_font) return;
 
-    addInstance(
-        min,
-        max,
-        tc_min,
-        tc_max,
-        InstanceType::GLYPH,
-        u8(threshold_min * 0xff),
-        u8(threshold_max * 0xff)
-    );
+    u8 threshold_min = outline ? 0x0c : 0x70;
+    u8 threshold_max = outline ? 0x33 : 0x80;
+
+    auto const& glyph = m_font->getGlypData(glyph_index);
+    if(glyph.subglyphs.empty()) {
+        vec2 min    = glyph.extents_min * scale + pos + m_position_offset;
+        vec2 max    = glyph.extents_max * scale + pos + m_position_offset;
+        vec2 tc_min = glyph.tex_coords_min;
+        vec2 tc_max = glyph.tex_coords_max;
+        if(!clampToViewArea(min, max, tc_min, tc_max)) return;
+
+        addInstance(min, max, tc_min, tc_max, InstanceType::GLYPH, threshold_min, threshold_max);
+    } else {
+        for(auto sub : glyph.subglyphs) {
+            auto const& sub_glyph = m_font->getGlypData(sub.glyph);
+
+            vec2 min    = (sub_glyph.extents_min + sub.pos) * scale + pos + m_position_offset;
+            vec2 max    = (sub_glyph.extents_max + sub.pos) * scale + pos + m_position_offset;
+            vec2 tc_min = sub_glyph.tex_coords_min;
+            vec2 tc_max = sub_glyph.tex_coords_max;
+            if(!clampToViewArea(min, max, tc_min, tc_max)) return;
+
+            addInstance(min, max, tc_min, tc_max, InstanceType::GLYPH, threshold_min, threshold_max);
+        }
+    }
 }
 
-bool RenderBatch::clampToViewArea(
-    vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max
-) {
+bool RenderBatch::clampToViewArea(vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max) {
     if(max.x <= m_draw_area_min.x || min.x >= m_draw_area_max.x || max.y <= m_draw_area_min.y
        || min.y >= m_draw_area_max.y) {
         return false; // outside of draw area
@@ -187,7 +185,7 @@ bool RenderBatch::clampToViewArea(
         tex_coords_max.y -= (max.y - m_draw_area_max.y) * scale.y;
         max.y = m_draw_area_max.y;
     }
-    return true;
+    return min != max;
 }
 
 } // namespace bembel::gui

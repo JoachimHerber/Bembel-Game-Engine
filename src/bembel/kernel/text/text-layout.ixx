@@ -1,12 +1,12 @@
 ﻿module;
-export module bembel.text:TextLayout;
+export module bembel.kernel.text:TextLayout;
 
 import bembel.base;
 import bembel.kernel.assets;
-import :Font;
+import :SdfFont;
 import :Text;
 
-namespace bembel::text {
+namespace bembel::kernel {
 using namespace bembel::base;
 
 export class TextLayout final {
@@ -15,17 +15,15 @@ export class TextLayout final {
     ~TextLayout() = default;
 
     struct Glyph {
-        Font::Glyph const* glyph;
-        vec2               pos;
+        GlyphIndex glyph;
+        vec2       pos;
 
-        Glyph(Font::Glyph const* g, float x, float y) : glyph{g}, pos{x, y} {}
+        Glyph(GlyphIndex g, float x, float y) : glyph{g}, pos{x, y} {}
         Glyph(Glyph&&)            = default;
         Glyph& operator=(Glyph&&) = default;
     };
 
-    bool calculateSimpleLayout(
-        Text const& text, vec2 origin, float font_size, float max_line_length
-    );
+    bool calculateSimpleLayout(Text const& text, vec2 origin, float font_size, float max_line_length);
 
     std::vector<Glyph> const& getGlyphs() const { return m_glyphs; }
 
@@ -34,4 +32,4 @@ export class TextLayout final {
     vec2               m_origin;
 };
 
-} // namespace bembel::text
+} // namespace bembel::kernel

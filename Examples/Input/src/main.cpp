@@ -1,8 +1,13 @@
-﻿import bembel.examples.input;
+﻿#include <string_view>
+#include <vector>
+import bembel.examples.input;
 import bembel.base;
-int main() {
+
+int main(int argc, char* argv[]) {
+    std::vector<std::string_view> args{argv, argv + argc};
+
     bembel::InputExample example;
 
     bembel::base::log().info((char*)u8"Testing unicode -- English -- Ελληνικά -- Español.");
-    example.run();
+    example.run(args);
 }

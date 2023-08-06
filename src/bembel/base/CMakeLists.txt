@@ -6,10 +6,13 @@ target_sources(Bembel
         base.ixx
         types.ixx
         types.cpp
+        unicode.ixx
+        unicode.cpp
         concurrent-queue.ixx
         image.ixx
         image.cpp
         xml.ixx
+        xml.cpp
         conversion.ixx
         logger.ixx
         console-log-sink.ixx

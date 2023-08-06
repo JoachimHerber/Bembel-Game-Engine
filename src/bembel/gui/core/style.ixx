@@ -4,20 +4,18 @@ export module bembel.gui.core:Style;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 
 export class Style {
   public:
     Style()  = default;
     ~Style() = default;
 
-    void  setFont(Asset<Font> font) { m_font = std::move(font); }
-    Font* getFont() const { return m_font.get(); }
+    void  setFont(Asset<SdfFont> font) { m_font = std::move(font); }
+    SdfFont* getFont() const { return m_font.get(); }
 
     void setTextureAtlas(Asset<TextureAtlas>);
 
@@ -97,7 +95,7 @@ export class Style {
   private:
     Asset<TextureAtlas> m_texture_atlas;
 
-    Asset<Font> m_font;
+    Asset<SdfFont> m_font;
 
     ColorRGBA u32ToColor(u32 c) { return {u8(c >> 24), u8(c >> 16), u8(c >> 8), u8(c)}; }
 

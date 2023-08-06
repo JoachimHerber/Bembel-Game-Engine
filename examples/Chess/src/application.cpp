@@ -27,7 +27,7 @@ Application::~Application() {
     events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
-bool Application::init() {
+bool Application::init(std::span<std::string_view>) {
     log().info("Loading Application Settings");
     if(!m_engine.loadSetting("chess/config.xml")) return false;
     auto pipline = m_graphic_system->getRenderingPipelines()[0].get();

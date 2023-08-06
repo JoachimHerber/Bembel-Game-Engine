@@ -14,3 +14,4 @@ export import :ObservableValue;
 export import :Conversion;
 export import :Serialisation;
 export import :Memory;
+export import :Unicode;

@@ -7,13 +7,12 @@ module;
 #include <tuple>
 #include <type_traits>
 #include <vector>
-export module bembel.text.i18n:String;
+export module bembel.kernel.i18n:String;
 
 import bembel.base;
 import :Localisation;
-import :Unicode;
 
-namespace bembel::text::i18n {
+namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
 export template <typename T>

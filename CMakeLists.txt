@@ -27,7 +27,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(src)
 
 bembel_conditional_add_sub_project(Input "examples/input" "a simple example that show how to handle input in the bembel game engine")
-bembel_conditional_add_sub_project(rendering "examples/rendering" "rendering example application")
+bembel_conditional_add_sub_project(Rendering "examples/rendering" "rendering example application")
 bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
 bembel_conditional_add_sub_project(GUI "examples/GUI" "GUI example application")
 bembel_conditional_add_sub_project(Physics "examples/physics" "Physics example application")

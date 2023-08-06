@@ -15,16 +15,16 @@ export class GlyphTextureAtlas {
     GlyphTextureAtlas();
     ~GlyphTextureAtlas();
 
-    void update(std::vector<Glyph>&);
+    void update(std::vector<Glyph>&, uint units_per_EM);
 
     TextureAtlasNode const* getRoot() const { return m_root.get(); }
 
-    void setResolution(uvec2 res) { m_resolution = res; }
+    void setResolution(uint res) { m_resolution = res; }
 
-    float getTexCoordScaleU() const { return 1.f / float(m_resolution.x); }
-    float getTexCoordScaleV() const { return 1.f / float(m_resolution.y); }
+    float getTexCoordScaleU() const { return 1.f / float(m_resolution); }
+    float getTexCoordScaleV() const { return 1.f / float(m_resolution); }
 
-    double getScaleFactor() const { return m_scale; }
+    Fraction getScaleFactor() const { return m_scale; }
 
     Signal<> update_signal;
 
@@ -32,8 +32,8 @@ export class GlyphTextureAtlas {
     bool fillAtlas(std::vector<Glyph*> const&);
 
   private:
-    uvec2  m_resolution = {1024, 1024};
-    double m_scale      = 1.0;
+    uint     m_resolution = 1024;
+    Fraction m_scale      = {1, 1};
 
     std::unique_ptr<TextureAtlasNode> m_root;
 };

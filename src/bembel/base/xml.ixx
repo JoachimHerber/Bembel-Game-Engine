@@ -1,7 +1,9 @@
 module;
 #include <tinyxml2/tinyxml2.h>
 
+#include <optional>
 #include <string_view>
+#include <type_traits>
 export module bembel.base:Xml;
 
 import :Types;
@@ -13,8 +15,8 @@ using Element  = tinyxml2::XMLElement;
 using Document = tinyxml2::XMLDocument;
 
 template <typename T>
-    requires std::integral<T> || std::floating_point<T> bool
-setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T value) {
+    requires std::integral<T> || std::floating_point<T>
+bool setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T value) {
     if(!node) return false;
 
     std::string name_str{name};
@@ -23,19 +25,17 @@ setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T value)
 }
 
 template <typename T>
-bool setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T&& value) {
+    requires(!std::is_arithmetic_v<std::remove_cv_t<T>>)
+bool setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T const& value) {
     if(!node) return false;
 
     std::string name_str{name};
-
     if constexpr(IsObservableValue<T>::value) {
         node->SetAttribute(name_str.c_str(), conversion::toString(value.get()).c_str());
     } else if constexpr(std::is_same_v<std::remove_cv_t<T>, std::u8string>) {
-        node->SetAttribute(
-            name_str.c_str(), value.c_str()
-        ); // TinyXML-2 assumes all inputs and outputs are UTF-8
+        node->SetAttribute(name_str.c_str(), value.c_str()); // TinyXML-2 assumes all inputs and outputs are UTF-8
     } else {
-        node->SetAttribute(name_str.c_str(), conversion::toString(std::forward<T>(value)).c_str());
+        node->SetAttribute(name_str.c_str(), conversion::toString(value).c_str());
     }
     return true;
 }
@@ -64,10 +64,7 @@ bool getAttribute(In<not_null_ptr<const Element>> node, In<std::string_view> nam
 
 template <typename T>
 bool getAttribute(
-    In<not_null_ptr<const Element>> node,
-    In<std::string_view>            child_node,
-    In<std::string_view>            name,
-    T&                              value
+    In<not_null_ptr<const Element>> node, In<std::string_view> child_node, In<std::string_view> name, T& value
 ) {
     if(!node) return false;
 
@@ -77,8 +74,7 @@ bool getAttribute(
 template <typename T = Element>
 class ElementIterator {
   public:
-    ElementIterator(In<not_null_ptr<T>> element, In<std::string_view> name)
-      : m_element(element), m_name(name) {}
+    ElementIterator(In<not_null_ptr<T>> element, In<std::string_view> name) : m_element(element), m_name(name) {}
 
     ElementIterator begin() {
         if(m_name.empty()) {
@@ -109,9 +105,7 @@ class ElementIterator {
     const std::string m_name;
 };
 
-ElementIterator<Element> IterateChildElements(
-    In<not_null_ptr<Element>> element, In<std::string_view> name = ""
-) {
+ElementIterator<Element> IterateChildElements(In<not_null_ptr<Element>> element, In<std::string_view> name = "") {
     return ElementIterator(element, name);
 }
 

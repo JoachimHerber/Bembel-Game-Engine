@@ -56,6 +56,7 @@ void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
     if(fontTexture == nullptr) return;
     if(atlasTexture == nullptr) return;
 
+    m_batch.setFont(style->getFont());
     drawWidget(&m_root_widget, vec2(0, 0), vec2(0, 0), viewport_size, 0);
 
     shader->use();

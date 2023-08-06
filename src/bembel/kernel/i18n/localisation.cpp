@@ -1,13 +1,14 @@
 module;
 #include <filesystem>
 #include <fstream>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_map>
-module bembel.text.i18n;
+module bembel.kernel.i18n;
 
 import bembel.base;
 
-namespace bembel::text::i18n {
+namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
 std::shared_ptr<Localisation> Localisation::DEFAULT = std::make_shared<Localisation>();
@@ -47,18 +48,55 @@ void Localisation::format(In<std::u8string_view> fmt, In<TimePoint> value, InOut
 Localisation::Error Localisation::load(std::filesystem::path file_path) {
     if(!std::filesystem::exists(file_path)) return Error::FileNotFound;
 
-    using u8ifstream = std::basic_ifstream<char8_t, std::char_traits<char8_t>>;
-
-    u8ifstream file{file_path, std::ios::in | std::ios::binary};
+    std::ifstream file{file_path, std::ios::in | std::ios::binary};
 
     if(!file) return Error::FileNotFound;
 
-    auto& keys = getTranslationKeys();
-    m_translations.resize(keys.size());
-
+    auto&                                        keys = getTranslationKeys();
     std::unordered_map<std::string, std::size_t> key_to_index;
     for(std::size_t i = 0; i < keys.size(); ++i) { key_to_index.emplace(keys[i], i); }
 
+    try {
+        nlohmann::json root;
+        file >> root;
+
+        if(!root.is_object()) return Error::FileNotFound;
+
+        if(root.contains("local")) {
+            auto& local = root["local"];
+            if(local.is_object() && local.contains("number_format")) this->number_format = local["number_format"];
+        }
+        auto& translations = root["translations"];
+
+        m_translations.clear();
+        m_translations.resize(keys.size());
+        [&](this const auto self, std::string path, nlohmann::json const& j) -> void {
+            if(j.is_object()) {
+                for(auto& [key, value] : j.items()) {
+                    if(path.empty())
+                        self(key, value);
+                    else
+                        self(path + "." + key, value);
+                }
+            } else {
+                auto it = key_to_index.find(path);
+                auto text = std::make_shared<std::u8string>(j.get<std::u8string>());
+                if(it != key_to_index.end()) {
+                    m_translations[it->second] = std::move(text);
+
+                } else {
+                    m_translations.emplace_back(std::move(text));
+                    key_to_index.emplace(path, keys.size());
+                    keys.push_back(path);
+                }
+            }
+        }("", translations);
+    } catch(nlohmann::json::exception e) {
+        log().error("Error while parsing {}: {}", file_path.string(), e.what());
+        return Error::FileNotFound;
+    }
+
+    /*
     std::u8string line;
     while(std::getline(file, line)) {
 
@@ -95,6 +133,7 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
             keys.push_back(key.value());
         }
     }
+    //*/
     return Error::Ok;
 }
 

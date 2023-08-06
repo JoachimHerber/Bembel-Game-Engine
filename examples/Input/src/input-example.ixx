@@ -1,4 +1,6 @@
-﻿export module bembel.examples.input;
+﻿#include <string_view>
+#include <span>
+export module bembel.examples.input;
 
 import bembel;
 
@@ -11,7 +13,7 @@ export class InputExample : public kernel::Application {
     InputExample();
     ~InputExample();
 
-    virtual bool init() override;
+    virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
     virtual void update(double time) override;

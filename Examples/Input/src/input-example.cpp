@@ -27,7 +27,7 @@ InputExample::InputExample() : Application() {
 
 InputExample::~InputExample() {}
 
-bool InputExample::init() {
+bool InputExample::init(std::span<std::string_view>) {
     auto window = m_engine.display.createWindow();
     window->open("Input Example");
     m_engine.initSystems();

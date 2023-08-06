@@ -4,13 +4,11 @@ export module bembel.gui.widgets:TextInput;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 
 export class TextInputWidget : public Widget {
   public:
@@ -60,14 +58,14 @@ export class TextInputWidget : public Widget {
         virtual void drawText(
             RenderBatchInterface& batch,
             Style const&          style,
-            Font const&           font,
+            SdfFont const&           font,
             vec2                  origin,
             float                 scale
         );
         virtual void drawCursor(
             RenderBatchInterface& batch,
             Style const&          style,
-            Font const&           font,
+            SdfFont const&           font,
             vec2                  text_origin,
             float                 text_scale,
             usize                 cursor_pos

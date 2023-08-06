@@ -5,6 +5,7 @@ module;
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <map>
+#include <nlohmann/json.hpp>
 #include <source_location>
 #include <span>
 #include <stdexcept>
@@ -63,7 +64,16 @@ using glm::min;
 
 using glm::quat;
 
+using nlohmann::json;
+
 enum class WindowId : u32 { MAIN };
+
+struct Fraction {
+    int  numerator;
+    uint denominator;
+
+    explicit operator double() const { return double(numerator) / double(denominator); }
+};
 
 struct Exeption : public std::runtime_error {
     Exeption(std::string const& what, std::source_location loc = std::source_location::current());
@@ -90,6 +100,7 @@ template <>           struct PASS_BY_VALUE<std::u8string_view>    : std::true_ty
 template <typename T> struct PASS_BY_VALUE<std::span<T>>          : std::true_type{};
 template <>           struct PASS_BY_VALUE<std::source_location>  : std::true_type{};
 template <>           struct PASS_BY_VALUE<std::filesystem::path> : std::false_type{};
+template <>           struct PASS_BY_VALUE<nlohmann::json>        : std::false_type{};
 
 template <typename T> using In    = std::conditional_t<PASS_BY_VALUE<T>::value, T const, T const &>;
 template <typename T> using InOut = T&;
@@ -196,5 +207,18 @@ export template <>
 struct std::formatter<bembel::base::WindowId> : std::formatter<std::string> {
     auto format(In<bembel::base::WindowId> v, format_context& ctx) {
         return formatter<string>::format(std::format("{}", uint32_t(v)), ctx);
+    }
+};
+
+// partial specializations for nlohmann::json
+export template <>
+struct nlohmann::adl_serializer<std::u8string> {
+    static void to_json(json& j, std::u8string const& str) {
+        j = std::string_view((char const*)str.data(), str.size());
+    }
+
+    static void from_json(json const& j, std::u8string& str) {
+        std::string tmp = j.get<std::string>();
+        str             = std::u8string_view((char8_t const*)tmp.data(), tmp.size());
     }
 };

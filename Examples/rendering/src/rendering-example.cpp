@@ -25,11 +25,10 @@ RenderingExample::~RenderingExample() {
     events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
-bool RenderingExample::init() {
+bool RenderingExample::init(std::span<std::string_view>) {
     if(!m_engine.loadSetting("rendering/config.xml")) return false;
 
-    m_camera =
-        std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
+    m_camera = std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
 
     auto& rendering_piupeline = m_graphic_system->getRenderingPipelines()[0];
     auto* lighting_stage      = rendering_piupeline->getRenderingStage<DeferredLightingStage>(1);
@@ -80,16 +79,16 @@ void RenderingExample::update(double time) {
 
     static constexpr float RAD_TO_DEG = 180 / 3.14159265359;
 
-    bembel::base::String text = std::format(
+    auto text = bembel::base::utf8::fromLocaleEncoding(std::format(
         "Cam: pos=({:.2}; {:.2}; {:.2}) pitch={:2}° yaw={:3}°",
         m_camera->getPosition().x,
         m_camera->getPosition().y,
         m_camera->getPosition().z,
         int(RAD_TO_DEG * m_camera->getPitch()),
         int(RAD_TO_DEG * m_camera->getYaw())
-    );
+    ));
 
-    m_label->setText(text.data);
+    if(text) { m_label->setText(text.value()); }
 }
 
 void RenderingExample::handleEvent(In<WindowShouldCloseEvent> event) {
@@ -126,9 +125,7 @@ RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolut
     m_shader->attachShader(std::move(frag));
     if(!m_shader->link()) { m_shader.reset(); }
 }
-void RenderingExample::ShadowDebugView::draw(
-    ivec2 const& viewport_position, uvec2 const& viewport_size
-) {
+void RenderingExample::ShadowDebugView::draw(ivec2 const& viewport_position, uvec2 const& viewport_size) {
     if(!m_shader) return;
     glViewport(viewport_position.x, viewport_position.y, viewport_size.x, viewport_size.y);
 

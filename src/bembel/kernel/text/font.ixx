@@ -1,29 +1,29 @@
 ﻿module;
-#include <string_view>
-#include <span>
-#include <memory>
 #include <filesystem>
 #include <map>
-export module bembel.text:Font;
+#include <memory>
+#include <span>
+#include <string_view>
+export module bembel.kernel.text:SdfFont;
 
 import bembel.base;
-import bembel.kernel;
+import bembel.kernel.assets;
+import bembel.kernel.rendering;
 
-namespace bembel::text {
+namespace bembel::kernel {
 using namespace bembel::base;
-using namespace bembel::kernel;
 
 export using GlyphIndex = uint;
 
-export class Font final {
+export class SdfFont final {
   public:
     static constexpr GlyphIndex INVALIDE_GLYPH_INDEX = ~0u;
 
   public:
-    Font()                       = default;
-    Font(Font const&)            = delete;
-    Font& operator&(Font const&) = delete;
-    ~Font()                      = default;
+    SdfFont()                          = default;
+    SdfFont(SdfFont const&)            = delete;
+    SdfFont& operator&(SdfFont const&) = delete;
+    ~SdfFont()                         = default;
 
     float getAscender() const { return m_ascender; }
     float getDescender() const { return m_descender; }
@@ -36,12 +36,18 @@ export class Font final {
     float getAdvance(GlyphIndex glyph_index) const;
     float getKernig(GlyphIndex left, GlyphIndex right) const;
 
+    struct SubGlyph {
+        GlyphIndex glyph;
+        vec2       pos;
+    };
+
     struct Glyph {
-        float advance;
-        vec2  extents_min;
-        vec2  extents_max;
-        vec2  tex_coords_min;
-        vec2  tex_coords_max;
+        float                 advance        = 0;
+        vec2                  extents_min    = {0.0, 0.0};
+        vec2                  extents_max    = {0.0, 0.0};
+        vec2                  tex_coords_min = {0.0, 0.0};
+        vec2                  tex_coords_max = {0.0, 0.0};
+        std::vector<SubGlyph> subglyphs;
     };
     Glyph const& getGlypData(GlyphIndex glyph_index) const;
 
@@ -49,13 +55,13 @@ export class Font final {
 
     static constexpr std::string_view ASSET_TYPE_NAME = "Font";
 
-    static std::unique_ptr<Font> loadAsset(std::filesystem::path path);
-    static std::unique_ptr<Font> createAsset(xml::Element const* properties);
+    static std::unique_ptr<SdfFont> loadAsset(std::filesystem::path path);
+    static std::unique_ptr<SdfFont> createAsset(xml::Element const* properties);
 
-    using DefaultLoaderType = SerialAssetLoader<Font>;
+    using DefaultLoaderType = SerialAssetLoader<SdfFont>;
 
   private:
-    bool readGlyphs(xml::Element const* properties);
+    bool readGlyphs(xml::Element const* properties, In<uint> resolution, In<uint> units_per_em);
     bool readCharMap(xml::Element const* properties);
     bool readKerning(xml::Element const* properties);
 
@@ -76,4 +82,4 @@ export class Font final {
     KernigMap m_kernig;
 };
 
-} // namespace bembel::text
+} // namespace bembel::kernel

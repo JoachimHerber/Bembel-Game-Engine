@@ -1,14 +1,12 @@
 ﻿module;
 #include <variant>
 #include <string_view>
-export module bembel.text:Text;
+export module bembel.kernel.text:Text;
 
 import bembel.base;
-import bembel.kernel;
-import bembel.text.i18n;
-import :Font;
+import :SdfFont;
 
-namespace bembel::text {
+namespace bembel::kernel {
 using namespace bembel::base;
 
 export class Text final {
@@ -16,8 +14,8 @@ export class Text final {
     Text()  = default;
     ~Text() = default;
 
-    void        setFont(Font* font) { m_font = font; }
-    Font const* getFont() const { return m_font; }
+    void        setFont(SdfFont* font) { m_font = font; }
+    SdfFont const* getFont() const { return m_font; }
 
     bool parse(In<std::u8string_view> text);
 
@@ -45,7 +43,7 @@ export class Text final {
     bool applyFormating(std::string_view, bool& bold, bool& oblique);
 
   private:
-    Font*                    m_font = nullptr;
+    SdfFont*                    m_font = nullptr;
     std::vector<GlyphIndex>  m_glyphs;
     std::vector<TextElement> m_text;
 };

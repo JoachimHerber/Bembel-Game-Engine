@@ -1,11 +1,11 @@
 ﻿module;
 #include <limits>
 #include <string_view>
-module bembel.text;
+module bembel.kernel.text;
 
 import bembel.base;
 
-namespace bembel::text {
+namespace bembel::kernel {
 using namespace bembel::base;
 
 bool Text::parse(In<std::u8string_view> text) {
@@ -23,11 +23,11 @@ bool Text::parse(In<std::u8string_view> text) {
 
     std::string format;
 
-    for(i18n::utf8::Iterator it = text; it; ++it) {
+    for(utf8::Iterator it = text; it; ++it) {
         char32_t c = *it;
         if(c != '[' && c != ' ' && c != '\t' && c != '\n') {
             GlyphIndex i = m_font->getGlyphIndex(c, bold, oblique);
-            if(i != Font::INVALIDE_GLYPH_INDEX) {
+            if(i != SdfFont::INVALIDE_GLYPH_INDEX) {
                 m_glyphs.emplace_back(i);
                 if(wordBegin > m_glyphs.size() - 1) { wordBegin = m_glyphs.size() - 1; }
             }

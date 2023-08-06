@@ -1,4 +1,7 @@
 ﻿module;
+#include <glm/glm.hpp>
+#include <map>
+#include <span>
 #include <vector>
 //
 #include <ft2build.h>
@@ -18,18 +21,21 @@ export class Glyph {
     Glyph();
     ~Glyph();
 
-    void init(FT_Face& face, uint, uint);
+    void init(FT_Face& face, uint, uint, std::map<unsigned, int>& glyph_map, std::vector<Glyph>& glyphs);
 
-    struct Line {
-        dvec2 start;
-        dvec2 end;
+    struct SubGlyph {
+        int        index;
+        dvec2      position;
+        glm::dmat2 transform;
     };
 
-    std::vector<Line> const&  getOutline() const { return m_outline; }
-    std::vector<ivec2> const& getEdges() const { return m_edges; }
+    std::span<const std::vector<ivec2>> getOutline()   const { return m_outline; }
+    std::span<const SubGlyph>           getSubGlyphs() const { return m_sub_glyphs; }
 
-    ivec2 const& getExtendsMin() const { return m_extends_min; }
-    ivec2 const& getExtendsMax() const { return m_extends_max; }
+    ivec2 getExtendsMin() const { return m_extends_min; }
+    ivec2 getExtendsMax() const { return m_extends_max; }
+
+    void setExtendsMax(ivec2 max) { m_extends_max = max; }
 
     ivec2 const& getSize() const { return m_size; }
 
@@ -46,8 +52,8 @@ export class Glyph {
   private:
     struct OutlinePoint {
         ivec2 pos;
-        bool  isControlPoint;
-        bool  isSecondOrderBézier;
+        bool  is_control_point;
+        bool  is_second_order_bézier;
     };
 
     void readContour(int count, OutlinePoint* points);
@@ -58,8 +64,8 @@ export class Glyph {
     void addBézier(vec2 const&, vec2 const&, vec2 const&, vec2 const&);
 
   private:
-    std::vector<Line>  m_outline;
-    std::vector<ivec2> m_edges;
+    std::vector <std::vector<ivec2>> m_outline;
+    std::vector<SubGlyph>            m_sub_glyphs;
 
     ivec2 m_extends_min = {0, 0};
     ivec2 m_extends_max = {0, 0};

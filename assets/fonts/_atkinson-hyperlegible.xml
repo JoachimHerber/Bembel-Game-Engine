@@ -1,154 +1,154 @@
 <Font texture="atkinson-hyperlegible.png" resolution="2048" units_per_em="1000">
     <Glyphs>
-        <Glyph advance="527" extends="-150 -200 678 904" texCoord="832 990 901 1082"/>
+        <Glyph advance="527" extends="-150 -200 677 900" texCoord="1027 795 1095 885"/>
         <Glyph advance="0"/>
         <Glyph advance="280"/>
-        <Glyph advance="281" extends="-124 -212 416 868" texCoord="1327 1449 1372 1539"/>
-        <Glyph advance="301" extends="-160 247 464 871" texCoord="1423 1976 1475 2028"/>
-        <Glyph advance="655" extends="-162 -200 822 868" texCoord="1022 437 1104 526"/>
-        <Glyph advance="594" extends="-160 -287 764 949" texCoord="187 1872 264 1975"/>
-        <Glyph advance="927" extends="-162 -212 1098 880" texCoord="1397 0 1502 91"/>
-        <Glyph advance="705" extends="-162 -212 906 880" texCoord="187 270 276 361"/>
-        <Glyph advance="160" extends="-160 247 320 871" texCoord="1286 1490 1326 1542"/>
-        <Glyph advance="300" extends="-150 -361 474 875" texCoord="902 1618 954 1721"/>
-        <Glyph advance="300" extends="-165 -361 459 875" texCoord="902 1721 954 1824"/>
-        <Glyph advance="433" extends="-132 188 564 872" texCoord="1777 1359 1835 1416"/>
-        <Glyph advance="602" extends="-147 -200 753 700" texCoord="1380 989 1455 1064"/>
-        <Glyph advance="205" extends="-162 -333 378 327" texCoord="1327 1703 1372 1758"/>
-        <Glyph advance="368" extends="-162 8 534 500" texCoord="1948 1655 2006 1696"/>
-        <Glyph advance="205" extends="-162 -212 378 328" texCoord="1327 1906 1372 1951"/>
-        <Glyph advance="377" extends="-185 -200 571 868" texCoord="1083 1155 1146 1244"/>
-        <Glyph advance="648" extends="-140 -212 796 880" texCoord="525 1695 603 1786"/>
-        <Glyph advance="402" extends="-158 -200 514 868" texCoord="960 1807 1016 1896"/>
-        <Glyph advance="549" extends="-166 -200 722 880" texCoord="1752 617 1826 707"/>
-        <Glyph advance="574" extends="-158 -212 718 880" texCoord="683 1933 756 2024"/>
-        <Glyph advance="614" extends="-162 -200 786 868" texCoord="843 528 922 617"/>
-        <Glyph advance="583" extends="-146 -212 730 868" texCoord="1637 707 1710 797"/>
-        <Glyph advance="598" extends="-140 -212 748 880" texCoord="683 1842 757 1933"/>
-        <Glyph advance="510" extends="-185 -200 679 868" texCoord="759 1262 831 1351"/>
-        <Glyph advance="615" extends="-140 -212 760 880" texCoord="683 981 758 1072"/>
-        <Glyph advance="598" extends="-140 -200 748 880" texCoord="963 707 1037 797"/>
-        <Glyph advance="205" extends="-162 -212 378 712" texCoord="1327 1626 1372 1703"/>
-        <Glyph advance="205" extends="-162 -333 378 711" texCoord="1327 1539 1372 1626"/>
-        <Glyph advance="553" extends="-160 -200 716 700" texCoord="1365 1135 1438 1210"/>
-        <Glyph advance="602" extends="-147 -79 753 593" texCoord="1656 1211 1731 1267"/>
-        <Glyph advance="553" extends="-160 -200 716 700" texCoord="1219 1135 1292 1210"/>
-        <Glyph advance="520" extends="-160 -212 680 880" texCoord="832 1174 902 1265"/>
-        <Glyph advance="780" extends="-150 -212 930 880" texCoord="91 1371 181 1462"/>
-        <Glyph advance="626" extends="-190 -200 818 880" texCoord="1651 347 1735 437"/>
-        <Glyph advance="619" extends="-124 -200 788 868" texCoord="1301 617 1377 706"/>
-        <Glyph advance="656" extends="-150 -212 822 880" texCoord="442 1523 523 1614"/>
-        <Glyph advance="673" extends="-124 -200 824 868" texCoord="685 528 764 617"/>
-        <Glyph advance="567" extends="-124 -200 740 868" texCoord="759 1936 831 2025"/>
-        <Glyph advance="548" extends="-124 -200 716 868" texCoord="978 810 1048 899"/>
-        <Glyph advance="710" extends="-150 -212 846 880" texCoord="442 528 525 619"/>
-        <Glyph advance="690" extends="-124 -200 824 868" texCoord="922 528 1001 617"/>
-        <Glyph advance="414" extends="-134 -200 550 868" texCoord="1991 180 2048 269"/>
-        <Glyph advance="510" extends="-185 -212 643 868" texCoord="832 1265 901 1355"/>
-        <Glyph advance="627" extends="-124 -200 824 868" texCoord="764 528 843 617"/>
-        <Glyph advance="539" extends="-124 -200 740 868" texCoord="759 1847 831 1936"/>
-        <Glyph advance="820" extends="-124 -200 944 868" texCoord="1724 180 1813 269"/>
-        <Glyph advance="689" extends="-124 -200 824 868" texCoord="1080 528 1159 617"/>
-        <Glyph advance="727" extends="-150 -212 882 880" texCoord="276 438 362 529"/>
-        <Glyph advance="601" extends="-124 -199 764 869" texCoord="1194 707 1268 796"/>
-        <Glyph advance="753" extends="-150 -244 954 884" texCoord="91 464 183 558"/>
-        <Glyph advance="618" extends="-124 -200 788 868" texCoord="1860 528 1936 617"/>
-        <Glyph advance="596" extends="-160 -212 764 880" texCoord="605 1731 682 1822"/>
-        <Glyph advance="558" extends="-190 -200 758 868" texCoord="1001 528 1080 617"/>
-        <Glyph advance="690" extends="-124 -212 824 868" texCoord="525 1786 604 1876"/>
-        <Glyph advance="589" extends="-190 -200 782 868" texCoord="1758 437 1839 526"/>
-        <Glyph advance="840" extends="-190 -200 1034 868" texCoord="91 91 193 180"/>
-        <Glyph advance="623" extends="-190 -200 818 868" texCoord="1904 347 1988 436"/>
-        <Glyph advance="595" extends="-190 -200 794 868" texCoord="1513 437 1595 526"/>
-        <Glyph advance="607" extends="-156 -200 768 868" texCoord="1552 528 1629 617"/>
-        <Glyph advance="315" extends="-124 -361 488 875" texCoord="902 1824 953 1927"/>
-        <Glyph advance="377" extends="-185 -200 571 868" texCoord="1083 1244 1146 1333"/>
-        <Glyph advance="315" extends="-167 -361 445 875" texCoord="902 1927 953 2030"/>
-        <Glyph advance="552" extends="-147 111 705 879" texCoord="1435 1211 1506 1275"/>
-        <Glyph advance="396" extends="-190 -279 590 201" texCoord="1605 1572 1670 1612"/>
-        <Glyph advance="268" extends="-147 371 417 911" texCoord="1906 1746 1953 1791"/>
-        <Glyph advance="526" extends="-162 -212 678 712" texCoord="1146 1450 1216 1527"/>
-        <Glyph advance="566" extends="-130 -212 734 868" texCoord="759 900 831 990"/>
-        <Glyph advance="500" extends="-162 -212 678 712" texCoord="1146 1527 1216 1604"/>
-        <Glyph advance="564" extends="-162 -212 714 868" texCoord="1975 617 2048 707"/>
-        <Glyph advance="539" extends="-162 -212 714 712" texCoord="1528 989 1601 1066"/>
-        <Glyph advance="311" extends="-185 -200 487 916" texCoord="960 1443 1016 1536"/>
-        <Glyph advance="560" extends="-162 -392 690 712" texCoord="1710 707 1781 799"/>
-        <Glyph advance="546" extends="-130 -200 686 868" texCoord="1529 810 1597 899"/>
-        <Glyph advance="278" extends="-155 -200 421 916" texCoord="1083 1871 1131 1964"/>
-        <Glyph advance="254" extends="-258 -361 402 923" texCoord="902 1002 957 1109"/>
-        <Glyph advance="490" extends="-130 -200 686 868" texCoord="1461 810 1529 899"/>
-        <Glyph advance="239" extends="-130 -200 434 868" texCoord="2001 437 2048 526"/>
-        <Glyph advance="841" extends="-130 -200 974 712" texCoord="866 270 958 346"/>
-        <Glyph advance="546" extends="-130 -200 686 712" texCoord="1218 1284 1286 1360"/>
-        <Glyph advance="552" extends="-162 -212 714 712" texCoord="1455 989 1528 1066"/>
-        <Glyph advance="566" extends="-130 -361 734 707" texCoord="759 1557 831 1646"/>
-        <Glyph advance="576" extends="-162 -373 834 707" texCoord="442 710 525 800"/>
-        <Glyph advance="340" extends="-130 -200 542 712" texCoord="1218 1750 1274 1826"/>
-        <Glyph advance="471" extends="-169 -212 647 712" texCoord="1146 1907 1214 1984"/>
-        <Glyph advance="324" extends="-180 -200 492 832" texCoord="1021 1615 1077 1701"/>
-        <Glyph advance="536" extends="-132 -212 672 700" texCoord="1218 1360 1285 1436"/>
-        <Glyph advance="441" extends="-200 -200 652 700" texCoord="1146 1679 1217 1754"/>
-        <Glyph advance="654" extends="-200 -200 856 700" texCoord="1047 270 1135 345"/>
-        <Glyph advance="461" extends="-200 -200 664 700" texCoord="1880 1135 1952 1210"/>
-        <Glyph advance="429" extends="-200 -361 640 695" texCoord="1187 810 1257 898"/>
-        <Glyph advance="460" extends="-160 -200 632 700" texCoord="1218 1436 1284 1511"/>
-        <Glyph advance="319" extends="-162 -361 486 875" texCoord="902 1418 956 1521"/>
-        <Glyph advance="233" extends="-124 -361 368 875" texCoord="1286 1387 1327 1490"/>
-        <Glyph advance="319" extends="-166 -361 482 875" texCoord="902 1315 956 1418"/>
-        <Glyph advance="555" extends="-160 -5 716 523" texCoord="605 2002 678 2046"/>
+        <Glyph advance="281" extends="-124 -212 405 868" texCoord="1194 1871 1238 1960"/>
+        <Glyph advance="301" extends="-160 247 461 868" texCoord="1359 1426 1410 1477"/>
+        <Glyph advance="655" extends="-162 -200 817 868" texCoord="436 1137 517 1225"/>
+        <Glyph advance="594" extends="-160 -287 754 942" texCoord="183 1757 258 1858"/>
+        <Glyph advance="927" extends="-162 -212 1089 880" texCoord="1373 0 1476 90"/>
+        <Glyph advance="705" extends="-162 -212 895 880" texCoord="183 267 270 357"/>
+        <Glyph advance="160" extends="-160 247 320 868" texCoord="1518 1961 1558 2012"/>
+        <Glyph advance="300" extends="-150 -361 465 868" texCoord="883 1397 934 1498"/>
+        <Glyph advance="300" extends="-165 -361 450 868" texCoord="883 1498 934 1599"/>
+        <Glyph advance="433" extends="-132 188 563 868" texCoord="1241 1645 1298 1701"/>
+        <Glyph advance="602" extends="-147 -200 749 696" texCoord="1965 888 2039 962"/>
+        <Glyph advance="205" extends="-162 -333 367 317" texCoord="2004 1052 2048 1106"/>
+        <Glyph advance="368" extends="-162 8 530 489" texCoord="1534 1419 1591 1459"/>
+        <Glyph advance="205" extends="-162 -212 367 317" texCoord="1784 1590 1828 1634"/>
+        <Glyph advance="377" extends="-185 -200 562 868" texCoord="1276 964 1338 1052"/>
+        <Glyph advance="648" extends="-140 -212 788 880" texCoord="597 963 673 1053"/>
+        <Glyph advance="402" extends="-158 -200 504 868" texCoord="1070 1647 1125 1735"/>
+        <Glyph advance="549" extends="-166 -200 715 880" texCoord="749 974 822 1063"/>
+        <Glyph advance="574" extends="-158 -212 714 880" texCoord="749 884 821 974"/>
+        <Glyph advance="614" extends="-162 -200 776 868" texCoord="1535 518 1612 606"/>
+        <Glyph advance="583" extends="-146 -212 721 868" texCoord="749 1710 820 1799"/>
+        <Glyph advance="598" extends="-140 -212 738 880" texCoord="674 1817 746 1907"/>
+        <Glyph advance="510" extends="-185 -200 676 868" texCoord="1690 707 1761 795"/>
+        <Glyph advance="615" extends="-140 -212 755 880" texCoord="1636 606 1710 696"/>
+        <Glyph advance="598" extends="-140 -200 738 879" texCoord="749 1443 821 1532"/>
+        <Glyph advance="205" extends="-162 -212 367 704" texCoord="1241 1456 1285 1531"/>
+        <Glyph advance="205" extends="-162 -333 367 704" texCoord="2004 90 2048 175"/>
+        <Glyph advance="553" extends="-160 -200 713 696" texCoord="998 1425 1070 1499"/>
+        <Glyph advance="602" extends="-147 -79 749 586" texCoord="354 1993 428 2048"/>
+        <Glyph advance="553" extends="-160 -200 713 696" texCoord="998 1277 1070 1351"/>
+        <Glyph advance="520" extends="-160 -212 670 880" texCoord="1163 795 1231 885"/>
+        <Glyph advance="780" extends="-150 -212 930 880" texCoord="0 1370 89 1460"/>
+        <Glyph advance="626" extends="-190 -200 816 869" texCoord="1705 342 1788 430"/>
+        <Glyph advance="619" extends="-124 -200 781 868" texCoord="674 1170 748 1258"/>
+        <Glyph advance="656" extends="-150 -212 818 880" texCoord="354 1802 434 1892"/>
+        <Glyph advance="673" extends="-124 -200 823 868" texCoord="1224 518 1302 606"/>
+        <Glyph advance="567" extends="-124 -200 729 868" texCoord="1902 707 1972 795"/>
+        <Glyph advance="548" extends="-124 -200 710 868" texCoord="1972 707 2041 795"/>
+        <Glyph advance="710" extends="-150 -212 842 880" texCoord="354 431 436 521"/>
+        <Glyph advance="690" extends="-124 -200 814 868" texCoord="1612 518 1689 606"/>
+        <Glyph advance="414" extends="-134 -200 548 868" texCoord="937 1854 993 1942"/>
+        <Glyph advance="510" extends="-185 -212 634 868" texCoord="1231 795 1298 884"/>
+        <Glyph advance="627" extends="-124 -200 817 868" texCoord="1458 518 1535 606"/>
+        <Glyph advance="539" extends="-124 -200 729 868" texCoord="1832 707 1902 795"/>
+        <Glyph advance="820" extends="-124 -200 944 868" texCoord="1695 178 1783 266"/>
+        <Glyph advance="689" extends="-124 -200 813 868" texCoord="1766 518 1843 606"/>
+        <Glyph advance="727" extends="-150 -212 877 880" texCoord="183 1948 267 2038"/>
+        <Glyph advance="601" extends="-124 -199 763 868" texCoord="968 707 1041 795"/>
+        <Glyph advance="753" extends="-150 -244 953 880" texCoord="89 456 180 548"/>
+        <Glyph advance="618" extends="-124 -200 788 868" texCoord="674 707 749 795"/>
+        <Glyph advance="596" extends="-160 -212 756 880" texCoord="808 606 883 696"/>
+        <Glyph advance="558" extends="-190 -200 748 868" texCoord="1689 518 1766 606"/>
+        <Glyph advance="690" extends="-124 -212 814 868" texCoord="597 1053 674 1142"/>
+        <Glyph advance="589" extends="-190 -200 779 868" texCoord="517 975 597 1063"/>
+        <Glyph advance="840" extends="-190 -200 1030 868" texCoord="89 90 189 178"/>
+        <Glyph advance="623" extends="-190 -200 813 868" texCoord="1954 342 2036 430"/>
+        <Glyph advance="595" extends="-190 -200 785 868" texCoord="436 1936 516 2024"/>
+        <Glyph advance="607" extends="-156 -200 763 868" texCoord="1486 606 1562 694"/>
+        <Glyph advance="315" extends="-124 -361 482 868" texCoord="883 1599 933 1700"/>
+        <Glyph advance="377" extends="-185 -200 562 868" texCoord="1338 964 1400 1052"/>
+        <Glyph advance="315" extends="-167 -361 439 868" texCoord="883 1700 933 1801"/>
+        <Glyph advance="552" extends="-147 111 699 868" texCoord="1421 1124 1491 1186"/>
+        <Glyph advance="396" extends="-190 -279 586 200" texCoord="1947 1375 2011 1415"/>
+        <Glyph advance="268" extends="-147 371 415 907" texCoord="1518 1785 1564 1829"/>
+        <Glyph advance="526" extends="-162 -212 675 704" texCoord="998 1869 1067 1944"/>
+        <Glyph advance="566" extends="-130 -212 728 868" texCoord="749 1889 820 1978"/>
+        <Glyph advance="500" extends="-162 -212 667 704" texCoord="1070 1124 1138 1199"/>
+        <Glyph advance="564" extends="-162 -212 713 868" texCoord="749 1532 821 1621"/>
+        <Glyph advance="539" extends="-162 -212 714 704" texCoord="1132 964 1204 1039"/>
+        <Glyph advance="311" extends="-185 -200 486 906" texCoord="937 1675 992 1766"/>
+        <Glyph advance="560" extends="-162 -392 690 704" texCoord="749 1799 819 1889"/>
+        <Glyph advance="546" extends="-130 -200 678 868" texCoord="1634 795 1701 883"/>
+        <Glyph advance="278" extends="-155 -200 419 915" texCoord="1194 1198 1241 1290"/>
+        <Glyph advance="254" extends="-258 -361 394 915" texCoord="883 888 937 993"/>
+        <Glyph advance="490" extends="-130 -200 680 868" texCoord="1567 795 1634 883"/>
+        <Glyph advance="239" extends="-130 -200 424 867" texCoord="1194 1694 1240 1782"/>
+        <Glyph advance="841" extends="-130 -200 973 704" texCoord="849 267 940 341"/>
+        <Glyph advance="546" extends="-130 -200 678 704" texCoord="1070 1424 1137 1498"/>
+        <Glyph advance="552" extends="-162 -212 714 704" texCoord="1060 964 1132 1039"/>
+        <Glyph advance="566" extends="-130 -361 728 704" texCoord="1761 707 1832 795"/>
+        <Glyph advance="576" extends="-162 -373 828 704" texCoord="354 712 435 801"/>
+        <Glyph advance="340" extends="-130 -200 535 704" texCoord="1695 1124 1750 1198"/>
+        <Glyph advance="471" extends="-169 -212 641 705" texCoord="1070 1349 1137 1424"/>
+        <Glyph advance="324" extends="-180 -200 484 821" texCoord="1138 1282 1193 1366"/>
+        <Glyph advance="536" extends="-132 -212 666 697" texCoord="1070 1498 1136 1573"/>
+        <Glyph advance="441" extends="-200 -200 641 696" texCoord="1207 1124 1276 1198"/>
+        <Glyph advance="654" extends="-200 -200 854 696" texCoord="1027 267 1114 341"/>
+        <Glyph advance="461" extends="-200 -200 661 696" texCoord="998 1795 1069 1869"/>
+        <Glyph advance="429" extends="-200 -361 629 695" texCoord="1340 431 1408 518"/>
+        <Glyph advance="460" extends="-160 -200 630 696" texCoord="1070 1573 1135 1647"/>
+        <Glyph advance="319" extends="-162 -361 485 868" texCoord="883 1296 936 1397"/>
+        <Glyph advance="233" extends="-124 -361 357 868" texCoord="1194 1593 1234 1694"/>
+        <Glyph advance="319" extends="-166 -361 481 868" texCoord="883 1195 936 1296"/>
+        <Glyph advance="555" extends="-160 -5 715 523" texCoord="1368 1285 1440 1329"/>
         <Glyph advance="280"/>
-        <Glyph advance="281" extends="-124 -361 416 719" texCoord="1327 1359 1372 1449"/>
-        <Glyph advance="500" extends="-162 -287 678 781" texCoord="1117 810 1187 899"/>
-        <Glyph advance="586" extends="-130 -212 758 880" texCoord="683 1163 757 1254"/>
-        <Glyph advance="580" extends="-147 -116 729 760" texCoord="1218 1211 1291 1284"/>
-        <Glyph advance="595" extends="-190 -200 794 868" texCoord="1431 437 1513 526"/>
-        <Glyph advance="233" extends="-124 -361 368 875" texCoord="1218 1826 1259 1929"/>
-        <Glyph advance="530" extends="-169 -373 707 887" texCoord="276 1919 349 2024"/>
-        <Glyph advance="425" extends="-147 390 573 906" texCoord="1605 1612 1665 1655"/>
-        <Glyph advance="798" extends="-147 -212 945 880" texCoord="0 1296 91 1387"/>
-        <Glyph advance="371" extends="-147 197 525 893" texCoord="1423 1525 1479 1583"/>
-        <Glyph advance="562" extends="-147 -160 717 668" texCoord="1456 1066 1528 1135"/>
-        <Glyph advance="602" extends="-147 -110 753 598" texCoord="1506 1211 1581 1270"/>
-        <Glyph advance="348" extends="-162 8 510 500" texCoord="1962 1699 2018 1740"/>
-        <Glyph advance="798" extends="-147 -212 945 880" texCoord="0 1387 91 1478"/>
-        <Glyph advance="382" extends="-147 401 537 869" texCoord="1850 1572 1907 1611"/>
-        <Glyph advance="352" extends="-160 208 512 880" texCoord="1423 1700 1479 1756"/>
-        <Glyph advance="579" extends="-147 -200 729 700" texCoord="1584 1135 1657 1210"/>
-        <Glyph advance="382" extends="-147 203 537 995" texCoord="1811 1284 1868 1350"/>
-        <Glyph advance="383" extends="-147 197 537 989" texCoord="1632 1284 1689 1350"/>
-        <Glyph advance="268" extends="-147 371 417 911" texCoord="1760 1794 1807 1839"/>
-        <Glyph advance="555" extends="-130 -362 746 706" texCoord="759 1079 832 1168"/>
-        <Glyph advance="508" extends="-162 -361 690 875" texCoord="362 1217 433 1320"/>
-        <Glyph advance="235" extends="-147 -17 393 523" texCoord="1327 1951 1372 1996"/>
-        <Glyph advance="291" extends="-127 -381 461 231" texCoord="1372 1875 1421 1926"/>
-        <Glyph advance="256" extends="-147 203 405 983" texCoord="1372 1704 1418 1769"/>
-        <Glyph advance="381" extends="-143 198 541 894" texCoord="1892 1359 1949 1417"/>
-        <Glyph advance="562" extends="-147 -160 717 668" texCoord="1528 1066 1600 1135"/>
-        <Glyph advance="826" extends="-147 -200 981 868" texCoord="1747 91 1841 180"/>
-        <Glyph advance="812" extends="-147 -200 969 868" texCoord="91 1104 184 1193"/>
-        <Glyph advance="868" extends="-147 -200 1017 880" texCoord="287 180 384 270"/>
-        <Glyph advance="520" extends="-151 -374 689 730" texCoord="832 1082 902 1174"/>
+        <Glyph advance="281" extends="-124 -361 405 719" texCoord="1194 1782 1238 1871"/>
+        <Glyph advance="500" extends="-162 -287 667 771" texCoord="1272 431 1340 518"/>
+        <Glyph advance="586" extends="-130 -212 756 880" texCoord="674 973 747 1063"/>
+        <Glyph advance="580" extends="-147 -116 727 758" texCoord="1218 1052 1290 1124"/>
+        <Glyph advance="595" extends="-190 -200 785 868" texCoord="436 1848 516 1936"/>
+        <Glyph advance="233" extends="-124 -361 357 868" texCoord="1194 1290 1234 1391"/>
+        <Glyph advance="530" extends="-169 -373 700 880" texCoord="270 1713 342 1816"/>
+        <Glyph advance="425" extends="-147 390 572 897" texCoord="1648 1459 1707 1501"/>
+        <Glyph advance="798" extends="-147 -212 945 880" texCoord="89 1087 179 1177"/>
+        <Glyph advance="371" extends="-147 197 518 892" texCoord="1241 1872 1296 1929"/>
+        <Glyph advance="562" extends="-147 -160 709 661" texCoord="1507 1052 1577 1120"/>
+        <Glyph advance="602" extends="-147 -110 749 596" texCoord="1491 1124 1565 1182"/>
+        <Glyph advance="348" extends="-162 8 510 489" texCoord="1591 1419 1646 1459"/>
+        <Glyph advance="798" extends="-147 -212 945 880" texCoord="89 1177 179 1267"/>
+        <Glyph advance="382" extends="-147 401 529 868" texCoord="1759 1419 1815 1458"/>
+        <Glyph advance="352" extends="-160 208 512 880" texCoord="1299 1499 1354 1554"/>
+        <Glyph advance="579" extends="-147 -200 726 696" texCoord="998 1647 1070 1721"/>
+        <Glyph advance="382" extends="-147 203 529 986" texCoord="1804 1198 1860 1263"/>
+        <Glyph advance="383" extends="-147 197 530 986" texCoord="1678 1198 1734 1263"/>
+        <Glyph advance="268" extends="-147 371 415 907" texCoord="1518 1917 1564 1961"/>
+        <Glyph advance="555" extends="-130 -362 740 696" texCoord="1054 431 1126 518"/>
+        <Glyph advance="508" extends="-162 -361 683 868" texCoord="517 606 587 707"/>
+        <Glyph advance="235" extends="-147 -17 382 512" texCoord="1828 1590 1872 1634"/>
+        <Glyph advance="291" extends="-127 -381 458 225" texCoord="1411 1948 1459 1998"/>
+        <Glyph advance="256" extends="-147 203 403 979" texCoord="1299 1843 1344 1907"/>
+        <Glyph advance="381" extends="-143 198 532 892" texCoord="1241 1758 1297 1815"/>
+        <Glyph advance="562" extends="-147 -160 709 661" texCoord="1577 1052 1647 1120"/>
+        <Glyph advance="826" extends="-147 -200 973 868" texCoord="1715 90 1807 178"/>
+        <Glyph advance="812" extends="-147 -200 959 868" texCoord="89 1717 180 1805"/>
+        <Glyph advance="868" extends="-147 -200 1015 880" texCoord="281 178 376 267"/>
+        <Glyph advance="520" extends="-151 -374 679 719" texCoord="1095 795 1163 885"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="130" position="191 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 544 376 1072" texCoord="1807 1794 1855 1838"/>
+        <Glyph advance="0" extends="-200 544 373 1064" texCoord="1613 1547 1660 1590"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="132" position="255 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 544 376 1072" texCoord="1855 1794 1903 1838"/>
+        <Glyph advance="0" extends="-200 544 372 1064" texCoord="1660 1547 1707 1590"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="134" position="151 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 547 532 1075" texCoord="1544 1660 1605 1704"/>
+        <Glyph advance="0" extends="-200 547 523 1067" texCoord="1827 1375 1887 1418"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="136" position="95 172"/>
         </Glyph>
-        <Glyph advance="435" extends="-147 375 585 891" texCoord="1544 1844 1605 1887"/>
+        <Glyph advance="435" extends="-147 375 582 881" texCoord="1469 1459 1529 1501"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="105" position="100 150"/>
@@ -157,13 +157,13 @@
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="139" position="189 61"/>
         </Glyph>
-        <Glyph advance="253" extends="-185 359 439 983" texCoord="1596 1520 1648 1572"/>
-        <Glyph advance="998" extends="-190 -200 1166 868" texCoord="1070 0 1183 89"/>
+        <Glyph advance="253" extends="-185 359 433 977" texCoord="1359 1629 1410 1680"/>
+        <Glyph advance="998" extends="-190 -200 1160 868" texCoord="1052 0 1163 88"/>
         <Glyph advance="656">
             <SubGlyph glyph="37" position="0 0"/>
             <SubGlyph glyph="142" position="259 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -381 388 231" texCoord="1372 1926 1421 1977"/>
+        <Glyph advance="0" extends="-200 -381 385 225" texCoord="1411 1998 1459 2048"/>
         <Glyph advance="567">
             <SubGlyph glyph="39" position="0 0"/>
             <SubGlyph glyph="130" position="182 0"/>
@@ -196,7 +196,7 @@
             <SubGlyph glyph="43" position="0 0"/>
             <SubGlyph glyph="105" position="-6 150"/>
         </Glyph>
-        <Glyph advance="712" extends="-180 -200 864 868" texCoord="711 347 798 436"/>
+        <Glyph advance="712" extends="-180 -200 862 868" texCoord="697 342 783 430"/>
         <Glyph advance="689">
             <SubGlyph glyph="48" position="0 0"/>
             <SubGlyph glyph="136" position="144 172"/>
@@ -221,8 +221,8 @@
             <SubGlyph glyph="49" position="0 0"/>
             <SubGlyph glyph="105" position="151 150"/>
         </Glyph>
-        <Glyph advance="528" extends="-147 -161 681 667" texCoord="1676 1066 1745 1135"/>
-        <Glyph advance="727" extends="-150 -212 882 880" texCoord="276 347 362 438"/>
+        <Glyph advance="528" extends="-147 -161 675 662" texCoord="1715 1052 1783 1120"/>
+        <Glyph advance="727" extends="-150 -212 877 880" texCoord="183 1858 267 1948"/>
         <Glyph advance="690">
             <SubGlyph glyph="55" position="0 0"/>
             <SubGlyph glyph="130" position="223 0"/>
@@ -243,39 +243,39 @@
             <SubGlyph glyph="59" position="0 0"/>
             <SubGlyph glyph="132" position="240 0"/>
         </Glyph>
-        <Glyph advance="576" extends="-124 -200 740 868" texCoord="759 990 831 1079"/>
-        <Glyph advance="597" extends="-124 -212 764 880" texCoord="683 1454 757 1545"/>
+        <Glyph advance="576" extends="-124 -200 738 868" texCoord="1619 707 1690 795"/>
+        <Glyph advance="597" extends="-124 -212 759 880" texCoord="674 1347 747 1437"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="168" position="155 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 371 364 911" texCoord="2000 1746 2047 1791"/>
+        <Glyph advance="0" extends="-200 371 362 907" texCoord="1518 1873 1564 1917"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="170" position="216 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 371 364 911" texCoord="1953 1746 2000 1791"/>
+        <Glyph advance="0" extends="-200 371 362 907" texCoord="1518 1829 1564 1873"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="172" position="101 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 375 532 903" texCoord="1983 1520 2044 1564"/>
+        <Glyph advance="0" extends="-200 375 523 895" texCoord="1647 1375 1707 1418"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="174" position="98 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 375 532 891" texCoord="1544 1887 1605 1930"/>
+        <Glyph advance="0" extends="-200 375 529 881" texCoord="1529 1459 1589 1501"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="176" position="103 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 390 520 906" texCoord="1544 1978 1604 2021"/>
+        <Glyph advance="0" extends="-200 390 519 897" texCoord="1589 1459 1648 1501"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="178" position="154 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 359 424 983" texCoord="1648 1520 1700 1572"/>
-        <Glyph advance="874" extends="-162 -212 1050 712" texCoord="379 270 480 347"/>
+        <Glyph advance="0" extends="-200 359 418 977" texCoord="1359 1680 1410 1731"/>
+        <Glyph advance="874" extends="-162 -212 1049 704" texCoord="371 267 470 342"/>
         <Glyph advance="500">
             <SubGlyph glyph="69" position="0 0"/>
             <SubGlyph glyph="142" position="181 0"/>
@@ -300,7 +300,7 @@
             <SubGlyph glyph="186" position="0 0"/>
             <SubGlyph glyph="168" position="26 0"/>
         </Glyph>
-        <Glyph advance="278" extends="-155 -200 409 700" texCoord="1991 1284 2038 1359"/>
+        <Glyph advance="278" extends="-155 -200 398 696" texCoord="1194 1960 1240 2034"/>
         <Glyph advance="278">
             <SubGlyph glyph="186" position="0 0"/>
             <SubGlyph glyph="170" position="87 0"/>
@@ -313,7 +313,7 @@
             <SubGlyph glyph="186" position="0 0"/>
             <SubGlyph glyph="176" position="-26 0"/>
         </Glyph>
-        <Glyph advance="567" extends="-162 -212 726 880" texCoord="683 1751 757 1842"/>
+        <Glyph advance="567" extends="-162 -212 717 880" texCoord="674 1727 746 1817"/>
         <Glyph advance="546">
             <SubGlyph glyph="80" position="0 0"/>
             <SubGlyph glyph="174" position="123 0"/>
@@ -338,8 +338,8 @@
             <SubGlyph glyph="81" position="0 0"/>
             <SubGlyph glyph="176" position="116 0"/>
         </Glyph>
-        <Glyph advance="602" extends="-147 -186 753 690" texCoord="1657 1135 1732 1208"/>
-        <Glyph advance="552" extends="-162 -212 714 712" texCoord="1157 989 1230 1066"/>
+        <Glyph advance="602" extends="-147 -186 749 683" texCoord="1070 1052 1144 1124"/>
+        <Glyph advance="552" extends="-162 -212 714 707" texCoord="1745 888 1817 964"/>
         <Glyph advance="536">
             <SubGlyph glyph="87" position="0 0"/>
             <SubGlyph glyph="168" position="159 0"/>
@@ -360,7 +360,7 @@
             <SubGlyph glyph="91" position="0 0"/>
             <SubGlyph glyph="170" position="173 0"/>
         </Glyph>
-        <Glyph advance="566" extends="-130 -361 734 875" texCoord="362 839 434 942"/>
+        <Glyph advance="566" extends="-130 -361 728 869" texCoord="354 1892 425 1993"/>
         <Glyph advance="429">
             <SubGlyph glyph="91" position="0 0"/>
             <SubGlyph glyph="176" position="60 0"/>
@@ -373,27 +373,27 @@
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="208" position="125 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 401 484 869" texCoord="1793 1572 1850 1611"/>
+        <Glyph advance="0" extends="-200 401 476 868" texCoord="1703 1419 1759 1458"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="210" position="113 172"/>
         </Glyph>
-        <Glyph advance="399" extends="-147 369 549 897" texCoord="1716 1655 1774 1699"/>
+        <Glyph advance="399" extends="-147 369 547 889" texCoord="1411 1593 1468 1636"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="212" position="116 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 369 496 897" texCoord="1774 1655 1832 1699"/>
+        <Glyph advance="0" extends="-200 369 494 889" texCoord="1411 1636 1468 1679"/>
         <Glyph advance="626">
             <SubGlyph glyph="35" position="0 0"/>
             <SubGlyph glyph="214" position="458 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -373 364 203" texCoord="1711 1942 1758 1990"/>
+        <Glyph advance="0" extends="-200 -373 357 200" texCoord="1518 1547 1564 1594"/>
         <Glyph advance="526">
             <SubGlyph glyph="67" position="0 0"/>
             <SubGlyph glyph="216" position="318 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -373 364 203" texCoord="1711 1990 1758 2038"/>
+        <Glyph advance="0" extends="-200 -373 357 200" texCoord="1518 1594 1564 1641"/>
         <Glyph advance="656">
             <SubGlyph glyph="37" position="0 0"/>
             <SubGlyph glyph="132" position="295 0"/>
@@ -406,22 +406,22 @@
             <SubGlyph glyph="37" position="0 0"/>
             <SubGlyph glyph="220" position="246 172"/>
         </Glyph>
-        <Glyph advance="214" extends="-147 390 369 906" texCoord="1807 1838 1850 1881"/>
+        <Glyph advance="214" extends="-147 390 361 898" texCoord="1753 1547 1795 1589"/>
         <Glyph advance="500">
             <SubGlyph glyph="69" position="0 0"/>
             <SubGlyph glyph="222" position="221 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 390 316 906" texCoord="1993 1794 2036 1837"/>
+        <Glyph advance="0" extends="-200 390 308 898" texCoord="1983 1459 2025 1501"/>
         <Glyph advance="656">
             <SubGlyph glyph="37" position="0 0"/>
             <SubGlyph glyph="224" position="138 172"/>
         </Glyph>
-        <Glyph advance="429" extends="-147 369 585 897" texCoord="1544 1704 1605 1748"/>
+        <Glyph advance="429" extends="-147 369 576 889" texCoord="1887 1375 1947 1418"/>
         <Glyph advance="500">
             <SubGlyph glyph="69" position="0 0"/>
             <SubGlyph glyph="226" position="113 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 369 532 897" texCoord="1922 1520 1983 1564"/>
+        <Glyph advance="0" extends="-200 369 523 889" texCoord="1587 1375 1647 1418"/>
         <Glyph advance="673">
             <SubGlyph glyph="38" position="0 0"/>
             <SubGlyph glyph="224" position="112 172"/>
@@ -430,11 +430,11 @@
             <SubGlyph glyph="70" position="0 0"/>
             <SubGlyph glyph="229" position="521 -1"/>
         </Glyph>
-        <Glyph advance="0" extends="-180 295 324 883" texCoord="1327 1857 1369 1906"/>
+        <Glyph advance="0" extends="-180 295 320 878" texCoord="1604 1635 1645 1683"/>
         <Glyph advance="712">
             <SubGlyph glyph="151" position="0 0"/>
         </Glyph>
-        <Glyph advance="603" extends="-162 -212 786 868" texCoord="525 1426 604 1516"/>
+        <Glyph advance="603" extends="-162 -212 778 868" texCoord="597 785 674 874"/>
         <Glyph advance="567">
             <SubGlyph glyph="39" position="0 0"/>
             <SubGlyph glyph="112" position="113 161"/>
@@ -455,7 +455,7 @@
             <SubGlyph glyph="39" position="0 0"/>
             <SubGlyph glyph="214" position="349 0"/>
         </Glyph>
-        <Glyph advance="539" extends="-162 -373 714 707" texCoord="1268 707 1341 797"/>
+        <Glyph advance="539" extends="-162 -373 714 704" texCoord="749 1621 821 1710"/>
         <Glyph advance="567">
             <SubGlyph glyph="39" position="0 0"/>
             <SubGlyph glyph="224" position="89 172"/>
@@ -484,13 +484,13 @@
             <SubGlyph glyph="41" position="0 0"/>
             <SubGlyph glyph="245" position="265 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -450 364 150" texCoord="1711 1842 1758 1892"/>
+        <Glyph advance="0" extends="-200 -450 360 144" texCoord="1469 1944 1515 1993"/>
         <Glyph advance="560">
             <SubGlyph glyph="73" position="0 0"/>
             <SubGlyph glyph="245" position="405 523"/>
         </Glyph>
-        <Glyph advance="710" extends="-190 -200 902 868" texCoord="91 1929 182 2018"/>
-        <Glyph advance="581" extends="-180 -200 720 868" texCoord="1528 617 1603 706"/>
+        <Glyph advance="710" extends="-190 -200 900 868" texCoord="570 178 660 266"/>
+        <Glyph advance="581" extends="-180 -200 713 868" texCoord="674 1907 747 1995"/>
         <Glyph advance="414">
             <SubGlyph glyph="43" position="0 0"/>
             <SubGlyph glyph="112" position="16 161"/>
@@ -507,7 +507,7 @@
             <SubGlyph glyph="75" position="0 0"/>
             <SubGlyph glyph="253" position="-19 0"/>
         </Glyph>
-        <Glyph advance="263" extends="-147 -373 417 203" texCoord="1760 1746 1807 1794"/>
+        <Glyph advance="263" extends="-147 -373 410 200" texCoord="1518 1641 1564 1688"/>
         <Glyph advance="627">
             <SubGlyph glyph="45" position="0 0"/>
             <SubGlyph glyph="245" position="224 0"/>
@@ -532,8 +532,8 @@
             <SubGlyph glyph="78" position="0 0"/>
             <SubGlyph glyph="229" position="177 -1"/>
         </Glyph>
-        <Glyph advance="573" extends="-180 -200 768 880" texCoord="762 617 841 707"/>
-        <Glyph advance="237" extends="-185 -200 427 868" texCoord="1083 1525 1134 1614"/>
+        <Glyph advance="573" extends="-180 -200 763 869" texCoord="1380 518 1458 606"/>
+        <Glyph advance="237" extends="-185 -200 422 868" texCoord="1138 1770 1188 1858"/>
         <Glyph advance="689">
             <SubGlyph glyph="48" position="0 0"/>
             <SubGlyph glyph="132" position="304 0"/>
@@ -562,14 +562,14 @@
             <SubGlyph glyph="49" position="0 0"/>
             <SubGlyph glyph="269" position="197 172"/>
         </Glyph>
-        <Glyph advance="414" extends="-147 372 561 912" texCoord="1759 1520 1818 1565"/>
+        <Glyph advance="414" extends="-147 372 561 908" texCoord="1529 1375 1587 1419"/>
         <Glyph advance="552">
             <SubGlyph glyph="81" position="0 0"/>
             <SubGlyph glyph="271" position="162 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 372 508 912" texCoord="1700 1520 1759 1565"/>
-        <Glyph advance="1052" extends="-150 -212 1218 880" texCoord="618 0 732 91"/>
-        <Glyph advance="927" extends="-162 -212 1110 712" texCoord="671 180 777 257"/>
+        <Glyph advance="0" extends="-200 372 508 908" texCoord="1471 1375 1529 1419"/>
+        <Glyph advance="1052" extends="-150 -212 1214 880" texCoord="608 0 720 90"/>
+        <Glyph advance="927" extends="-162 -212 1102 705" texCoord="660 178 764 253"/>
         <Glyph advance="618">
             <SubGlyph glyph="52" position="0 0"/>
             <SubGlyph glyph="132" position="245 0"/>
@@ -654,7 +654,7 @@
             <SubGlyph glyph="55" position="0 0"/>
             <SubGlyph glyph="214" position="270 0"/>
         </Glyph>
-        <Glyph advance="536" extends="-132 -373 672 707" texCoord="960 899 1027 989"/>
+        <Glyph advance="536" extends="-132 -373 666 697" texCoord="1701 795 1767 883"/>
         <Glyph advance="595">
             <SubGlyph glyph="59" position="0 0"/>
             <SubGlyph glyph="105" position="85 150"/>
@@ -683,7 +683,7 @@
             <SubGlyph glyph="92" position="0 0"/>
             <SubGlyph glyph="226" position="75 0"/>
         </Glyph>
-        <Glyph advance="321" extends="-175 -373 497 911" texCoord="832 1767 888 1874"/>
+        <Glyph advance="321" extends="-175 -373 496 906" texCoord="822 1602 877 1707"/>
         <Glyph advance="596">
             <SubGlyph glyph="53" position="0 0"/>
             <SubGlyph glyph="245" position="208 0"/>
@@ -702,142 +702,142 @@
         </Glyph>
         <Glyph advance="0"/>
         <Glyph advance="280"/>
-        <Glyph advance="284" extends="-173 -212 475 868" texCoord="1021 1350 1075 1440"/>
-        <Glyph advance="334" extends="-105 247 519 871" texCoord="1479 1877 1531 1929"/>
-        <Glyph advance="634" extends="-163 -200 821 868" texCoord="1104 437 1186 526"/>
-        <Glyph advance="610" extends="-163 -280 773 956" texCoord="187 665 265 768"/>
-        <Glyph advance="1000" extends="-118 -212 1142 880" texCoord="1292 0 1397 91"/>
-        <Glyph advance="691" extends="-185 -212 823 880" texCoord="276 1091 360 1182"/>
-        <Glyph advance="193" extends="-105 247 375 871" texCoord="1286 1542 1326 1594"/>
-        <Glyph advance="301" extends="-171 -362 537 874" texCoord="832 1664 891 1767"/>
-        <Glyph advance="302" extends="-253 -362 467 874" texCoord="832 1561 892 1664"/>
-        <Glyph advance="439" extends="-94 173 602 869" texCoord="1719 1359 1777 1417"/>
-        <Glyph advance="619" extends="-158 -200 742 700" texCoord="1305 989 1380 1064"/>
-        <Glyph advance="209" extends="-244 -334 320 326" texCoord="1372 1769 1419 1824"/>
-        <Glyph advance="372" extends="-169 8 551 500" texCoord="1962 1612 2022 1653"/>
-        <Glyph advance="208" extends="-201 -212 339 328" texCoord="1327 1996 1372 2041"/>
-        <Glyph advance="371" extends="-250 -200 650 868" texCoord="1900 617 1975 706"/>
-        <Glyph advance="654" extends="-134 -212 814 880" texCoord="362 1686 441 1777"/>
-        <Glyph advance="403" extends="-113 -200 595 868" texCoord="960 1354 1019 1443"/>
-        <Glyph advance="565" extends="-218 -200 754 880" texCoord="1350 437 1431 527"/>
-        <Glyph advance="580" extends="-168 -212 744 880" texCoord="683 707 759 798"/>
-        <Glyph advance="636" extends="-183 -200 789 868" texCoord="1920 437 2001 526"/>
-        <Glyph advance="575" extends="-175 -212 761 868" texCoord="605 708 683 798"/>
-        <Glyph advance="605" extends="-138 -212 762 880" texCoord="683 1072 758 1163"/>
-        <Glyph advance="537" extends="-169 -200 767 868" texCoord="1159 528 1237 617"/>
-        <Glyph advance="617" extends="-162 -212 738 880" texCoord="683 890 758 981"/>
-        <Glyph advance="601" extends="-108 -200 780 880" texCoord="1678 617 1752 707"/>
-        <Glyph advance="208" extends="-211 -212 401 712" texCoord="1372 1359 1423 1436"/>
+        <Glyph advance="284" extends="-173 -212 468 868" texCoord="883 1893 936 1982"/>
+        <Glyph advance="334" extends="-105 247 516 868" texCoord="1359 1477 1410 1528"/>
+        <Glyph advance="634" extends="-163 -200 816 868" texCoord="436 1225 517 1313"/>
+        <Glyph advance="610" extends="-163 -280 763 950" texCoord="183 656 259 757"/>
+        <Glyph advance="1000" extends="-118 -212 1136 880" texCoord="1270 0 1373 90"/>
+        <Glyph advance="691" extends="-185 -212 819 879" texCoord="270 895 353 985"/>
+        <Glyph advance="193" extends="-105 247 375 868" texCoord="1564 1590 1604 1641"/>
+        <Glyph advance="301" extends="-171 -362 537 868" texCoord="822 1501 880 1602"/>
+        <Glyph advance="302" extends="-253 -362 456 868" texCoord="822 1400 880 1501"/>
+        <Glyph advance="439" extends="-94 173 595 867" texCoord="1241 1588 1298 1645"/>
+        <Glyph advance="619" extends="-158 -200 738 696" texCoord="1891 888 1965 962"/>
+        <Glyph advance="209" extends="-244 -334 318 316" texCoord="1359 1883 1405 1937"/>
+        <Glyph advance="372" extends="-169 8 541 489" texCoord="1475 1419 1534 1459"/>
+        <Glyph advance="208" extends="-201 -212 328 317" texCoord="1872 1590 1916 1634"/>
+        <Glyph advance="371" extends="-250 -200 639 868" texCoord="822 707 895 795"/>
+        <Glyph advance="654" extends="-134 -212 806 880" texCoord="517 1421 594 1511"/>
+        <Glyph advance="403" extends="-113 -200 585 868" texCoord="937 1587 995 1675"/>
+        <Glyph advance="565" extends="-218 -200 748 880" texCoord="436 1579 515 1668"/>
+        <Glyph advance="580" extends="-168 -212 738 880" texCoord="1111 606 1186 696"/>
+        <Glyph advance="636" extends="-183 -200 783 868" texCoord="517 1151 596 1239"/>
+        <Glyph advance="575" extends="-175 -212 761 868" texCoord="597 1232 674 1321"/>
+        <Glyph advance="605" extends="-138 -212 753 880" texCoord="674 795 747 885"/>
+        <Glyph advance="537" extends="-169 -200 767 868" texCoord="1843 518 1920 606"/>
+        <Glyph advance="617" extends="-162 -212 734 880" texCoord="1562 606 1636 696"/>
+        <Glyph advance="601" extends="-108 -200 774 880" texCoord="749 795 822 884"/>
+        <Glyph advance="208" extends="-211 -212 400 704" texCoord="1405 1198 1455 1273"/>
         <Glyph advance="210">
             <SubGlyph glyph="321" position="0 0"/>
             <SubGlyph glyph="323" position="74 387"/>
         </Glyph>
-        <Glyph advance="613" extends="-162 -200 714 700" texCoord="1438 1135 1511 1210"/>
-        <Glyph advance="658" extends="-137 -79 763 593" texCoord="1731 1211 1806 1267"/>
-        <Glyph advance="613" extends="-117 -200 759 700" texCoord="1511 1135 1584 1210"/>
-        <Glyph advance="527" extends="-111 -212 729 880" texCoord="832 899 902 990"/>
-        <Glyph advance="784" extends="-135 -212 945 880" texCoord="91 1462 181 1553"/>
-        <Glyph advance="627" extends="-252 -200 768 868" texCoord="1059 347 1144 436"/>
-        <Glyph advance="625" extends="-186 -200 810 868" texCoord="442 1343 525 1432"/>
-        <Glyph advance="661" extends="-147 -212 861 880" texCoord="276 1289 360 1380"/>
-        <Glyph advance="674" extends="-186 -200 870 868" texCoord="449 347 537 436"/>
-        <Glyph advance="565" extends="-186 -200 822 868" texCoord="609 437 693 526"/>
-        <Glyph advance="546" extends="-186 -200 798 868" texCoord="1268 437 1350 526"/>
-        <Glyph advance="712" extends="-146 -212 862 880" texCoord="276 1470 360 1561"/>
-        <Glyph advance="694" extends="-186 -200 906 868" texCoord="777 180 868 269"/>
-        <Glyph advance="414" extends="-196 -200 632 868" texCoord="1048 810 1117 899"/>
-        <Glyph advance="509" extends="-217 -212 719 868" texCoord="605 1253 683 1343"/>
-        <Glyph advance="623" extends="-186 -200 870 868" texCoord="187 1514 275 1603"/>
-        <Glyph advance="541" extends="-186 -200 690 868" texCoord="1927 707 2000 796"/>
-        <Glyph advance="824" extends="-186 -200 1038 868" texCoord="193 91 295 180"/>
-        <Glyph advance="693" extends="-186 -200 906 868" texCoord="868 180 959 269"/>
-        <Glyph advance="728" extends="-145 -212 899 880" texCoord="187 1334 274 1425"/>
-        <Glyph advance="597" extends="-186 -200 810 868" texCoord="442 1614 525 1703"/>
-        <Glyph advance="748" extends="-142 -255 902 897" texCoord="0 1478 87 1574"/>
-        <Glyph advance="610" extends="-186 -200 810 868" texCoord="442 1792 525 1881"/>
-        <Glyph advance="609" extends="-164 -212 772 880" texCoord="605 798 683 889"/>
-        <Glyph advance="558" extends="-127 -200 833 868" texCoord="525 1069 605 1158"/>
-        <Glyph advance="693" extends="-139 -212 905 868" texCoord="362 347 449 437"/>
-        <Glyph advance="592" extends="-110 -200 862 868" texCoord="1677 437 1758 526"/>
-        <Glyph advance="844" extends="-110 -200 1114 868" texCoord="1922 0 2024 89"/>
-        <Glyph advance="624" extends="-252 -200 900 868" texCoord="973 91 1069 180"/>
-        <Glyph advance="598" extends="-110 -200 874 868" texCoord="1186 437 1268 526"/>
-        <Glyph advance="613" extends="-218 -200 850 868" texCoord="187 1425 276 1514"/>
-        <Glyph advance="317" extends="-220 -361 572 875" texCoord="683 1648 749 1751"/>
-        <Glyph advance="519" extends="-105 -200 651 868" texCoord="1083 1333 1146 1422"/>
-        <Glyph advance="317" extends="-263 -361 529 875" texCoord="683 1545 749 1648"/>
-        <Glyph advance="552" extends="-153 111 699 879" texCoord="1146 1984 1217 2048"/>
-        <Glyph advance="413" extends="-232 -279 548 201" texCoord="1670 1572 1735 1612"/>
-        <Glyph advance="272" extends="-66 371 486 911" texCoord="1760 1977 1806 2022"/>
-        <Glyph advance="521" extends="-195 -212 669 712" texCoord="1146 1288 1218 1365"/>
-        <Glyph advance="555" extends="-193 -212 719 868" texCoord="1148 617 1224 707"/>
-        <Glyph advance="495" extends="-174 -212 690 712" texCoord="1146 1211 1218 1288"/>
-        <Glyph advance="555" extends="-173 -212 775 868" texCoord="525 1336 604 1426"/>
-        <Glyph advance="542" extends="-173 -212 715 712" texCoord="1083 989 1157 1066"/>
-        <Glyph advance="320" extends="-163 -200 581 916" texCoord="1021 1083 1083 1176"/>
-        <Glyph advance="555" extends="-204 -390 732 714" texCoord="525 977 603 1069"/>
-        <Glyph advance="548" extends="-193 -200 695 868" texCoord="1415 707 1489 796"/>
-        <Glyph advance="270" extends="-154 -200 494 916" texCoord="960 1625 1014 1718"/>
-        <Glyph advance="258" extends="-354 -361 474 923" texCoord="362 732 431 839"/>
-        <Glyph advance="487" extends="-193 -200 707 868" texCoord="1603 617 1678 706"/>
-        <Glyph advance="259" extends="-173 -200 439 868" texCoord="1021 1804 1072 1893"/>
-        <Glyph advance="846" extends="-192 -200 996 712" texCoord="579 270 678 346"/>
-        <Glyph advance="550" extends="-192 -200 696 712" texCoord="1674 989 1748 1065"/>
-        <Glyph advance="547" extends="-173 -212 703 712" texCoord="1601 989 1674 1066"/>
-        <Glyph advance="556" extends="-226 -362 710 706" texCoord="1237 528 1315 617"/>
-        <Glyph advance="555" extends="-172 -374 752 706" texCoord="605 1912 682 2002"/>
-        <Glyph advance="353" extends="-192 -200 588 712" texCoord="1218 1511 1283 1587"/>
-        <Glyph advance="479" extends="-190 -212 638 712" texCoord="1146 1754 1215 1831"/>
-        <Glyph advance="324" extends="-151 -200 533 820" texCoord="1021 1530 1078 1615"/>
-        <Glyph advance="540" extends="-160 -211 716 701" texCoord="1971 989 2044 1065"/>
-        <Glyph advance="444" extends="-157 -200 695 700" texCoord="1146 1604 1217 1679"/>
-        <Glyph advance="658" extends="-157 -200 911 700" texCoord="958 270 1047 345"/>
-        <Glyph advance="462" extends="-263 -200 709 700" texCoord="1384 270 1465 345"/>
-        <Glyph advance="435" extends="-262 -361 686 707" texCoord="1394 528 1473 617"/>
-        <Glyph advance="467" extends="-221 -200 679 700" texCoord="1230 989 1305 1064"/>
-        <Glyph advance="322" extends="-177 -362 579 874" texCoord="759 1351 822 1454"/>
-        <Glyph advance="289" extends="-104 -361 388 875" texCoord="1286 1284 1327 1387"/>
-        <Glyph advance="322" extends="-262 -363 494 873" texCoord="759 1454 822 1557"/>
-        <Glyph advance="539" extends="-175 -5 701 523" texCoord="1494 1420 1567 1464"/>
+        <Glyph advance="613" extends="-162 -200 711 696" texCoord="998 1499 1070 1573"/>
+        <Glyph advance="658" extends="-137 -79 759 586" texCoord="1750 1124 1824 1179"/>
+        <Glyph advance="613" extends="-117 -200 756 696" texCoord="998 1573 1070 1647"/>
+        <Glyph advance="527" extends="-111 -212 724 879" texCoord="958 795 1027 885"/>
+        <Glyph advance="784" extends="-135 -212 944 880" texCoord="0 1460 89 1550"/>
+        <Glyph advance="627" extends="-252 -200 765 868" texCoord="1121 342 1205 430"/>
+        <Glyph advance="625" extends="-186 -200 804 868" texCoord="354 1624 435 1712"/>
+        <Glyph advance="661" extends="-147 -212 855 880" texCoord="270 1090 352 1180"/>
+        <Glyph advance="674" extends="-186 -200 860 868" texCoord="439 342 525 430"/>
+        <Glyph advance="565" extends="-186 -200 811 868" texCoord="354 895 436 983"/>
+        <Glyph advance="546" extends="-186 -200 792 868" texCoord="436 1491 516 1579"/>
+        <Glyph advance="712" extends="-146 -212 855 880" texCoord="270 1269 352 1359"/>
+        <Glyph advance="694" extends="-186 -200 898 868" texCoord="764 178 853 266"/>
+        <Glyph advance="414" extends="-196 -200 627 868" texCoord="1298 795 1366 883"/>
+        <Glyph advance="509" extends="-217 -212 713 868" texCoord="597 1771 674 1860"/>
+        <Glyph advance="623" extends="-186 -200 870 868" texCoord="183 1403 270 1491"/>
+        <Glyph advance="541" extends="-186 -200 686 868" texCoord="1475 707 1547 795"/>
+        <Glyph advance="824" extends="-186 -200 1028 868" texCoord="189 90 289 178"/>
+        <Glyph advance="693" extends="-186 -200 897 868" texCoord="853 178 942 266"/>
+        <Glyph advance="728" extends="-145 -212 891 880" texCoord="183 1225 268 1315"/>
+        <Glyph advance="597" extends="-186 -200 801 868" texCoord="436 518 517 606"/>
+        <Glyph advance="748" extends="-142 -255 894 896" texCoord="0 1094 85 1189"/>
+        <Glyph advance="610" extends="-186 -200 801 868" texCoord="436 694 517 782"/>
+        <Glyph advance="609" extends="-164 -212 761 880" texCoord="597 1321 673 1411"/>
+        <Glyph advance="558" extends="-127 -200 828 868" texCoord="755 518 834 606"/>
+        <Glyph advance="693" extends="-139 -212 897 868" texCoord="354 342 439 431"/>
+        <Glyph advance="592" extends="-110 -200 862 868" texCoord="517 707 597 795"/>
+        <Glyph advance="844" extends="-110 -200 1114 868" texCoord="1888 0 1989 88"/>
+        <Glyph advance="624" extends="-252 -200 891 868" texCoord="954 90 1048 178"/>
+        <Glyph advance="598" extends="-110 -200 868 868" texCoord="436 1403 516 1491"/>
+        <Glyph advance="613" extends="-218 -200 840 868" texCoord="183 1315 270 1403"/>
+        <Glyph advance="317" extends="-220 -361 563 868" texCoord="674 1538 739 1639"/>
+        <Glyph advance="519" extends="-105 -200 642 868" texCoord="1400 964 1462 1052"/>
+        <Glyph advance="317" extends="-263 -361 520 868" texCoord="674 1437 739 1538"/>
+        <Glyph advance="552" extends="-153 111 693 868" texCoord="1351 1124 1421 1186"/>
+        <Glyph advance="413" extends="-232 -279 544 200" texCoord="1411 1419 1475 1459"/>
+        <Glyph advance="272" extends="-66 371 478 907" texCoord="1739 1590 1784 1634"/>
+        <Glyph advance="521" extends="-195 -212 662 704" texCoord="998 1202 1069 1277"/>
+        <Glyph advance="555" extends="-193 -212 709 868" texCoord="1935 606 2009 695"/>
+        <Glyph advance="495" extends="-174 -212 683 704" texCoord="998 1127 1069 1202"/>
+        <Glyph advance="555" extends="-173 -212 767 868" texCoord="597 696 674 785"/>
+        <Glyph advance="542" extends="-173 -212 709 704" texCoord="1672 888 1745 963"/>
+        <Glyph advance="320" extends="-163 -200 574 906" texCoord="937 964 998 1055"/>
+        <Glyph advance="555" extends="-204 -390 728 706" texCoord="597 606 674 696"/>
+        <Glyph advance="548" extends="-193 -200 689 868" texCoord="1114 707 1187 795"/>
+        <Glyph advance="270" extends="-154 -200 492 916" texCoord="883 1801 936 1893"/>
+        <Glyph advance="258" extends="-354 -361 474 917" texCoord="354 1519 422 1624"/>
+        <Glyph advance="487" extends="-193 -200 700 868" texCoord="749 707 822 795"/>
+        <Glyph advance="259" extends="-173 -200 435 868" texCoord="1997 518 2047 606"/>
+        <Glyph advance="846" extends="-192 -200 988 704" texCoord="567 267 664 341"/>
+        <Glyph advance="550" extends="-192 -200 690 704" texCoord="1462 964 1535 1038"/>
+        <Glyph advance="547" extends="-173 -212 702 704" texCoord="1204 964 1276 1039"/>
+        <Glyph advance="556" extends="-226 -362 710 704" texCoord="1920 518 1997 606"/>
+        <Glyph advance="555" extends="-172 -374 751 705" texCoord="959 606 1035 695"/>
+        <Glyph advance="353" extends="-192 -200 583 704" texCoord="1070 1823 1134 1897"/>
+        <Glyph advance="479" extends="-190 -212 631 704" texCoord="1070 1199 1138 1274"/>
+        <Glyph advance="324" extends="-151 -200 527 820" texCoord="1138 1198 1194 1282"/>
+        <Glyph advance="540" extends="-160 -211 713 696" texCoord="1753 964 1825 1039"/>
+        <Glyph advance="444" extends="-157 -200 687 696" texCoord="1138 1124 1207 1198"/>
+        <Glyph advance="658" extends="-157 -200 901 696" texCoord="940 267 1027 341"/>
+        <Glyph advance="462" extends="-263 -200 705 696" texCoord="1281 267 1361 341"/>
+        <Glyph advance="435" extends="-262 -361 678 696" texCoord="596 431 673 518"/>
+        <Glyph advance="467" extends="-221 -200 676 697" texCoord="1817 888 1891 962"/>
+        <Glyph advance="322" extends="-177 -362 568 868" texCoord="822 888 883 989"/>
+        <Glyph advance="289" extends="-104 -361 377 868" texCoord="1194 1492 1234 1593"/>
+        <Glyph advance="322" extends="-262 -363 483 867" texCoord="822 989 883 1090"/>
+        <Glyph advance="539" extends="-175 -5 700 523" texCoord="1440 1285 1512 1329"/>
         <Glyph advance="280"/>
-        <Glyph advance="283" extends="-200 -361 448 719" texCoord="1021 1440 1075 1530"/>
-        <Glyph advance="492" extends="-175 -287 689 781" texCoord="906 810 978 899"/>
-        <Glyph advance="585" extends="-178 -212 794 880" texCoord="442 1432 523 1523"/>
-        <Glyph advance="666" extends="-98 -116 778 760" texCoord="1952 1135 2025 1208"/>
-        <Glyph advance="598" extends="-153 -200 879 868" texCoord="276 1830 362 1919"/>
-        <Glyph advance="289" extends="-104 -361 388 875" texCoord="1218 1929 1259 2032"/>
-        <Glyph advance="526" extends="-243 -374 741 886" texCoord="0 610 82 715"/>
-        <Glyph advance="427" extends="-71 390 649 906" texCoord="1665 1612 1725 1655"/>
-        <Glyph advance="814" extends="-130 -212 962 880" texCoord="0 1205 91 1296"/>
-        <Glyph advance="363" extends="-128 196 544 892" texCoord="1423 1467 1479 1525"/>
-        <Glyph advance="563" extends="-155 -160 733 668" texCoord="1382 1066 1456 1135"/>
-        <Glyph advance="667" extends="-125 -110 775 598" texCoord="1581 1211 1656 1270"/>
+        <Glyph advance="283" extends="-200 -361 441 719" texCoord="1070 1897 1123 1986"/>
+        <Glyph advance="492" extends="-175 -287 680 771" texCoord="1126 431 1196 518"/>
+        <Glyph advance="585" extends="-178 -212 791 879" texCoord="354 1712 434 1802"/>
+        <Glyph advance="666" extends="-98 -116 776 758" texCoord="998 1944 1070 2016"/>
+        <Glyph advance="598" extends="-153 -200 868 868" texCoord="270 1625 354 1713"/>
+        <Glyph advance="289" extends="-104 -361 377 868" texCoord="1194 1391 1234 1492"/>
+        <Glyph advance="526" extends="-243 -374 737 880" texCoord="0 599 81 702"/>
+        <Glyph advance="427" extends="-71 390 648 897" texCoord="1707 1459 1766 1501"/>
+        <Glyph advance="814" extends="-130 -212 962 880" texCoord="89 997 179 1087"/>
+        <Glyph advance="363" extends="-128 196 542 891" texCoord="1241 1815 1296 1872"/>
+        <Glyph advance="563" extends="-155 -160 729 661" texCoord="1434 1052 1507 1120"/>
+        <Glyph advance="667" extends="-125 -110 771 596" texCoord="1565 1124 1639 1182"/>
         <Glyph advance="372">
             <SubGlyph glyph="322" position="0 0"/>
         </Glyph>
-        <Glyph advance="814" extends="-130 -212 962 880" texCoord="0 1114 91 1205"/>
-        <Glyph advance="382" extends="-81 401 615 869" texCoord="1735 1572 1793 1611"/>
-        <Glyph advance="358" extends="-113 208 559 880" texCoord="1423 1644 1479 1700"/>
-        <Glyph advance="653" extends="-135 -200 741 700" texCoord="1292 1135 1365 1210"/>
-        <Glyph advance="384" extends="-141 203 591 995" texCoord="1931 1211 1992 1277"/>
-        <Glyph advance="394" extends="-113 196 595 988" texCoord="1514 1284 1573 1350"/>
-        <Glyph advance="271" extends="-87 372 501 912" texCoord="1807 1746 1856 1791"/>
-        <Glyph advance="554" extends="-228 -362 720 706" texCoord="1315 528 1394 617"/>
-        <Glyph advance="522" extends="-126 -362 774 874" texCoord="276 805 351 908"/>
-        <Glyph advance="235" extends="-147 -17 393 523" texCoord="2003 1467 2048 1512"/>
-        <Glyph advance="294" extends="-224 -381 376 231" texCoord="1372 1824 1422 1875"/>
-        <Glyph advance="257" extends="-84 203 492 983" texCoord="1372 1578 1420 1643"/>
-        <Glyph advance="383" extends="-113 199 571 895" texCoord="1835 1359 1892 1417"/>
-        <Glyph advance="555" extends="-191 -160 697 668" texCoord="1308 1066 1382 1135"/>
-        <Glyph advance="824" extends="-100 -200 944 868" texCoord="798 347 885 436"/>
-        <Glyph advance="802" extends="-107 -200 937 868" texCoord="624 347 711 436"/>
-        <Glyph advance="906" extends="-118 -200 1022 892" texCoord="91 558 186 649"/>
-        <Glyph advance="527" extends="-214 -375 626 717" texCoord="759 1756 829 1847"/>
+        <Glyph advance="814" extends="-130 -212 962 880" texCoord="89 907 179 997"/>
+        <Glyph advance="382" extends="-81 401 609 868" texCoord="1646 1419 1703 1458"/>
+        <Glyph advance="358" extends="-113 208 559 880" texCoord="1241 1989 1296 2044"/>
+        <Glyph advance="653" extends="-135 -200 738 696" texCoord="998 1351 1070 1425"/>
+        <Glyph advance="384" extends="-141 203 582 986" texCoord="1345 1198 1405 1263"/>
+        <Glyph advance="394" extends="-113 196 585 986" texCoord="1513 1198 1571 1263"/>
+        <Glyph advance="271" extends="-87 372 497 907" texCoord="1999 1331 2047 1375"/>
+        <Glyph advance="554" extends="-228 -362 713 696" texCoord="519 431 596 518"/>
+        <Glyph advance="522" extends="-126 -362 768 868" texCoord="270 614 344 715"/>
+        <Glyph advance="235" extends="-147 -17 382 512" texCoord="1916 1590 1960 1634"/>
+        <Glyph advance="294" extends="-224 -381 376 225" texCoord="1359 1984 1409 2034"/>
+        <Glyph advance="257" extends="-84 203 488 979" texCoord="1299 1554 1346 1618"/>
+        <Glyph advance="383" extends="-113 199 564 892" texCoord="1241 1701 1297 1758"/>
+        <Glyph advance="555" extends="-191 -160 693 661" texCoord="1361 1052 1434 1120"/>
+        <Glyph advance="824" extends="-100 -200 939 868" texCoord="783 342 868 430"/>
+        <Glyph advance="802" extends="-107 -200 935 868" texCoord="611 342 697 430"/>
+        <Glyph advance="906" extends="-118 -200 1021 881" texCoord="89 548 183 637"/>
+        <Glyph advance="527" extends="-214 -375 621 717" texCoord="889 795 958 885"/>
         <Glyph advance="627">
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="437" position="148 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-32 544 532 1072" texCoord="1903 1794 1950 1838"/>
+        <Glyph advance="0" extends="-32 544 521 1064" texCoord="1707 1547 1753 1590"/>
         <Glyph advance="627">
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="424" position="234 172"/>
@@ -846,12 +846,12 @@
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="440" position="128 172"/>
         </Glyph>
-        <Glyph advance="429" extends="-86 375 646 903" texCoord="1544 1572 1605 1616"/>
+        <Glyph advance="429" extends="-86 375 637 895" texCoord="1707 1375 1767 1418"/>
         <Glyph advance="627">
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="442" position="139 172"/>
         </Glyph>
-        <Glyph advance="420" extends="-110 375 658 891" texCoord="1479 1834 1543 1877"/>
+        <Glyph advance="420" extends="-110 375 654 880" texCoord="1936 1331 1999 1373"/>
         <Glyph advance="627">
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="412" position="125 150"/>
@@ -860,8 +860,8 @@
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="445" position="161 67"/>
         </Glyph>
-        <Glyph advance="329" extends="-66 352 558 976" texCoord="1544 1520 1596 1572"/>
-        <Glyph advance="987" extends="-252 -200 1236 868" texCoord="377 0 501 89"/>
+        <Glyph advance="329" extends="-66 352 552 970" texCoord="1359 1578 1410 1629"/>
+        <Glyph advance="987" extends="-252 -200 1232 867" texCoord="371 0 493 88"/>
         <Glyph advance="661">
             <SubGlyph glyph="344" position="0 0"/>
             <SubGlyph glyph="428" position="191 0"/>
@@ -874,7 +874,7 @@
             <SubGlyph glyph="346" position="0 0"/>
             <SubGlyph glyph="450" position="196 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-65 544 535 1072" texCoord="1856 1746 1906 1790"/>
+        <Glyph advance="0" extends="-65 544 533 1064" texCoord="1564 1547 1613 1590"/>
         <Glyph advance="565">
             <SubGlyph glyph="346" position="0 0"/>
             <SubGlyph glyph="440" position="122 172"/>
@@ -899,7 +899,7 @@
             <SubGlyph glyph="350" position="0 0"/>
             <SubGlyph glyph="412" position="25 150"/>
         </Glyph>
-        <Glyph advance="710" extends="-178 -200 902 868" texCoord="1425 180 1515 269"/>
+        <Glyph advance="710" extends="-178 -200 896 868" texCoord="1402 178 1490 266"/>
         <Glyph advance="693">
             <SubGlyph glyph="355" position="0 0"/>
             <SubGlyph glyph="442" position="188 172"/>
@@ -924,8 +924,8 @@
             <SubGlyph glyph="356" position="0 0"/>
             <SubGlyph glyph="412" position="176 150"/>
         </Glyph>
-        <Glyph advance="593" extends="-123 -161 705 667" texCoord="832 1977 901 2046"/>
-        <Glyph advance="725" extends="-196 -212 932 880" texCoord="91 649 185 740"/>
+        <Glyph advance="593" extends="-123 -161 699 662" texCoord="1647 1052 1715 1120"/>
+        <Glyph advance="725" extends="-196 -212 928 879" texCoord="89 637 181 727"/>
         <Glyph advance="693">
             <SubGlyph glyph="362" position="0 0"/>
             <SubGlyph glyph="437" position="176 0"/>
@@ -946,8 +946,8 @@
             <SubGlyph glyph="366" position="0 0"/>
             <SubGlyph glyph="450" position="177 0"/>
         </Glyph>
-        <Glyph advance="583" extends="-187 -208 773 860" texCoord="605 528 685 617"/>
-        <Glyph advance="605" extends="-186 -213 774 891" texCoord="362 942 442 1034"/>
+        <Glyph advance="583" extends="-187 -208 762 859" texCoord="1146 518 1224 606"/>
+        <Glyph advance="605" extends="-186 -213 770 880" texCoord="436 1313 515 1403"/>
         <Glyph advance="521">
             <SubGlyph glyph="374" position="0 0"/>
             <SubGlyph glyph="373" position="81 0"/>
@@ -964,7 +964,7 @@
             <SubGlyph glyph="374" position="0 0"/>
             <SubGlyph glyph="477" position="63 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-110 375 658 891" texCoord="1479 1791 1543 1834"/>
+        <Glyph advance="0" extends="-110 375 654 880" texCoord="1873 1331 1936 1373"/>
         <Glyph advance="521">
             <SubGlyph glyph="374" position="0 0"/>
             <SubGlyph glyph="412" position="41 0"/>
@@ -973,7 +973,7 @@
             <SubGlyph glyph="374" position="0 0"/>
             <SubGlyph glyph="445" position="103 0"/>
         </Glyph>
-        <Glyph advance="870" extends="-194 -212 1042 712" texCoord="276 270 379 347"/>
+        <Glyph advance="870" extends="-194 -212 1037 704" texCoord="270 267 371 342"/>
         <Glyph advance="495">
             <SubGlyph glyph="376" position="0 0"/>
             <SubGlyph glyph="428" position="107 0"/>
@@ -998,7 +998,7 @@
             <SubGlyph glyph="487" position="0 0"/>
             <SubGlyph glyph="373" position="-63 0"/>
         </Glyph>
-        <Glyph advance="248" extends="-154 -200 446 700" texCoord="1761 1284 1811 1359"/>
+        <Glyph advance="248" extends="-154 -200 437 696" texCoord="1999 1124 2048 1198"/>
         <Glyph advance="285">
             <SubGlyph glyph="487" position="0 1"/>
             <SubGlyph glyph="424" position="14 1"/>
@@ -1011,7 +1011,7 @@
             <SubGlyph glyph="487" position="77 0"/>
             <SubGlyph glyph="412" position="-26 0"/>
         </Glyph>
-        <Glyph advance="569" extends="-176 -212 736 892" texCoord="683 798 759 890"/>
+        <Glyph advance="569" extends="-176 -212 728 881" texCoord="1186 606 1260 696"/>
         <Glyph advance="550">
             <SubGlyph glyph="387" position="0 0"/>
             <SubGlyph glyph="477" position="80 0"/>
@@ -1036,8 +1036,8 @@
             <SubGlyph glyph="388" position="0 0"/>
             <SubGlyph glyph="412" position="51 0"/>
         </Glyph>
-        <Glyph advance="619" extends="-148 -186 752 690" texCoord="1732 1135 1807 1208"/>
-        <Glyph advance="548" extends="-210 -212 750 712" texCoord="1304 270 1384 347"/>
+        <Glyph advance="619" extends="-148 -186 748 683" texCoord="1144 1052 1218 1124"/>
+        <Glyph advance="548" extends="-210 -212 739 709" texCoord="1408 431 1486 507"/>
         <Glyph advance="540">
             <SubGlyph glyph="394" position="0 0"/>
             <SubGlyph glyph="373" position="78 0"/>
@@ -1058,7 +1058,7 @@
             <SubGlyph glyph="398" position="0 0"/>
             <SubGlyph glyph="424" position="113 0"/>
         </Glyph>
-        <Glyph advance="557" extends="-226 -361 710 875" texCoord="187 361 265 464"/>
+        <Glyph advance="557" extends="-226 -361 710 868" texCoord="183 357 260 458"/>
         <Glyph advance="435">
             <SubGlyph glyph="398" position="0 0"/>
             <SubGlyph glyph="412" position="-4 0"/>
@@ -1075,17 +1075,17 @@
             <SubGlyph glyph="342" position="0 0"/>
             <SubGlyph glyph="510" position="144 172"/>
         </Glyph>
-        <Glyph advance="400" extends="-64 362 632 890" texCoord="1658 1655 1716 1699"/>
+        <Glyph advance="400" extends="-64 362 630 882" texCoord="1411 1550 1468 1593"/>
         <Glyph advance="521">
             <SubGlyph glyph="374" position="0 0"/>
             <SubGlyph glyph="510" position="68 0"/>
         </Glyph>
-        <Glyph advance="627" extends="-252 -373 768 875" texCoord="0 300 85 404"/>
+        <Glyph advance="627" extends="-252 -373 765 868" texCoord="0 295 84 397"/>
         <Glyph advance="521">
             <SubGlyph glyph="374" position="0 0"/>
             <SubGlyph glyph="514" position="253 0"/>
         </Glyph>
-        <Glyph advance="270" extends="-230 -373 358 203" texCoord="1711 1794 1760 1842"/>
+        <Glyph advance="270" extends="-230 -373 355 200" texCoord="1469 1897 1517 1944"/>
         <Glyph advance="661">
             <SubGlyph glyph="344" position="0 0"/>
             <SubGlyph glyph="450" position="235 0"/>
@@ -1098,7 +1098,7 @@
             <SubGlyph glyph="344" position="0 0"/>
             <SubGlyph glyph="518" position="268 172"/>
         </Glyph>
-        <Glyph advance="216" extends="-72 383 444 899" texCoord="1950 1794 1993 1837"/>
+        <Glyph advance="216" extends="-72 383 436 891" texCoord="1941 1459 1983 1501"/>
         <Glyph advance="495">
             <SubGlyph glyph="376" position="0 0"/>
             <SubGlyph glyph="518" position="144 0"/>
@@ -1107,7 +1107,7 @@
             <SubGlyph glyph="344" position="0 0"/>
             <SubGlyph glyph="521" position="162 172"/>
         </Glyph>
-        <Glyph advance="429" extends="-64 362 668 890" texCoord="1544 1616 1605 1660"/>
+        <Glyph advance="429" extends="-64 362 659 882" texCoord="1767 1375 1827 1418"/>
         <Glyph advance="495">
             <SubGlyph glyph="376" position="0 0"/>
             <SubGlyph glyph="521" position="43 0"/>
@@ -1120,11 +1120,11 @@
             <SubGlyph glyph="377" position="0 0"/>
             <SubGlyph glyph="525" position="484 2"/>
         </Glyph>
-        <Glyph advance="206" extends="-104 295 436 883" texCoord="1327 1808 1372 1857"/>
+        <Glyph advance="206" extends="-104 295 429 878" texCoord="1518 1737 1562 1785"/>
         <Glyph advance="730">
             <SubGlyph glyph="457" position="20 0"/>
         </Glyph>
-        <Glyph advance="602" extends="-173 -212 847 868" texCoord="276 1650 361 1740"/>
+        <Glyph advance="602" extends="-173 -212 837 868" texCoord="270 1447 353 1536"/>
         <Glyph advance="565">
             <SubGlyph glyph="346" position="0 0"/>
             <SubGlyph glyph="419" position="144 161"/>
@@ -1145,8 +1145,8 @@
             <SubGlyph glyph="346" position="0 0"/>
             <SubGlyph glyph="533" position="297 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-244 -373 344 203" texCoord="1711 1746 1760 1794"/>
-        <Glyph advance="541" extends="-173 -373 715 707" texCoord="1826 617 1900 707"/>
+        <Glyph advance="0" extends="-244 -373 341 200" texCoord="1469 1850 1517 1897"/>
+        <Glyph advance="541" extends="-173 -373 709 704" texCoord="749 1265 822 1354"/>
         <Glyph advance="565">
             <SubGlyph glyph="346" position="0 0"/>
             <SubGlyph glyph="521" position="123 172"/>
@@ -1175,13 +1175,13 @@
             <SubGlyph glyph="348" position="0 0"/>
             <SubGlyph glyph="542" position="230 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-266 -441 310 159" texCoord="1658 1946 1706 1996"/>
+        <Glyph advance="0" extends="-266 -441 304 154" texCoord="1469 1801 1516 1850"/>
         <Glyph advance="555">
             <SubGlyph glyph="380" position="0 0"/>
             <SubGlyph glyph="542" position="392 521"/>
         </Glyph>
-        <Glyph advance="710" extends="-177 -200 963 868" texCoord="1164 91 1259 180"/>
-        <Glyph advance="580" extends="-161 -200 727 868" texCoord="1341 707 1415 796"/>
+        <Glyph advance="710" extends="-177 -200 962 868" texCoord="1142 90 1236 178"/>
+        <Glyph advance="580" extends="-161 -200 721 868" texCoord="1041 707 1114 795"/>
         <Glyph advance="414">
             <SubGlyph glyph="350" position="0 0"/>
             <SubGlyph glyph="419" position="50 161"/>
@@ -1223,8 +1223,8 @@
             <SubGlyph glyph="385" position="0 0"/>
             <SubGlyph glyph="525" position="144 -2"/>
         </Glyph>
-        <Glyph advance="572" extends="-197 -200 727 868" texCoord="1706 528 1783 617"/>
-        <Glyph advance="273" extends="-197 -200 499 868" texCoord="960 1536 1018 1625"/>
+        <Glyph advance="572" extends="-197 -200 717 868" texCoord="1785 606 1860 694"/>
+        <Glyph advance="273" extends="-197 -200 491 868" texCoord="937 1766 994 1854"/>
         <Glyph advance="693">
             <SubGlyph glyph="355" position="0 0"/>
             <SubGlyph glyph="450" position="251 0"/>
@@ -1253,14 +1253,14 @@
             <SubGlyph glyph="356" position="0 0"/>
             <SubGlyph glyph="565" position="237 172"/>
         </Glyph>
-        <Glyph advance="394" extends="-97 372 635 912" texCoord="1479 1746 1540 1791"/>
+        <Glyph advance="394" extends="-97 372 632 908" texCoord="1813 1331 1873 1375"/>
         <Glyph advance="547">
             <SubGlyph glyph="388" position="0 0"/>
             <SubGlyph glyph="567" position="134 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-131 372 601 912" texCoord="1479 1701 1540 1746"/>
-        <Glyph advance="1070" extends="-147 -212 1317 880" texCoord="255 0 377 91"/>
-        <Glyph advance="910" extends="-174 -212 1086 712" texCoord="1515 180 1620 257"/>
+        <Glyph advance="0" extends="-131 372 598 908" texCoord="822 2004 882 2048"/>
+        <Glyph advance="1070" extends="-147 -212 1315 880" texCoord="251 0 371 90"/>
+        <Glyph advance="910" extends="-174 -212 1077 704" texCoord="1490 178 1593 253"/>
         <Glyph advance="610">
             <SubGlyph glyph="359" position="0 0"/>
             <SubGlyph glyph="450" position="199 0"/>
@@ -1345,7 +1345,7 @@
             <SubGlyph glyph="362" position="0 0"/>
             <SubGlyph glyph="533" position="211 0"/>
         </Glyph>
-        <Glyph advance="540" extends="-160 -373 716 707" texCoord="1781 707 1854 797"/>
+        <Glyph advance="540" extends="-160 -373 713 696" texCoord="1331 707 1403 795"/>
         <Glyph advance="598">
             <SubGlyph glyph="366" position="0 0"/>
             <SubGlyph glyph="412" position="100 150"/>
@@ -1374,7 +1374,7 @@
             <SubGlyph glyph="399" position="0 0"/>
             <SubGlyph glyph="521" position="31 0"/>
         </Glyph>
-        <Glyph advance="330" extends="-272 -373 592 911" texCoord="276 1182 348 1289"/>
+        <Glyph advance="330" extends="-272 -373 584 906" texCoord="270 985 340 1090"/>
         <Glyph advance="609">
             <SubGlyph glyph="360" position="0 0"/>
             <SubGlyph glyph="542" position="204 0"/>
@@ -1393,152 +1393,152 @@
         </Glyph>
         <Glyph advance="0"/>
         <Glyph advance="320"/>
-        <Glyph advance="283" extends="-156 -212 444 868" texCoord="1083 1691 1133 1781"/>
-        <Glyph advance="410" extends="-160 234 572 870" texCoord="1540 1467 1601 1520"/>
-        <Glyph advance="783" extends="-176 -200 964 868" texCoord="1449 91 1544 180"/>
-        <Glyph advance="619" extends="-175 -287 797 949" texCoord="0 1011 81 1114"/>
-        <Glyph advance="977" extends="-176 -212 1156 880" texCoord="959 0 1070 91"/>
-        <Glyph advance="702" extends="-176 -213 904 915" texCoord="0 917 90 1011"/>
-        <Glyph advance="222" extends="-160 234 392 870" texCoord="1658 1746 1704 1799"/>
-        <Glyph advance="366" extends="-165 -361 531 875" texCoord="832 1874 890 1977"/>
-        <Glyph advance="366" extends="-165 -361 531 875" texCoord="902 899 960 1002"/>
-        <Glyph advance="434" extends="-150 151 594 871" texCoord="1868 1284 1930 1344"/>
-        <Glyph advance="618" extends="-147 -200 765 700" texCoord="1489 899 1565 974"/>
-        <Glyph advance="243" extends="-176 -346 424 386" texCoord="1372 1643 1422 1704"/>
-        <Glyph advance="374" extends="-176 -16 556 524" texCoord="1479 1929 1540 1974"/>
-        <Glyph advance="243" extends="-176 -212 424 388" texCoord="1372 1977 1422 2027"/>
-        <Glyph advance="442" extends="-185 -200 631 868" texCoord="1325 810 1393 899"/>
-        <Glyph advance="652" extends="-155 -212 829 880" texCoord="442 891 524 982"/>
-        <Glyph advance="448" extends="-153 -200 555 868" texCoord="960 1265 1019 1354"/>
-        <Glyph advance="586" extends="-166 -200 758 880" texCoord="995 617 1072 707"/>
-        <Glyph advance="605" extends="-167 -212 757 880" texCoord="605 1162 682 1253"/>
-        <Glyph advance="626" extends="-177 -200 795 868" texCoord="1839 437 1920 526"/>
-        <Glyph advance="612" extends="-159 -212 765 868" texCoord="605 1822 682 1912"/>
-        <Glyph advance="632" extends="-149 -212 787 880" texCoord="605 617 683 708"/>
-        <Glyph advance="543" extends="-185 -200 715 868" texCoord="1453 617 1528 706"/>
-        <Glyph advance="625" extends="-162 -212 798 880" texCoord="362 1411 442 1502"/>
-        <Glyph advance="561" extends="-162 -200 726 880" texCoord="889 707 963 797"/>
-        <Glyph advance="243" extends="-176 -212 424 712" texCoord="1372 1436 1422 1513"/>
-        <Glyph advance="243" extends="-176 -346 424 710" texCoord="1218 1587 1268 1675"/>
-        <Glyph advance="573" extends="-160 -212 740 712" texCoord="1180 899 1255 976"/>
-        <Glyph advance="618" extends="-147 -104 765 616" texCoord="1893 1066 1969 1126"/>
-        <Glyph advance="573" extends="-160 -212 740 712" texCoord="1105 899 1180 976"/>
-        <Glyph advance="614" extends="-160 -212 764 880" texCoord="605 980 682 1071"/>
-        <Glyph advance="754" extends="-165 -212 927 880" texCoord="91 1013 182 1104"/>
-        <Glyph advance="690" extends="-195 -200 885 868" texCoord="1049 180 1139 269"/>
-        <Glyph advance="639" extends="-156 -200 828 868" texCoord="1595 437 1677 526"/>
-        <Glyph advance="673" extends="-165 -212 855 880" texCoord="276 714 361 805"/>
-        <Glyph advance="686" extends="-156 -200 852 868" texCoord="1567 347 1651 436"/>
-        <Glyph advance="580" extends="-156 -200 768 868" texCoord="1629 528 1706 617"/>
-        <Glyph advance="544" extends="-156 -200 732 868" texCoord="1563 707 1637 796"/>
-        <Glyph advance="719" extends="-165 -212 891 880" texCoord="187 574 275 665"/>
-        <Glyph advance="679" extends="-156 -200 840 868" texCoord="442 1254 525 1343"/>
-        <Glyph advance="458" extends="-143 -200 601 868" texCoord="1021 1176 1083 1265"/>
-        <Glyph advance="560" extends="-195 -212 717 868" texCoord="1072 617 1148 707"/>
-        <Glyph advance="659" extends="-156 -200 852 868" texCoord="1735 347 1819 436"/>
-        <Glyph advance="537" extends="-156 -200 732 868" texCoord="1489 707 1563 796"/>
-        <Glyph advance="842" extends="-156 -200 1008 868" texCoord="588 91 685 180"/>
-        <Glyph advance="700" extends="-156 -200 864 868" texCoord="1314 347 1399 436"/>
-        <Glyph advance="764" extends="-165 -212 939 880" texCoord="91 831 183 922"/>
-        <Glyph advance="626" extends="-156 -200 804 868" texCoord="525 528 605 617"/>
-        <Glyph advance="781" extends="-165 -255 987 885" texCoord="91 180 187 275"/>
-        <Glyph advance="654" extends="-156 -200 840 868" texCoord="442 1074 525 1163"/>
-        <Glyph advance="619" extends="-175 -212 797 880" texCoord="442 1163 523 1254"/>
-        <Glyph advance="617" extends="-185 -200 811 868" texCoord="442 1703 525 1792"/>
-        <Glyph advance="663" extends="-156 -212 828 868" texCoord="442 1881 524 1971"/>
-        <Glyph advance="656" extends="-190 -200 854 868" texCoord="885 347 972 436"/>
-        <Glyph advance="883" extends="-190 -200 1082 868" texCoord="1713 0 1819 89"/>
-        <Glyph advance="699" extends="-190 -200 890 868" texCoord="1139 180 1229 269"/>
-        <Glyph advance="687" extends="-190 -200 878 868" texCoord="1813 180 1902 269"/>
-        <Glyph advance="621" extends="-168 -200 792 868" texCoord="525 888 605 977"/>
-        <Glyph advance="333" extends="-156 -361 504 875" texCoord="902 1212 957 1315"/>
-        <Glyph advance="442" extends="-185 -200 631 868" texCoord="1257 810 1325 899"/>
-        <Glyph advance="333" extends="-167 -361 493 875" texCoord="902 1109 957 1212"/>
-        <Glyph advance="589" extends="-147 112 741 868" texCoord="1819 1066 1893 1129"/>
-        <Glyph advance="430" extends="-190 -328 626 200" texCoord="1736 1467 1804 1511"/>
-        <Glyph advance="314" extends="-147 374 465 938" texCoord="1658 1996 1709 2043"/>
-        <Glyph advance="553" extends="-176 -212 724 712" texCoord="1972 810 2047 887"/>
-        <Glyph advance="596" extends="-150 -212 774 868" texCoord="841 617 918 707"/>
-        <Glyph advance="520" extends="-176 -212 712 712" texCoord="1941 899 2015 976"/>
-        <Glyph advance="596" extends="-176 -212 772 868" texCoord="525 1516 604 1606"/>
-        <Glyph advance="566" extends="-176 -212 760 712" texCoord="1780 270 1858 347"/>
-        <Glyph advance="367" extends="-195 -200 549 928" texCoord="1021 989 1083 1083"/>
-        <Glyph advance="597" extends="-176 -403 748 713" texCoord="362 1593 439 1686"/>
-        <Glyph advance="572" extends="-150 -200 726 868" texCoord="1854 707 1927 796"/>
-        <Glyph advance="315" extends="-176 -200 496 964" texCoord="902 1521 958 1618"/>
-        <Glyph advance="259" extends="-270 -361 426 959" texCoord="759 1646 817 1756"/>
-        <Glyph advance="567" extends="-150 -200 774 868" texCoord="1783 528 1860 617"/>
-        <Glyph advance="314" extends="-150 -200 522 868" texCoord="960 1896 1016 1985"/>
-        <Glyph advance="886" extends="-150 -200 1038 712" texCoord="480 270 579 346"/>
-        <Glyph advance="572" extends="-150 -200 726 712" texCoord="1748 989 1821 1065"/>
-        <Glyph advance="573" extends="-176 -212 760 712" texCoord="1858 270 1936 347"/>
-        <Glyph advance="596" extends="-150 -361 774 719" texCoord="918 617 995 707"/>
-        <Glyph advance="601" extends="-176 -372 880 720" texCoord="187 768 275 859"/>
-        <Glyph advance="372" extends="-150 -200 558 724" texCoord="1083 1614 1142 1691"/>
-        <Glyph advance="534" extends="-179 -212 709 712" texCoord="1641 899 1715 976"/>
-        <Glyph advance="379" extends="-187 -200 557 820" texCoord="1021 1265 1083 1350"/>
-        <Glyph advance="570" extends="-150 -212 726 700" texCoord="1146 1135 1219 1211"/>
-        <Glyph advance="526" extends="-200 -200 736 700" texCoord="1027 899 1105 974"/>
-        <Glyph advance="723" extends="-200 -200 928 700" texCoord="772 270 866 345"/>
-        <Glyph advance="533" extends="-200 -200 736 700" texCoord="1816 810 1894 885"/>
-        <Glyph advance="518" extends="-200 -361 724 707" texCoord="1224 617 1301 706"/>
-        <Glyph advance="516" extends="-170 -200 706 700" texCoord="1807 1135 1880 1210"/>
-        <Glyph advance="370" extends="-176 -361 544 875" texCoord="832 1458 892 1561"/>
-        <Glyph advance="234" extends="-156 -361 396 875" texCoord="1021 1701 1067 1804"/>
-        <Glyph advance="370" extends="-166 -361 554 875" texCoord="832 1355 892 1458"/>
-        <Glyph advance="533" extends="-160 -54 704 570" texCoord="1689 1284 1761 1336"/>
+        <Glyph advance="283" extends="-156 -212 439 868" texCoord="1138 1858 1187 1947"/>
+        <Glyph advance="410" extends="-160 234 570 868" texCoord="1299 1383 1359 1435"/>
+        <Glyph advance="783" extends="-176 -200 959 868" texCoord="1423 90 1516 178"/>
+        <Glyph advance="619" extends="-175 -287 796 947" texCoord="0 993 80 1094"/>
+        <Glyph advance="977" extends="-176 -212 1153 880" texCoord="943 0 1052 90"/>
+        <Glyph advance="702" extends="-176 -213 898 906" texCoord="0 901 88 993"/>
+        <Glyph advance="222" extends="-160 234 382 868" texCoord="1469 1697 1514 1749"/>
+        <Glyph advance="366" extends="-165 -361 531 868" texCoord="822 1707 879 1808"/>
+        <Glyph advance="366" extends="-165 -361 531 868" texCoord="822 1808 879 1909"/>
+        <Glyph advance="434" extends="-150 151 583 868" texCoord="1860 1198 1920 1257"/>
+        <Glyph advance="618" extends="-147 -200 765 696" texCoord="1913 267 1988 341"/>
+        <Glyph advance="243" extends="-176 -346 419 383" texCoord="1299 1783 1348 1843"/>
+        <Glyph advance="374" extends="-176 -16 550 513" texCoord="1411 1375 1471 1419"/>
+        <Glyph advance="243" extends="-176 -212 419 383" texCoord="1469 1501 1518 1550"/>
+        <Glyph advance="442" extends="-185 -200 627 868" texCoord="1433 795 1500 883"/>
+        <Glyph advance="652" extends="-155 -212 818 880" texCoord="354 1073 434 1163"/>
+        <Glyph advance="448" extends="-153 -200 550 868" texCoord="937 1499 995 1587"/>
+        <Glyph advance="586" extends="-166 -200 747 880" texCoord="1336 606 1411 695"/>
+        <Glyph advance="605" extends="-167 -212 754 880" texCoord="597 1681 673 1771"/>
+        <Glyph advance="626" extends="-177 -200 792 868" texCoord="517 1063 597 1151"/>
+        <Glyph advance="612" extends="-159 -212 765 868" texCoord="883 606 959 695"/>
+        <Glyph advance="632" extends="-149 -212 778 880" texCoord="597 1142 673 1232"/>
+        <Glyph advance="543" extends="-185 -200 715 868" texCoord="674 1639 748 1727"/>
+        <Glyph advance="625" extends="-162 -212 787 880" texCoord="517 885 595 975"/>
+        <Glyph advance="561" extends="-162 -200 716 879" texCoord="749 1354 821 1443"/>
+        <Glyph advance="243" extends="-176 -212 419 710" texCoord="1571 1198 1620 1274"/>
+        <Glyph advance="243" extends="-176 -346 419 710" texCoord="1241 1198 1290 1285"/>
+        <Glyph advance="573" extends="-160 -212 733 710" texCoord="1010 888 1083 964"/>
+        <Glyph advance="618" extends="-147 -104 765 610" texCoord="1929 1052 2004 1111"/>
+        <Glyph advance="573" extends="-160 -212 733 710" texCoord="937 888 1010 964"/>
+        <Glyph advance="614" extends="-160 -212 764 880" texCoord="597 1501 673 1591"/>
+        <Glyph advance="754" extends="-165 -212 919 880" texCoord="0 1280 89 1370"/>
+        <Glyph advance="690" extends="-195 -200 885 868" texCoord="1031 178 1120 266"/>
+        <Glyph advance="639" extends="-156 -200 817 868" texCoord="517 518 597 606"/>
+        <Glyph advance="673" extends="-165 -212 851 880" texCoord="270 524 354 614"/>
+        <Glyph advance="686" extends="-156 -200 851 868" texCoord="1622 342 1705 430"/>
+        <Glyph advance="580" extends="-156 -200 758 868" texCoord="1710 606 1785 694"/>
+        <Glyph advance="544" extends="-156 -200 722 868" texCoord="1259 707 1331 795"/>
+        <Glyph advance="719" extends="-165 -212 883 880" texCoord="183 566 269 656"/>
+        <Glyph advance="679" extends="-156 -200 835 868" texCoord="354 1431 436 1519"/>
+        <Glyph advance="458" extends="-143 -200 601 868" texCoord="937 1055 998 1143"/>
+        <Glyph advance="560" extends="-195 -212 716 868" texCoord="1411 606 1486 695"/>
+        <Glyph advance="659" extends="-156 -200 849 868" texCoord="1788 342 1871 430"/>
+        <Glyph advance="537" extends="-156 -200 722 868" texCoord="1187 707 1259 795"/>
+        <Glyph advance="842" extends="-156 -200 998 868" texCoord="576 90 671 178"/>
+        <Glyph advance="700" extends="-156 -200 856 868" texCoord="1373 342 1456 430"/>
+        <Glyph advance="764" extends="-165 -212 929 880" texCoord="89 817 179 907"/>
+        <Glyph advance="626" extends="-156 -200 804 868" texCoord="517 1713 596 1801"/>
+        <Glyph advance="781" extends="-165 -255 981 880" texCoord="89 178 183 271"/>
+        <Glyph advance="654" extends="-156 -200 837 868" texCoord="354 1253 436 1341"/>
+        <Glyph advance="619" extends="-175 -212 796 880" texCoord="354 1341 434 1431"/>
+        <Glyph advance="617" extends="-185 -200 802 868" texCoord="436 606 517 694"/>
+        <Glyph advance="663" extends="-156 -212 819 868" texCoord="436 782 516 871"/>
+        <Glyph advance="656" extends="-190 -200 846 868" texCoord="868 342 953 430"/>
+        <Glyph advance="883" extends="-190 -200 1073 868" texCoord="1683 0 1787 88"/>
+        <Glyph advance="699" extends="-190 -200 889 868" texCoord="1120 178 1209 266"/>
+        <Glyph advance="687" extends="-190 -200 877 868" texCoord="1783 178 1871 266"/>
+        <Glyph advance="621" extends="-168 -200 789 868" texCoord="676 518 755 606"/>
+        <Glyph advance="333" extends="-156 -361 500 868" texCoord="883 1094 937 1195"/>
+        <Glyph advance="442" extends="-185 -200 627 868" texCoord="1366 795 1433 883"/>
+        <Glyph advance="333" extends="-167 -361 489 868" texCoord="883 993 937 1094"/>
+        <Glyph advance="589" extends="-147 112 736 868" texCoord="1856 1052 1929 1114"/>
+        <Glyph advance="430" extends="-190 -328 620 200" texCoord="1426 1331 1493 1375"/>
+        <Glyph advance="314" extends="-147 374 461 928" texCoord="1724 1501 1774 1547"/>
+        <Glyph advance="553" extends="-176 -212 720 710" texCoord="1969 795 2043 871"/>
+        <Glyph advance="596" extends="-150 -212 772 868" texCoord="1035 606 1111 695"/>
+        <Glyph advance="520" extends="-176 -212 702 710" texCoord="1600 888 1672 964"/>
+        <Glyph advance="596" extends="-176 -212 763 868" texCoord="597 874 674 963"/>
+        <Glyph advance="566" extends="-176 -212 749 710" texCoord="1639 431 1715 507"/>
+        <Glyph advance="367" extends="-195 -200 547 928" texCoord="1908 795 1969 888"/>
+        <Glyph advance="597" extends="-176 -403 746 711" texCoord="517 1329 593 1421"/>
+        <Glyph advance="572" extends="-150 -200 722 868" texCoord="1403 707 1475 795"/>
+        <Glyph advance="315" extends="-176 -200 485 958" texCoord="937 1232 992 1327"/>
+        <Glyph advance="259" extends="-270 -361 422 958" texCoord="822 1090 879 1198"/>
+        <Glyph advance="567" extends="-150 -200 763 868" texCoord="1860 606 1935 694"/>
+        <Glyph advance="314" extends="-150 -200 511 868" texCoord="1070 1735 1125 1823"/>
+        <Glyph advance="886" extends="-150 -200 1036 710" texCoord="470 267 567 342"/>
+        <Glyph advance="572" extends="-150 -200 722 710" texCoord="1535 964 1607 1039"/>
+        <Glyph advance="573" extends="-176 -212 749 710" texCoord="1715 431 1791 507"/>
+        <Glyph advance="596" extends="-150 -361 772 710" texCoord="1260 606 1336 694"/>
+        <Glyph advance="601" extends="-176 -372 874 710" texCoord="1959 178 2045 267"/>
+        <Glyph advance="372" extends="-150 -200 557 713" texCoord="1988 267 2046 342"/>
+        <Glyph advance="534" extends="-179 -212 707 710" texCoord="1304 888 1377 964"/>
+        <Glyph advance="379" extends="-187 -200 555 820" texCoord="937 1415 998 1499"/>
+        <Glyph advance="570" extends="-150 -212 719 696" texCoord="998 1052 1070 1127"/>
+        <Glyph advance="526" extends="-200 -200 726 696" texCoord="1671 267 1747 341"/>
+        <Glyph advance="723" extends="-200 -200 923 696" texCoord="757 267 849 341"/>
+        <Glyph advance="533" extends="-200 -200 733 696" texCoord="1517 267 1594 341"/>
+        <Glyph advance="518" extends="-200 -361 718 696" texCoord="750 431 826 518"/>
+        <Glyph advance="516" extends="-170 -200 696 696" texCoord="998 1721 1069 1795"/>
+        <Glyph advance="370" extends="-176 -361 536 868" texCoord="822 1299 881 1400"/>
+        <Glyph advance="234" extends="-156 -361 390 868" texCoord="1138 1467 1183 1568"/>
+        <Glyph advance="370" extends="-166 -361 546 868" texCoord="822 1198 881 1299"/>
+        <Glyph advance="533" extends="-160 -54 693 570" texCoord="1734 1198 1804 1250"/>
         <Glyph advance="320"/>
-        <Glyph advance="283" extends="-156 -361 444 719" texCoord="1083 1781 1133 1871"/>
-        <Glyph advance="520" extends="-176 -287 712 781" texCoord="832 810 906 899"/>
-        <Glyph advance="617" extends="-150 -212 810 880" texCoord="362 1320 442 1411"/>
-        <Glyph advance="596" extends="-147 -125 753 775" texCoord="1821 989 1896 1064"/>
-        <Glyph advance="687" extends="-190 -200 878 868" texCoord="1902 180 1991 269"/>
-        <Glyph advance="216" extends="-156 -361 372 875" texCoord="1021 1893 1065 1996"/>
-        <Glyph advance="578" extends="-179 -373 757 887" texCoord="91 1733 169 1838"/>
-        <Glyph advance="452" extends="-141 378 603 930" texCoord="1021 1996 1083 2042"/>
-        <Glyph advance="798" extends="-147 -212 945 880" texCoord="0 1847 91 1938"/>
-        <Glyph advance="395" extends="-147 195 549 891" texCoord="1661 1359 1719 1417"/>
-        <Glyph advance="669" extends="-147 -160 825 668" texCoord="1146 1066 1227 1135"/>
-        <Glyph advance="618" extends="-147 -144 765 624" texCoord="1600 1066 1676 1130"/>
-        <Glyph advance="350" extends="-176 -16 532 524" texCoord="1544 1799 1603 1844"/>
-        <Glyph advance="798" extends="-147 -212 945 880" texCoord="0 1665 91 1756"/>
-        <Glyph advance="405" extends="-147 370 561 874" texCoord="1903 1612 1962 1654"/>
-        <Glyph advance="404" extends="-160 154 572 886" texCoord="1930 1284 1991 1345"/>
-        <Glyph advance="618" extends="-147 -200 765 700" texCoord="1715 899 1791 974"/>
-        <Glyph advance="407" extends="-147 203 561 995" texCoord="1573 1284 1632 1350"/>
-        <Glyph advance="413" extends="-147 195 561 987" texCoord="1381 1284 1440 1350"/>
-        <Glyph advance="314" extends="-147 374 465 938" texCoord="1762 1699 1813 1746"/>
-        <Glyph advance="591" extends="-150 -361 798 707" texCoord="1473 528 1552 617"/>
-        <Glyph advance="515" extends="-176 -362 700 874" texCoord="362 533 435 636"/>
-        <Glyph advance="301" extends="-147 -49 453 551" texCoord="1605 1947 1655 1997"/>
-        <Glyph advance="321" extends="-127 -387 497 225" texCoord="1818 1520 1870 1571"/>
-        <Glyph advance="291" extends="-147 203 441 983" texCoord="1372 1513 1421 1578"/>
-        <Glyph advance="409" extends="-143 195 565 891" texCoord="1602 1359 1661 1417"/>
-        <Glyph advance="669" extends="-147 -160 825 668" texCoord="1227 1066 1308 1135"/>
-        <Glyph advance="853" extends="-147 -200 1005 868" texCoord="781 91 877 180"/>
-        <Glyph advance="856" extends="-147 -200 1005 868" texCoord="685 91 781 180"/>
-        <Glyph advance="959" extends="-147 -200 1113 880" texCoord="1608 0 1713 90"/>
-        <Glyph advance="614" extends="-150 -372 774 720" texCoord="605 1071 682 1162"/>
+        <Glyph advance="283" extends="-156 -361 439 719" texCoord="1138 1947 1187 2036"/>
+        <Glyph advance="520" extends="-176 -287 702 771" texCoord="982 431 1054 518"/>
+        <Glyph advance="617" extends="-150 -212 800 879" texCoord="517 795 595 885"/>
+        <Glyph advance="596" extends="-147 -125 743 765" texCoord="1607 964 1680 1037"/>
+        <Glyph advance="687" extends="-190 -200 877 867" texCoord="1871 178 1959 266"/>
+        <Glyph advance="216" extends="-156 -361 372 868" texCoord="1138 1568 1182 1669"/>
+        <Glyph advance="578" extends="-179 -373 751 880" texCoord="0 1640 77 1743"/>
+        <Glyph advance="452" extends="-141 378 593 919" texCoord="1299 1907 1359 1952"/>
+        <Glyph advance="798" extends="-147 -212 945 879" texCoord="89 1627 179 1717"/>
+        <Glyph advance="395" extends="-147 195 542 891" texCoord="1241 1531 1298 1588"/>
+        <Glyph advance="669" extends="-147 -160 816 661" texCoord="1825 964 1904 1032"/>
+        <Glyph advance="618" extends="-147 -144 765 622" texCoord="517 1981 592 2044"/>
+        <Glyph advance="350" extends="-176 -16 526 513" texCoord="1411 1459 1469 1503"/>
+        <Glyph advance="798" extends="-147 -212 945 879" texCoord="89 1447 179 1537"/>
+        <Glyph advance="405" extends="-147 370 552 868" texCoord="1883 1459 1941 1500"/>
+        <Glyph advance="404" extends="-160 154 564 879" texCoord="1920 1198 1980 1258"/>
+        <Glyph advance="618" extends="-147 -200 765 695" texCoord="1377 888 1452 962"/>
+        <Glyph advance="407" extends="-147 203 554 985" texCoord="1620 1198 1678 1262"/>
+        <Glyph advance="413" extends="-147 195 560 985" texCoord="1455 1198 1513 1263"/>
+        <Glyph advance="314" extends="-147 374 461 927" texCoord="1824 1501 1874 1547"/>
+        <Glyph advance="591" extends="-150 -361 788 696" texCoord="673 431 750 518"/>
+        <Glyph advance="515" extends="-176 -362 695 867" texCoord="354 521 426 622"/>
+        <Glyph advance="301" extends="-147 -49 448 545" texCoord="1469 1648 1518 1697"/>
+        <Glyph advance="321" extends="-127 -387 488 225" texCoord="1359 1731 1410 1782"/>
+        <Glyph advance="291" extends="-147 203 438 979" texCoord="1299 1435 1347 1499"/>
+        <Glyph advance="409" extends="-143 195 560 889" texCoord="1241 1399 1299 1456"/>
+        <Glyph advance="669" extends="-147 -160 816 661" texCoord="1904 964 1983 1032"/>
+        <Glyph advance="853" extends="-147 -200 1000 867" texCoord="766 90 860 178"/>
+        <Glyph advance="856" extends="-147 -200 1003 867" texCoord="671 90 766 178"/>
+        <Glyph advance="959" extends="-147 -200 1106 879" texCoord="1580 0 1683 89"/>
+        <Glyph advance="614" extends="-150 -372 774 719" texCoord="597 1591 673 1681"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="733" position="198 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 531 424 1095" texCoord="1658 1852 1710 1899"/>
+        <Glyph advance="0" extends="-200 531 419 1085" texCoord="1622 1501 1673 1547"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="735" position="275 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 531 424 1095" texCoord="1658 1899 1710 1946"/>
+        <Glyph advance="0" extends="-200 531 418 1085" texCoord="1673 1501 1724 1547"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="737" position="148 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 531 604 1083" texCoord="1838 1420 1905 1466"/>
+        <Glyph advance="0" extends="-200 531 593 1083" texCoord="1778 1285 1843 1331"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="739" position="123 160"/>
         </Glyph>
-        <Glyph advance="444" extends="-163 369 617 897" texCoord="1479 1520 1544 1564"/>
+        <Glyph advance="444" extends="-163 369 607 889" texCoord="1688 1331 1751 1374"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="708" position="119 148"/>
@@ -1547,13 +1547,13 @@
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="742" position="197 61"/>
         </Glyph>
-        <Glyph advance="295" extends="-185 335 487 1007" texCoord="1423 1756 1479 1812"/>
-        <Glyph advance="1016" extends="-195 -200 1197 868" texCoord="732 0 848 89"/>
+        <Glyph advance="295" extends="-185 335 480 1000" texCoord="1299 1618 1354 1673"/>
+        <Glyph advance="1016" extends="-195 -200 1194 867" texCoord="720 0 834 88"/>
         <Glyph advance="673">
             <SubGlyph glyph="640" position="0 0"/>
             <SubGlyph glyph="745" position="249 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -387 424 225" texCoord="1870 1520 1922 1571"/>
+        <Glyph advance="0" extends="-200 -387 415 225" texCoord="1359 1782 1410 1833"/>
         <Glyph advance="580">
             <SubGlyph glyph="642" position="0 0"/>
             <SubGlyph glyph="733" position="156 0"/>
@@ -1586,7 +1586,7 @@
             <SubGlyph glyph="646" position="0 0"/>
             <SubGlyph glyph="708" position="5 148"/>
         </Glyph>
-        <Glyph advance="773" extends="-187 -200 941 868" texCoord="1653 91 1747 180"/>
+        <Glyph advance="773" extends="-187 -200 938 868" texCoord="1623 90 1715 178"/>
         <Glyph advance="700">
             <SubGlyph glyph="651" position="0 0"/>
             <SubGlyph glyph="739" position="143 160"/>
@@ -1611,8 +1611,8 @@
             <SubGlyph glyph="652" position="0 0"/>
             <SubGlyph glyph="708" position="156 148"/>
         </Glyph>
-        <Glyph advance="539" extends="-159 -178 705 686" texCoord="1291 1211 1363 1283"/>
-        <Glyph advance="763" extends="-165 -212 939 880" texCoord="91 922 183 1013"/>
+        <Glyph advance="539" extends="-159 -178 698 676" texCoord="749 1978 820 2048"/>
+        <Glyph advance="763" extends="-165 -212 928 879" texCoord="89 1267 179 1357"/>
         <Glyph advance="663">
             <SubGlyph glyph="658" position="0 0"/>
             <SubGlyph glyph="733" position="185 0"/>
@@ -1633,39 +1633,39 @@
             <SubGlyph glyph="662" position="0 0"/>
             <SubGlyph glyph="735" position="274 0"/>
         </Glyph>
-        <Glyph advance="615" extends="-156 -200 804 868" texCoord="525 1876 605 1965"/>
-        <Glyph advance="621" extends="-156 -212 804 880" texCoord="362 1126 442 1217"/>
+        <Glyph advance="615" extends="-156 -200 793 867" texCoord="1068 518 1146 606"/>
+        <Glyph advance="621" extends="-156 -212 799 879" texCoord="436 1758 515 1848"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="771" position="146 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 374 412 938" texCoord="1711 1699 1762 1746"/>
+        <Glyph advance="0" extends="-200 374 408 928" texCoord="1774 1501 1824 1547"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="773" position="217 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 374 412 938" texCoord="1813 1699 1864 1746"/>
+        <Glyph advance="0" extends="-200 374 408 927" texCoord="1874 1501 1924 1547"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="775" position="88 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 374 604 926" texCoord="1601 1467 1668 1513"/>
+        <Glyph advance="0" extends="-200 374 593 926" texCoord="1973 1285 2038 1331"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="777" position="100 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 369 580 897" texCoord="1938 1467 2003 1511"/>
+        <Glyph advance="0" extends="-200 369 570 889" texCoord="1625 1331 1688 1374"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="779" position="118 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 378 544 930" texCoord="1479 1609 1541 1655"/>
+        <Glyph advance="0" extends="-200 378 534 919" texCoord="1299 1952 1359 1997"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="781" position="152 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 335 472 1007" texCoord="1423 1812 1479 1868"/>
-        <Glyph advance="883" extends="-176 -212 1072 712" texCoord="1620 180 1724 257"/>
+        <Glyph advance="0" extends="-200 335 465 1000" texCoord="1299 1673 1354 1728"/>
+        <Glyph advance="883" extends="-176 -212 1066 710" texCoord="1593 178 1695 254"/>
         <Glyph advance="520">
             <SubGlyph glyph="672" position="0 0"/>
             <SubGlyph glyph="745" position="167 0"/>
@@ -1690,7 +1690,7 @@
             <SubGlyph glyph="789" position="0 0"/>
             <SubGlyph glyph="771" position="22 0"/>
         </Glyph>
-        <Glyph advance="301" extends="-176 -200 472 700" texCoord="1327 1284 1381 1359"/>
+        <Glyph advance="301" extends="-176 -200 471 696" texCoord="1886 1124 1939 1198"/>
         <Glyph advance="301">
             <SubGlyph glyph="789" position="0 0"/>
             <SubGlyph glyph="773" position="93 0"/>
@@ -1703,7 +1703,7 @@
             <SubGlyph glyph="789" position="0 0"/>
             <SubGlyph glyph="779" position="-6 0"/>
         </Glyph>
-        <Glyph advance="589" extends="-176 -212 760 940" texCoord="362 636 440 732"/>
+        <Glyph advance="589" extends="-176 -212 754 934" texCoord="354 801 431 895"/>
         <Glyph advance="572">
             <SubGlyph glyph="683" position="0 0"/>
             <SubGlyph glyph="777" position="120 0"/>
@@ -1728,8 +1728,8 @@
             <SubGlyph glyph="684" position="0 0"/>
             <SubGlyph glyph="779" position="120 0"/>
         </Glyph>
-        <Glyph advance="594" extends="-159 -212 753 712" texCoord="442 1971 518 2048"/>
-        <Glyph advance="573" extends="-176 -226 760 734" texCoord="525 1965 603 2045"/>
+        <Glyph advance="594" extends="-159 -212 753 710" texCoord="1866 431 1941 507"/>
+        <Glyph advance="573" extends="-176 -226 749 724" texCoord="1196 431 1272 509"/>
         <Glyph advance="570">
             <SubGlyph glyph="690" position="0 0"/>
             <SubGlyph glyph="771" position="146 0"/>
@@ -1750,7 +1750,7 @@
             <SubGlyph glyph="694" position="0 0"/>
             <SubGlyph glyph="773" position="192 0"/>
         </Glyph>
-        <Glyph advance="596" extends="-150 -361 774 875" texCoord="187 1039 264 1142"/>
+        <Glyph advance="596" extends="-150 -361 772 868" texCoord="183 935 259 1036"/>
         <Glyph advance="518">
             <SubGlyph glyph="694" position="0 0"/>
             <SubGlyph glyph="779" position="93 0"/>
@@ -1763,27 +1763,27 @@
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="811" position="135 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 370 508 874" texCoord="1844 1612 1903 1654"/>
+        <Glyph advance="0" extends="-200 370 499 868" texCoord="1825 1459 1883 1500"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="813" position="144 162"/>
         </Glyph>
-        <Glyph advance="373" extends="-143 369 553 897" texCoord="1832 1655 1890 1699"/>
+        <Glyph advance="373" extends="-143 369 544 889" texCoord="1411 1679 1468 1722"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="815" position="141 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 369 496 897" texCoord="1890 1655 1948 1699"/>
+        <Glyph advance="0" extends="-200 369 487 889" texCoord="1411 1722 1468 1765"/>
         <Glyph advance="690">
             <SubGlyph glyph="638" position="0 0"/>
             <SubGlyph glyph="817" position="433 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -374 424 202" texCoord="1605 1799 1657 1847"/>
+        <Glyph advance="0" extends="-200 -374 421 200" texCoord="1411 1901 1462 1948"/>
         <Glyph advance="553">
             <SubGlyph glyph="670" position="0 0"/>
             <SubGlyph glyph="819" position="297 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -374 424 202" texCoord="1605 1703 1657 1751"/>
+        <Glyph advance="0" extends="-200 -374 421 200" texCoord="1411 1807 1462 1854"/>
         <Glyph advance="673">
             <SubGlyph glyph="640" position="0 0"/>
             <SubGlyph glyph="735" position="287 0"/>
@@ -1796,22 +1796,22 @@
             <SubGlyph glyph="640" position="0 0"/>
             <SubGlyph glyph="823" position="256 148"/>
         </Glyph>
-        <Glyph advance="201" extends="-170 378 382 930" texCoord="1760 1839 1806 1885"/>
+        <Glyph advance="201" extends="-170 378 371 919" texCoord="1604 1590 1649 1635"/>
         <Glyph advance="520">
             <SubGlyph glyph="672" position="0 0"/>
             <SubGlyph glyph="825" position="209 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 378 352 930" texCoord="1760 1931 1806 1977"/>
+        <Glyph advance="0" extends="-200 378 341 919" texCoord="1694 1590 1739 1635"/>
         <Glyph advance="673">
             <SubGlyph glyph="640" position="0 0"/>
             <SubGlyph glyph="827" position="123 157"/>
         </Glyph>
-        <Glyph advance="467" extends="-163 368 641 920" texCoord="1972 1420 2039 1466"/>
+        <Glyph advance="467" extends="-163 368 630 920" texCoord="1908 1285 1973 1331"/>
         <Glyph advance="520">
             <SubGlyph glyph="672" position="0 0"/>
             <SubGlyph glyph="829" position="83 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 368 604 920" texCoord="1905 1420 1972 1466"/>
+        <Glyph advance="0" extends="-200 368 593 920" texCoord="1843 1285 1908 1331"/>
         <Glyph advance="686">
             <SubGlyph glyph="641" position="0 0"/>
             <SubGlyph glyph="827" position="99 157"/>
@@ -1820,11 +1820,11 @@
             <SubGlyph glyph="673" position="0 0"/>
             <SubGlyph glyph="832" position="558 -1"/>
         </Glyph>
-        <Glyph advance="0" extends="-180 296 360 896" texCoord="1327 1758 1372 1808"/>
+        <Glyph advance="0" extends="-180 296 355 888" texCoord="1518 1688 1562 1737"/>
         <Glyph advance="773">
             <SubGlyph glyph="754" position="0 0"/>
         </Glyph>
-        <Glyph advance="632" extends="-176 -212 820 904" texCoord="276 998 359 1091"/>
+        <Glyph advance="632" extends="-176 -212 812 898" texCoord="270 804 351 895"/>
         <Glyph advance="580">
             <SubGlyph glyph="642" position="0 0"/>
             <SubGlyph glyph="715" position="100 177"/>
@@ -1845,7 +1845,7 @@
             <SubGlyph glyph="642" position="0 0"/>
             <SubGlyph glyph="817" position="301 0"/>
         </Glyph>
-        <Glyph advance="566" extends="-176 -374 760 718" texCoord="605 1640 683 1731"/>
+        <Glyph advance="566" extends="-176 -374 749 710" texCoord="597 1949 673 2038"/>
         <Glyph advance="580">
             <SubGlyph glyph="642" position="0 0"/>
             <SubGlyph glyph="827" position="69 157"/>
@@ -1874,13 +1874,13 @@
             <SubGlyph glyph="644" position="0 0"/>
             <SubGlyph glyph="848" position="217 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 -451 424 161" texCoord="1544 1748 1596 1799"/>
+        <Glyph advance="0" extends="-200 -451 420 155" texCoord="1359 1833 1410 1883"/>
         <Glyph advance="597">
             <SubGlyph glyph="676" position="0 0"/>
             <SubGlyph glyph="848" position="434 523"/>
         </Glyph>
-        <Glyph advance="740" extends="-185 -200 931 868" texCoord="1949 91 2042 180"/>
-        <Glyph advance="629" extends="-187 -200 785 904" texCoord="442 982 523 1074"/>
+        <Glyph advance="740" extends="-185 -200 925 868" texCoord="1913 90 2004 178"/>
+        <Glyph advance="629" extends="-187 -200 779 898" texCoord="354 1163 433 1253"/>
         <Glyph advance="458">
             <SubGlyph glyph="646" position="0 0"/>
             <SubGlyph glyph="715" position="28 177"/>
@@ -1897,7 +1897,7 @@
             <SubGlyph glyph="678" position="0 0"/>
             <SubGlyph glyph="856" position="3 0"/>
         </Glyph>
-        <Glyph advance="295" extends="-163 -374 461 202" texCoord="1605 1751 1657 1799"/>
+        <Glyph advance="295" extends="-163 -374 458 200" texCoord="1411 1854 1462 1901"/>
         <Glyph advance="659">
             <SubGlyph glyph="648" position="0 0"/>
             <SubGlyph glyph="848" position="186 0"/>
@@ -1922,8 +1922,8 @@
             <SubGlyph glyph="681" position="0 0"/>
             <SubGlyph glyph="832" position="213 2"/>
         </Glyph>
-        <Glyph advance="586" extends="-187 -200 773 868" texCoord="525 799 605 888"/>
-        <Glyph advance="322" extends="-195 -200 525 868" texCoord="960 1176 1020 1265"/>
+        <Glyph advance="586" extends="-187 -200 771 868" texCoord="597 518 676 606"/>
+        <Glyph advance="322" extends="-195 -200 519 868" texCoord="937 1327 996 1415"/>
         <Glyph advance="700">
             <SubGlyph glyph="651" position="0 0"/>
             <SubGlyph glyph="735" position="295 0"/>
@@ -1952,14 +1952,14 @@
             <SubGlyph glyph="652" position="0 0"/>
             <SubGlyph glyph="872" position="169 172"/>
         </Glyph>
-        <Glyph advance="490" extends="-163 374 653 938" texCoord="1635 1420 1703 1467"/>
+        <Glyph advance="490" extends="-163 374 648 927" texCoord="1579 1285 1646 1331"/>
         <Glyph advance="573">
             <SubGlyph glyph="684" position="0 0"/>
             <SubGlyph glyph="874" position="129 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-200 374 616 938" texCoord="1567 1420 1635 1467"/>
-        <Glyph advance="1061" extends="-165 -212 1239 880" texCoord="501 0 618 91"/>
-        <Glyph advance="937" extends="-176 -212 1120 712" texCoord="1841 91 1949 168"/>
+        <Glyph advance="0" extends="-200 374 611 927" texCoord="1512 1285 1579 1331"/>
+        <Glyph advance="1061" extends="-165 -212 1239 880" texCoord="493 0 608 90"/>
+        <Glyph advance="937" extends="-176 -212 1120 710" texCoord="1807 90 1913 166"/>
         <Glyph advance="654">
             <SubGlyph glyph="655" position="0 0"/>
             <SubGlyph glyph="735" position="237 0"/>
@@ -2044,7 +2044,7 @@
             <SubGlyph glyph="658" position="0 0"/>
             <SubGlyph glyph="817" position="219 0"/>
         </Glyph>
-        <Glyph advance="571" extends="-150 -374 726 706" texCoord="759 810 832 900"/>
+        <Glyph advance="571" extends="-150 -374 720 696" texCoord="1547 707 1619 795"/>
         <Glyph advance="687">
             <SubGlyph glyph="662" position="0 0"/>
             <SubGlyph glyph="708" position="118 148"/>
@@ -2073,7 +2073,7 @@
             <SubGlyph glyph="695" position="0 0"/>
             <SubGlyph glyph="829" position="71 0"/>
         </Glyph>
-        <Glyph advance="377" extends="-185 -374 559 934" texCoord="683 1254 745 1363"/>
+        <Glyph advance="377" extends="-185 -374 557 929" texCoord="674 1063 735 1170"/>
         <Glyph advance="619">
             <SubGlyph glyph="656" position="0 0"/>
             <SubGlyph glyph="848" position="196 0"/>
@@ -2092,142 +2092,142 @@
         </Glyph>
         <Glyph advance="0"/>
         <Glyph advance="320"/>
-        <Glyph advance="298" extends="-201 -212 519 868" texCoord="1988 347 2048 437"/>
-        <Glyph advance="444" extends="-98 234 634 870" texCoord="1479 1467 1540 1520"/>
-        <Glyph advance="750" extends="-192 -200 948 868" texCoord="1354 91 1449 180"/>
-        <Glyph advance="643" extends="-190 -286 818 950" texCoord="0 507 84 610"/>
-        <Glyph advance="1043" extends="-144 -212 1188 880" texCoord="848 0 959 91"/>
-        <Glyph advance="683" extends="-207 -210 885 906" texCoord="0 824 91 917"/>
-        <Glyph advance="258" extends="-111 234 441 870" texCoord="1658 1799 1704 1852"/>
-        <Glyph advance="377" extends="-186 -361 594 875" texCoord="759 707 824 810"/>
-        <Glyph advance="378" extends="-242 -361 538 875" texCoord="824 707 889 810"/>
-        <Glyph advance="443" extends="-124 136 608 868" texCoord="960 1985 1021 2046"/>
-        <Glyph advance="645" extends="-161 -200 751 700" texCoord="1565 899 1641 974"/>
-        <Glyph advance="282" extends="-240 -345 396 387" texCoord="1423 1583 1476 1644"/>
-        <Glyph advance="376" extends="-190 -16 566 524" texCoord="1479 1564 1542 1609"/>
-        <Glyph advance="247" extends="-216 -212 384 388" texCoord="1605 1847 1655 1897"/>
-        <Glyph advance="442" extends="-255 -200 705 868" texCoord="525 1247 605 1336"/>
-        <Glyph advance="659" extends="-153 -212 831 880" texCoord="442 619 524 710"/>
-        <Glyph advance="455" extends="-128 -200 628 868" texCoord="1083 1066 1146 1155"/>
-        <Glyph advance="587" extends="-235 -200 785 880" texCoord="276 1380 361 1470"/>
-        <Glyph advance="619" extends="-194 -212 790 880" texCoord="442 800 524 891"/>
-        <Glyph advance="646" extends="-216 -200 804 868" texCoord="1144 347 1229 436"/>
-        <Glyph advance="616" extends="-183 -212 789 868" texCoord="941 437 1022 527"/>
-        <Glyph advance="629" extends="-157 -212 767 880" texCoord="605 889 682 980"/>
-        <Glyph advance="561" extends="-187 -200 797 868" texCoord="859 437 941 526"/>
-        <Glyph advance="623" extends="-188 -212 760 880" texCoord="362 1502 441 1593"/>
-        <Glyph advance="576" extends="-138 -200 762 892" texCoord="683 1363 758 1454"/>
-        <Glyph advance="247" extends="-226 -212 446 712" texCoord="1083 1964 1139 2041"/>
+        <Glyph advance="298" extends="-201 -212 518 868" texCoord="1989 0 2048 89"/>
+        <Glyph advance="444" extends="-98 234 632 868" texCoord="1299 1331 1359 1383"/>
+        <Glyph advance="750" extends="-192 -200 943 868" texCoord="1330 90 1423 178"/>
+        <Glyph advance="643" extends="-190 -286 807 947" texCoord="0 498 82 599"/>
+        <Glyph advance="1043" extends="-144 -212 1188 880" texCoord="834 0 943 90"/>
+        <Glyph advance="683" extends="-207 -210 876 906" texCoord="0 809 89 901"/>
+        <Glyph advance="258" extends="-111 234 431 868" texCoord="1469 1749 1514 1801"/>
+        <Glyph advance="377" extends="-186 -361 587 869" texCoord="749 1063 813 1164"/>
+        <Glyph advance="378" extends="-242 -361 531 869" texCoord="749 1164 813 1265"/>
+        <Glyph advance="443" extends="-124 136 602 868" texCoord="1070 1986 1130 2046"/>
+        <Glyph advance="645" extends="-161 -200 751 696" texCoord="1229 888 1304 962"/>
+        <Glyph advance="282" extends="-240 -345 387 383" texCoord="1241 1929 1293 1989"/>
+        <Glyph advance="376" extends="-190 -16 564 513" texCoord="1751 1331 1813 1375"/>
+        <Glyph advance="247" extends="-216 -212 379 383" texCoord="1469 1550 1518 1599"/>
+        <Glyph advance="442" extends="-255 -200 699 868" texCoord="912 518 990 606"/>
+        <Glyph advance="659" extends="-153 -212 825 880" texCoord="354 622 434 712"/>
+        <Glyph advance="455" extends="-128 -200 628 868" texCoord="998 964 1060 1052"/>
+        <Glyph advance="587" extends="-235 -200 778 880" texCoord="270 1180 353 1269"/>
+        <Glyph advance="619" extends="-194 -212 779 880" texCoord="354 983 434 1073"/>
+        <Glyph advance="646" extends="-216 -200 800 868" texCoord="1205 342 1289 430"/>
+        <Glyph advance="616" extends="-183 -212 786 868" texCoord="436 1048 516 1137"/>
+        <Glyph advance="629" extends="-157 -212 767 880" texCoord="597 1411 673 1501"/>
+        <Glyph advance="561" extends="-187 -200 793 868" texCoord="436 960 517 1048"/>
+        <Glyph advance="623" extends="-188 -212 756 880" texCoord="517 1239 595 1329"/>
+        <Glyph advance="576" extends="-138 -200 756 881" texCoord="674 1258 748 1347"/>
+        <Glyph advance="247" extends="-226 -212 439 711" texCoord="1290 1198 1345 1274"/>
         <Glyph advance="247">
             <SubGlyph glyph="924" position="-17 0"/>
             <SubGlyph glyph="926" position="59 328"/>
         </Glyph>
-        <Glyph advance="640" extends="-166 -212 734 712" texCoord="1255 899 1330 976"/>
-        <Glyph advance="685" extends="-140 -104 772 616" texCoord="1969 1066 2045 1126"/>
-        <Glyph advance="638" extends="-122 -212 778 712" texCoord="1330 899 1405 976"/>
-        <Glyph advance="634" extends="-115 -212 833 880" texCoord="525 617 604 708"/>
-        <Glyph advance="753" extends="-159 -212 921 880" texCoord="91 1553 181 1644"/>
-        <Glyph advance="698" extends="-265 -200 827 868" texCoord="490 180 581 269"/>
-        <Glyph advance="643" extends="-223 -200 833 868" texCoord="187 1603 275 1692"/>
-        <Glyph advance="673" extends="-168 -212 876 880" texCoord="187 859 274 950"/>
-        <Glyph advance="690" extends="-223 -200 893 868" texCoord="91 1193 184 1282"/>
-        <Glyph advance="582" extends="-223 -200 845 868" texCoord="187 1142 276 1231"/>
-        <Glyph advance="545" extends="-223 -200 809 868" texCoord="276 1561 362 1650"/>
-        <Glyph advance="733" extends="-169 -212 899 880" texCoord="91 1838 180 1929"/>
-        <Glyph advance="695" extends="-223 -200 917 868" texCoord="1069 91 1164 180"/>
-        <Glyph advance="459" extends="-213 -200 675 868" texCoord="1037 707 1111 796"/>
-        <Glyph advance="566" extends="-228 -212 792 868" texCoord="276 908 361 998"/>
-        <Glyph advance="657" extends="-223 -200 917 868" texCoord="1259 91 1354 180"/>
-        <Glyph advance="543" extends="-223 -200 689 868" texCoord="1936 528 2012 617"/>
-        <Glyph advance="858" extends="-223 -200 1085 868" texCoord="1183 0 1292 89"/>
-        <Glyph advance="715" extends="-223 -200 941 868" texCoord="394 91 491 180"/>
-        <Glyph advance="763" extends="-168 -212 936 880" texCoord="91 740 183 831"/>
-        <Glyph advance="628" extends="-223 -200 845 868" texCoord="187 950 276 1039"/>
-        <Glyph advance="774" extends="-163 -255 941 909" texCoord="91 275 183 372"/>
-        <Glyph advance="644" extends="-223 -200 833 868" texCoord="187 1692 275 1781"/>
-        <Glyph advance="642" extends="-190 -212 806 880" texCoord="442 437 525 528"/>
-        <Glyph advance="617" extends="-143 -200 877 868" texCoord="1229 347 1314 436"/>
-        <Glyph advance="679" extends="-174 -212 906 868" texCoord="581 180 671 270"/>
-        <Glyph advance="662" extends="-118 -200 926 868" texCoord="537 347 624 436"/>
-        <Glyph advance="889" extends="-118 -200 1154 868" texCoord="1502 0 1608 89"/>
-        <Glyph advance="706" extends="-260 -200 976 868" texCoord="1819 0 1922 89"/>
-        <Glyph advance="700" extends="-118 -200 962 868" texCoord="959 180 1049 269"/>
-        <Glyph advance="632" extends="-238 -200 878 868" texCoord="91 1282 184 1371"/>
-        <Glyph advance="340" extends="-257 -361 583 875" texCoord="362 1880 432 1983"/>
-        <Glyph advance="584" extends="-113 -200 703 868" texCoord="1393 810 1461 899"/>
-        <Glyph advance="342" extends="-271 -361 569 875" texCoord="362 1777 432 1880"/>
-        <Glyph advance="589" extends="-151 112 737 868" texCoord="1745 1066 1819 1129"/>
-        <Glyph advance="457" extends="-230 -328 586 200" texCoord="1668 1467 1736 1511"/>
-        <Glyph advance="315" extends="-73 374 515 938" texCoord="1913 1699 1962 1746"/>
-        <Glyph advance="545" extends="-218 -212 694 712" texCoord="1664 810 1740 887"/>
-        <Glyph advance="592" extends="-221 -212 763 868" texCoord="777 437 859 527"/>
-        <Glyph advance="531" extends="-198 -212 714 712" texCoord="1740 810 1816 887"/>
-        <Glyph advance="592" extends="-197 -212 823 868" texCoord="276 1740 361 1830"/>
-        <Glyph advance="567" extends="-197 -212 739 712" texCoord="1702 270 1780 347"/>
-        <Glyph advance="379" extends="-182 -200 634 928" texCoord="759 1168 827 1262"/>
-        <Glyph advance="594" extends="-222 -407 786 721" texCoord="276 620 360 714"/>
-        <Glyph advance="580" extends="-221 -200 739 868" texCoord="525 1606 605 1695"/>
-        <Glyph advance="338" extends="-174 -200 558 964" texCoord="960 989 1021 1086"/>
-        <Glyph advance="263" extends="-374 -362 502 958" texCoord="187 464 260 574"/>
-        <Glyph advance="562" extends="-221 -200 787 868" texCoord="1483 347 1567 436"/>
-        <Glyph advance="317" extends="-196 -200 488 868" texCoord="960 1718 1017 1807"/>
-        <Glyph advance="895" extends="-220 -200 1052 712" texCoord="1319 180 1425 256"/>
-        <Glyph advance="581" extends="-220 -200 740 712" texCoord="1465 270 1545 346"/>
-        <Glyph advance="576" extends="-195 -213 741 711" texCoord="1545 270 1623 347"/>
-        <Glyph advance="590" extends="-255 -361 753 719" texCoord="1399 347 1483 437"/>
-        <Glyph advance="601" extends="-196 -373 812 719" texCoord="525 437 609 528"/>
-        <Glyph advance="391" extends="-220 -200 608 712" texCoord="1146 1831 1215 1907"/>
-        <Glyph advance="515" extends="-210 -213 678 711" texCoord="1867 899 1941 976"/>
-        <Glyph advance="391" extends="-172 -200 596 820" texCoord="1146 1365 1210 1450"/>
-        <Glyph advance="578" extends="-183 -212 765 700" texCoord="1623 270 1702 346"/>
-        <Glyph advance="533" extends="-165 -200 771 700" texCoord="1894 810 1972 885"/>
-        <Glyph advance="727" extends="-165 -200 963 700" texCoord="678 270 772 345"/>
-        <Glyph advance="536" extends="-271 -200 773 700" texCoord="1135 270 1222 345"/>
-        <Glyph advance="527" extends="-244 -361 764 707" texCoord="693 437 777 526"/>
-        <Glyph advance="528" extends="-240 -200 744 700" texCoord="1222 270 1304 345"/>
-        <Glyph advance="373" extends="-206 -362 610 874" texCoord="605 1434 673 1537"/>
-        <Glyph advance="299" extends="-141 -361 411 875" texCoord="2000 707 2046 810"/>
-        <Glyph advance="373" extends="-270 -362 546 874" texCoord="605 1537 673 1640"/>
-        <Glyph advance="533" extends="-191 -54 697 570" texCoord="1440 1284 1514 1336"/>
+        <Glyph advance="640" extends="-166 -212 727 710" texCoord="1083 888 1156 964"/>
+        <Glyph advance="685" extends="-140 -104 772 610" texCoord="1276 1124 1351 1183"/>
+        <Glyph advance="638" extends="-122 -212 771 710" texCoord="1156 888 1229 964"/>
+        <Glyph advance="634" extends="-115 -212 823 880" texCoord="517 1801 594 1891"/>
+        <Glyph advance="753" extends="-159 -212 920 880" texCoord="0 1550 89 1640"/>
+        <Glyph advance="698" extends="-265 -200 823 868" texCoord="0 1833 89 1921"/>
+        <Glyph advance="643" extends="-223 -200 833 868" texCoord="183 1491 270 1579"/>
+        <Glyph advance="673" extends="-168 -212 871 880" texCoord="183 757 268 847"/>
+        <Glyph advance="690" extends="-223 -200 883 868" texCoord="89 1805 180 1893"/>
+        <Glyph advance="582" extends="-223 -200 837 868" texCoord="183 1036 270 1124"/>
+        <Glyph advance="545" extends="-223 -200 800 868" texCoord="270 1359 354 1447"/>
+        <Glyph advance="733" extends="-169 -212 898 880" texCoord="0 1743 88 1833"/>
+        <Glyph advance="695" extends="-223 -200 917 868" texCoord="1048 90 1142 178"/>
+        <Glyph advance="459" extends="-213 -200 674 868" texCoord="895 707 968 795"/>
+        <Glyph advance="566" extends="-228 -212 788 868" texCoord="270 715 354 804"/>
+        <Glyph advance="657" extends="-223 -200 915 868" texCoord="1236 90 1330 178"/>
+        <Glyph advance="543" extends="-223 -200 688 868" texCoord="674 885 749 973"/>
+        <Glyph advance="858" extends="-223 -200 1080 868" texCoord="1163 0 1270 88"/>
+        <Glyph advance="715" extends="-223 -200 937 868" texCoord="386 90 481 178"/>
+        <Glyph advance="763" extends="-168 -212 932 880" texCoord="89 727 179 817"/>
+        <Glyph advance="628" extends="-223 -200 838 868" texCoord="183 847 270 935"/>
+        <Glyph advance="774" extends="-163 -255 937 906" texCoord="89 271 179 366"/>
+        <Glyph advance="644" extends="-223 -200 830 868" texCoord="183 1579 270 1667"/>
+        <Glyph advance="642" extends="-190 -212 806 880" texCoord="270 1910 352 2000"/>
+        <Glyph advance="617" extends="-143 -200 873 868" texCoord="1289 342 1373 430"/>
+        <Glyph advance="679" extends="-174 -212 901 868" texCoord="0 1921 88 2010"/>
+        <Glyph advance="662" extends="-118 -200 924 868" texCoord="525 342 611 430"/>
+        <Glyph advance="889" extends="-118 -200 1151 868" texCoord="1476 0 1580 88"/>
+        <Glyph advance="706" extends="-260 -200 968 868" texCoord="1787 0 1888 88"/>
+        <Glyph advance="700" extends="-118 -200 962 868" texCoord="942 178 1031 266"/>
+        <Glyph advance="632" extends="-238 -200 868 868" texCoord="89 1893 180 1981"/>
+        <Glyph advance="340" extends="-257 -361 578 868" texCoord="517 1612 586 1713"/>
+        <Glyph advance="584" extends="-113 -200 699 868" texCoord="1500 795 1567 883"/>
+        <Glyph advance="342" extends="-271 -361 564 868" texCoord="517 1511 586 1612"/>
+        <Glyph advance="589" extends="-151 112 732 868" texCoord="1783 1052 1856 1114"/>
+        <Glyph advance="457" extends="-230 -328 580 200" texCoord="1359 1331 1426 1375"/>
+        <Glyph advance="315" extends="-73 374 514 927" texCoord="1972 1501 2020 1547"/>
+        <Glyph advance="545" extends="-218 -212 694 710" texCoord="1941 431 2016 507"/>
+        <Glyph advance="592" extends="-221 -212 754 868" texCoord="436 871 516 960"/>
+        <Glyph advance="531" extends="-198 -212 711 710" texCoord="1833 795 1908 871"/>
+        <Glyph advance="592" extends="-197 -212 813 868" texCoord="270 1536 353 1625"/>
+        <Glyph advance="567" extends="-197 -212 730 710" texCoord="1563 431 1639 507"/>
+        <Glyph advance="379" extends="-182 -200 634 927" texCoord="822 795 889 888"/>
+        <Glyph advance="594" extends="-222 -407 777 711" texCoord="270 432 352 524"/>
+        <Glyph advance="580" extends="-221 -200 728 868" texCoord="990 518 1068 606"/>
+        <Glyph advance="338" extends="-174 -200 556 957" texCoord="822 1909 882 2004"/>
+        <Glyph advance="263" extends="-374 -362 496 958" texCoord="183 458 255 566"/>
+        <Glyph advance="562" extends="-221 -200 786 868" texCoord="1539 342 1622 430"/>
+        <Glyph advance="317" extends="-196 -200 477 868" texCoord="937 1942 993 2030"/>
+        <Glyph advance="895" extends="-220 -200 1045 710" texCoord="1298 178 1402 253"/>
+        <Glyph advance="581" extends="-220 -200 729 710" texCoord="1361 267 1439 342"/>
+        <Glyph advance="576" extends="-195 -213 736 710" texCoord="1486 431 1563 507"/>
+        <Glyph advance="590" extends="-255 -361 752 710" texCoord="1456 342 1539 430"/>
+        <Glyph advance="601" extends="-196 -373 808 710" texCoord="1038 342 1121 431"/>
+        <Glyph advance="391" extends="-220 -200 603 710" texCoord="1070 1274 1138 1349"/>
+        <Glyph advance="515" extends="-210 -213 671 710" texCoord="1527 888 1600 964"/>
+        <Glyph advance="391" extends="-172 -200 594 820" texCoord="1983 964 2046 1048"/>
+        <Glyph advance="578" extends="-183 -212 761 696" texCoord="1439 267 1517 342"/>
+        <Glyph advance="533" extends="-165 -200 768 696" texCoord="1594 267 1671 341"/>
+        <Glyph advance="727" extends="-165 -200 962 696" texCoord="664 267 757 341"/>
+        <Glyph advance="536" extends="-271 -200 771 696" texCoord="1114 267 1200 341"/>
+        <Glyph advance="527" extends="-244 -361 762 696" texCoord="436 431 519 518"/>
+        <Glyph advance="528" extends="-240 -200 739 696" texCoord="1200 267 1281 341"/>
+        <Glyph advance="373" extends="-206 -362 610 867" texCoord="674 606 741 707"/>
+        <Glyph advance="299" extends="-141 -361 405 868" texCoord="1138 1366 1183 1467"/>
+        <Glyph advance="373" extends="-270 -362 546 867" texCoord="741 606 808 707"/>
+        <Glyph advance="533" extends="-191 -54 694 570" texCoord="674 1995 747 2047"/>
         <Glyph advance="320"/>
-        <Glyph advance="297" extends="-255 -362 465 718" texCoord="960 1086 1020 1176"/>
-        <Glyph advance="531" extends="-198 -287 714 781" texCoord="1377 617 1453 706"/>
-        <Glyph advance="617" extends="-198 -212 834 880" texCoord="187 1781 273 1872"/>
-        <Glyph advance="678" extends="-108 -125 792 775" texCoord="1896 989 1971 1064"/>
-        <Glyph advance="700" extends="-118 -200 962 868" texCoord="1229 180 1319 269"/>
-        <Glyph advance="281" extends="-141 -361 387 875" texCoord="1083 1422 1127 1525"/>
-        <Glyph advance="563" extends="-259 -374 773 886" texCoord="0 195 86 300"/>
-        <Glyph advance="455" extends="-72 378 672 930" texCoord="1479 1655 1541 1701"/>
-        <Glyph advance="814" extends="-138 -212 954 880" texCoord="0 1574 91 1665"/>
-        <Glyph advance="395" extends="-114 196 594 892" texCoord="1543 1359 1602 1417"/>
-        <Glyph advance="665" extends="-164 -160 844 668" texCoord="187 1975 271 2044"/>
-        <Glyph advance="696" extends="-127 -144 785 624" texCoord="362 1983 438 2047"/>
+        <Glyph advance="297" extends="-255 -362 463 718" texCoord="937 1143 996 1232"/>
+        <Glyph advance="531" extends="-198 -287 711 771" texCoord="826 431 901 518"/>
+        <Glyph advance="617" extends="-198 -212 832 879" texCoord="183 1667 268 1757"/>
+        <Glyph advance="678" extends="-108 -125 782 765" texCoord="1680 964 1753 1037"/>
+        <Glyph advance="700" extends="-118 -200 962 867" texCoord="1209 178 1298 266"/>
+        <Glyph advance="281" extends="-141 -361 387 868" texCoord="1138 1669 1182 1770"/>
+        <Glyph advance="563" extends="-259 -374 771 879" texCoord="0 192 85 295"/>
+        <Glyph advance="455" extends="-72 378 662 919" texCoord="1299 1997 1359 2042"/>
+        <Glyph advance="814" extends="-138 -212 954 879" texCoord="89 1357 179 1447"/>
+        <Glyph advance="395" extends="-114 196 588 892" texCoord="1241 1342 1299 1399"/>
+        <Glyph advance="665" extends="-164 -160 840 660" texCoord="1747 267 1830 335"/>
+        <Glyph advance="696" extends="-127 -144 785 622" texCoord="89 1981 164 2044"/>
         <Glyph advance="376">
             <SubGlyph glyph="925" position="0 0"/>
         </Glyph>
-        <Glyph advance="814" extends="-138 -212 954 880" texCoord="0 1756 91 1847"/>
-        <Glyph advance="405" extends="-96 370 624 874" texCoord="1725 1612 1785 1654"/>
-        <Glyph advance="411" extends="-117 154 615 886" texCoord="1423 1359 1484 1420"/>
-        <Glyph advance="701" extends="-144 -200 768 700" texCoord="1791 899 1867 974"/>
-        <Glyph advance="407" extends="-130 203 638 995" texCoord="1806 1211 1870 1277"/>
-        <Glyph advance="425" extends="-102 196 630 988" texCoord="1870 1211 1931 1277"/>
-        <Glyph advance="320" extends="-95 374 541 938" texCoord="1658 1699 1711 1746"/>
-        <Glyph advance="599" extends="-253 -361 767 707" texCoord="1819 347 1904 436"/>
-        <Glyph advance="530" extends="-149 -361 775 875" texCoord="187 1231 264 1334"/>
-        <Glyph advance="305" extends="-162 -49 438 551" texCoord="1605 1897 1655 1947"/>
-        <Glyph advance="322" extends="-235 -395 401 229" texCoord="1423 1924 1476 1976"/>
-        <Glyph advance="294" extends="-79 203 545 983" texCoord="1992 1211 2044 1276"/>
-        <Glyph advance="412" extends="-98 196 610 892" texCoord="1484 1359 1543 1417"/>
-        <Glyph advance="666" extends="-208 -160 800 668" texCoord="1405 899 1489 968"/>
-        <Glyph advance="930" extends="-103 -200 1049 868" texCoord="877 91 973 180"/>
-        <Glyph advance="919" extends="-103 -200 1061 868" texCoord="491 91 588 180"/>
-        <Glyph advance="958" extends="-125 -200 1075 880" texCoord="187 180 287 270"/>
-        <Glyph advance="634" extends="-221 -372 727 720" texCoord="525 708 604 799"/>
+        <Glyph advance="814" extends="-138 -212 954 879" texCoord="89 1537 179 1627"/>
+        <Glyph advance="405" extends="-96 370 624 868" texCoord="1766 1459 1825 1500"/>
+        <Glyph advance="411" extends="-117 154 607 879" texCoord="1980 1198 2040 1258"/>
+        <Glyph advance="701" extends="-144 -200 768 695" texCoord="1452 888 1527 962"/>
+        <Glyph advance="407" extends="-130 203 627 988" texCoord="1824 1124 1886 1189"/>
+        <Glyph advance="425" extends="-102 196 628 988" texCoord="1939 1124 1999 1189"/>
+        <Glyph advance="320" extends="-95 374 539 927" texCoord="1570 1501 1622 1547"/>
+        <Glyph advance="599" extends="-253 -361 761 696" texCoord="1871 342 1954 429"/>
+        <Glyph advance="530" extends="-149 -361 772 868" texCoord="183 1124 259 1225"/>
+        <Glyph advance="305" extends="-162 -49 433 545" texCoord="1469 1599 1518 1648"/>
+        <Glyph advance="322" extends="-235 -395 394 226" texCoord="1359 1375 1411 1426"/>
+        <Glyph advance="294" extends="-79 203 537 979" texCoord="883 1982 934 2046"/>
+        <Glyph advance="412" extends="-98 196 608 889" texCoord="1241 1285 1299 1342"/>
+        <Glyph advance="666" extends="-208 -160 796 660" texCoord="1830 267 1913 335"/>
+        <Glyph advance="930" extends="-103 -200 1041 868" texCoord="860 90 954 178"/>
+        <Glyph advance="919" extends="-103 -200 1054 868" texCoord="481 90 576 178"/>
+        <Glyph advance="958" extends="-125 -200 1069 879" texCoord="183 178 281 267"/>
+        <Glyph advance="634" extends="-221 -372 717 719" texCoord="517 1891 594 1981"/>
         <Glyph advance="698">
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1040" position="229 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-112 531 476 1095" texCoord="1864 1699 1913 1746"/>
+        <Glyph advance="0" extends="-112 531 475 1084" texCoord="1924 1501 1972 1547"/>
         <Glyph advance="698">
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1027" position="265 172"/>
@@ -2236,12 +2236,12 @@
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1043" position="148 157"/>
         </Glyph>
-        <Glyph advance="480" extends="-111 374 705 926" texCoord="1703 1420 1771 1466"/>
+        <Glyph advance="480" extends="-111 374 695 926" texCoord="1646 1285 1712 1331"/>
         <Glyph advance="698">
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1045" position="158 157"/>
         </Glyph>
-        <Glyph advance="461" extends="-111 368 693 896" texCoord="1871 1467 1938 1511"/>
+        <Glyph advance="461" extends="-111 368 692 890" texCoord="1559 1331 1625 1374"/>
         <Glyph advance="698">
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1015" position="159 148"/>
@@ -2250,8 +2250,8 @@
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1048" position="210 79"/>
         </Glyph>
-        <Glyph advance="301" extends="-110 335 562 1007" texCoord="1423 1868 1479 1924"/>
-        <Glyph advance="1016" extends="-265 -200 1271 868" texCoord="127 0 255 89"/>
+        <Glyph advance="301" extends="-110 335 555 1000" texCoord="1299 1728 1354 1783"/>
+        <Glyph advance="1016" extends="-265 -200 1271 868" texCoord="125 0 251 88"/>
         <Glyph advance="673">
             <SubGlyph glyph="947" position="0 0"/>
             <SubGlyph glyph="1031" position="201 0"/>
@@ -2264,7 +2264,7 @@
             <SubGlyph glyph="949" position="0 0"/>
             <SubGlyph glyph="1053" position="188 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-77 531 559 1095" texCoord="1605 1997 1658 2044"/>
+        <Glyph advance="0" extends="-77 531 557 1084" texCoord="1518 1501 1570 1547"/>
         <Glyph advance="582">
             <SubGlyph glyph="949" position="0 0"/>
             <SubGlyph glyph="1043" position="105 157"/>
@@ -2289,7 +2289,7 @@
             <SubGlyph glyph="953" position="0 0"/>
             <SubGlyph glyph="1015" position="33 148"/>
         </Glyph>
-        <Glyph advance="738" extends="-194 -200 910 868" texCoord="91 1644 183 1733"/>
+        <Glyph advance="738" extends="-194 -200 906 868" texCoord="376 178 466 266"/>
         <Glyph advance="715">
             <SubGlyph glyph="958" position="0 0"/>
             <SubGlyph glyph="1045" position="187 157"/>
@@ -2314,8 +2314,8 @@
             <SubGlyph glyph="959" position="0 0"/>
             <SubGlyph glyph="1015" position="188 148"/>
         </Glyph>
-        <Glyph advance="618" extends="-145 -178 719 686" texCoord="1363 1211 1435 1283"/>
-        <Glyph advance="761" extends="-196 -212 956 892" texCoord="91 372 187 464"/>
+        <Glyph advance="618" extends="-145 -178 712 676" texCoord="1290 1052 1361 1122"/>
+        <Glyph advance="761" extends="-196 -212 946 886" texCoord="89 366 183 456"/>
         <Glyph advance="679">
             <SubGlyph glyph="965" position="0 0"/>
             <SubGlyph glyph="1040" position="216 0"/>
@@ -2336,8 +2336,8 @@
             <SubGlyph glyph="969" position="0 0"/>
             <SubGlyph glyph="1053" position="207 0"/>
         </Glyph>
-        <Glyph advance="623" extends="-223 -200 821 868" texCoord="972 347 1059 436"/>
-        <Glyph advance="631" extends="-223 -213 809 879" texCoord="276 529 362 620"/>
+        <Glyph advance="623" extends="-223 -200 812 868" texCoord="953 342 1038 430"/>
+        <Glyph advance="631" extends="-223 -213 802 879" texCoord="270 342 354 432"/>
         <Glyph advance="545">
             <SubGlyph glyph="977" position="0 0"/>
             <SubGlyph glyph="976" position="47 0"/>
@@ -2354,7 +2354,7 @@
             <SubGlyph glyph="977" position="0 0"/>
             <SubGlyph glyph="1080" position="32 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-111 368 693 896" texCoord="1804 1467 1871 1511"/>
+        <Glyph advance="0" extends="-111 368 692 890" texCoord="1493 1331 1559 1374"/>
         <Glyph advance="545">
             <SubGlyph glyph="977" position="0 0"/>
             <SubGlyph glyph="1015" position="25 0"/>
@@ -2363,7 +2363,7 @@
             <SubGlyph glyph="977" position="0 0"/>
             <SubGlyph glyph="1048" position="93 0"/>
         </Glyph>
-        <Glyph advance="886" extends="-218 -213 1054 711" texCoord="384 180 490 257"/>
+        <Glyph advance="886" extends="-218 -213 1050 710" texCoord="466 178 570 254"/>
         <Glyph advance="531">
             <SubGlyph glyph="979" position="0 0"/>
             <SubGlyph glyph="1031" position="108 1"/>
@@ -2388,7 +2388,7 @@
             <SubGlyph glyph="1090" position="0 0"/>
             <SubGlyph glyph="976" position="-49 0"/>
         </Glyph>
-        <Glyph advance="326" extends="-174 -200 510 700" texCoord="1218 1675 1275 1750"/>
+        <Glyph advance="326" extends="-174 -200 509 696" texCoord="1639 1124 1695 1198"/>
         <Glyph advance="359">
             <SubGlyph glyph="1090" position="0 0"/>
             <SubGlyph glyph="1027" position="40 0"/>
@@ -2401,7 +2401,7 @@
             <SubGlyph glyph="1090" position="28 0"/>
             <SubGlyph glyph="1015" position="-43 0"/>
         </Glyph>
-        <Glyph advance="581" extends="-198 -212 762 940" texCoord="362 437 442 533"/>
+        <Glyph advance="581" extends="-198 -212 752 934" texCoord="270 1816 348 1910"/>
         <Glyph advance="581">
             <SubGlyph glyph="990" position="0 0"/>
             <SubGlyph glyph="1080" position="78 0"/>
@@ -2426,8 +2426,8 @@
             <SubGlyph glyph="991" position="0 0"/>
             <SubGlyph glyph="1015" position="44 0"/>
         </Glyph>
-        <Glyph advance="645" extends="-160 -212 752 712" texCoord="1936 270 2012 347"/>
-        <Glyph advance="577" extends="-225 -227 771 733" texCoord="1111 707 1194 787"/>
+        <Glyph advance="645" extends="-160 -212 752 710" texCoord="1791 431 1866 507"/>
+        <Glyph advance="577" extends="-225 -227 765 729" texCoord="901 431 982 510"/>
         <Glyph advance="578">
             <SubGlyph glyph="997" position="0 0"/>
             <SubGlyph glyph="976" position="71 0"/>
@@ -2448,7 +2448,7 @@
             <SubGlyph glyph="1001" position="0 0"/>
             <SubGlyph glyph="1027" position="140 0"/>
         </Glyph>
-        <Glyph advance="589" extends="-255 -361 753 875" texCoord="0 404 84 507"/>
+        <Glyph advance="589" extends="-255 -361 751 868" texCoord="0 397 83 498"/>
         <Glyph advance="527">
             <SubGlyph glyph="1001" position="0 0"/>
             <SubGlyph glyph="1015" position="29 0"/>
@@ -2465,17 +2465,17 @@
             <SubGlyph glyph="945" position="0 0"/>
             <SubGlyph glyph="1113" position="180 162"/>
         </Glyph>
-        <Glyph advance="385" extends="-64 377 644 893" texCoord="1785 1612 1844 1655"/>
+        <Glyph advance="385" extends="-64 377 635 888" texCoord="1411 1765 1469 1807"/>
         <Glyph advance="545">
             <SubGlyph glyph="977" position="0 0"/>
             <SubGlyph glyph="1113" position="53 0"/>
         </Glyph>
-        <Glyph advance="698" extends="-265 -374 827 874" texCoord="0 91 91 195"/>
+        <Glyph advance="698" extends="-265 -374 823 868" texCoord="0 90 89 192"/>
         <Glyph advance="545">
             <SubGlyph glyph="977" position="0 0"/>
             <SubGlyph glyph="1117" position="257 0"/>
         </Glyph>
-        <Glyph advance="296" extends="-252 -373 384 203" texCoord="1605 1655 1658 1703"/>
+        <Glyph advance="296" extends="-252 -373 383 200" texCoord="1359 1937 1411 1984"/>
         <Glyph advance="673">
             <SubGlyph glyph="947" position="0 0"/>
             <SubGlyph glyph="1053" position="232 0"/>
@@ -2488,7 +2488,7 @@
             <SubGlyph glyph="947" position="0 0"/>
             <SubGlyph glyph="1121" position="286 148"/>
         </Glyph>
-        <Glyph advance="204" extends="-101 378 451 930" texCoord="1760 1885 1806 1931"/>
+        <Glyph advance="204" extends="-101 378 440 919" texCoord="1649 1590 1694 1635"/>
         <Glyph advance="531">
             <SubGlyph glyph="979" position="0 0"/>
             <SubGlyph glyph="1121" position="178 0"/>
@@ -2497,7 +2497,7 @@
             <SubGlyph glyph="947" position="0 0"/>
             <SubGlyph glyph="1124" position="151 157"/>
         </Glyph>
-        <Glyph advance="476" extends="-80 368 724 920" texCoord="1771 1420 1838 1466"/>
+        <Glyph advance="476" extends="-80 368 722 920" texCoord="1712 1285 1778 1331"/>
         <Glyph advance="531">
             <SubGlyph glyph="979" position="0 0"/>
             <SubGlyph glyph="1124" position="45 0"/>
@@ -2510,11 +2510,11 @@
             <SubGlyph glyph="980" position="0 0"/>
             <SubGlyph glyph="1128" position="533 0"/>
         </Glyph>
-        <Glyph advance="205" extends="-125 296 439 896" texCoord="1711 1892 1758 1942"/>
+        <Glyph advance="205" extends="-125 296 436 888" texCoord="1469 1993 1515 2042"/>
         <Glyph advance="746">
             <SubGlyph glyph="1060" position="8 0"/>
         </Glyph>
-        <Glyph advance="638" extends="-197 -213 883 903" texCoord="0 1938 90 2031"/>
+        <Glyph advance="638" extends="-197 -213 873 898" texCoord="0 1189 88 1280"/>
         <Glyph advance="582">
             <SubGlyph glyph="949" position="0 0"/>
             <SubGlyph glyph="1022" position="147 177"/>
@@ -2535,8 +2535,8 @@
             <SubGlyph glyph="949" position="0 0"/>
             <SubGlyph glyph="1136" position="275 -12"/>
         </Glyph>
-        <Glyph advance="0" extends="-252 -374 396 202" texCoord="1544 1930 1598 1978"/>
-        <Glyph advance="568" extends="-197 -373 739 719" texCoord="605 1343 683 1434"/>
+        <Glyph advance="0" extends="-252 -374 388 200" texCoord="1411 1503 1464 1550"/>
+        <Glyph advance="568" extends="-197 -373 730 710" texCoord="597 1860 673 1949"/>
         <Glyph advance="582">
             <SubGlyph glyph="949" position="0 0"/>
             <SubGlyph glyph="1124" position="107 157"/>
@@ -2565,13 +2565,13 @@
             <SubGlyph glyph="951" position="0 0"/>
             <SubGlyph glyph="1145" position="213 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-281 -448 355 164" texCoord="1479 1974 1532 2025"/>
+        <Glyph advance="0" extends="-281 -448 350 160" texCoord="1359 1528 1411 1578"/>
         <Glyph advance="594">
             <SubGlyph glyph="983" position="0 0"/>
             <SubGlyph glyph="1145" position="408 523"/>
         </Glyph>
-        <Glyph advance="740" extends="-197 -200 991 868" texCoord="295 91 394 180"/>
-        <Glyph advance="644" extends="-157 -200 803 904" texCoord="362 1034 442 1126"/>
+        <Glyph advance="740" extends="-197 -200 981 868" texCoord="289 90 386 178"/>
+        <Glyph advance="644" extends="-157 -200 792 898" texCoord="436 1668 514 1758"/>
         <Glyph advance="459">
             <SubGlyph glyph="953" position="0 0"/>
             <SubGlyph glyph="1022" position="64 177"/>
@@ -2613,8 +2613,8 @@
             <SubGlyph glyph="988" position="0 0"/>
             <SubGlyph glyph="1128" position="194 0"/>
         </Glyph>
-        <Glyph advance="595" extends="-215 -200 745 868" texCoord="525 1158 605 1247"/>
-        <Glyph advance="342" extends="-223 -200 581 868" texCoord="1597 810 1664 899"/>
+        <Glyph advance="595" extends="-215 -200 739 868" texCoord="834 518 912 606"/>
+        <Glyph advance="342" extends="-223 -200 576 868" texCoord="1767 795 1833 883"/>
         <Glyph advance="715">
             <SubGlyph glyph="958" position="0 0"/>
             <SubGlyph glyph="1053" position="260 0"/>
@@ -2643,14 +2643,14 @@
             <SubGlyph glyph="959" position="0 0"/>
             <SubGlyph glyph="1168" position="212 172"/>
         </Glyph>
-        <Glyph advance="502" extends="-111 372 741 936" texCoord="1949 1359 2020 1406"/>
+        <Glyph advance="502" extends="-111 372 730 926" texCoord="270 2000 339 2046"/>
         <Glyph advance="576">
             <SubGlyph glyph="991" position="0 0"/>
             <SubGlyph glyph="1170" position="93 0"/>
         </Glyph>
-        <Glyph advance="0" extends="-131 372 721 936" texCoord="1423 1420 1494 1467"/>
-        <Glyph advance="1095" extends="-169 -212 1355 880" texCoord="0 0 127 91"/>
-        <Glyph advance="937" extends="-201 -212 1107 712" texCoord="1544 91 1653 168"/>
+        <Glyph advance="0" extends="-131 372 710 926" texCoord="1299 1285 1368 1331"/>
+        <Glyph advance="1095" extends="-169 -212 1350 880" texCoord="0 0 125 90"/>
+        <Glyph advance="937" extends="-201 -212 1102 711" texCoord="1516 90 1623 166"/>
         <Glyph advance="644">
             <SubGlyph glyph="962" position="0 0"/>
             <SubGlyph glyph="1053" position="215 0"/>
@@ -2735,7 +2735,7 @@
             <SubGlyph glyph="965" position="0 0"/>
             <SubGlyph glyph="1136" position="188 0"/>
         </Glyph>
-        <Glyph advance="584" extends="-183 -373 765 707" texCoord="683 617 762 707"/>
+        <Glyph advance="584" extends="-183 -373 761 696" texCoord="1302 518 1380 606"/>
         <Glyph advance="700">
             <SubGlyph glyph="969" position="0 0"/>
             <SubGlyph glyph="1015" position="135 148"/>
@@ -2764,7 +2764,7 @@
             <SubGlyph glyph="1002" position="0 0"/>
             <SubGlyph glyph="1124" position="44 0"/>
         </Glyph>
-        <Glyph advance="390" extends="-287 -373 649 935" texCoord="0 715 78 824"/>
+        <Glyph advance="390" extends="-287 -373 645 929" texCoord="0 702 77 809"/>
         <Glyph advance="642">
             <SubGlyph glyph="963" position="0 0"/>
             <SubGlyph glyph="1145" position="197 0"/>

@@ -29,39 +29,41 @@ bool FontFamily::addFace(FT_Face const& face) {
     return true;
 }
 
-bool FontFamily::parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces) {
+bool FontFamily::parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces, uint border) {
     m_glyphs.clear();
     m_kerning.clear();
 
     if(!m_faces[0]) return false;
 
+    std::map<unsigned, int> glyph_map;
     // init '.notdef' glyph
     m_glyphs.emplace_back();
-    m_glyphs.back().init(m_faces[0]->face, 0, 2 * m_units_per_EM / 10);
+    m_glyphs.back().init(m_faces[0]->face, 0, border, glyph_map, m_glyphs);
 
     for(auto i : faces) {
         if(!m_faces[i]) continue;
-        FT_Face  face    = m_faces[i]->face;
-        CharMap& charMap = m_faces[i]->charMap;
 
-        std::map<unsigned, int> glyphMap;
+        FT_Face  face    = m_faces[i]->face;
+        CharMap& char_map = m_faces[i]->char_map;
+        glyph_map.clear();
+
         for(char32_t c : characters) {
             unsigned glyph_index = FT_Get_Char_Index(face, c);
             if(glyph_index == 0) continue; //'.notdef' glyph
 
-            auto it = glyphMap.find(glyph_index);
-            if(it != glyphMap.end()) {
-                m_faces[i]->charMap.emplace(c, it->second);
+            auto it = glyph_map.find(glyph_index);
+            if(it != glyph_map.end()) {
+                m_faces[i]->char_map.emplace(c, it->second);
             } else {
-                glyphMap.emplace(glyph_index, m_glyphs.size());
-                charMap.emplace(c, m_glyphs.size());
+                glyph_map.emplace(glyph_index, m_glyphs.size());
+                char_map.emplace(c, m_glyphs.size());
                 m_glyphs.emplace_back();
-                m_glyphs.back().init(face, glyph_index, 2 * m_units_per_EM / 10);
+                m_glyphs.back().init(face, glyph_index, border, glyph_map, m_glyphs);
             }
         }
 
-        for(auto left : glyphMap) {
-            for(auto right : glyphMap) {
+        for(auto left : glyph_map) {
+            for(auto right : glyph_map) {
                 FT_Vector kerning;
                 FT_Get_Kerning(face, left.first, right.first, FT_KERNING_UNSCALED, &kerning);
                 if(kerning.x != 0) {
@@ -77,8 +79,8 @@ bool FontFamily::parseGlypes(std::span<char32_t> characters, std::span<FaceType>
 size_t FontFamily::getGlypheID(char32_t c, bool bold, bool oblique) {
     auto& face = m_faces[(bold ? 2 : 0) | (oblique ? 1 : 0)];
     if(face) {
-        auto it = face->charMap.find(c);
-        if(it != face->charMap.end()) return it->second;
+        auto it = face->char_map.find(c);
+        if(it != face->char_map.end()) return it->second;
     }
 
     return 0;

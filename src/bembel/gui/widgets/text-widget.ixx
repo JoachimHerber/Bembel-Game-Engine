@@ -5,13 +5,11 @@ export module bembel.gui.widgets:Text;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 
 export class TextWidget : public Widget {
   public:

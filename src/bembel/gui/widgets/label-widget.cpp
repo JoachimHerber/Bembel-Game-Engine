@@ -8,14 +8,11 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
-using namespace bembel::text::i18n;
 
 LabelWidget::LabelWidget(Widget& parent, std::u8string_view text) : Widget{parent}, m_text{text} {
     m_view = std::make_unique<LabelWidget::View>(*this);
@@ -31,9 +28,7 @@ bool LabelWidget::configure(base::xml::Element const* properties) {
 
     std::string alignment = "";
     if(xml::getAttribute(properties, "alignment", alignment)) {
-        std::transform(alignment.begin(), alignment.end(), alignment.begin(), [](char c) {
-            return std::tolower(c);
-        });
+        std::transform(alignment.begin(), alignment.end(), alignment.begin(), [](char c) { return std::tolower(c); });
         if(alignment == "left") m_alignment = Alignment::Left;
         if(alignment == "right") m_alignment = Alignment::Right;
     }
@@ -78,14 +73,12 @@ void LabelWidget::updateGlyphs() {
 
     m_glyphs.clear();
     m_text_length       = 0;
-    unsigned prev_index = Font::INVALIDE_GLYPH_INDEX;
+    unsigned prev_index = SdfFont::INVALIDE_GLYPH_INDEX;
     for(char32_t c : utf8::Iterate(m_text)) {
         unsigned index = font->getGlyphIndex(c, false, false);
-        if(index == Font::INVALIDE_GLYPH_INDEX) continue;
+        if(index == SdfFont::INVALIDE_GLYPH_INDEX) continue;
 
-        if(prev_index != Font::INVALIDE_GLYPH_INDEX) {
-            m_text_length += font->getKernig(prev_index, index);
-        }
+        if(prev_index != SdfFont::INVALIDE_GLYPH_INDEX) { m_text_length += font->getKernig(prev_index, index); }
         if(c != ' ') m_glyphs.emplace_back(index, m_text_length);
 
         m_text_length += font->getAdvance(index);
@@ -103,29 +96,23 @@ void LabelWidget::View::draw(RenderBatchInterface& batch) {
 
     vec2 size = m_label.size.get();
 
-    float outline_margin = m_label.m_outline ? 0.05 : 0;
-    float text_length    = m_label.m_text_length + outline_margin;
-    float line_heigth    = font->getAscender() - font->getDescender() + outline_margin;
+    float outline_margin = m_label.m_outline ? 0.1 : 0;
+    float text_length    = m_label.m_text_length + 2 * outline_margin;
+    float line_heigth    = font->getAscender() - font->getDescender() + 2 * outline_margin;
     float scale          = std::min(size.x / text_length, size.y / line_heigth);
 
     vec2 pos = vec2(m_label.position.get());
     switch(m_label.m_alignment) {
-        case LabelWidget::Alignment::Center:
-            pos.x += 0.5f * (size.x - scale * m_label.m_text_length);
-            break;
-        case LabelWidget::Alignment::Right: pos.x += size.x - scale * m_label.m_text_length; break;
+        case LabelWidget::Alignment::Center: pos.x += 0.5f * (size.x - scale * m_label.m_text_length); break;
+        case LabelWidget::Alignment::Right: pos.x += size.x - scale * (m_label.m_text_length + outline_margin); break;
+        case LabelWidget::Alignment::Left: pos.x += scale * outline_margin; break;
     }
-    pos.y +=
-        0.5f * size.y - scale * (0.5 * line_heigth + font->getDescender()); // center text verticaly
+    pos.y += 0.5f * size.y - scale * (0.5 * line_heigth + font->getDescender()); // center text verticaly
 
     if(m_label.m_outline) {
         batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
-        for(auto const& it : m_label.m_glyphs) {
-            auto const& glyph = font->getGlypData(it.index);
-
-            glm::vec2 p = pos;
-            p.x += scale * it.x;
-            batch.drawGlyph(glyph, p, scale, 0.20f, 0.30f);
+        for(auto const& it : m_label.m_glyphs) { 
+            batch.drawGlyph(it.index, pos + vec2(scale * it.x, 0), scale, true);
         }
     }
 
@@ -136,11 +123,7 @@ void LabelWidget::View::draw(RenderBatchInterface& batch) {
     }
 
     for(auto const& it : m_label.m_glyphs) {
-        auto const& glyph = font->getGlypData(it.index);
-
-        glm::vec2 p = pos;
-        p.x += scale * it.x;
-        batch.drawGlyph(glyph, p, scale);
+        batch.drawGlyph(it.index, pos + vec2(scale * it.x, 0), scale);
     }
 }
 

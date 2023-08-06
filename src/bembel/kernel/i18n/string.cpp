@@ -3,11 +3,11 @@ module;
 #include <fstream>
 #include <string>
 #include <unordered_map>
-module bembel.text.i18n;
+module bembel.kernel.i18n;
 
 import bembel.base;
 
-namespace bembel::text::i18n {
+namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
-} // namespace bembel::text::i18n
+} // namespace bembel::kernel::i18n

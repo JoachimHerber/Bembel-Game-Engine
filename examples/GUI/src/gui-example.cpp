@@ -22,7 +22,7 @@ GuiExample::~GuiExample() {
     events::removeHandler<WindowShouldCloseEvent>(this);
 }
 
-bool GuiExample::init() {
+bool GuiExample::init(std::span<std::string_view>) {
     if(!m_engine.loadSetting("GUI/config.xml")) return false;
 
     m_engine.initSystems();

@@ -8,7 +8,7 @@ namespace bembel::tools {
 using namespace bembel::base;
 using namespace bembel::gui;
 using namespace bembel::kernel;
-using namespace bembel::text::i18n::literals;
+using namespace bembel::kernel::i18n::literals;
 
 Application::Application() : kernel::Application() {
     m_gui_system = m_engine.addSystem<GuiSystem>();
@@ -27,15 +27,21 @@ Application::~Application() {
     events::removeHandler<FileDropEvent>(this);
 }
 
-bool Application::init() {
+bool Application::init(std::span<std::string_view> args) {
     auto& asset_locator = AssetLocator::getInstance();
     asset_locator.addGenericAssetDirectory("../assets");
     asset_locator.addGenericAssetDirectory("../assets/gui");
     asset_locator.addGenericAssetDirectory("../assets/shader");
     asset_locator.addGenericAssetDirectory("../assets/fonts");
 
-    //text::i18n::Localisation::DEFAULT->load("font-converter/local.en");
-    text::i18n::Localisation::DEFAULT->load("font-converter/local.de");
+    if(auto it = std::find(args.begin(), args.end(), "-local"); it != args.end() && ++it != args.end()) {
+        std::filesystem::path local = "font-converter/local/";
+        local += *it;
+        local += ".json";
+        kernel::i18n::Localisation::DEFAULT->load(local);
+    } else {
+        kernel::i18n::Localisation::DEFAULT->load("font-converter/local/en.json");
+    }
 
     auto display_mode = std::make_shared<WindowDisplayMode>();
     display_mode->setWidth(1200);
@@ -58,9 +64,7 @@ bool Application::init() {
 
     m_main_window->getViewport(1)->addView(&m_gui->view);
 
-    m_font_view = std::make_unique<FontView>(
-        m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator()
-    );
+    m_font_view = std::make_unique<FontView>(m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator());
     m_main_window->getViewport(0)->addView(m_font_view.get());
 
     m_widgets.texture_size_slider->setValue(1024);
@@ -152,8 +156,7 @@ void Application::onFontFilePathChanged(In<std::u8string>, In<std::u8string>) {
 
 void Application::onFontFamilyAdded(In<std::u8string_view> name) {
     m_widgets.font_family_selections->addRadioButton(name);
-    if(m_widgets.font_family_selections->getSelection() == -1)
-        m_widgets.font_family_selections->setSelection(0);
+    if(m_widgets.font_family_selections->getSelection() == -1) m_widgets.font_family_selections->setSelection(0);
 
     m_widgets.convert_font_button->enable();
 
@@ -181,9 +184,7 @@ void Application::onConvertFont() {
     if(m_widgets.type_face_selection[3]->isSelected()) // BOLD & OBLIQUE
         faces.push_back(FontFamily::FaceType::BOLD_OBLIQUE);
 
-    m_converter->converSelectedFont(
-        std::move(chars), faces, m_widgets.sdf_max_dist_slider->getValue()
-    );
+    m_converter->converSelectedFont(std::move(chars), faces);
 
     m_widgets.save_font_button->enable();
 }
@@ -217,7 +218,7 @@ void Application::onSelectFontFamily(int index) {
 }
 
 void Application::onTextureResulutionUpdate(i64 res) {
-    m_converter->setResolution(uvec2{res, res});
+    m_converter->setResolution(res);
 }
 
 void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
@@ -265,8 +266,6 @@ void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
 
     texture_size_label  = root.createChildWidget<LabelWidget>("widgets.labels.resolution"_i18n);
     texture_size_slider = root.createChildWidget<IntSliderWidget>(256, 4 * 1024, true);
-    sdf_max_dist_label  = root.createChildWidget<LabelWidget>("widgets.labels.max_distance"_i18n);
-    sdf_max_dist_slider = root.createChildWidget<IntSliderWidget>(2, 16);
 
     convert_font_button = root.createChildWidget<ButtonWidget>("widgets.button.convert_font"_i18n);
     convert_font_button->disable();
@@ -302,8 +301,6 @@ void Application::Widgets::initLayout(LinearWidgetLayout* layout) {
     layout->addRow({.height = 32}).addWidget(sdf_label);
     layout->addRow({.height = 2});
     layout->addRow({.height = 28}).addWidget(texture_size_label, 0.f, 128).addWidget(texture_size_slider);
-    layout->addRow({.height = 2});
-    layout->addRow({.height = 28}).addWidget(sdf_max_dist_label, 0.f, 128).addWidget(sdf_max_dist_slider);
     layout->addRow({.rel_height = 1.0});
     layout->addRow({.height = 32}).addWidget(convert_font_button);
     layout->addRow({.height = 2});

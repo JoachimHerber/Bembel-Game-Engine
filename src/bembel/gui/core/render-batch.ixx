@@ -1,13 +1,13 @@
-﻿export module bembel.gui.core:RenderBatch;
+﻿module;
+#include <vector>
+export module bembel.gui.core:RenderBatch;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 
 export enum InstanceType : u8 { RECTANGLE = 0, GLYPH = 1, ICON = 2 };
 
@@ -20,15 +20,9 @@ export class RenderBatchInterface {
     virtual void setSecondaryColor(In<ColorRGB> color) = 0;
     virtual void setAlpha(In<u8> alpha)                = 0;
 
-    virtual void drawRectangle(vec2 min, vec2 max)                                      = 0;
-    virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) = 0;
-    virtual void drawGlyph(
-        Font::Glyph const& glyph,
-        vec2 const&        pos,
-        float              scale,
-        float              threshold_min = 0.48f,
-        float              threshold_max = 0.52f
-    ) = 0;
+    virtual void drawRectangle(vec2 min, vec2 max)                                                          = 0;
+    virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max)                     = 0;
+    virtual void drawGlyph(GlyphIndex glyph, vec2 const& pos, float scale, bool outline = false)   = 0;
 };
 
 export struct InstanceData {
@@ -62,6 +56,8 @@ export class RenderBatch : public RenderBatchInterface {
 
     void init();
 
+    void setFont(SdfFont* font) { m_font = font; }
+
     void setPositionOffset(vec2 const& position_offset);
     void setDrawArea(vec2 const& min, vec2 const& max);
 
@@ -72,13 +68,7 @@ export class RenderBatch : public RenderBatchInterface {
 
     virtual void drawRectangle(vec2 min, vec2 max) override;
     virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) override;
-    virtual void drawGlyph(
-        Font::Glyph const& glyph,
-        vec2 const&        pos,
-        float              scale,
-        float              threshold_min,
-        float              threshold_max
-    ) override;
+    virtual void drawGlyph(GlyphIndex glyph, vec2 const& pos, float scale, bool outline) override;
 
     void draw();
 
@@ -86,14 +76,7 @@ export class RenderBatch : public RenderBatchInterface {
     bool clampToViewArea(vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max);
 
     void addInstance(
-        vec2 pos_min,
-        vec2 pos_max,
-        vec2 tc_min,
-        vec2 tc_max,
-        u8   type,
-        u8   data1 = 0u,
-        u8   data2 = 0u,
-        u8   data3 = 0u
+        vec2 pos_min, vec2 pos_max, vec2 tc_min, vec2 tc_max, u8 type, u8 data1 = 0u, u8 data2 = 0u, u8 data3 = 0u
     ) {
         m_instances.emplace_back(
             pos_min.x,
@@ -130,6 +113,8 @@ export class RenderBatch : public RenderBatchInterface {
 
     uint m_vao = 0;
     uint m_vbo = 0;
+
+    SdfFont* m_font;
 };
 
 } // namespace bembel::gui

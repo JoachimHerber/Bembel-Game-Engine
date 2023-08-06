@@ -15,28 +15,30 @@ export class FontTextureGenerator {
   public:
     FontTextureGenerator();
 
-    void setResolution(uvec2);
+    void setResolution(uint);
 
-    void generateTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, double line_width);
+    void generateTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist);
 
     bool saveTexture(std::filesystem::path path);
 
-    FrameBufferObject* getFBO() { return m_fbo.get(); }
-    Texture*           getTexture() { return m_texture.get(); }
-    uvec2              getResolution() { return m_resolution; }
+    FrameBufferObject* getFBO()        { return m_fbo.get();     }
+    Texture*           getTexture()    { return m_texture.get(); }
+    uint               getResolution() { return m_resolution;    }
 
   private:
-    void renderToTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, double line_width);
+    void renderToTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist);
 
     struct Intersection {
         // describes the intersection between a ray and a glyph
         double pos;       // the postilions along the ray
         bool   direction; // indicates whether the ray enters or leaves a glyph
+
+        bool operator!=(Intersection other) { return pos != other.pos || direction != other.direction; }
     };
     using Intersections = std::vector<Intersection>;
 
-    void getIntersections(double y, TextureAtlasNode const*, Intersections&);
-    void drawGlypeOutline(TextureAtlasNode const*, double line_width);
+    void getIntersections(int row, TextureAtlasNode const*, Intersections&);
+    void drawGlypeOutline(TextureAtlasNode const*, double margin);
 
   private:
     Asset<ShaderProgram> m_shader;
@@ -44,7 +46,7 @@ export class FontTextureGenerator {
     std::unique_ptr<FrameBufferObject> m_fbo;
     std::unique_ptr<Texture>           m_texture;
 
-    uvec2 m_resolution = {1024, 1024};
+    uint m_resolution = 1024;
 
 };
 

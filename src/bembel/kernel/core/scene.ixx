@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <vector>
 #include <stack>
+#include <any> 
 export module bembel.kernel.core:Scene;
 
 import bembel.base;

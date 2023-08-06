@@ -14,11 +14,11 @@ export class Application {
     Application() {}
     virtual ~Application() = default;
 
-    bool run() {
+    bool run(std::span<std::string_view> args) {
         {
             log().info("Initalizing Application");
             IndentDefaultLogs indent;
-            if(!init()) return false;
+            if(!init(args)) return false;
         }
         {
             log().info("Starting MainLoop");
@@ -56,7 +56,7 @@ export class Application {
         }
     }
 
-    virtual bool init()    = 0;
+    virtual bool init(std::span<std::string_view> args) = 0;
     virtual void cleanup() = 0;
 
     virtual void update(double timeDelta) = 0;

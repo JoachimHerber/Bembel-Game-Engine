@@ -1,11 +1,12 @@
 module;
 #include <set>
 #include <string>
-export module bembel.text.i18n:NumberFormat;
+
+export module bembel.kernel.i18n:NumberFormat;
 
 import bembel.base;
 
-namespace bembel::text::i18n {
+namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
 export class NumberFormat {
@@ -19,10 +20,12 @@ export class NumberFormat {
     void format(In<u64> value, InOut<std::u8string> str);
     void format(In<double> value, InOut<std::u8string> str);
 
+    NumberFormat& operator=(In<json> j);
+
   private:
-    std::u8string_view m_decimal_separator         = u8".";
-    std::u8string_view m_group_separator           = u8"\u2009"; // half space
-    std::set<uint>     m_group_separator_locations = {3, 6, 9, 12, 15, 18};
+    std::u8string  m_decimal_separator         = u8".";
+    std::u8string  m_group_separator           = u8"\u2009"; // half space
+    std::set<uint> m_group_separator_locations = {3, 6, 9, 12, 15, 18};
 };
 
 } // namespace bembel::text::i18n

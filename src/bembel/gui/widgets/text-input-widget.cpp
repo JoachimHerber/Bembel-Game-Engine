@@ -7,14 +7,11 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
-using namespace bembel::text::i18n;
 
 TextInputWidget::TextInputWidget(Widget& parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);
@@ -104,10 +101,10 @@ void TextInputWidget::View::updateGlyphs(In<std::u8string> str) {
 
     m_glyphs.clear();
     m_advance = 0;
-    for(unsigned prev_index = Font::INVALIDE_GLYPH_INDEX; char32_t c : str) {
+    for(unsigned prev_index = SdfFont::INVALIDE_GLYPH_INDEX; char32_t c : str) {
         auto const glyph_index = font->getGlyphIndex(c, false, false);
 
-        if(prev_index != Font::INVALIDE_GLYPH_INDEX)
+        if(prev_index != SdfFont::INVALIDE_GLYPH_INDEX)
             m_advance += font->getKernig(prev_index, glyph_index);
 
         m_glyphs.emplace_back(glyph_index, m_advance);
@@ -178,18 +175,18 @@ void TextInputWidget::View::drawBackground(
 }
 
 void TextInputWidget::View::drawText(
-    RenderBatchInterface& batch, Style const& style, Font const& font, vec2 origin, float scale
+    RenderBatchInterface& batch, Style const& style, SdfFont const& font, vec2 origin, float scale
 ) {
     batch.setColor(style.getColor(Style::Colors::TEXT));
     for(auto const& [glyph, x] : m_glyphs) {
-        batch.drawGlyph(font.getGlypData(glyph), origin + vec2{x * scale, 0}, scale);
+        batch.drawGlyph(glyph, origin + vec2{x * scale, 0}, scale);
     }
 }
 
 void TextInputWidget::View::drawCursor(
     RenderBatchInterface& batch,
     Style const&          style,
-    Font const&           font,
+    SdfFont const&           font,
     vec2                  text_origin,
     float                 text_scale,
     usize                 cursor_pos

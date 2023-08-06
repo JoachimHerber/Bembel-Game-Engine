@@ -20,7 +20,7 @@ export class FontConverter {
     FontConverter();
     ~FontConverter();
 
-    GlyphTextureAtlas& getGlyphTextureAtlas() { return m_texture_atlas; }
+    GlyphTextureAtlas&    getGlyphTextureAtlas() { return m_texture_atlas; }
     FontTextureGenerator& getTextureGenerator() { return m_texture_generator; }
 
     bool loade(In<std::filesystem::path>);
@@ -34,13 +34,11 @@ export class FontConverter {
     }
 
     FontFamily* getFontFamily() { return m_selected_font_family; }
-    void        setResolution(uvec2 res);
+    void        setResolution(uint res);
 
     bool save(In<std::filesystem::path>);
 
-    void converSelectedFont(
-        std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces, double max_dist
-    );
+    void converSelectedFont(std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces);
 
     Signal<std::u8string_view> font_family_added_signal;
 

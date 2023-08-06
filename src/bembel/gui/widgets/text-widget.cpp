@@ -6,13 +6,11 @@ module bembel.gui.widgets;
 
 import bembel.base;
 import bembel.kernel;
-import bembel.text;
 import bembel.gui.core;
 
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
-using namespace bembel::text;
 
 TextWidget::TextWidget(Widget& parent) : Widget{parent} {
     text.change_signal.bind(this, &TextWidget::onTextChanged);
@@ -61,7 +59,7 @@ void TextWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
 }
 
 void TextWidget::recalculateLayout(In<ivec2> size) {
-    Font const* const font = m_text.getFont();
+    SdfFont const* const font = m_text.getFont();
     if(!font) return;
 
     vec2 origin = {0, size.y - m_fontSize * font->getAscender()};
@@ -83,7 +81,7 @@ void TextWidget::View::draw(RenderBatchInterface& batch) {
 
     batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
     for(auto& g : m_widget.m_layout.getGlyphs()) {
-        batch.drawGlyph(*g.glyph, g.pos + position, m_widget.m_fontSize, 0.15f, 0.20f);
+        batch.drawGlyph(g.glyph, g.pos + position, m_widget.m_fontSize, true);
     }
     if(m_widget.text_color.has_value()) {
         batch.setColor(m_widget.text_color.value());
@@ -92,7 +90,7 @@ void TextWidget::View::draw(RenderBatchInterface& batch) {
     }
 
     for(auto& g : m_widget.m_layout.getGlyphs()) {
-        batch.drawGlyph(*g.glyph, g.pos + position, m_widget.m_fontSize);
+        batch.drawGlyph(g.glyph, g.pos + position, m_widget.m_fontSize);
     }
 }
 

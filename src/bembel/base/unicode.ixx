@@ -1,14 +1,13 @@
 module;
+#include <iostream>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <iostream>
-export module bembel.text.i18n:Unicode;
+export module bembel.base:Unicode;
 
-import bembel.base;
+import :Types;
 
-namespace bembel::text::i18n {
-using namespace bembel::base;
+namespace bembel::base {
 
 export namespace utf8 {
     using CodeUnit  = char8_t;
@@ -41,16 +40,14 @@ export namespace utf8 {
 
     class Iterator {
       public:
-        Iterator(In<std::u8string_view> str, In<size_t> pos = 0) noexcept
-          : m_str{str}, m_pos{pos} {}
+        Iterator(In<std::u8string_view> str, In<size_t> pos = 0) noexcept : m_str{str}, m_pos{pos} {}
 
         utf8::CodePoint operator*();
         Iterator&       operator++();
         Iterator        operator++(int);
 
         bool operator!=(Iterator other) {
-            return m_pos != other.m_pos || m_str.size() != other.m_str.size()
-                || m_str.data() != other.m_str.data();
+            return m_pos != other.m_pos || m_str.size() != other.m_str.size() || m_str.data() != other.m_str.data();
         }
 
         operator bool() const { return m_pos < m_str.size(); };
@@ -71,8 +68,8 @@ export namespace utf8 {
 
 } // namespace utf8
 
-} // namespace bembel::text
+} // namespace bembel::base
 
 export std::ostream& operator<<(std::ostream& out, std::u8string_view str) {
-    return out << bembel::text::i18n::utf8::toLocaleEncoding(str).value_or("");
+    return out << bembel::base::utf8::toLocaleEncoding(str).value_or("");
 }

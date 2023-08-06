@@ -28,7 +28,7 @@ PhysicsExample::~PhysicsExample() {
     events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
-bool PhysicsExample::init() {
+bool PhysicsExample::init(std::span<std::string_view>) {
     if(!m_engine.loadSetting("physics/config.xml")) return false;
     auto pipline = m_graphic_system->getRenderingPipelines()[0].get();
 

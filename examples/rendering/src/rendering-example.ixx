@@ -16,7 +16,7 @@ export class RenderingExample : public kernel::Application {
     RenderingExample();
     ~RenderingExample();
 
-    virtual bool init() override;
+    virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
     virtual void update(double time) override;
