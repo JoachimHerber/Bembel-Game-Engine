@@ -1,0 +1,36 @@
+{
+  "local": {
+    "number_format": {
+      "decimal_separator": ",",
+      "group_separator": "."
+    }
+  },
+  "translations": {
+    "widgets": {
+      "labels": {
+        "load_file": "Schriftart Datei laden:",
+        "font": "Schriftart:",
+        "character_sets": "Zeichen:",
+        "other_chars": "Weitere Zeichen:",
+        "sdf_texture": "SDF Texture:",
+        "resolution": "Auflösung:",
+        "max_distance": "Max Distanze:"
+      },
+      "checkbox": {
+        "default": "Stantart",
+        "oblique": "Kursiv",
+        "bold": "Fett",
+        "bold_oblique": "Fett & Kursiv",
+        "basic_latin": "Basic Latin",
+        "latin_supplement": "Latin-1 Supplement",
+        "latin_extended_a": "Latin Extended-A",
+        "latin_extended_b": "Latin Extended-B"
+      },
+      "button": {
+        "load_file": "Laden",
+        "convert_font": "Schriftart umwanden",
+        "save_font": "Schriftart speichern"
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ GraphicalUserInterface::GraphicalUserInterface()
     this->root_widget.setName("Root");
 }
 
-GraphicalUserInterface::~GraphicalUserInterface() {}
+GraphicalUserInterface::~GraphicalUserInterface() {} 
 
 bool GraphicalUserInterface::init(xml::Element const* properties, bool load_file) {
     if(!properties) return false;

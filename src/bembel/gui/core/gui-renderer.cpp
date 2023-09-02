@@ -63,6 +63,7 @@ void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
     glUniform1i(shader->getUniformLocation("uFontTexture"), 0);
     glUniform1i(shader->getUniformLocation("uAtlasTexture"), 1);
 
+    glActiveTexture(GL_TEXTURE0);
     fontTexture->bind();
     glActiveTexture(GL_TEXTURE1);
     atlasTexture->bind();

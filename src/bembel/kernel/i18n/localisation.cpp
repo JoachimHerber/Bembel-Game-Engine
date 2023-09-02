@@ -7,6 +7,7 @@ module;
 module bembel.kernel.i18n;
 
 import bembel.base;
+import bembel.kernel.assets;
 
 namespace bembel::kernel::i18n {
 using namespace bembel::base;
@@ -17,7 +18,11 @@ std::u8string_view Localisation::translate(TranslationKeyIndex key) const {
     auto index = std::to_underlying(key);
     if(index < m_translations.size() && m_translations[index]) { return *m_translations[index]; }
 
-    log().warning("Localisation doesn't provide translation for: {}", index);
+    if(index < getTranslationKeys().size()) {
+        log().warning("Localisation doesn't provide translation for: {}", getTranslationKeys()[index]);
+    } else {
+        log().warning("Invalid TranslationKeyIndex: {}", index);
+    }
     return u8"";
 }
 
@@ -46,11 +51,17 @@ void Localisation::format(In<std::u8string_view> fmt, In<double> value, InOut<st
 void Localisation::format(In<std::u8string_view> fmt, In<TimePoint> value, InOut<std::u8string> str) {}
 
 Localisation::Error Localisation::load(std::filesystem::path file_path) {
-    if(!std::filesystem::exists(file_path)) return Error::FileNotFound;
+    if(!std::filesystem::exists(file_path)) {
+        log().error("File {} doesn't exist", file_path.string());
+        return Error::FileNotFound;
+    }
 
     std::ifstream file{file_path, std::ios::in | std::ios::binary};
 
-    if(!file) return Error::FileNotFound;
+    if(!file) {
+        log().error("Couldn't open file {}", file_path.string());
+        return Error::FileNotFound;
+    }
 
     auto&                                        keys = getTranslationKeys();
     std::unordered_map<std::string, std::size_t> key_to_index;
@@ -79,7 +90,7 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
                         self(path + "." + key, value);
                 }
             } else {
-                auto it = key_to_index.find(path);
+                auto it   = key_to_index.find(path);
                 auto text = std::make_shared<std::u8string>(j.get<std::u8string>());
                 if(it != key_to_index.end()) {
                     m_translations[it->second] = std::move(text);
@@ -96,44 +107,6 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
         return Error::FileNotFound;
     }
 
-    /*
-    std::u8string line;
-    while(std::getline(file, line)) {
-
-        auto n = line.find(':');
-        if(n == std::u8string::npos) continue;
-
-        auto key   = utf8::toLocaleEncoding(std::u8string_view(line).substr(0, n));
-        auto value = std::u8string_view(line).substr(n + 1);
-
-        if(!key) { return Error::InvalidFileFormat; }
-        while(value.starts_with(' ')) value = value.substr(1);
-
-        if(value.ends_with(u8"\r")) value = value.substr(0, value.size() - 1);
-
-        if(key == "number_format.decimal_separator") {
-            number_format.setDecimalSeparator(value);
-            continue;
-        }
-        if(key == "number_format.group_separator") {
-            number_format.setGroupSeparator(value);
-            continue;
-        }
-        if(key == "number_format.group_separator_locations") {
-            //number_format.setGroupSeparator(value); // @ToDo
-            continue;
-        }
-
-        auto it = key_to_index.find(key.value());
-        if(it != key_to_index.end()) {
-            m_translations[it->second] = std::make_shared<std::u8string>(value);
-        } else {
-            m_translations.emplace_back(std::make_shared<std::u8string>(value));
-            key_to_index.emplace(key.value(), keys.size());
-            keys.push_back(key.value());
-        }
-    }
-    //*/
     return Error::Ok;
 }
 
@@ -150,9 +123,17 @@ TranslationKeyIndex Localisation::getTranslationKeyIndex(std::string_view key) {
     return TranslationKeyIndex(keys.size() - 1);
 }
 
+void Localisation::init(std::span<std::string_view> args, std::filesystem::path base_dir) {
+    if(auto it = std::find(args.begin(), args.end(), "-local"); it != args.end() && ++it != args.end()) {
+        DEFAULT->load(base_dir / std::format("{}.json", *it));
+    } else {
+        DEFAULT->load(base_dir / "en.json");
+    }
+}
+
 std::vector<std::string_view>& Localisation::getTranslationKeys() {
     static std::vector<std::string_view> keys;
     return keys;
 }
 
-} // namespace bembel::text::i18n
+} // namespace bembel::kernel::i18n

@@ -13,12 +13,10 @@ using namespace base;
 using namespace kernel;
 using namespace graphics;
 using namespace gui;
+using namespace kernel::i18n::literals;
 
 GameLogic::GameLogic(
-    ChessBoard*             board,
-    SelectionPointer*       selection_ptr,
-    CameraControle*         camera,
-    GraphicalUserInterface* gui
+    ChessBoard* board, SelectionPointer* selection_ptr, CameraControle* camera, GraphicalUserInterface* gui
 )
   : m_board(board), m_selection_ptr(selection_ptr), m_camera(camera), m_gui(gui) {
     setState(std::make_unique<SelectChessPice>(this, ChessPlayer::WHITE));
@@ -69,15 +67,13 @@ void GameLogic::getPossiblePawnMoves(ChessPiece pice, std::vector<Move>& moves) 
         if(!pice.hasMoved()) { addMove(pice, moves, pos + ivec2(2 * dir, 0), false); }
     }
     if(auto other = m_board->getChessPieceAt(pos + ivec2(dir, -1))) {
-        if(other.getOwner() != pice.getOwner())
-            moves.emplace_back(Move::CAPUTE, pos + ivec2(dir, -1));
+        if(other.getOwner() != pice.getOwner()) moves.emplace_back(Move::CAPUTE, pos + ivec2(dir, -1));
     }
     if(m_board->canCaptureEnPassant(pos + ivec2(dir, -1))) {
         moves.emplace_back(Move::CAPUTE_EN_PASSANT, pos + ivec2(dir, -1));
     }
     if(auto other = m_board->getChessPieceAt(pos + ivec2(dir, +1))) {
-        if(other.getOwner() != pice.getOwner())
-            moves.emplace_back(Move::CAPUTE, pos + ivec2(dir, +1));
+        if(other.getOwner() != pice.getOwner()) moves.emplace_back(Move::CAPUTE, pos + ivec2(dir, +1));
     }
     if(m_board->canCaptureEnPassant(pos + ivec2(dir, +1))) {
         moves.emplace_back(Move::CAPUTE_EN_PASSANT, pos + ivec2(dir, +1));
@@ -141,8 +137,7 @@ bool GameLogic::addMove(ChessPiece pice, std::vector<Move>& moves, ivec2 pos, bo
     return false;
 }
 
-GameLogic::SelectChessPice::SelectChessPice(GameLogic* logic, ChessPlayer player)
-  : m_logic(logic), m_player(player) {}
+GameLogic::SelectChessPice::SelectChessPice(GameLogic* logic, ChessPlayer player) : m_logic(logic), m_player(player) {}
 
 void GameLogic::SelectChessPice::update(double) {
     ivec2 tile = m_logic->getSelectionPointer()->getSelectedTile();
@@ -153,7 +148,7 @@ void GameLogic::SelectChessPice::update(double) {
 
     for(uint x = 0; x < 8; ++x) {
         for(uint y = 0; y < 8; ++y) {
-            auto tile = m_logic->getChessBoard()->getTileAt({x, y});
+            auto tile                                        = m_logic->getChessBoard()->getTileAt({x, y});
             tile.getComponent<SelectionHighlightComponent>() = SelectionHighlight::NO_HIGHLIGHT;
         }
     }
@@ -169,9 +164,7 @@ void GameLogic::SelectChessPice::update(double) {
 
     auto moves = m_logic->getPossibleMoves(m_selection);
 
-    m_selection.setHighlight(
-        moves.empty() ? SelectionHighlight::SELECTABLE : SelectionHighlight::FOCUSED
-    );
+    m_selection.setHighlight(moves.empty() ? SelectionHighlight::SELECTABLE : SelectionHighlight::FOCUSED);
 
     for(auto move : moves) {
         m_logic->getChessBoard()->getTileAt(move.to).getComponent<SelectionHighlightComponent>() =
@@ -194,8 +187,8 @@ void GameLogic::SelectChessPice::onEnter() {
     if(!lable) return;
 
     lable->setText(
-        m_player == ChessPlayer::WHITE ? u8"White's Turn: select chess pice"
-                                       : u8"Black's Turn: select chess pice"
+        m_player == ChessPlayer::WHITE ? "examples.chess.select_chess_pice.white"_i18n()
+                                       : "examples.chess.select_chess_pice.black"_i18n()
     );
 }
 
@@ -239,8 +232,8 @@ void GameLogic::SelectMove::onEnter() {
     if(!lable) return;
 
     lable->setText(
-        m_pice.getOwner() == ChessPlayer::WHITE ? u8"White's Turn: select move"
-                                                : u8"Black's Turn: select move"
+        m_pice.getOwner() == ChessPlayer::WHITE ? "examples.chess.select_move.white"_i18n()
+                                                : "examples.chess.select_move.black"_i18n()
     );
 }
 

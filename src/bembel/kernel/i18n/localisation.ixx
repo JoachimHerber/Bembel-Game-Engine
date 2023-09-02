@@ -39,6 +39,8 @@ export class Localisation {
     static std::vector<std::string_view> const& getUsedTranslationKeys();
     static TranslationKeyIndex                  getTranslationKeyIndex(std::string_view key);
 
+    static void init(std::span<std::string_view> args, std::filesystem::path base_dir);
+
     static std::shared_ptr<Localisation> DEFAULT;
 
   private:
@@ -53,7 +55,10 @@ struct TranslationKey {
     static const TranslationKeyIndex INDEX;
 
     operator TranslationKeyIndex() const { return INDEX; }
-    operator std::u8string_view() const { return Localisation::DEFAULT->translate(INDEX); }
+
+    std::u8string_view operator()(Localisation& local = *(Localisation::DEFAULT)) {
+        return local.translate(INDEX);
+    }
 };
 template <StringLiteral TKey>
 TranslationKeyIndex const TranslationKey<TKey>::INDEX = Localisation::getTranslationKeyIndex(TKey);

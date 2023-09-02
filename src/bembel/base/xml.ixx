@@ -55,7 +55,7 @@ bool getAttribute(In<not_null_ptr<const Element>> node, In<std::string_view> nam
         value.set(tmp);
         return true;
     } else if constexpr(std::is_same_v<std::remove_cv_t<T>, std::u8string>) {
-        value = (char8_t)attrib; // TinyXML-2 assumes all inputs and outputs are UTF-8
+        value = (char8_t*)attrib; // TinyXML-2 assumes all inputs and outputs are UTF-8
         return true;
     } else {
         return conversion::fromString(attrib, value);

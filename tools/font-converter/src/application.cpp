@@ -34,14 +34,7 @@ bool Application::init(std::span<std::string_view> args) {
     asset_locator.addGenericAssetDirectory("../assets/shader");
     asset_locator.addGenericAssetDirectory("../assets/fonts");
 
-    if(auto it = std::find(args.begin(), args.end(), "-local"); it != args.end() && ++it != args.end()) {
-        std::filesystem::path local = "font-converter/local/";
-        local += *it;
-        local += ".json";
-        kernel::i18n::Localisation::DEFAULT->load(local);
-    } else {
-        kernel::i18n::Localisation::DEFAULT->load("font-converter/local/en.json");
-    }
+    kernel::i18n::Localisation::init(args, "font-converter/local");
 
     auto display_mode = std::make_shared<WindowDisplayMode>();
     display_mode->setWidth(1200);
@@ -224,53 +217,53 @@ void Application::onTextureResulutionUpdate(i64 res) {
 void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     auto& root = gui->root_widget;
 
-    load_file_label = root.createChildWidget<LabelWidget>("widgets.labels.load_file"_i18n);
+    load_file_label = root.createChildWidget<LabelWidget>("widgets.labels.load_file"_i18n());
     load_file_label->setHasOutline(true);
 
     load_file_path_input = root.createChildWidget<TextInputWidget>();
-    load_file_button     = root.createChildWidget<ButtonWidget>("widgets.button.load_file"_i18n);
+    load_file_button     = root.createChildWidget<ButtonWidget>("widgets.button.load_file"_i18n());
     load_file_error      = root.createChildWidget<LabelWidget>();
 
     load_file_path_input->text = std::u8string(u8"fonts/AtkinsonHyperlegible-Regular.ttf");
     load_file_error->setTextColor(ColorRGBA{255, 0, 0, 255});
 
-    font_selections_label = root.createChildWidget<LabelWidget>("widgets.labels.font"_i18n);
+    font_selections_label = root.createChildWidget<LabelWidget>("widgets.labels.font"_i18n());
     font_selections_label->setHasOutline(true);
 
     font_family_selections = root.createChildWidget<RadioButtonGroupWidget>();
-    type_face_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.default"_i18n);
-    type_face_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.oblique"_i18n);
-    type_face_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold"_i18n);
-    type_face_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold_oblique"_i18n);
+    type_face_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.default"_i18n());
+    type_face_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.oblique"_i18n());
+    type_face_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold"_i18n());
+    type_face_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold_oblique"_i18n());
 
     type_face_selection[0]->disable();
     type_face_selection[1]->disable();
     type_face_selection[2]->disable();
     type_face_selection[3]->disable();
 
-    char_set_label = root.createChildWidget<LabelWidget>("widgets.labels.character_sets"_i18n);
+    char_set_label = root.createChildWidget<LabelWidget>("widgets.labels.character_sets"_i18n());
     char_set_label->setHasOutline(true);
 
-    char_set_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.basic_latin"_i18n);
-    char_set_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_supplement"_i18n);
-    char_set_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_a"_i18n);
-    char_set_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_b"_i18n);
+    char_set_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.basic_latin"_i18n());
+    char_set_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_supplement"_i18n());
+    char_set_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_a"_i18n());
+    char_set_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_b"_i18n());
 
     char_set_selection[0]->state = CheckBoxWidget::State::SELECTED;
 
-    additional_chars_label = root.createChildWidget<LabelWidget>("widgets.labels.other_chars"_i18n);
+    additional_chars_label = root.createChildWidget<LabelWidget>("widgets.labels.other_chars"_i18n());
     additional_chars_input = root.createChildWidget<TextInputWidget>();
 
-    sdf_label = root.createChildWidget<LabelWidget>("widgets.labels.sdf_texture"_i18n);
+    sdf_label = root.createChildWidget<LabelWidget>("widgets.labels.sdf_texture"_i18n());
     sdf_label->setHasOutline(true);
 
-    texture_size_label  = root.createChildWidget<LabelWidget>("widgets.labels.resolution"_i18n);
+    texture_size_label  = root.createChildWidget<LabelWidget>("widgets.labels.resolution"_i18n());
     texture_size_slider = root.createChildWidget<IntSliderWidget>(256, 4 * 1024, true);
 
-    convert_font_button = root.createChildWidget<ButtonWidget>("widgets.button.convert_font"_i18n);
+    convert_font_button = root.createChildWidget<ButtonWidget>("widgets.button.convert_font"_i18n());
     convert_font_button->disable();
 
-    save_font_button = root.createChildWidget<ButtonWidget>("widgets.button.save_font"_i18n);
+    save_font_button = root.createChildWidget<ButtonWidget>("widgets.button.save_font"_i18n());
     save_font_button->disable();
 
     save_file_error = root.createChildWidget<LabelWidget>();

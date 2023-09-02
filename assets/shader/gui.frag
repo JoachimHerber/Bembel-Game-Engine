@@ -17,10 +17,7 @@ void main()
 		} break;
 		case 1u: {
 			float dist = texture2D(uFontTexture, vTexCoords).r;
-			//oColor.rgb *= dist;
-			//oColor.a *= dist > 0.01f ? 1.0f : 0.0f;
-			//oColor.a *= clamp((255.0f*dist - vData.x)/float(vData.y - vData.x), 0.0f, 1.0f);
-			oColor.a *= smoothstep(vData.x, vData.y, dist);
+			oColor.a *= smoothstep(vData.x/255, vData.y/255, dist);
 		} break;
 		case 2u: {
 			vec4 mix = texture2D(uAtlasTexture, vTexCoords);

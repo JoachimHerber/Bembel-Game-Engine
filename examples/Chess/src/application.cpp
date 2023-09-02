@@ -27,9 +27,12 @@ Application::~Application() {
     events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
-bool Application::init(std::span<std::string_view>) {
+bool Application::init(std::span<std::string_view> args) {
     log().info("Loading Application Settings");
     if(!m_engine.loadSetting("chess/config.xml")) return false;
+
+    kernel::i18n::Localisation::init(args, "local");
+
     auto pipline = m_graphic_system->getRenderingPipelines()[0].get();
 
     m_camera = std::make_unique<CameraControle>(pipline->getCamera());

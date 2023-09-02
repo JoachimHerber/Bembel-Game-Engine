@@ -1,0 +1,25 @@
+{
+  "local": {
+    "number_format": {
+      "decimal_separator": ".",
+      "group_separator": " "
+    }
+  },
+  "translations": {
+    "examples": {
+      "chess": {
+        "select_chess_pice": {
+          "white": "White's Turn: select chess pice",
+          "black": "Black's Turn: select chess pice"
+        },
+        "select_move": {
+          "white": "White's Turn: select move",
+          "black": "Black's Turn: select move"
+        }
+      },
+      "rendering": {
+        "camara_transform_label": "Cam: pos=({1:.2}; {2:.2}; {3:.2}) pitch={4:2}° yaw={5:3}°"
+      }
+    }
+  }
+}

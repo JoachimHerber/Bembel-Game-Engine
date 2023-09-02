@@ -10,6 +10,7 @@ namespace bembel {
 using namespace bembel::graphics;
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::kernel::i18n::literals;
 using namespace bembel::gui;
 using namespace ::gl;
 
@@ -25,8 +26,10 @@ RenderingExample::~RenderingExample() {
     events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
-bool RenderingExample::init(std::span<std::string_view>) {
+bool RenderingExample::init(std::span<std::string_view> args) {
     if(!m_engine.loadSetting("rendering/config.xml")) return false;
+
+    kernel::i18n::Localisation::init(args, "local");
 
     m_camera = std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
 
@@ -79,16 +82,16 @@ void RenderingExample::update(double time) {
 
     static constexpr float RAD_TO_DEG = 180 / 3.14159265359;
 
-    auto text = bembel::base::utf8::fromLocaleEncoding(std::format(
-        "Cam: pos=({:.2}; {:.2}; {:.2}) pitch={:2}° yaw={:3}°",
+    static bembel::kernel::i18n::String<float, float, float, float, float> text = {
+        "examples.rendering.camara_transform_label"_i18n};
+
+    m_label->setText(text(
         m_camera->getPosition().x,
         m_camera->getPosition().y,
         m_camera->getPosition().z,
         int(RAD_TO_DEG * m_camera->getPitch()),
         int(RAD_TO_DEG * m_camera->getYaw())
     ));
-
-    if(text) { m_label->setText(text.value()); }
 }
 
 void RenderingExample::handleEvent(In<WindowShouldCloseEvent> event) {
