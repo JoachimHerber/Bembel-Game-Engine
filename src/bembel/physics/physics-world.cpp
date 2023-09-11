@@ -1,5 +1,5 @@
 module;
-#include <bullet/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 
 #include <memory>
 module bembel.physics;

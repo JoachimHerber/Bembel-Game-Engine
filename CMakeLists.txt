@@ -17,7 +17,6 @@ include_directories( "${CMAKE_SOURCE_DIR}/src" )
 include_directories( "${CMAKE_SOURCE_DIR}/dependencies" )
 include_directories( "${CMAKE_SOURCE_DIR}/dependencies/glm" )
 include_directories( "${CMAKE_SOURCE_DIR}/dependencies/json/include" )
-include_directories( "${EXTERNAL_INCLUDE_DIRS}" )
 
 set( CMAKE_CONFIGURAION_TYPES "Debug;Release" )
 

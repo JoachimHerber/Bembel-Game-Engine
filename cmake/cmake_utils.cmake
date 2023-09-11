@@ -1,24 +1,47 @@
 macro( bembel_find_external_dependencies  )
 
+	option(GLFW_INSTALL "" OFF)
+	add_subdirectory( "dependencies/glfw")
+
+	option(OPTION_BUILD_TOOLS "" OFF)
+	option(OPTION_BUILD_EXAMPLES "" OFF)
+	add_subdirectory( "dependencies/glbinding")
+	
+	option(BUILD_CPU_DEMOS "" OFF)
+	option(USE_GLUT "" OFF)
+	option(BUILD_BULLET2_DEMOS "" OFF)
+	option(BUILD_OPENGL3_DEMOS "" OFF)
+	option(BUILD_EXTRAS "" OFF)
+	option(BUILD_UNIT_TESTS "" OFF)
+	option(BUILD_ENET "" OFF)
+	option(BUILD_CLSOCKET "" OFF)
+	add_subdirectory( "dependencies/bullet3")
+	
+	option(BUILD_CLSOCKET "" OFF)
+	add_subdirectory( "dependencies/freetype")
+	
+	set_target_properties( glfw                  PROPERTIES FOLDER "3rdParty/glfw" )
+	set_target_properties( update_mappings       PROPERTIES FOLDER "3rdParty/glfw" )
+	set_target_properties( glbinding             PROPERTIES FOLDER "3rdParty/glbinding" )
+	set_target_properties( glbinding-aux         PROPERTIES FOLDER "3rdParty/glbinding" )
+	set_target_properties( KHRplatform-sources   PROPERTIES FOLDER "3rdParty/glbinding" )
+	set_target_properties( pack                  PROPERTIES FOLDER "3rdParty/glbinding" )
+	set_target_properties( pack-glbinding        PROPERTIES FOLDER "3rdParty/glbinding" )
+	set_target_properties( Bullet2FileLoader     PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( Bullet3Collision      PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( Bullet3Common         PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( Bullet3Dynamics       PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( Bullet3Geometry       PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( Bullet3OpenCL_clew    PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( BulletCollision       PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( BulletDynamics        PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( BulletInverseDynamics PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( BulletSoftBody        PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( LinearMath            PROPERTIES FOLDER "3rdParty/bullet3" )
+	set_target_properties( freetype              PROPERTIES FOLDER "3rdParty/freetype" )
+	
 	find_package(OpenGL REQUIRED)
-	find_package(GLFW REQUIRED)
-	find_package(glbinding REQUIRED)
-	find_package(Bullet REQUIRED)
-
-	list( APPEND EXTERNAL_INCLUDE_DIRS "${GLFW_INCLUDE_DIR}" )
-	list( APPEND EXTERNAL_INCLUDE_DIRS "${GLBINDING_INCLUDE_DIR}" )
-	list( APPEND EXTERNAL_INCLUDE_DIRS "${BULLET_INCLUDE_DIR}" )
-
 	list( APPEND EXTERNAL_LIBRARIES "${OPENGL_LIBRARIES}" )
-	list( APPEND EXTERNAL_LIBRARIES "${GLFW_LIBRARY}" )
-	list( APPEND EXTERNAL_LIBRARIES "${GLBINDING_LIBRARIES}" )
-	list( APPEND EXTERNAL_LIBRARIES "${BULLET_LIBRARIES}" )
-	
-	get_filename_component(GLBINDING_BINARY_DIR  "${glbinding_DIR}" PATH )
-	
-	message(STATUS "glbinding_DIR='${glbinding_DIR}'")
-
-	list( APPEND  DLL_DIRS "${glbinding_DIR}" )
 endmacro( bembel_find_external_dependencies )
 
 macro( bembel_conditional_add_sub_project _PACKAGE_NAME _DIRECTORY _DISCRIPTION )
@@ -54,20 +77,3 @@ macro( bembel_configure_application _PACKAGE_NAME _WORK_FOLDER )
 		
 	endif( MSVC )	
 endmacro()
-
-macro(bembel_add_msvc_precompiled_header PrecompiledHeader PrecompiledSource SourcesVar)
-  IF(MSVC)
-    GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
-    SET(PrecompiledBinary "${CMAKE_CURRENT_BINARY_DIR}/${PrecompiledBasename}.pch")
-    SET(Sources ${${SourcesVar}})
-
-    SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
-                                PROPERTIES COMPILE_FLAGS "/Yc\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
-                                           OBJECT_OUTPUTS "${PrecompiledBinary}")
-    SET_SOURCE_FILES_PROPERTIES(${Sources}
-                                PROPERTIES COMPILE_FLAGS "/Yu\"${PrecompiledHeader}\" /FI\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
-                                           OBJECT_DEPENDS "${PrecompiledBinary}")  
-    # Add precompiled header to SourcesVar
-    LIST(APPEND ${SourcesVar} ${PrecompiledSource})
-  ENDIF(MSVC)
-endmacro(bembel_add_msvc_precompiled_header)

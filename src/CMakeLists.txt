@@ -1,6 +1,9 @@
 add_library( Bembel STATIC)
+include_directories( "../dependencies/bullet3/src" )
 
+target_link_libraries( Bembel glfw )
 target_link_libraries( Bembel glbinding::glbinding )
+target_link_libraries( Bembel BulletDynamics BulletCollision BulletSoftBody LinearMath )
 target_link_libraries( Bembel ${EXTERNAL_LIBRARIES} )
 set_target_properties( Bembel PROPERTIES OUTPUT_NAME "Bembel" )
 

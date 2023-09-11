@@ -1,10 +1,9 @@
 
-find_package(Freetype REQUIRED)
+#find_package(Freetype REQUIRED)
 
-list( APPEND EXTERNAL_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIRS}" )
-list( APPEND EXTERNAL_LIBRARIES "${FREETYPE_LIBRARIES}" )
+#list( APPEND EXTERNAL_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIRS}" )
+#list( APPEND EXTERNAL_LIBRARIES "${FREETYPE_LIBRARIES}" )
 
-include_directories( "${EXTERNAL_INCLUDE_DIRS}" )
 include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
@@ -35,6 +34,7 @@ endforeach()
 
 add_executable( FontConverter ${ProjectSources} )
 target_link_libraries( FontConverter Bembel ${EXTERNAL_LIBRARIES})
+target_link_libraries( FontConverter freetype )
 set_target_properties( FontConverter PROPERTIES FOLDER "tools" )
 bembel_configure_application( FontConverter "tools")
 

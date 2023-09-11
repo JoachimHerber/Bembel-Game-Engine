@@ -10,3 +10,18 @@
 [submodule "dependencies/json"]
 	path = dependencies/json
 	url = https://github.com/nlohmann/json.git
+[submodule "dependencies/glfw"]
+	path = dependencies/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "dependencies/glbinding"]
+	path = dependencies/glbinding
+	url = https://github.com/cginternals/glbinding.git
+[submodule "dependencies/bullet3"]
+	path = dependencies/bullet3
+	url = https://github.com/bulletphysics/bullet3.git
+[submodule "dependencies/freetype"]
+	path = dependencies/freetype
+	url = https://github.com/freetype/freetype.git
+[submodule "dependencies/assimp"]
+	path = dependencies/assimp
+	url = https://github.com/assimp/assimp.git
