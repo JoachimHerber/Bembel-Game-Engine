@@ -21,11 +21,13 @@ PhysicsExample::PhysicsExample() : Application() {
 
     events::addHandler<WindowShouldCloseEvent>(this);
     events::addHandler<FrameBufferResizeEvent>(this);
+    events::addHandler<KeyPressEvent>(this);
 }
 
 PhysicsExample::~PhysicsExample() {
     events::removeHandler<WindowShouldCloseEvent>(this);
     events::removeHandler<FrameBufferResizeEvent>(this);
+    events::removeHandler<KeyPressEvent>(this);
 }
 
 bool PhysicsExample::init(std::span<std::string_view>) {
@@ -37,7 +39,10 @@ bool PhysicsExample::init(std::span<std::string_view>) {
     m_gui = m_gui_system->getGUI("main");
 
     m_scene = std::make_shared<Scene>();
-    m_graphic_system->getRenderingPipelines()[0]->setScene(m_scene);
+
+    auto& rendering_pipeline = m_graphic_system->getRenderingPipelines()[0];
+
+    rendering_pipeline->setScene(m_scene);
     m_physics_system->addScene(m_scene);
 
     m_scene->loadAssets("scenes/assets.xml");
@@ -49,10 +54,7 @@ bool PhysicsExample::init(std::span<std::string_view>) {
     m_scene->createComponent<Geometry>(
         m_stirring_stick, Asset<GeometryModel>("stirring_stick"), vec3(4.5f, 0.5f, 0.1f)
     );
-    m_scene
-        ->createComponent<RigidBody>(
-            m_stirring_stick, Asset<CollisionShape>("stirring_stick"), 0.0_kg
-        )
+    m_scene->createComponent<RigidBody>(m_stirring_stick, Asset<CollisionShape>("stirring_stick"), 0.0_kg)
         .setIsKinematic();
 
     m_engine.initSystems();
@@ -81,6 +83,15 @@ void PhysicsExample::handleEvent(In<WindowShouldCloseEvent> event) {
 
 void PhysicsExample::handleEvent(In<FrameBufferResizeEvent> event) {
     m_graphic_system->getRenderingPipelines()[0]->setResulution(event.size);
+}
+
+void PhysicsExample::handleEvent(In<KeyPressEvent> event) {
+    if((event.mods & 0x2)  && event.key_id == 'D') { // [Ctrl] + [D]
+        events::broadcast(ConfigurePhysicsDebugRenderStageEvent{
+            .enable     = ConfigurePhysicsDebugRenderStageEvent::TOGGLE,
+            .depth_test = ConfigurePhysicsDebugRenderStageEvent::FALSE,
+        });
+    }
 }
 
 } // namespace bembel::examples::physics

@@ -67,16 +67,12 @@ Unit<T, Q, R> operator-(Unit<T, Q, R> a, Unit<T, Q, R> b) {
 }
 
 template <typename T, QuantityType Q0, QuantityType Q1, RatioType R0, RatioType R1>
-Unit<T, Product<Q0, Q1>, std::ratio_multiply<R0, R1>> operator*(
-    Unit<T, Q0, R0> a, Unit<T, Q1, R1> b
-) {
+Unit<T, Product<Q0, Q1>, std::ratio_multiply<R0, R1>> operator*(Unit<T, Q0, R0> a, Unit<T, Q1, R1> b) {
     return {a.value * b.value};
 }
 
 template <typename T, QuantityType Q0, QuantityType Q1, RatioType R0, RatioType R1>
-Unit<T, Quotient<Q0, Q1>, std::ratio_divide<R0, R1>> operator/(
-    Unit<T, Q0, R0> a, Unit<T, Q1, R1> b
-) {
+Unit<T, Quotient<Q0, Q1>, std::ratio_divide<R0, R1>> operator/(Unit<T, Q0, R0> a, Unit<T, Q1, R1> b) {
     return {a.value / b.value};
 }
 
@@ -93,20 +89,15 @@ ToUnit unit_cast(Unit<FromType, typename ToUnit::Quantity, FromRatio> a) {
     using CT    = std::common_type_t<TT, FromType, intmax_t>;
 
     if constexpr(Ratio::den == 1) {
-        if constexpr(Ratio::num == 1)
-            return {static_cast<TT>(                a.value)};
-        else
-            return {static_cast<TT>(static_cast<CT>(a.value) * static_cast<CT>(Ratio::num))};
+        if constexpr(Ratio::num == 1) return {static_cast<TT>(                a.value)};
+        else                          return {static_cast<TT>(static_cast<CT>(a.value) * static_cast<CT>(Ratio::num))};
     } else {
-        if constexpr(Ratio::num == 1)
-            return {static_cast<TT>(static_cast<CT>(a.value)                               / static_cast<CT>(Ratio::den))};
-        else
-            return {static_cast<TT>(static_cast<CT>(a.value) * static_cast<CT>(Ratio::num) / static_cast<CT>(Ratio::den))};
+        if constexpr(Ratio::num == 1) return {static_cast<TT>(static_cast<CT>(a.value)                               / static_cast<CT>(Ratio::den))};
+        else                          return {static_cast<TT>(static_cast<CT>(a.value) * static_cast<CT>(Ratio::num) / static_cast<CT>(Ratio::den))};
     }
 }
 // clang-format on
 
-// clang-format off
 using Second   = Unit<double, Time>;
 using Meter    = Unit<double, Length>;
 using Kilogram = Unit<double, Mass>;
@@ -118,36 +109,35 @@ using Joule  = Unit<double, Energy>;
 using Watt   = Unit<double, Power>;
 
 using SquareMeter = Unit<double, Area>;
-using CubicMetre  = Unit<double, Volume>;
+using CubicMeter  = Unit<double, Volume>;
 
 using MeterPerSecond  = Unit<double, Velocity>;
 using MeterPerSecond² = Unit<double, Acceleration>;
 
-using NanoSecond  = Unit<double, Length, std::nano>;
-using MicroSecond = Unit<double, Length, std::micro>;
-using MilliSecond = Unit<double, Length, std::milli>;
-using Minute      = Unit<double, Length, std::ratio<60>>;
-using Hour        = Unit<double, Length, std::ratio<3600>>;
-using Day         = Unit<double, Length, std::ratio<86400>>;
+using NanoSecond  = Unit<double, Time, std::nano>;
+using MicroSecond = Unit<double, Time, std::micro>;
+using MilliSecond = Unit<double, Time, std::milli>;
+using Minute      = Unit<double, Time, std::ratio<60>>;
+using Hour        = Unit<double, Time, std::ratio<3600>>;
+using Day         = Unit<double, Time, std::ratio<86400>>;
 
 using NanoMeter  = Unit<double, Length, std::nano>;
 using MicroMeter = Unit<double, Length, std::micro>;
 using MilliMeter = Unit<double, Length, std::milli>;
 using KiloMeter  = Unit<double, Length, std::kilo>;
-// clang-format on
 
 namespace literals {
     // clang-format off
         Second      operator""_s (unsigned long long v) { return {double(v)}; }
         Meter       operator""_m (unsigned long long v) { return {double(v)}; }
         SquareMeter operator""_m²(unsigned long long v) { return {double(v)}; }
-        CubicMetre  operator""_m³(unsigned long long v) { return {double(v)}; }
+        CubicMeter  operator""_m³(unsigned long long v) { return {double(v)}; }
         Kilogram    operator""_kg(unsigned long long v) { return {double(v)}; }
         
         Second      operator""_s (long double v) { return {double(v)}; }
         Meter       operator""_m (long double v) { return {double(v)}; }
         SquareMeter operator""_m²(long double v) { return {double(v)}; }
-        CubicMetre  operator""_m³(long double v) { return {double(v)}; }
+        CubicMeter  operator""_m³(long double v) { return {double(v)}; }
         Kilogram    operator""_kg(long double v) { return {double(v)}; }
 
         MeterPerSecond operator""_mps(unsigned long long v) { return {double(v)}; }

@@ -14,6 +14,8 @@ target_sources(Bembel
         rigid-body.ixx
         rigid-body.cpp
         units.ixx
+        debug-renderer.ixx
+        debug-renderer.cpp
 
         CMakeLists.txt
 )

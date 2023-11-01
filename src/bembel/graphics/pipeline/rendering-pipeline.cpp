@@ -169,7 +169,7 @@ void RenderingPipeline::configureStages(xml::Element const* properties) {
     for(auto stageProperties : xml::IterateChildElements(properties)) {
         auto stage = Stage::create(stageProperties->Value(), *this);
 
-        if(stage->configure(stageProperties)) m_render_stages.push_back(std::move(stage));
+        if(stage && stage->configure(stageProperties)) m_render_stages.push_back(std::move(stage));
     }
 }
 

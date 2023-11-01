@@ -1,8 +1,8 @@
 module;
 #include <btBulletDynamicsCommon.h>
 
-#include <vector>
 #include <memory>
+#include <vector>
 export module bembel.physics:RigidBody;
 
 import bembel.base;
@@ -20,14 +20,10 @@ class MotionState : public btMotionState {
     MotionState(Transform t) : m_transform{t} {}
 
     virtual void getWorldTransform(btTransform& center_of_mass_world_trans) const {
-        center_of_mass_world_trans.setOrigin(
-            {m_transform->position.x, m_transform->position.y, m_transform->position.z}
+        center_of_mass_world_trans.setOrigin({m_transform->position.x, m_transform->position.y, m_transform->position.z}
         );
         center_of_mass_world_trans.setRotation(
-            {m_transform->rotation.x,
-             m_transform->rotation.y,
-             m_transform->rotation.z,
-             m_transform->rotation.w}
+            {m_transform->rotation.x, m_transform->rotation.y, m_transform->rotation.z, m_transform->rotation.w}
         );
     }
 
@@ -51,6 +47,8 @@ struct RigidBodyData {
 export class RigidBody {
   public:
     class Container : public ComponentContainerBase {
+        friend RigidBody;
+
       public:
         Container(ComponentTypeID type_id, Scene* scene, btDiscreteDynamicsWorld* world)
           : ComponentContainerBase{type_id}, m_scene{scene}, m_world{world} {}
@@ -58,9 +56,7 @@ export class RigidBody {
 
         RigidBody createComponent(EntityID entity_id);
 
-        RigidBody createComponent(
-            EntityID entity_id, Asset<CollisionShape> collision_shape, units::Kilogram mass
-        );
+        RigidBody createComponent(EntityID entity_id, Asset<CollisionShape> collision_shape, units::Kilogram mass);
 
         bool createComponent(EntityID entity_id, xml::Element const* properties) override;
 
@@ -69,6 +65,8 @@ export class RigidBody {
         auto& getComponentData() { return m_data; }
 
         RigidBody getComponent(EntityID entity_id);
+
+        btDiscreteDynamicsWorld* getWorld() { return m_world; }
 
       private:
         bool createRigidBody(EntityID entity_id, Asset<CollisionShape> collision_shape, btScalar mass);
@@ -80,8 +78,7 @@ export class RigidBody {
     };
 
   public:
-    RigidBody(Container* container = nullptr, RigidBodyData* data = nullptr)
-      : m_container{container}, m_data{data} {}
+    RigidBody(Container* container = nullptr, RigidBodyData* data = nullptr) : m_container{container}, m_data{data} {}
     RigidBody(RigidBody const&) = default;
     RigidBody(RigidBody&&)      = default;
 
@@ -89,6 +86,8 @@ export class RigidBody {
     RigidBody& operator=(RigidBody&&)      = default;
 
     operator bool() const { return m_container && m_data; }
+
+    bool init(Asset<CollisionShape> collision_shape, btScalar mass);
 
     void setIsKinematic();
 

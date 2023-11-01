@@ -6,17 +6,22 @@ export module bembel.physics:System;
 
 import bembel.base;
 import bembel.kernel;
+import bembel.graphics;
 
 import :CollisionShape;
 import :World;
+import :DebugRenderer;
 
 namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace bembel::graphics;
 
 export class PhysicsSystem : public System {
   public:
     PhysicsSystem(Engine& engine) : System{"Physics"}, m_engine{engine} {
+        RenderingPipeline::Stage::registerStageType<PhysicsDebugRenderStage>("PhysicsDebugRenderStage");
+
         assets::registerAssetType<CollisionShape>();
 
         CollisionShape::initFactory();

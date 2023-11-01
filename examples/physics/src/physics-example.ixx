@@ -25,6 +25,7 @@ export class PhysicsExample : public kernel::Application {
 
     void handleEvent(In<WindowShouldCloseEvent>);
     void handleEvent(In<FrameBufferResizeEvent>);
+    void handleEvent(In<KeyPressEvent>);
 
   private:
     GraphicSystem* m_graphic_system;

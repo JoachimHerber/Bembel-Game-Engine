@@ -3,10 +3,10 @@
     <Material name="sphere" renderer="default" emission="0 0 0" albedo="0.8 0.1 0.1" roughness="0.5" metallic="0.8" f0="0.04"/>
     <Material name="floor"  renderer="default" emission="0 0 0" albedo="0.1 0.8 0.1" roughness="0.5" metallic="0.3" f0="0.04"/>
     <Material name="wall"   renderer="default" emission="0 0 0" albedo="0.1 0.1 0.8" roughness="0.5" metallic="0.3" f0="0.04"/>
-    <CollisionShape name="floor"  type="box" size="5.0 0.1 5.0"/>
-    <CollisionShape name="wall_1" type="box" size="0.1 2.0 5.0"/>
-    <CollisionShape name="wall_2" type="box" size="5.0 2.0 0.1"/>
-    <CollisionShape name="stirring_stick" type="box" size="4.5 0.5 0.1"/>
+    <CollisionShape name="floor"  type="box" size="10.0 0.1 10.0"/>
+    <CollisionShape name="wall_1" type="box" size="0.1 4.0 10.0"/>
+    <CollisionShape name="wall_2" type="box" size="10.0 4.0 0.1"/>
+    <CollisionShape name="stirring_stick" type="box" size="9 1.0 0.2"/>
     <CollisionShape name="sphere" type="sphere" radius="1.0"/>
     <GeometryModel name="sphere" mesh="basic-shapes.geom-mesh">
       <MaterialMapping material="sphere" submesh="sphere"/>
