@@ -1,6 +1,6 @@
 ﻿module;
-#include <queue>
 #include <mutex>
+#include <queue>
 export module bembel.base:ConcurrentQueue;
 
 import :Types;

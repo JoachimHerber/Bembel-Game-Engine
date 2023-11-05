@@ -49,7 +49,7 @@ inline SystemType* Engine::addSystem(Args&&... args) {
 
     auto it = m_system_mapping.find(system->name);
     if(it != m_system_mapping.end()) {
-        log().error("System '{}' has already been added.", system->name);
+        logError("System '{}' has already been added.", system->name);
         return nullptr;
     }
 

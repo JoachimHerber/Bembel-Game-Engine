@@ -19,7 +19,7 @@ bool fromString(In<std::string_view> str, Out<bool> value) {
         value = false;
         return true;
     }
-    log().error("Can't convert '{}' to bool", str);
+    logError("Can't convert '{}' to bool", str);
     return false;
 }
 
@@ -34,10 +34,10 @@ bool fromString(In<std::string_view> str, T& value) {
     auto result = std::from_chars(str.data(), str.data() + str.size(), value);
     
     if(result.ec == std::errc::invalid_argument) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     } else if(result.ec == std::errc::result_out_of_range) {
-        log().error("This number '{}'  is to large", str);
+        logError("This number '{}'  is to large", str);
         return false;
     }
 
@@ -51,7 +51,7 @@ bool fromString(In<std::string_view> str, T& value) {
         char* end;
         value = std::strtof(str.data(), &end);
     }catch(...){
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
     }
     //std::string tmp = {str.begin(), str.end()};
     //auto [ptr, ec] = std::from_chars(tmp.data(), tmp.data() + tmp.size(), value);
@@ -73,7 +73,7 @@ requires std::integral<T> || std::floating_point<T>
 bool fromString(In<std::string_view> str, tvec2<T>& value) {
     auto delim_pos = str.find(' ');
     if(delim_pos == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
 
@@ -86,12 +86,12 @@ requires std::integral<T> || std::floating_point<T>
 bool fromString(In<std::string_view> str, tvec3<T>& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
     auto delim_pos_1 = str.find(' ', delim_pos_0 + 1);
     if(delim_pos_1 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
 
@@ -105,18 +105,18 @@ requires std::integral<T> || std::floating_point<T>
 bool fromString(In<std::string_view> str, tvec4<T>& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
     auto delim_pos_1 = str.find(' ', delim_pos_0 + 1);
     if(delim_pos_1 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
 
     auto delim_pos_2 = str.find(' ', delim_pos_1 + 1);
     if(delim_pos_2 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
 
@@ -129,18 +129,18 @@ bool fromString(In<std::string_view> str, tvec4<T>& value) {
 bool fromString(In<std::string_view> str, quat& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
     auto delim_pos_1 = str.find(' ', delim_pos_0 + 1);
     if(delim_pos_1 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
 
     auto delim_pos_2 = str.find(' ', delim_pos_1 + 1);
     if(delim_pos_2 == str.npos) {
-        log().error("Can't parse string '{}'", str);
+        logError("Can't parse string '{}'", str);
         return false;
     }
 

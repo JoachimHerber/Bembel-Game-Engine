@@ -18,12 +18,12 @@ using namespace bembel::base;
 using namespace ::gl;
 
 void glfw_error_callback(int error, char const* description) {
-    log().error("GLFW-Error({}): {}", error, description);
+    logError("GLFW-Error({}): {}", error, description);
 }
 
 Engine::Engine() {
     if(!glfwInit()) {
-        log().error("Failed to initialize GLFW");
+        logError("Failed to initialize GLFW");
         throw std::exception();
     }
     glfwSetErrorCallback(glfw_error_callback);
@@ -43,7 +43,7 @@ Engine::~Engine() {
 bool Engine::removeSystem(std::string_view name) {
     auto it = m_system_mapping.find(name);
     if(it == m_system_mapping.end()) {
-        log().warning("Unknown system '{}'", name);
+        logWarning("Unknown system '{}'", name);
         return false;
     }
 
@@ -56,7 +56,7 @@ System* Engine::getSystem(std::string_view name) {
     auto it = m_system_mapping.find(name);
     if(it != m_system_mapping.end()) return m_systems[it->second].get();
 
-    log().warning("Unknown system '{}'", name);
+    logWarning("Unknown system '{}'", name);
     return nullptr;
 }
 
@@ -79,13 +79,13 @@ bool Engine::loadSetting(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to lode file '{}'\n{}", file_path, doc.ErrorName());
+        logError("Failed to lode file '{}'\n{}", file_path, doc.ErrorName());
         return false;
     }
 
     xml::Element const* root = doc.FirstChildElement("Bembel");
     if(!root) {
-        log().error("Config file '{}' has no root element 'Bembel'", file_path);
+        logError("Config file '{}' has no root element 'Bembel'", file_path);
         return false;
     }
 
@@ -101,7 +101,7 @@ bool Engine::loadSetting(std::filesystem::path file) {
             xml::Element const* system_config = systems->FirstChildElement(system->name.c_str());
 
             if(!system->configure(system_config)) {
-                log().error("Failed to init '{}'-System from file '{}'", system->name, file_path);
+                logError("Failed to init '{}'-System from file '{}'", system->name, file_path);
                 return false;
             }
         }

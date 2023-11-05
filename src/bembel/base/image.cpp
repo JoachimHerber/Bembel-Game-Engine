@@ -12,7 +12,7 @@ bool Image::load(In<std::filesystem::path> file, In<bool> invert_y_axis) {
     unsigned                   error = lodepng::decode(data, w, h, file_path_str);
 
     if(error != 0) {
-        log().error("Can't load file '{}'\n{}", file_path_str, lodepng_error_text(error));
+        logError("Can't load file '{}'\n{}", file_path_str, lodepng_error_text(error));
         return false;
     }
 
@@ -65,7 +65,7 @@ bool Image::save(In<std::filesystem::path> file, In<bool> invert_y_axis) {
     }
 
     if(error != 0) {
-        log().error("Can't load file '{}'\n{}", file_path, lodepng_error_text(error));
+        logError("Can't load file '{}'\n{}", file_path, lodepng_error_text(error));
         return false;
     }
     return true;

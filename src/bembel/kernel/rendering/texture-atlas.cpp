@@ -24,17 +24,17 @@ std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(std::filesystem::path file
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
+        logError("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
         return nullptr;
     }
 
     xml::Element const* root = doc.FirstChildElement("TextureAtlas");
     if(!root) {
-        log().error("File '{}' has no root element 'TextureAtlas'", file_path);
+        logError("File '{}' has no root element 'TextureAtlas'", file_path);
         return nullptr;
     }
     auto atlas = TextureAtlas::createAsset(root);
-    if(!atlas) { log().error("Failed to create TextureAtlas from file '{}'", file_path); }
+    if(!atlas) { logError("Failed to create TextureAtlas from file '{}'", file_path); }
     return std::move(atlas);
 }
 

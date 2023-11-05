@@ -23,7 +23,7 @@ void CursorIcon::createStandardCursors() {
                 std::make_unique<CursorIcon>(cursor, name), name
             );
         } else {
-            log().error("Failed to create StandardCursor {}", name);
+            logError("Failed to create StandardCursor {}", name);
         }
     };
 

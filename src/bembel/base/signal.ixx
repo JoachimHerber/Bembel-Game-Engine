@@ -1,4 +1,5 @@
 module;
+#include <coroutine>
 #include <mutex>
 #include <vector>
 export module bembel.base:Signal;
@@ -7,6 +8,12 @@ import :Slot;
 import :Types;
 
 export namespace bembel::base {
+
+struct SignalAwaiter : std::suspend_always {
+    std::vector<std::coroutine_handle<>>* signal;
+
+    void await_suspend(std::coroutine_handle<> handle) { signal->push_back(handle); }
+};
 
 template <typename... TArgs>
 class Signal {
@@ -48,20 +55,36 @@ class Signal {
         // Create a temporaty copy of m_slots so m_slots can be modified witin
         // the loop without invalidating the iterator (this allows slots to be
         // removed or added by the methodes/functions bound to this signal).
-        SlotVector slots;
-        {
-            Lock lock(m_mutex);
-            slots = m_slots;
+        if constexpr(sizeof...(TArgs) == 0) {
+            std::vector<Slot>                    slots;
+            std::vector<std::coroutine_handle<>> coroutines;
+            {
+                Lock lock(m_mutex);
+                slots = m_slots;
+                std::swap(coroutines, m_coroutines);
+            }
+            for(auto it : coroutines) it.resume();
+            for(auto it : slots) it(args...);
+        } else {
+            std::vector<Slot> slots;
+            {
+                Lock lock(m_mutex);
+                slots = m_slots;
+            }
+            for(auto it : slots) it(args...);
         }
-
-        for(auto it : slots) it(args...);
     }
     void operator()(TArgs... args) { emit(args...); }
 
-  private:
-    using SlotVector = std::vector<Slot>;
+    SignalAwaiter operator co_await()
+        requires(sizeof...(TArgs) == 0) // For now coroutines are only allowed to await Signals with no Args
+    {
+        return {&m_coroutines};
+    }
 
-    SlotVector m_slots;
+  private:
+    std::vector<Slot>                    m_slots;
+    std::vector<std::coroutine_handle<>> m_coroutines;
 
     std::mutex m_mutex;
 };

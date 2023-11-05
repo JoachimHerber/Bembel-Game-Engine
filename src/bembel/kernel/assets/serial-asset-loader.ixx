@@ -42,7 +42,7 @@ class SerialAssetLoader : public AssetLoaderBase {
 
         auto path = AssetLocator::getInstance().findAssetLocation<AssetType>(file_name);
         if(!path) {
-            log().warning("can't find location of '{}'", file_name);
+            logWarning("can't find location of '{}'", file_name);
             // can't find the requested file
             return AssetHandle();
         }
@@ -60,7 +60,7 @@ class SerialAssetLoader : public AssetLoaderBase {
 
     AssetHandle requestAsset(xml::Element const* properties) override {
         if(!properties) {
-            log().warning("Can't request Asset: properties == nullptr");
+            logWarning("Can't request Asset: properties == nullptr");
             return AssetHandle();
         }
 

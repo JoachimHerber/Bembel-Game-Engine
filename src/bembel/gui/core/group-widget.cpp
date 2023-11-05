@@ -54,7 +54,7 @@ Widget* GroupWidget::createChildWidget(
 ) {
     auto widget = getFactory().createObject(widget_type_name, *this);
     if(!widget) {
-        log().error("Unknown WidgetType {}", widget_type_name);
+        logError("Unknown WidgetType {}", widget_type_name);
         return nullptr;
     }
 

@@ -226,7 +226,7 @@ void FontTextureGenerator::getIntersections(int row, TextureAtlasNode const* nod
             }
         }
         if(intersections.size() % 2 != 0) {
-            log().error(""); //
+            logError(""); //
         }
     }
 }

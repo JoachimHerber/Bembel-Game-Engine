@@ -1,7 +1,6 @@
 ﻿module;
 #include <format>
 #include <memory>
-#include <source_location>
 #include <string>
 #include <string_view>
 export module bembel.base:Logger;
@@ -17,9 +16,7 @@ export class Logger {
         LogSink()          = default;
         virtual ~LogSink() = default;
 
-        virtual void writeMessage(
-            In<std::source_location> location, In<std::string_view> message, In<u32> indentation
-        ) = 0;
+        virtual void writeMessage(In<std::string_view> message, In<u32> indentation) = 0;
     };
 
   public:
@@ -28,8 +25,8 @@ export class Logger {
     Logger(In<std::shared_ptr<LogSink>> sink) : m_log_sink{sink} {}
     ~Logger() = default;
 
-    void log(In<std::source_location> location, In<std::string_view> message) {
-        if(m_log_sink) m_log_sink->writeMessage(location, message, m_indentation);
+    void log(In<std::string_view> message) {
+        if(m_log_sink) m_log_sink->writeMessage(message, m_indentation);
     }
 
     void setLogSink(std::shared_ptr<LogSink> const& sink) { m_log_sink = sink; }
@@ -50,41 +47,34 @@ export class Logger {
     u32                      m_indentation = 0;
 };
 
-export class LogMassage {
-  public:
-    LogMassage(std::source_location location) : m_location(location) {}
-    LogMassage(LogMassage&& other)      = default;
-    LogMassage(LogMassage const& other) = default;
-    ~LogMassage()                       = default;
+export void logInfo(In<std::string_view> message) {
+    Logger::info.log(message);
+}
+export void logError(In<std::string_view> message) {
+    Logger::error.log(message);
+}
+export void logDebug(In<std::string_view> message) {
+    Logger::debug.log(message);
+}
+export void logWarning(In<std::string_view> message) {
+    Logger::warning.log(message);
+}
 
-    void info(In<std::string_view> message) { Logger::info.log(m_location, message); }
-    void error(In<std::string_view> message) { Logger::error.log(m_location, message); }
-    void debug(In<std::string_view> message) { Logger::debug.log(m_location, message); }
-    void warning(In<std::string_view> message) { Logger::warning.log(m_location, message); }
-
-    template <typename... TArgs>
-    void info(In<std::string_view> format, TArgs&&... args) {
-        info(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
-    }
-    template <typename... TArgs>
-    void error(In<std::string_view> format, TArgs&&... args) {
-        error(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
-    }
-    template <typename... TArgs>
-    void debug(In<std::string_view> format, TArgs&&... args) {
-        debug(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
-    }
-    template <typename... TArgs>
-    void warning(In<std::string_view> format, TArgs&&... args) {
-        warning(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
-    }
-
-  private:
-    std::source_location m_location;
-};
-
-export inline LogMassage log(std::source_location location = std::source_location::current()) {
-    return {location};
+export template <typename... TArgs>
+void logInfo(In<std::string_view> format, TArgs&&... args) {
+    logInfo(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+}
+export template <typename... TArgs>
+void logError(In<std::string_view> format, TArgs&&... args) {
+    logError(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+}
+export template <typename... TArgs>
+void logDebug(In<std::string_view> format, TArgs&&... args) {
+    logDebug(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+}
+export template <typename... TArgs>
+void logWarning(In<std::string_view> format, TArgs&&... args) {
+    logWarning(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
 }
 
 export class IndentDefaultLogs {

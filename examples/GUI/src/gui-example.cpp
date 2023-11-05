@@ -52,15 +52,15 @@ void GuiExample::handleEvent(const WindowShouldCloseEvent& event) {
 }
 
 void GuiExample::onButton1Click() {
-    log().info("Button 1 clicked");
+    logInfo("Button 1 clicked");
 }
 
 void GuiExample::onButton2Click() {
-    log().info("Button 2 clicked");
+    logInfo("Button 2 clicked");
 }
 
 void GuiExample::onButton3Click() {
-    log().info("Button 3 clicked");
+    logInfo("Button 3 clicked");
 }
 
 } // namespace bembel

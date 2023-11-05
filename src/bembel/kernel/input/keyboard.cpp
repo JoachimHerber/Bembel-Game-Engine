@@ -139,7 +139,7 @@ void Keyboard::handleEvent(KeyReleaseEvent const& event) {
 
 Keyboard::Key* Keyboard::createButton(KeyId key_id, Scancode scancode) {
     if(m_keys.size() == MAX_NUM_KEYS) {
-        log().error("Max number of Keys for Keyboard reached");
+        logError("Max number of Keys for Keyboard reached");
         return nullptr;
     }
 

@@ -19,7 +19,7 @@ Mouse::~Mouse() {
 
 InputDevice::Button* Mouse::getButton(u64 button_id) {
     if(button_id >= NUM_BUTTONS) {
-        log().error("Mouse button {} not supported", button_id);
+        logError("Mouse button {} not supported", button_id);
         return nullptr;
     }
 
@@ -39,7 +39,7 @@ void Mouse::handleEvent(MouseButtonPressEvent const& event) {
         events::broadcast<InputDeviceButtonPressEvent>(button);
         button->setIsPressed(true);
     } else {
-        log().error(
+        logError(
             "Received MouseButtonPressEvent for unsupported Mouse button {}", event.button_id
         );
     }
@@ -51,7 +51,7 @@ void Mouse::handleEvent(MouseButtonReleaseEvent const& event) {
         events::broadcast<InputDeviceButtonReleaseEvent>(button);
         button->setIsPressed(false);
     } else {
-        log().error(
+        logError(
             "Received MouseButtonReleaseEvent for unsupported Mouse button {}", event.button_id
         );
     }

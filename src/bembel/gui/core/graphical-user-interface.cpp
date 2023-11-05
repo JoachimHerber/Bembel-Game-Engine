@@ -27,11 +27,11 @@ bool GraphicalUserInterface::init(xml::Element const* properties, bool load_file
         return init(file_name);
     } else {
         if(!this->renderer.init(properties->FirstChildElement("Renderer"))) {
-            log().error("Failed to init Renderer");
+            logError("Failed to init Renderer");
             return false;
         }
         if(!this->root_widget.configure(properties->FirstChildElement("Widgets"))) {
-            log().error("Failed to init Widgets");
+            logError("Failed to init Widgets");
             return false;
         }
     }
@@ -43,7 +43,7 @@ bool GraphicalUserInterface::init(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed load file '{}' - Error: {}", file_path, doc.ErrorName());
+        logError("Failed load file '{}' - Error: {}", file_path, doc.ErrorName());
         return false;
     }
 

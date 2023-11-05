@@ -39,7 +39,7 @@ bool Shader::init(std::string_view source) {
         GLsizei size;
         glGetShaderInfoLog(m_handle, 4096, &size, error_message);
 
-        log().error(
+        logError(
             "Can't compile {}\n{}\nSource:\n{}", GetShaderTypeName(m_type), error_message, source
         );
 
@@ -69,13 +69,13 @@ std::unique_ptr<Shader> Shader::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
+        logError("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
         return nullptr;
     }
 
     xml::Element const* root = doc.FirstChildElement("Shader");
     if(!root) {
-        log().error("File '{}' has no root element 'Shader'", file_path);
+        logError("File '{}' has no root element 'Shader'", file_path);
         return nullptr;
     }
     return createAsset(root);
@@ -202,7 +202,7 @@ bool ShaderProgram::link() {
         error_message.resize(max_length);
         glGetProgramInfoLog(m_program_handle, max_length, &max_length, &error_message[0]);
 
-        log().error("Can't link ShaderProgram\n {}", error_message);
+        logError("Can't link ShaderProgram\n {}", error_message);
 
         m_ready_to_use = false;
         return false;
@@ -223,17 +223,17 @@ std::unique_ptr<ShaderProgram> ShaderProgram::loadAsset(std::filesystem::path fi
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
+        logError("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
         return nullptr;
     }
 
     xml::Element const* root = doc.FirstChildElement("ShaderProgram");
     if(!root) {
-        log().error("File '{}'  has no root element 'Shader'", file_path);
+        logError("File '{}'  has no root element 'Shader'", file_path);
         return nullptr;
     }
     auto pragram = createAsset(root);
-    if(!pragram) { log().error("Failed to create shader program from file '{}'", file_path); }
+    if(!pragram) { logError("Failed to create shader program from file '{}'", file_path); }
     return std::move(pragram);
 }
 
@@ -263,7 +263,7 @@ GLint ShaderProgram::getUniformLocation(std::string_view name) const {
         // add location to the map for faster lookup in the future.
         m_uniorm_locations.emplace(name, location);
     } else {
-        log().error("Unknown Uniform Location for '{}'", name);
+        logError("Unknown Uniform Location for '{}'", name);
     }
 
     return location;

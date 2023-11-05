@@ -62,13 +62,13 @@ std::unique_ptr<SdfFont> SdfFont::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Can't load file '{}'\n'{}'", file_path, doc.ErrorStr());
+        logError("Can't load file '{}'\n'{}'", file_path, doc.ErrorStr());
         return nullptr;
     }
 
     xml::Element* root = doc.FirstChildElement("Font");
     if(!root) {
-        log().error("'{}' has no root element 'Font'", file_path);
+        logError("'{}' has no root element 'Font'", file_path);
         return nullptr;
     }
     return createAsset(root);
@@ -79,37 +79,37 @@ std::unique_ptr<SdfFont> SdfFont::createAsset(xml::Element const* properties) {
 
     std::string texture;
     if(!xml::getAttribute(properties, "texture", texture)) {
-        log().error("<Font>-Element is missing property 'texture'");
+        logError("<Font>-Element is missing property 'texture'");
         return nullptr;
     }
     uint resolution;
     if(!xml::getAttribute(properties, "resolution", resolution)) {
-        log().error("<Font>-Element is missing property 'resolution'");
+        logError("<Font>-Element is missing property 'resolution'");
         return nullptr;
     }
     uint units_per_em;
     if(!xml::getAttribute(properties, "units_per_em", units_per_em)) {
-        log().error("<Font>-Element is missing property 'units_per_em'");
+        logError("<Font>-Element is missing property 'units_per_em'");
         return nullptr;
     }
     font->m_glyph_atlas_texture.request(texture);
     if(!font->m_glyph_atlas_texture) {
-        log().error("Can't find texture for font");
+        logError("Can't find texture for font");
         return nullptr;
     }
 
     if(!font->readGlyphs(properties->FirstChildElement("Glyphs"), resolution, units_per_em)) {
-        log().error("Can't parse glyph informations");
+        logError("Can't parse glyph informations");
         return nullptr;
     }
 
     if(!font->readCharMap(properties->FirstChildElement("CharMap"))) {
-        log().error("Can't parse char-map informations");
+        logError("Can't parse char-map informations");
         return nullptr;
     }
 
     if(!font->readKerning(properties->FirstChildElement("Kerning"))) {
-        log().error("Can't parse kerning informations");
+        logError("Can't parse kerning informations");
         return nullptr;
     }
 

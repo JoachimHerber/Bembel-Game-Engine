@@ -52,7 +52,7 @@ bool Scene::loadScene(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to lode file '{}'\n{}", file_path, doc.ErrorName());
+        logError("Failed to lode file '{}'\n{}", file_path, doc.ErrorName());
         return false;
     }
 
@@ -78,13 +78,13 @@ bool Scene::loadAssets(std::filesystem::path file) {
     std::string const file_path_str = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path_str.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to lode file '{}'\n{}", file_path_str, doc.ErrorName());
+        logError("Failed to lode file '{}'\n{}", file_path_str, doc.ErrorName());
         return false;
     }
 
     xml::Element const* root = doc.FirstChildElement("Assets");
     if(!root) {
-        log().error("File '{}' has no root element 'Assets'", file_path_str);
+        logError("File '{}' has no root element 'Assets'", file_path_str);
         return false;
     }
     for(auto it : xml::IterateChildElements(root)) {

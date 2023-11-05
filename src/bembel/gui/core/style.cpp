@@ -40,13 +40,13 @@ std::unique_ptr<Style> Style::loadAsset(std::filesystem::path file) {
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to load file '{}'\n{}", file_path, doc.ErrorName());
+        logError("Failed to load file '{}'\n{}", file_path, doc.ErrorName());
         return nullptr;
     }
 
     xml::Element const* root = doc.FirstChildElement("GuiSkin");
     if(!root) {
-        log().error("File '{}' has no root element 'GuiSkin'", file_path);
+        logError("File '{}' has no root element 'GuiSkin'", file_path);
         return nullptr;
     }
     return Style::createStyle(root);
@@ -61,12 +61,12 @@ std::unique_ptr<Style> Style::createStyle(xml::Element const* properties) {
 
     Asset<TextureAtlas> texture_array;
     if(!texture_array.request(properties->FirstChildElement("TextureAtlas"))) {
-        log().error("Can't find TextureAtlas for gui::Style");
+        logError("Can't find TextureAtlas for gui::Style");
         return nullptr;
     }
     Asset<SdfFont> font;
     if(!font.request(properties->FirstChildElement("Font"))) {
-        log().error("Can't find Font for gui::Style");
+        logError("Can't find Font for gui::Style");
         return nullptr;
     }
 

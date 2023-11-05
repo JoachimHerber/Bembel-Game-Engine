@@ -70,7 +70,7 @@ void DefaultGeometryRenderer::renderGeometry(
             GLenum active_texture = GL_TEXTURE0;
             for(auto const& texture : currentMaterial->textures) {
                 if(!texture) {
-                    log().warning("Texture handle is invalid");
+                    logWarning("Texture handle is invalid");
                     continue;
                 }
                 glActiveTexture(active_texture);
@@ -170,13 +170,13 @@ std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element c
     for(auto& it : m_required_textures) {
         auto texture_name = properties->FirstChildElement(it.texture_name.c_str());
         if(texture_name == nullptr) {
-            log().error("Material does not secify a '{}' texture", it.texture_name);
+            logError("Material does not secify a '{}' texture", it.texture_name);
             return nullptr;
         }
 
         Asset<Texture> texture;
         if(!texture.request(texture_name)) {
-            log().error("Can't find reqired '{}' texture for material", it.texture_name);
+            logError("Can't find reqired '{}' texture for material", it.texture_name);
             return nullptr;
         }
         textures.push_back(std::move(texture));
@@ -201,12 +201,12 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
 ) {
     Asset<ShaderProgram> geomety_pass_shader;
     if(!geomety_pass_shader.request(properties->FirstChildElement("GeometyPassShader"))) {
-        log().error("Could not load ShaderProgram for geomety pass of DefaultGeometryRenderer");
+        logError("Could not load ShaderProgram for geomety pass of DefaultGeometryRenderer");
         return nullptr;
     }
     Asset<ShaderProgram> shadow_pass_shader;
     if(!shadow_pass_shader.request(properties->FirstChildElement("ShadowPassShader"))) {
-        log().error("Could not load ShaderProgram for shadow pass of DefaultGeometryRenderer");
+        logError("Could not load ShaderProgram for shadow pass of DefaultGeometryRenderer");
         return nullptr;
     }
     auto renderer = std::make_unique<DefaultGeometryRenderer>(id);

@@ -8,6 +8,6 @@ int main(int argc, char* argv[]) {
 
     bembel::InputExample example;
 
-    bembel::base::log().info((char*)u8"Testing unicode -- English -- Ελληνικά -- Español.");
+    bembel::base::logInfo((char*)u8"Testing unicode -- English -- Ελληνικά -- Español.");
     example.run(args);
 }

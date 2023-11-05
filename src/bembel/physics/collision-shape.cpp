@@ -17,13 +17,13 @@ std::unique_ptr<CollisionShape> CollisionShape::loadAsset(std::filesystem::path 
     std::string const file_path = file.string(); // file.c_str() returns a wchar*
     xml::Document     doc;
     if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
-        log().error("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
+        logError("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
         return nullptr;
     }
 
     xml::Element const* root = doc.FirstChildElement("CollisionShape");
     if(!root) {
-        log().error("File '{}' has no root element 'CollisionShape'", file_path);
+        logError("File '{}' has no root element 'CollisionShape'", file_path);
         return nullptr;
     }
     return CollisionShape::createCollisionShape(root);

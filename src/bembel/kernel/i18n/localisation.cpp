@@ -19,9 +19,9 @@ std::u8string_view Localisation::translate(TranslationKeyIndex key) const {
     if(index < m_translations.size() && m_translations[index]) { return *m_translations[index]; }
 
     if(index < getTranslationKeys().size()) {
-        log().warning("Localisation doesn't provide translation for: {}", getTranslationKeys()[index]);
+        logWarning("Localisation doesn't provide translation for: {}", getTranslationKeys()[index]);
     } else {
-        log().warning("Invalid TranslationKeyIndex: {}", index);
+        logWarning("Invalid TranslationKeyIndex: {}", index);
     }
     return u8"";
 }
@@ -30,7 +30,7 @@ std::shared_ptr<const std::u8string> Localisation::getTranslation(TranslationKey
     auto index = std::to_underlying(key);
     if(index < m_translations.size()) { return m_translations[index]; }
 
-    log().warning("Localisation doesn't provide translation for: {}", index);
+    logWarning("Localisation doesn't provide translation for: {}", index);
     return nullptr;
 }
 
@@ -52,14 +52,14 @@ void Localisation::format(In<std::u8string_view> fmt, In<TimePoint> value, InOut
 
 Localisation::Error Localisation::load(std::filesystem::path file_path) {
     if(!std::filesystem::exists(file_path)) {
-        log().error("File {} doesn't exist", file_path.string());
+        logError("File {} doesn't exist", file_path.string());
         return Error::FileNotFound;
     }
 
     std::ifstream file{file_path, std::ios::in | std::ios::binary};
 
     if(!file) {
-        log().error("Couldn't open file {}", file_path.string());
+        logError("Couldn't open file {}", file_path.string());
         return Error::FileNotFound;
     }
 
@@ -103,7 +103,7 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
             }
         }("", translations);
     } catch(nlohmann::json::exception e) {
-        log().error("Error while parsing {}: {}", file_path.string(), e.what());
+        logError("Error while parsing {}: {}", file_path.string(), e.what());
         return Error::FileNotFound;
     }
 

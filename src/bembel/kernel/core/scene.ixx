@@ -1,8 +1,10 @@
 ﻿module;
+#include <any>
+#include <compare>
 #include <filesystem>
-#include <vector>
 #include <stack>
-#include <any> 
+#include <vector>
+#include <string_view>
 export module bembel.kernel.core:Scene;
 
 import bembel.base;
@@ -15,6 +17,10 @@ export using ComponentTypeID = u64;
 export using ComponentMask   = u64;
 
 export enum class EntityID : u64 { INVALID = ~u64(0) };
+
+export inline std::strong_ordering operator<=>(EntityID a, EntityID b) {
+    return u64(a) <=> u64(b);
+}
 
 export class ComponentContainerBase {
   public:

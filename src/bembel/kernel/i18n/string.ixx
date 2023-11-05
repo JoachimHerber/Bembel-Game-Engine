@@ -115,7 +115,7 @@ class String {
                 m_formater.push_back(std::move(formater));
                 str = str.substr(opening_bracket + 1);
             } else {
-                log().error("Invalid placeholder for formater in");
+                logError("Invalid placeholder for formater in");
                 m_formater.clear();
                 m_formater.push_back(std::make_shared<SubStringFormater>(*m_fmt_str));
                 return;
@@ -125,7 +125,7 @@ class String {
                 m_formater.push_back(createFormater(str.substr(0, closing_bracket)));
                 str = str.substr(closing_bracket + 1);
             } else {
-                log().error("Format String is missing closing '}'");
+                logError("Format String is missing closing '}'");
                 m_formater.clear();
                 m_formater.push_back(std::make_shared<SubStringFormater>(*m_fmt_str));
                 return;
@@ -189,7 +189,7 @@ class String {
             if(placeholder[0] == '|') {
                 if(placeholder.size() <= 1) return nullptr;
                 if constexpr(!std::is_integral_v<Param<N>>) {
-                    log().error(
+                    logError(
                         "Argument '{}' of i18n::String<> is not an integer and therefor can't be used for "
                         "selecting "
                         "plural form",

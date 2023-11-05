@@ -27,7 +27,7 @@ bool FontConverter::loade(In<std::filesystem::path> path) {
 
     auto error = FT_New_Face(m_library, path_str.c_str(), 0, &face);
     if(error) {
-        log().error("Failed to load TypeFace : '{}'", path_str);
+        logError("Failed to load TypeFace : '{}'", path_str);
         return false;
     }
 

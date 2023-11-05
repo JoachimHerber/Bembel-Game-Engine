@@ -61,7 +61,7 @@ void GuiSystem::update(double) {}
 
 GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
     if(!name.empty() && m_named_guis.find(name) != m_named_guis.end()) {
-        log().error(
+        logError(
             "Can't create GUI with name '{}'. A GUI with the same name already exists.", name
         );
         return nullptr;

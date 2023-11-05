@@ -16,17 +16,17 @@ export class Application {
 
     bool run(std::span<std::string_view> args) {
         {
-            log().info("Initalizing Application");
+            logInfo("Initalizing Application");
             IndentDefaultLogs indent;
             if(!init(args)) return false;
         }
         {
-            log().info("Starting MainLoop");
+            logInfo("Starting MainLoop");
             IndentDefaultLogs indent;
             mainLoop();
         }
         {
-            log().info("Cleaning up");
+            logInfo("Cleaning up");
             IndentDefaultLogs indent;
             cleanup();
         }

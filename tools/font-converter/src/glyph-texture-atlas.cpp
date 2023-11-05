@@ -22,7 +22,7 @@ Fraction roundScale(double scale) {
     uint denominator = std::floor(1 / frat);
     int numerator   = denominator * int(std::floor(scale)) + 1;
 
-    log().info("Scale = {}/{}", numerator, denominator);
+    logInfo("Scale = {}/{}", numerator, denominator);
     return {numerator, denominator};
 }
 
@@ -58,7 +58,7 @@ void GlyphTextureAtlas::update(std::vector<Glyph>& glyphs, uint units_per_EM) {
             scale *= 0.95;
         }
     }
-    log().info("GlyphTextureAtlas filled successfully: scale = {}/{}", m_scale.numerator, m_scale.denominator);
+    logInfo("GlyphTextureAtlas filled successfully: scale = {}/{}", m_scale.numerator, m_scale.denominator);
 
     this->update_signal.emit();
 }

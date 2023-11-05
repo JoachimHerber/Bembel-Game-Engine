@@ -107,7 +107,7 @@ class AssetContainer : public AssetContainerBase {
 
         if(m_assets[handle.index].reference_count > 0) {
             if(force) {
-                log().warning("Removing asset that is still in use.");
+                logWarning("Removing asset that is still in use.");
             } else
                 return nullptr;
         }

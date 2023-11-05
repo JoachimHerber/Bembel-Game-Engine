@@ -59,55 +59,55 @@ void InputExample::handleEvent(In<WindowShouldCloseEvent> event) {
 }
 
 void InputExample::handleEvent(In<KeyPressEvent> event) {
-    log().info("[Key Pressed] {}|{}", event.key_id, event.scancode);
+    logInfo("[Key Pressed] {}|{}", event.key_id, event.scancode);
 }
 
 void InputExample::handleEvent(In<KeyRepeatEvent> event) {
-    log().info("[Key Repeated] {}|{}", event.key_id, event.scancode);
+    logInfo("[Key Repeated] {}|{}", event.key_id, event.scancode);
 }
 
 void InputExample::handleEvent(In<KeyReleaseEvent> event) {
-    log().info("[Key Released] {}|{}", event.key_id, event.scancode);
+    logInfo("[Key Released] {}|{}", event.key_id, event.scancode);
 }
 
 void InputExample::handleEvent(In<TextInputEvent> event) {
-    log().info("[TextInput] {}", (unsigned char)(event.character));
+    logInfo("[TextInput] {}", (unsigned char)(event.character));
 }
 
 void InputExample::handleEvent(In<MouseButtonPressEvent> event) {
-    log().info("[Mouse Button Pressed] {}", event.button_id);
+    logInfo("[Mouse Button Pressed] {}", event.button_id);
 }
 
 void InputExample::handleEvent(In<MouseButtonRepeatEvent> event) {
-    log().info("[Mouse Button Repeated] {}", event.button_id);
+    logInfo("[Mouse Button Repeated] {}", event.button_id);
 }
 
 void InputExample::handleEvent(In<MouseButtonReleaseEvent> event) {
-    log().info("[Mouse Button Released] {}", event.button_id);
+    logInfo("[Mouse Button Released] {}", event.button_id);
 }
 
 void InputExample::handleEvent(In<CursorMovedEvent> event) {
-    log().info("[Cursor Moved] {}", event.position);
+    logInfo("[Cursor Moved] {}", event.position);
 }
 
 void InputExample::handleEvent(In<CursorEnteredEvent> event) {
-    log().info("[Cursor Entered] window[{}]", event.window->getWindowID());
+    logInfo("[Cursor Entered] window[{}]", event.window->getWindowID());
 }
 
 void InputExample::handleEvent(In<CursorLeftEvent> event) {
-    log().info("[Cursor Left] window[{}]", event.window->getWindowID());
+    logInfo("[Cursor Left] window[{}]", event.window->getWindowID());
 }
 
 void InputExample::handleEvent(In<ScrollEvent> event) {
-    log().info("[Scroll] ({}; {})", event.x, event.y);
+    logInfo("[Scroll] ({}; {})", event.x, event.y);
 }
 
 void InputExample::handleEvent(In<InputDeviceButtonPressEvent> event) {
-    log().info("[ButtonPress] {}", event.button->getName());
+    logInfo("[ButtonPress] {}", event.button->getName());
 }
 
 void InputExample::handleEvent(In<InputDeviceButtonReleaseEvent> event) {
-    log().info("[ButtonRelease] {}", event.button->getName());
+    logInfo("[ButtonRelease] {}", event.button->getName());
 }
 
 void InputExample::pervCursor() {

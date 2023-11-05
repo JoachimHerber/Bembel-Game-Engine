@@ -76,8 +76,8 @@ struct Fraction {
 };
 
 struct Exeption : public std::runtime_error {
-    Exeption(std::string const& what, std::source_location loc = std::source_location::current());
-    Exeption(char const* what, std::source_location loc = std::source_location::current());
+    Exeption(std::string const& what);
+    Exeption(char const* what);
 
     Exeption(Exeption const& other) noexcept = default;
 };
