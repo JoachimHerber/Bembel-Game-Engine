@@ -13,9 +13,11 @@ import :CollisionShape;
 namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace units::literals;
 
 RigidBody RigidBody::Container::createComponent(EntityID entity_id) {
-    if(std::to_underlying(entity_id) >= m_data.size()) m_data.resize(std::to_underlying(entity_id) + 1);
+    if(std::to_underlying(entity_id) >= m_data.size())
+        m_data.resize(std::to_underlying(entity_id) + 1);
 
     auto& component = m_data[std::to_underlying(entity_id)];
 
@@ -66,7 +68,9 @@ RigidBody RigidBody::Container::getComponent(EntityID entity_id) {
     return {this, &m_data[std::to_underlying(entity_id)]};
 }
 
-bool RigidBody::Container::createRigidBody(EntityID entity_id, Asset<CollisionShape> collision_shape, btScalar mass) {
+bool RigidBody::Container::createRigidBody(
+    EntityID entity_id, Asset<CollisionShape> collision_shape, btScalar mass
+) {
     auto transform = m_scene->getComponent<Transform>(entity_id);
 
     if(!collision_shape) return false;
@@ -74,7 +78,9 @@ bool RigidBody::Container::createRigidBody(EntityID entity_id, Asset<CollisionSh
     btVector3 local_inertia(0, 0, 0);
     if(mass != 0) collision_shape->getCollisionShape()->calculateLocalInertia(mass, local_inertia);
 
-    if(std::to_underlying(entity_id) >= m_data.size()) { m_data.resize(std::to_underlying(entity_id) + 1); }
+    if(std::to_underlying(entity_id) >= m_data.size()) {
+        m_data.resize(std::to_underlying(entity_id) + 1);
+    }
 
     auto& component = m_data[std::to_underlying(entity_id)];
 
@@ -82,7 +88,10 @@ bool RigidBody::Container::createRigidBody(EntityID entity_id, Asset<CollisionSh
     component.motion_state    = std::make_unique<MotionState>(transform);
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo(
-        mass, component.motion_state.get(), component.collision_shape->getCollisionShape(), local_inertia
+        mass,
+        component.motion_state.get(),
+        component.collision_shape->getCollisionShape(),
+        local_inertia
     );
 
     component.rigid_body = std::make_unique<btRigidBody>(rbInfo);
@@ -92,16 +101,25 @@ bool RigidBody::Container::createRigidBody(EntityID entity_id, Asset<CollisionSh
     return true;
 }
 
-bool RigidBody::init(Asset<CollisionShape> collision_shape, btScalar mass) {
+bool RigidBody::init(
+    In<Asset<CollisionShape>> collision_shape,
+    In<units::Kilogram>       mass,
+    In<vec3>                  center_of_mass_offset
+) {
     if(!m_container || !m_data) return false;
 
     btVector3 local_inertia(0, 0, 0);
-    if(mass != 0) collision_shape->getCollisionShape()->calculateLocalInertia(mass, local_inertia);
+    if(mass != 0_kg) collision_shape->getCollisionShape()->calculateLocalInertia(mass.value, local_inertia);
+
+    m_data->motion_state->setCenterOfMassOffset(center_of_mass_offset);
 
     m_data->collision_shape = collision_shape;
     if(!m_data->rigid_body) {
         btRigidBody::btRigidBodyConstructionInfo rbInfo(
-            mass, m_data->motion_state.get(), m_data->collision_shape->getCollisionShape(), local_inertia
+            mass.value,
+            m_data->motion_state.get(),
+            m_data->collision_shape->getCollisionShape(),
+            local_inertia
         );
 
         m_data->rigid_body = std::make_unique<btRigidBody>(rbInfo);

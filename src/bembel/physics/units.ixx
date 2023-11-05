@@ -67,13 +67,26 @@ Unit<T, Q, R> operator-(Unit<T, Q, R> a, Unit<T, Q, R> b) {
 }
 
 template <typename T, QuantityType Q0, QuantityType Q1, RatioType R0, RatioType R1>
-Unit<T, Product<Q0, Q1>, std::ratio_multiply<R0, R1>> operator*(Unit<T, Q0, R0> a, Unit<T, Q1, R1> b) {
+Unit<T, Product<Q0, Q1>, std::ratio_multiply<R0, R1>> operator*(
+    Unit<T, Q0, R0> a, Unit<T, Q1, R1> b
+) {
     return {a.value * b.value};
 }
 
 template <typename T, QuantityType Q0, QuantityType Q1, RatioType R0, RatioType R1>
-Unit<T, Quotient<Q0, Q1>, std::ratio_divide<R0, R1>> operator/(Unit<T, Q0, R0> a, Unit<T, Q1, R1> b) {
+Unit<T, Quotient<Q0, Q1>, std::ratio_divide<R0, R1>> operator/(
+    Unit<T, Q0, R0> a, Unit<T, Q1, R1> b
+) {
     return {a.value / b.value};
+}
+
+template <typename T0, typename T1, QuantityType Q, RatioType R>
+auto operator<=>(Unit<T0, Q, R> a, Unit<T1, Q, R> b) {
+    return a.value <=> b.value;
+}
+template <typename T0, typename T1, QuantityType Q, RatioType R>
+bool operator==(Unit<T0, Q, R> a, Unit<T1, Q, R> b) {
+    return a.value == b.value;
 }
 
 // clang-format off
@@ -128,20 +141,20 @@ using KiloMeter  = Unit<double, Length, std::kilo>;
 
 namespace literals {
     // clang-format off
-        Second      operator""_s (unsigned long long v) { return {double(v)}; }
-        Meter       operator""_m (unsigned long long v) { return {double(v)}; }
-        SquareMeter operator""_m²(unsigned long long v) { return {double(v)}; }
-        CubicMeter  operator""_m³(unsigned long long v) { return {double(v)}; }
-        Kilogram    operator""_kg(unsigned long long v) { return {double(v)}; }
-        
-        Second      operator""_s (long double v) { return {double(v)}; }
-        Meter       operator""_m (long double v) { return {double(v)}; }
-        SquareMeter operator""_m²(long double v) { return {double(v)}; }
-        CubicMeter  operator""_m³(long double v) { return {double(v)}; }
-        Kilogram    operator""_kg(long double v) { return {double(v)}; }
+    Second      operator""_s (unsigned long long v) { return {double(v)}; }
+    Meter       operator""_m (unsigned long long v) { return {double(v)}; }
+    SquareMeter operator""_m²(unsigned long long v) { return {double(v)}; }
+    CubicMeter  operator""_m³(unsigned long long v) { return {double(v)}; }
+    Kilogram    operator""_kg(unsigned long long v) { return {double(v)}; }
+    
+    Second      operator""_s (long double v) { return {double(v)}; }
+    Meter       operator""_m (long double v) { return {double(v)}; }
+    SquareMeter operator""_m²(long double v) { return {double(v)}; }
+    CubicMeter  operator""_m³(long double v) { return {double(v)}; }
+    Kilogram    operator""_kg(long double v) { return {double(v)}; }
 
-        MeterPerSecond operator""_mps(unsigned long long v) { return {double(v)}; }
-        MeterPerSecond operator""_mps(long double        v) { return {double(v)}; }
+    MeterPerSecond operator""_mps(unsigned long long v) { return {double(v)}; }
+    MeterPerSecond operator""_mps(long double        v) { return {double(v)}; }
     // clang-format on
 } // namespace literals
 

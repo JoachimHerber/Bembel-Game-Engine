@@ -17,25 +17,32 @@ using namespace bembel::kernel;
 
 class MotionState : public btMotionState {
   public:
-    MotionState(Transform t) : m_transform{t} {}
+    MotionState(Transform t, In<vec3> center_of_mass_offset = {0, 0, 0})
+      : m_transform{t}, m_center_of_mass_offset{center_of_mass_offset} {}
 
     virtual void getWorldTransform(btTransform& center_of_mass_world_trans) const {
-        center_of_mass_world_trans.setOrigin({m_transform->position.x, m_transform->position.y, m_transform->position.z}
-        );
-        center_of_mass_world_trans.setRotation(
-            {m_transform->rotation.x, m_transform->rotation.y, m_transform->rotation.z, m_transform->rotation.w}
-        );
+        quat rot    = m_transform->rotation;
+        vec3 origin = m_transform->position + rot * m_center_of_mass_offset;
+        center_of_mass_world_trans.setOrigin({origin.x, origin.y, origin.z});
+        center_of_mass_world_trans.setRotation({rot.x, rot.y, rot.z, rot.w});
     }
 
     virtual void setWorldTransform(btTransform const& center_of_mass_world_trans) {
-        auto pos              = center_of_mass_world_trans.getOrigin();
-        auto rot              = center_of_mass_world_trans.getRotation();
-        m_transform->position = vec3{pos.x(), pos.y(), pos.z()};
-        m_transform->rotation = quat{rot.w(), rot.x(), rot.y(), rot.z()};
+        auto bt_origin = center_of_mass_world_trans.getOrigin();
+        auto bt_rot    = center_of_mass_world_trans.getRotation();
+        vec3 origin    = {bt_origin.x(), bt_origin.y(), bt_origin.z()};
+        quat rot       = {bt_rot.w(), bt_rot.x(), bt_rot.y(), bt_rot.z()};
+
+        auto pos              = origin - rot * m_center_of_mass_offset;
+        m_transform->position = pos;
+        m_transform->rotation = rot;
     }
+
+    void setCenterOfMassOffset(In<vec3> offset) { m_center_of_mass_offset = offset; }
 
   private:
     Transform m_transform;
+    vec3      m_center_of_mass_offset;
 };
 
 struct RigidBodyData {
@@ -56,7 +63,9 @@ export class RigidBody {
 
         RigidBody createComponent(EntityID entity_id);
 
-        RigidBody createComponent(EntityID entity_id, Asset<CollisionShape> collision_shape, units::Kilogram mass);
+        RigidBody createComponent(
+            EntityID entity_id, Asset<CollisionShape> collision_shape, units::Kilogram mass
+        );
 
         bool createComponent(EntityID entity_id, xml::Element const* properties) override;
 
@@ -69,7 +78,9 @@ export class RigidBody {
         btDiscreteDynamicsWorld* getWorld() { return m_world; }
 
       private:
-        bool createRigidBody(EntityID entity_id, Asset<CollisionShape> collision_shape, btScalar mass);
+        bool createRigidBody(
+            EntityID entity_id, Asset<CollisionShape> collision_shape, btScalar mass
+        );
 
       private:
         Scene*                     m_scene;
@@ -78,7 +89,8 @@ export class RigidBody {
     };
 
   public:
-    RigidBody(Container* container = nullptr, RigidBodyData* data = nullptr) : m_container{container}, m_data{data} {}
+    RigidBody(Container* container = nullptr, RigidBodyData* data = nullptr)
+      : m_container{container}, m_data{data} {}
     RigidBody(RigidBody const&) = default;
     RigidBody(RigidBody&&)      = default;
 
@@ -87,7 +99,11 @@ export class RigidBody {
 
     operator bool() const { return m_container && m_data; }
 
-    bool init(Asset<CollisionShape> collision_shape, btScalar mass);
+    bool init(
+        In<Asset<CollisionShape>> collision_shape,
+        In<units::Kilogram>       mass,
+        In<vec3>                  center_of_mass_offset = {0, 0, 0}
+    );
 
     void setIsKinematic();
 
