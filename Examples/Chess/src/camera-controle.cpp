@@ -1,7 +1,7 @@
 ﻿module;
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-module bembel.examples.chess.camera;
+module bembel.examples.chess;
 
 namespace bembel::examples::chess {
 using namespace bembel::base;

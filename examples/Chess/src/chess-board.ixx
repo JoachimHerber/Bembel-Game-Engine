@@ -1,15 +1,16 @@
 module;
 #include <array>
 #include <string_view>
-export module bembel.examples.chess.board;
+export module bembel.examples.chess:Board;
 
 import bembel;
-import bembel.examples.chess.selection;
+import :SelectionHighlight;
 
 namespace bembel::examples::chess {
 using namespace base;
 using namespace kernel;
 using namespace graphics;
+using namespace physics::units::literals;
 
 export enum ChessPieceType : u8 { PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 export enum ChessPlayer : u8 { WHITE, BLACK };
@@ -23,19 +24,15 @@ export struct ChessPieceComponentData {
 export bool initComponent(xml::Element const*, ChessPieceComponentData&) {
     return true;
 }
-export using ChessPieceComponent =
-    BasicComponent<"ChessPieceComponent", ChessPieceComponentData>;
+export using ChessPieceComponent = BasicComponent<"ChessPieceComponent", ChessPieceComponentData>;
 
 class ChessBoard;
 
-export using ChessPieceEntity = Entity<
-    ChessPieceComponent,
-    Transform,
-    Geometry,
-    SelectionHighlightComponent>;
+export using ChessPieceEntity =
+    Entity<ChessPieceComponent, Transform, Geometry, SelectionHighlightComponent, PhysicsComponent>;
 
 export using TilesEntity =
-    Entity<Transform, Geometry, SelectionHighlightComponent>;
+    Entity<Transform, Geometry, SelectionHighlightComponent, PhysicsComponent>;
 
 export class ChessPiece {
   public:
@@ -67,6 +64,23 @@ export class ChessPiece {
     }
     void setHighlight(SelectionHighlight highlight) {
         *(m_entity.getComponent<SelectionHighlightComponent>()) = highlight;
+    }
+
+    void makeRigidBodyKinematic() {
+        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
+        if(rb) rb->makeKinematic();
+    }
+    void makeRigidBodyStatic() {
+        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
+        if(rb) rb->makeStatic();
+    }
+    void makeRigidBodyDynamic() {
+        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
+        if(rb) rb->makeDynamic(1_kg);
+    }
+    vec3 getRigidBodyLinearVelocity() {
+        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
+        return rb ? rb->getLinearVelocity() : vec3(0, 0, 0);
     }
 
   private:
@@ -102,12 +116,29 @@ export class ChessBoard {
     void movePiece(ivec2 from, ivec2 to);
     void promote(ivec2 pos, ChessPieceType new_type);
 
+    Scene* getScene() { return m_scene; }
+
   private:
     Scene*                                         m_scene;
     std::array<std::array<ChessPieceEntity, 8>, 8> m_board;
     std::array<std::array<TilesEntity, 8>, 8>      m_tiles;
 
-    std::array<std::array<Asset<GeometryModel>, 2>, 6> m_models;
+    struct Assets {
+        Asset<GeometryModel>  models[2];
+        Asset<CollisionShape> collision_shape;
+
+        void request(
+            std::string_view model_white_name,
+            std::string_view model_black_name,
+            std::string_view collision_shape_name
+        ) {
+            models[u8(WHITE)].request(model_white_name);
+            models[u8(BLACK)].request(model_black_name);
+            collision_shape.request(collision_shape_name);
+        }
+    };
+
+    std::array<Assets, 7> m_assets;
 
     std::optional<ivec2> m_en_passant;
 };

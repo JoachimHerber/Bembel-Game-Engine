@@ -2,15 +2,24 @@ module;
 #include <cstdlib>
 #include <source_location>
 #include <string_view>
-module bembel.examples.chess.board;
+module bembel.examples.chess:Board;
 
 import bembel;
-import bembel.examples.chess.selection;
+import :SelectionHighlight;
 
 namespace bembel::examples::chess {
 using namespace base;
 using namespace kernel;
 using namespace graphics;
+using namespace physics::units::literals;
+
+constexpr std::array<vec3, 6> CHESS_PIECE_CENTER_OF_MASS = {
+    {{0.0f, 1.0f, 0.0f},
+     {0.0f, 1.1f, 0.0f},
+     {0.0f, 1.1f, 0.0f},
+     {0.0f, 1.5f, 0.0f},
+     {0.0f, 1.6f, 0.0f},
+     {0.0f, 1.6f, 0.0f}}};
 
 ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
     m_scene->registerComponentType<Geometry>();
@@ -18,31 +27,25 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
     m_scene->registerComponentType<ChessPieceComponent>();
     m_scene->registerComponentType<SelectionHighlightComponent>();
 
-    m_models[u8(PAWN)][u8(WHITE)].request( "white.pawn");
-    m_models[u8(PAWN)][u8(BLACK)].request("black.pawn");
-    m_models[u8(ROOK)][u8(WHITE)].request("white.rook");
-    m_models[u8(ROOK)][u8(BLACK)].request("black.rook");
-    m_models[u8(KNIGHT)][u8(WHITE)].request("white.knight");
-    m_models[u8(KNIGHT)][u8(BLACK)].request("black.knight");
-    m_models[u8(BISHOP)][u8(WHITE)].request("white.bishop");
-    m_models[u8(BISHOP)][u8(BLACK)].request("black.bishop");
-    m_models[u8(QUEEN)][u8(WHITE)].request("white.queen");
-    m_models[u8(QUEEN)][u8(BLACK)].request("black.queen");
-    m_models[u8(KING)][u8(WHITE)].request("white.king");
-    m_models[u8(KING)][u8(BLACK)].request("black.king");
-
-    
-    Asset<GeometryModel> whiteTile{"white.tile"};
-    Asset<GeometryModel> blackTile{"black.tile"};
+    // clang-format off
+    m_assets[u8(PAWN)]  .request("white.pawn",   "black.pawn",   "pawn");
+    m_assets[u8(ROOK)]  .request("white.rook",   "black.rook",   "rook");
+    m_assets[u8(KNIGHT)].request("white.knight", "black.knight", "knight");
+    m_assets[u8(BISHOP)].request("white.bishop", "black.bishop", "bishop");
+    m_assets[u8(QUEEN)] .request("white.queen",  "black.queen",  "queen");
+    m_assets[u8(KING)]  .request("white.king",   "black.king",   "king");
+    m_assets.back()     .request("white.tile",   "black.tile",   "tile");
+    // clang-format on
 
     for(unsigned u = 0; u < 8; ++u) {
         for(unsigned v = 0; v < 8; ++v) {
             m_tiles[u][v] = TilesEntity{*m_scene};
 
-            auto& [transform, geom, highlight] = m_tiles[u][v];
-            transform->position                = vec3(2.0f * u, 0, 2.0f * v);
-            geom->model                        = (u + v) % 2 != 0 ? whiteTile : blackTile;
-            *highlight                         = SelectionHighlight::NO_HIGHLIGHT;
+            auto& [transform, geom, highlight, physics] = m_tiles[u][v];
+            transform->position                         = vec3(2.0f * u, 0, 2.0f * v);
+            geom->model                                 = m_assets.back().models[(u + v) % 2];
+            *highlight                                  = SelectionHighlight::NO_HIGHLIGHT;
+            physics.createRigidBody(m_assets.back().collision_shape, 0_kg);
         }
     }
     resetBoard();
@@ -58,12 +61,11 @@ ChessBoard::~ChessBoard() {
 }
 
 void ChessBoard::resetBoard() {
-    for(unsigned u = 0; u < 8; ++u) {
-        for(unsigned v = 0; v < 8; ++v) {
-            if(m_board[u][v]) m_board[u][v].deleteEntity();
+    for(auto& row : m_board) {
+        for(auto& chess_piece : row) {
+            if(chess_piece) chess_piece.deleteEntity();
         }
     }
-
     createChessPiece({0, 0}, ROOK, WHITE);
     createChessPiece({0, 1}, KNIGHT, WHITE);
     createChessPiece({0, 2}, BISHOP, WHITE);
@@ -108,16 +110,18 @@ void ChessBoard::createChessPiece(ivec2 pos, ChessPieceType type, ChessPlayer ow
 
     if(chess_piece) chess_piece.deleteEntity();
 
-    chess_piece                               = ChessPieceEntity{*m_scene};
-    auto& [piece, transform, geom, selection] = chess_piece;
+    chess_piece = ChessPieceEntity{*m_scene};
+
+    auto& [piece, transform, geom, selection, physics] = chess_piece;
 
     piece->type         = type;
     piece->owner        = owner;
     piece->position     = pos;
     transform->position = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
     transform->rotation = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
-    geom->model         = m_models[type][owner];
+    geom->model         = m_assets[type].models[owner];
     *selection          = SelectionHighlight::NO_HIGHLIGHT;
+    auto* rb = physics.createRigidBody(m_assets[type].collision_shape, 0_kg, CHESS_PIECE_CENTER_OF_MASS[type]);
 }
 
 bool ChessBoard::canCaptureEnPassant(ivec2 pos) {

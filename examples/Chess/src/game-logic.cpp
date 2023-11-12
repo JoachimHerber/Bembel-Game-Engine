@@ -1,12 +1,17 @@
 module;
+#include <chrono>
 #include <cmath>
+#include <coroutine>
+#include <glm/glm.hpp>
 #include <memory>
 #include <string_view>
-module bembel.examples.chess.logic;
+module bembel.examples.chess;
 
 import bembel;
-import bembel.examples.chess.board;
-import bembel.examples.chess.camera;
+import :Board;
+import :Selector;
+import :Moves;
+import :MoveAnimation;
 
 namespace bembel::examples::chess {
 using namespace base;
@@ -15,250 +20,140 @@ using namespace graphics;
 using namespace gui;
 using namespace kernel::i18n::literals;
 
-GameLogic::GameLogic(
-    ChessBoard* board, SelectionPointer* selection_ptr, CameraControle* camera, GraphicalUserInterface* gui
-)
-  : m_board(board), m_selection_ptr(selection_ptr), m_camera(camera), m_gui(gui) {
-    setState(std::make_unique<SelectChessPice>(this, ChessPlayer::WHITE));
+template <typename TReturn>
+struct Script {
+    struct Promise {
+        using Handle = std::coroutine_handle<Promise>;
 
-    selection_ptr->getSelectSignal().bind(this, &GameLogic::onClick);
-}
-
-void GameLogic::update(double time) {
-    if(m_state) m_state->update(time);
-}
-
-void GameLogic::onClick() {
-    if(m_state) m_state->onClick();
-}
-
-void GameLogic::setState(std::unique_ptr<GameState> state) {
-    if(m_state) m_state->onExit();
-    m_last_state = std::move(m_state);
-    m_state      = std::move(state);
-    if(m_state) m_state->onEnter();
-}
-
-std::vector<GameLogic::Move> GameLogic::getPossibleMoves(ChessPiece pice) {
-    std::vector<Move> moves;
-
-    if(!pice) return moves;
-
-    switch(pice.getType()) {
-        case ChessPieceType::PAWN: getPossiblePawnMoves(pice, moves); break;
-        case ChessPieceType::ROOK: getPossibleRookMoves(pice, moves); break;
-        case ChessPieceType::KNIGHT: getPossibleKnightMoves(pice, moves); break;
-        case ChessPieceType::BISHOP: getPossibleBishopMoves(pice, moves); break;
-        case ChessPieceType::QUEEN: {
-            getPossibleRookMoves(pice, moves);
-            getPossibleBishopMoves(pice, moves);
-            break;
+        Script              get_return_object() { return Script(Handle::from_promise(*this)); }
+        std::suspend_never  initial_suspend() { return {}; }
+        std::suspend_always final_suspend() noexcept { return {}; }
+        void                return_value(In<TReturn> v) noexcept {
+            value = v;
+            if(parent && !parent.done()) parent.resume();
         }
-        case ChessPieceType::KING: getPossibleKingMoves(pice, moves); break;
+        TReturn await_resume() { return value; }
+        void    unhandled_exception() { logError("Unhandled exception in coroutine\n"); }
+
+        TReturn                 value;
+        std::coroutine_handle<> parent;
+    };
+    struct Awaiter : std::suspend_always {
+        Awaiter(std::coroutine_handle<Promise> handle) : m_handle{handle} {}
+        void await_suspend(std::coroutine_handle<> handle) { m_handle.promise().parent = handle; }
+
+        TReturn await_resume() { return m_handle.promise().value; }
+
+      private:
+        std::coroutine_handle<Promise> m_handle;
+    };
+
+    using promise_type = Promise;
+    using handle_type  = std::coroutine_handle<promise_type>;
+
+    Script(handle_type hndl) : m_hndl(hndl) {}
+    ~Script() { m_hndl.destroy(); }
+
+    Awaiter operator co_await() { return {m_hndl}; }
+
+  private:
+    handle_type m_hndl;
+};
+
+Script<ChessPieceEntity> selectChessPiece(
+    ChessBoard* board, ChessPlayer cur_player, Camera* camera, Signal<>& button_press
+) {
+    ChessPieceSelector selection{board, cur_player, camera};
+    ChessPieceEntity   chess_piece;
+    while(!chess_piece) {
+        co_await button_press;
+        chess_piece = selection.getSelectedChessPiece();
     }
-    return moves;
+    co_return chess_piece;
 }
 
-void GameLogic::getPossiblePawnMoves(ChessPiece pice, std::vector<Move>& moves) {
-    ivec2 pos = pice.getBoardPosition();
-    int   dir = (pice.getOwner() == ChessPlayer::WHITE) ? 1 : -1;
-
-    if(addMove(pice, moves, pos + ivec2(dir, 0), false)) {
-        if(!pice.hasMoved()) { addMove(pice, moves, pos + ivec2(2 * dir, 0), false); }
+Script<Move> selectMove(
+    ChessBoard* board, ChessPieceEntity pice, Camera* camera, Signal<>& button_press
+) {
+    std::optional<Move> move;
+    {
+        MoveSelector selection{board, pice, camera};
+        while(!move) {
+            co_await button_press;
+            move = selection.getSelectedMove();
+        }
     }
-    if(auto other = m_board->getChessPieceAt(pos + ivec2(dir, -1))) {
-        if(other.getOwner() != pice.getOwner()) moves.emplace_back(Move::CAPUTE, pos + ivec2(dir, -1));
-    }
-    if(m_board->canCaptureEnPassant(pos + ivec2(dir, -1))) {
-        moves.emplace_back(Move::CAPUTE_EN_PASSANT, pos + ivec2(dir, -1));
-    }
-    if(auto other = m_board->getChessPieceAt(pos + ivec2(dir, +1))) {
-        if(other.getOwner() != pice.getOwner()) moves.emplace_back(Move::CAPUTE, pos + ivec2(dir, +1));
-    }
-    if(m_board->canCaptureEnPassant(pos + ivec2(dir, +1))) {
-        moves.emplace_back(Move::CAPUTE_EN_PASSANT, pos + ivec2(dir, +1));
-    }
+    co_return move.value();
 }
 
-void GameLogic::getPossibleKnightMoves(ChessPiece pice, std::vector<Move>& moves) {
-    ivec2 pos = pice.getBoardPosition();
-
-    addMove(pice, moves, pos + ivec2(+1, +2), true);
-    addMove(pice, moves, pos + ivec2(+2, +1), true);
-    addMove(pice, moves, pos + ivec2(+2, -1), true);
-    addMove(pice, moves, pos + ivec2(+1, -2), true);
-    addMove(pice, moves, pos + ivec2(-1, -2), true);
-    addMove(pice, moves, pos + ivec2(-2, -1), true);
-    addMove(pice, moves, pos + ivec2(-2, +1), true);
-    addMove(pice, moves, pos + ivec2(-1, +2), true);
-}
-
-void GameLogic::getPossibleRookMoves(ChessPiece pice, std::vector<Move>& moves) {
-    ivec2 pos = pice.getBoardPosition();
-
-    for(int i = 1; addMove(pice, moves, pos + ivec2(+i, 0), true); ++i) {}
-    for(int i = 1; addMove(pice, moves, pos + ivec2(-i, 0), true); ++i) {}
-    for(int i = 1; addMove(pice, moves, pos + ivec2(0, +i), true); ++i) {}
-    for(int i = 1; addMove(pice, moves, pos + ivec2(0, -i), true); ++i) {}
-}
-
-void GameLogic::getPossibleBishopMoves(ChessPiece pice, std::vector<Move>& moves) {
-    ivec2 pos = pice.getBoardPosition();
-
-    for(int i = 1; addMove(pice, moves, pos + ivec2(-i, -i), true); ++i) {}
-    for(int i = 1; addMove(pice, moves, pos + ivec2(-i, +i), true); ++i) {}
-    for(int i = 1; addMove(pice, moves, pos + ivec2(+i, -i), true); ++i) {}
-    for(int i = 1; addMove(pice, moves, pos + ivec2(+i, +i), true); ++i) {}
-}
-
-void GameLogic::getPossibleKingMoves(ChessPiece pice, std::vector<Move>& moves) {
-    ivec2 pos = pice.getBoardPosition();
-
-    addMove(pice, moves, pos + ivec2(+1, +0), true);
-    addMove(pice, moves, pos + ivec2(+1, +1), true);
-    addMove(pice, moves, pos + ivec2(+0, +1), true);
-    addMove(pice, moves, pos + ivec2(-1, +1), true);
-    addMove(pice, moves, pos + ivec2(-1, +0), true);
-    addMove(pice, moves, pos + ivec2(-1, -1), true);
-    addMove(pice, moves, pos + ivec2(+0, -1), true);
-    addMove(pice, moves, pos + ivec2(+1, -1), true);
-}
-
-bool GameLogic::addMove(ChessPiece pice, std::vector<Move>& moves, ivec2 pos, bool can_capture) {
-    if(pos.x < 0 || 8 <= pos.x) return false;
-    if(pos.y < 0 || 8 <= pos.y) return false;
-
-    auto other = m_board->getChessPieceAt(pos);
-    if(!other) {
-        moves.emplace_back(Move::MOVE, pos);
-        return true;
-    }
-    if(can_capture && other.getOwner() != pice.getOwner()) moves.emplace_back(Move::CAPUTE, pos);
-    return false;
-}
-
-GameLogic::SelectChessPice::SelectChessPice(GameLogic* logic, ChessPlayer player) : m_logic(logic), m_player(player) {}
-
-void GameLogic::SelectChessPice::update(double) {
-    ivec2 tile = m_logic->getSelectionPointer()->getSelectedTile();
-
-    ChessPiece selection = m_logic->getChessBoard()->getChessPieceAt(tile);
-
-    if(selection == m_selection) return;
+void resetHighlights(ChessBoard* board) {
+    using Highlight = SelectionHighlightComponent;
+    using enum SelectionHighlight;
 
     for(uint x = 0; x < 8; ++x) {
         for(uint y = 0; y < 8; ++y) {
-            auto tile                                        = m_logic->getChessBoard()->getTileAt({x, y});
-            tile.getComponent<SelectionHighlightComponent>() = SelectionHighlight::NO_HIGHLIGHT;
+            board->getTileAt({x, y}).getComponent<Highlight>() = NO_HIGHLIGHT;
+            if(auto chess_piece = board->getChessPieceAt({x, y}))
+                chess_piece.setHighlight(NO_HIGHLIGHT);
         }
     }
+}
 
-    if(m_selection) { m_selection.setHighlight(SelectionHighlight::NO_HIGHLIGHT); }
+GameLogicCoroutine runGameLogic(
+    ChessBoard*  board,
+    Camera*      camera,
+    LabelWidget* lable,
+    Signal<>&    button_press,
+    Signal<>&    frame_sync
+) {
+    ChessPlayer cur_player   = ChessPlayer::WHITE;
+    auto        isWhitesTurn = [&]() { return cur_player == ChessPlayer::WHITE; };
+    while(true) {
+        lable->setText(
+            isWhitesTurn() ? "examples.chess.select_chess_pice.white"_i18n()
+                           : "examples.chess.select_chess_pice.black"_i18n()
+        );
 
-    if(!selection || selection.getOwner() != m_player) {
-        m_selection = ChessPiece{};
-        return;
+        auto chess_piece_entity =
+            co_await selectChessPiece(board, cur_player, camera, button_press);
+        ChessPiece chess_piece(board, chess_piece_entity);
+
+        lable->setText(
+            isWhitesTurn() ? "examples.chess.select_move.white"_i18n()
+                           : "examples.chess.select_move.black"_i18n()
+        );
+        chess_piece.setHighlight(SelectionHighlight::SELECTED);
+
+        auto move = co_await selectMove(board, chess_piece_entity, camera, button_press);
+
+        resetHighlights(board);
+
+        chess_piece.makeRigidBodyKinematic();
+        auto captured_chess_piece = board->getChessPieceAt(move.to);
+        if(captured_chess_piece) { captured_chess_piece.makeRigidBodyDynamic(); }
+
+        lable->setText(u8"");
+
+        co_await playMoveAnimation(chess_piece, move.to, frame_sync);
+
+        if(captured_chess_piece) {
+            // let the captured piece 'ragdoll' for a bit
+            using namespace std::chrono_literals;
+            auto start_time = std::chrono::steady_clock::now();
+            while(std::chrono::steady_clock::now() - start_time < 2s) {
+                co_await frame_sync;
+                vec3 v = captured_chess_piece.getRigidBodyLinearVelocity();
+                if(glm::dot(v, v) < 0.01f) break; // the captured piece has stoped moving
+
+                vec3 pos = captured_chess_piece.getPosition();
+                if(pos.y < -1.f) break; // the captured piece has rolled of the board
+            }
+            // @ToDo add particle effect
+        }
+        chess_piece.setBoardPosition(move.to);
+
+        cur_player = isWhitesTurn() ? ChessPlayer::BLACK : ChessPlayer::WHITE;
     }
-
-    m_selection = selection;
-
-    auto moves = m_logic->getPossibleMoves(m_selection);
-
-    m_selection.setHighlight(moves.empty() ? SelectionHighlight::SELECTABLE : SelectionHighlight::FOCUSED);
-
-    for(auto move : moves) {
-        m_logic->getChessBoard()->getTileAt(move.to).getComponent<SelectionHighlightComponent>() =
-            SelectionHighlight::SELECTABLE;
-    }
+    co_return;
 }
-
-void GameLogic::SelectChessPice::onClick() {
-    if(!m_selection) return;
-
-    if(m_logic->getPossibleMoves(m_selection).empty()) return;
-
-    m_selection.setHighlight(SelectionHighlight::SELECTED);
-
-    m_logic->setState(std::make_unique<SelectMove>(m_logic, m_selection));
-}
-
-void GameLogic::SelectChessPice::onEnter() {
-    auto lable = m_logic->getGui()->getWidget<LabelWidget>("Label");
-    if(!lable) return;
-
-    lable->setText(
-        m_player == ChessPlayer::WHITE ? "examples.chess.select_chess_pice.white"_i18n()
-                                       : "examples.chess.select_chess_pice.black"_i18n()
-    );
-}
-
-GameLogic::SelectMove::SelectMove(GameLogic* logic, ChessPiece pice)
-  : m_logic(logic), m_pice(pice), m_moves(m_logic->getPossibleMoves(pice)) {}
-
-void GameLogic::SelectMove::update(double) {
-    ivec2 tile = m_logic->getSelectionPointer()->getSelectedTile();
-
-    size_t selection = 0;
-    for(; selection < m_moves.size(); ++selection) {
-        if(m_moves[selection].to == tile) break;
-    }
-
-    if(m_selection == selection) return;
-
-    if(auto highlight = getHighlightComponentOfSelectedTile()) {
-        if(highlight == SelectionHighlight::FOCUSED) highlight = SelectionHighlight::SELECTABLE;
-    }
-    m_selection = selection;
-    if(auto highlight = getHighlightComponentOfSelectedTile()) {
-        if(highlight == SelectionHighlight::SELECTABLE) highlight = SelectionHighlight::FOCUSED;
-    }
-}
-
-void GameLogic::SelectMove::onClick() {
-    auto highlight = getHighlightComponentOfSelectedTile();
-    if(!highlight) return;
-
-    m_pice.setHighlight(SelectionHighlight::NO_HIGHLIGHT);
-
-    for(auto& move : m_moves) {
-        m_logic->getChessBoard()->getTileAt(move.to).getComponent<SelectionHighlightComponent>() =
-            SelectionHighlight::NO_HIGHLIGHT;
-    }
-    m_logic->setState(std::make_unique<PerformMove>(m_logic, m_pice, m_moves[m_selection]));
-}
-
-void GameLogic::SelectMove::onEnter() {
-    auto lable = m_logic->getGui()->getWidget<LabelWidget>("Label");
-    if(!lable) return;
-
-    lable->setText(
-        m_pice.getOwner() == ChessPlayer::WHITE ? "examples.chess.select_move.white"_i18n()
-                                                : "examples.chess.select_move.black"_i18n()
-    );
-}
-
-GameLogic::PerformMove::PerformMove(GameLogic* logic, ChessPiece pice, Move move)
-  : m_logic(logic), m_pice(pice), m_move(move) {
-    m_animation = std::make_unique<StandartMoveAnimation>(pice, move.to);
-}
-
-void GameLogic::PerformMove::update(double time) {
-    bool animation_finished = m_animation->update(time);
-
-    if(!animation_finished) return;
-
-    m_pice.setBoardPosition(m_move.to);
-
-    m_logic->setState(std::make_unique<SelectChessPice>(
-        m_logic, m_pice.getOwner() == ChessPlayer::WHITE ? ChessPlayer::BLACK : ChessPlayer::WHITE
-    ));
-}
-
-void GameLogic::PerformMove::onEnter() {
-    auto lable = m_logic->getGui()->getWidget<LabelWidget>("Label");
-    if(!lable) return;
-
-    lable->setText(u8"");
-}
-
 } // namespace bembel::examples::chess

@@ -1,6 +1,6 @@
 ﻿module;
 #include <memory>
-export module bembel.examples.chess.camera;
+export module bembel.examples.chess:Camera;
 
 import bembel;
 

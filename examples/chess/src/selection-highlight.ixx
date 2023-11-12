@@ -1,6 +1,6 @@
 ﻿module;
 #include <chrono>
-export module bembel.examples.chess.selection;
+export module bembel.examples.chess:SelectionHighlight;
 
 import bembel;
 
@@ -9,32 +9,6 @@ using namespace base;
 using namespace kernel;
 using namespace graphics;
 using namespace gui;
-
-export class SelectionPointer {
-  public:
-    SelectionPointer(RenderingPipeline*);
-    ~SelectionPointer();
-
-    void handleEvent(CursorMovedEvent const& event);
-    void handleEvent(MouseButtonPressEvent const& event);
-
-    vec3 const&  getRayOrigin() const { return m_ray_origin; }
-    vec3 const&  getRayDirection() const { return m_ray_direction; }
-    ivec2 const& getSelectedTile() const { return m_selected_tile; }
-
-    Signal<>& getSelectSignal() { return m_select; }
-
-  private:
-    void updateRay(vec2 pos);
-
-  private:
-    RenderingPipeline* m_pipline;
-
-    vec3     m_ray_origin;
-    vec3     m_ray_direction;
-    ivec2    m_selected_tile;
-    Signal<> m_select;
-};
 
 export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECTED };
 export bool initComponent(xml::Element const*, SelectionHighlight&) {

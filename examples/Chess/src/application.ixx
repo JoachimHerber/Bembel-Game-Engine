@@ -5,10 +5,9 @@
 export module bembel.examples.chess;
 
 import bembel;
-import bembel.examples.chess.board;
-import bembel.examples.chess.camera;
-import bembel.examples.chess.logic;
-import bembel.examples.chess.selection;
+import :Board;
+import :Camera;
+import :Logic;
 
 namespace bembel::examples::chess {
 using namespace base;
@@ -26,18 +25,21 @@ export class Application : public kernel::Application {
 
     virtual void update(double time) override;
 
-    void handleEvent(WindowShouldCloseEvent const&);
-    void handleEvent(FrameBufferResizeEvent const&);
+    void handleEvent(In<WindowShouldCloseEvent>);
+    void handleEvent(In<FrameBufferResizeEvent>);
+    void handleEvent(In<KeyPressEvent>);
 
   private:
     GraphicSystem* m_graphic_system;
+    PhysicsSystem* m_physics_system;
     GuiSystem*     m_gui_system;
 
-    std::shared_ptr<Scene>            m_scene;
-    std::unique_ptr<SelectionPointer> m_selection_ptr;
-    std::unique_ptr<ChessBoard>       m_chess_board;
-    std::unique_ptr<GameLogic>        m_game_logic;
+    std::shared_ptr<Scene>      m_scene;
+    std::unique_ptr<ChessBoard> m_chess_board;
+    GameLogicCoroutine          m_game_logic;
 
     std::unique_ptr<CameraControle> m_camera;
+
+    Signal<> m_frame_sync;
 };
 } // namespace bembel::examples::chess

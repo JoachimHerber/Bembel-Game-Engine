@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <random>
-module bembel.examples.chess.selection;
+module bembel.examples.chess;
 
 import bembel;
 
@@ -16,70 +16,6 @@ using namespace graphics;
 using namespace gui;
 using namespace ::gl;
 using namespace std::chrono;
-
-SelectionPointer::SelectionPointer(RenderingPipeline* pipline) : m_pipline(pipline) {
-    events::addHandler<CursorMovedEvent>(this);
-    events::addHandler<MouseButtonPressEvent>(this);
-}
-
-SelectionPointer::~SelectionPointer() {
-    events::removeHandler<CursorMovedEvent>(this);
-    events::removeHandler<MouseButtonPressEvent>(this);
-}
-
-void SelectionPointer::handleEvent(CursorMovedEvent const& event) {
-    ivec2 windowSize = event.window->getWindowSize();
-    ivec2 fbSize     = event.window->getFrameBufferSize();
-
-    vec2 pos = event.position;
-
-    // convert courser position form to window coordinates
-    // to viewport coordinates.
-    pos /= vec2(windowSize);
-    pos.y = 1.0 - pos.y;
-    pos *= fbSize;
-
-    updateRay(pos);
-}
-
-void SelectionPointer::handleEvent(MouseButtonPressEvent const& event) {
-    if(event.button_id == 0) m_select.emit();
-}
-
-void SelectionPointer::updateRay(vec2 pos) {
-    const vec2 res = m_pipline->getResulution();
-
-    for(auto const& it : m_pipline->getViews()) {
-        auto vp = it->getViewport();
-        if(!vp) continue;
-        vec2 vp_pos = pos - vec2(vp->getPosition());
-        vp_pos /= vec2(vp->getSize());
-
-        // test if the cursor is within the view port
-        if(!(0.0f <= vp_pos.x && vp_pos.x <= 1.0f && 0.0f <= vp_pos.y && vp_pos.y <= 1.0f))
-            continue;
-
-        vec2 tc = vec2(it->getViewAreaPosition()) + vec2(it->getViewAreaSize()) * vp_pos;
-        tc /= res;
-
-        auto cam = m_pipline->getCamera();
-
-        vec4 rel_pos(2 * tc.x - 1, 2 * tc.y - 1, 0, 1);
-        rel_pos = cam->getInverseProjectionMatrix() * rel_pos;
-        rel_pos /= rel_pos.w;
-        rel_pos = cam->getInverseViewMatrix() * rel_pos;
-
-        m_ray_origin    = cam->getPosition();
-        m_ray_direction = glm::vec3(rel_pos) - m_ray_origin;
-        m_ray_direction = glm::normalize(m_ray_direction);
-    }
-
-    float     f = -m_ray_origin.y / m_ray_direction.y;
-    glm::vec3 p = m_ray_origin + f * m_ray_direction;
-    p *= 0.5f;
-
-    m_selected_tile = glm::ivec2{p.x + 0.5f, p.z + 0.5f};
-}
 
 SelectionRenderingStage::SelectionRenderingStage(RenderingPipeline& pipline)
   : RenderingPipeline::Stage(pipline) {
@@ -204,9 +140,13 @@ void SelectionRenderingStage::execute(In<std::span<const RendererPtr>>) {
 void SelectionRenderingStage::setScene(Scene* scene) {
     m_scene = scene;
     if(m_scene) {
-        m_transform_components = scene->getComponentContainer<Transform>();
-        m_geometry_components  = scene->getComponentContainer<Geometry>();
-        m_highlight_components = scene->getComponentContainer<SelectionHighlightComponent>();
+        m_scene->registerComponentType<Transform>();
+        m_scene->registerComponentType<Geometry>();
+        m_scene->registerComponentType<SelectionHighlightComponent>();
+
+        m_transform_components = m_scene->getComponentContainer<Transform>();
+        m_geometry_components  = m_scene->getComponentContainer<Geometry>();
+        m_highlight_components = m_scene->getComponentContainer<SelectionHighlightComponent>();
     } else {
         m_transform_components = nullptr;
         m_geometry_components  = nullptr;
