@@ -86,7 +86,11 @@ export class Scene {
         if(it == m_component_type_map.end()) return {};
 
         auto container = static_cast<typename T::Container*>(m_container[it->second].get());
-
+        if((m_entities[std::to_underlying(id)] & container->getComponentMask()) != 0) {
+            if constexpr (sizeof...(TArgs) > 0)
+              logWarning("Component already exisits");
+            return container->getComponent(id);
+        }
         m_entities[std::to_underlying(id)] |= container->getComponentMask();
         return container->createComponent(id, std::forward<TArgs>(args)...);
     }
@@ -109,22 +113,6 @@ export class Scene {
             return nullptr; // entity doesn't have a component of the requested type
 
         return container->getComponent(id);
-    }
-    template <Component T>
-    T acquireComponent(EntityID id) {
-        if(std::to_underlying(id) >= m_entities.size())
-            throw Exeption("Tying to acquire component for invalid entity");
-
-        auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
-        if(it == m_component_type_map.end()) throw Exeption("Invalid Component Type");
-
-        auto container = static_cast<typename T::Container*>(m_container[it->second].get());
-
-        if((m_entities[std::to_underlying(id)] & container->getComponentMask()) != 0)
-            return container->getComponent(id);
-
-        m_entities[std::to_underlying(id)] |= container->getComponentMask();
-        return container->createComponent(id);
     }
 
     std::vector<ComponentMask> const& getEntitys() const;

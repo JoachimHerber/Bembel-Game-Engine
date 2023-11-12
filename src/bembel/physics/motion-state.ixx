@@ -3,7 +3,7 @@ module;
 
 #include <memory>
 #include <vector>
-export module bembel.physics:RigidBody;
+export module bembel.physics:MotionState;
 
 import bembel.base;
 import bembel.kernel;
@@ -43,38 +43,6 @@ class MotionState : public btMotionState {
   private:
     Transform m_transform;
     vec3      m_center_of_mass_offset;
-};
-
-class World;
-
-export class RigidBody {
-  public:
-    RigidBody(
-        In<World*>                world,
-        In<EntityID>              entity,
-        In<Asset<CollisionShape>> collision_shape,
-        In<vec3>                  center_of_mass_offset,
-        In<units::Kilogram>       mass
-    );
-    ~RigidBody();
-
-    void makeKinematic();
-    void makeStatic();
-    void makeDynamic(In<units::Kilogram> mass);
-
-    vec3 getLinearVelocity();
-    vec3 getAngularVelocity();
-
-    btRigidBody* getRigidBody() { return &m_rigid_body; }
-
-    EntityID getEntityID() const { return m_entity; }
-
-  private:
-    World*                m_world;
-    EntityID              m_entity;
-    Asset<CollisionShape> m_collision_shape;
-    MotionState           m_motion_state;
-    btRigidBody           m_rigid_body;
 };
 
 } // namespace bembel::physics

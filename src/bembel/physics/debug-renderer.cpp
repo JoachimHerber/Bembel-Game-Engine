@@ -13,6 +13,7 @@ import bembel.kernel;
 import bembel.graphics;
 
 import :RigidBody;
+import :World;
 
 namespace bembel::physics {
 using namespace bembel::base;
@@ -53,7 +54,7 @@ void PhysicsDebugRenderStage::cleanup() {
 void PhysicsDebugRenderStage::execute(In<std::span<const RendererPtr>>) {
     if(!m_enabled || !m_scene) return;
 
-    auto* rigidBodys = m_scene->getComponentContainer<RigidBody>();
+    auto* rigidBodys = m_scene->getComponentContainer<PhysicsComponent>();
     if(!rigidBodys) return;
     auto world = rigidBodys->getWorld();
     if(!world) return;

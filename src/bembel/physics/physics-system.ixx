@@ -30,22 +30,22 @@ export class PhysicsSystem : public System {
     PhysicsSystem& operator=(PhysicsSystem const&) = delete;
     ~PhysicsSystem()                               = default;
 
-    template <typename... TArgs>
-    World* addScene(std::shared_ptr<Scene> scene, TArgs&&... args) {
-        m_worlds.push_back(std::make_unique<World>(scene, std::forward<TArgs>(args)...));
-        return m_worlds.back().get();
+    void addScene(std::shared_ptr<Scene> scene) {
+        scene->registerComponentType<Transform>();
+        scene->registerComponentType<PhysicsComponent>();    
+        m_scenes.push_back(std::move(scene));
     }
 
     virtual bool configure(xml::Element const*) override { return true; }
 
     virtual bool init() override { return true; }
-    virtual void shutdown() override { m_worlds.clear(); }
+    virtual void shutdown() override { m_scenes.clear(); }
     virtual void update(double time_since_last_update) override;
 
   private:
     Engine& m_engine;
 
-    std::vector<std::unique_ptr<World>> m_worlds;
+    std::vector<std::shared_ptr<Scene>> m_scenes;
 };
 
 } // namespace bembel::physics

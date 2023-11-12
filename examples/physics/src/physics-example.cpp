@@ -54,8 +54,9 @@ bool PhysicsExample::init(std::span<std::string_view>) {
     m_scene->createComponent<Geometry>(
         m_stirring_stick, Asset<GeometryModel>("stirring_stick"), vec3(4.5f, 0.5f, 0.1f)
     );
-    m_scene->createComponent<RigidBody>(m_stirring_stick, Asset<CollisionShape>("stirring_stick"), 0.0_kg)
-        .setIsKinematic();
+    auto stirring_stick = m_scene->createComponent<PhysicsComponent>(m_stirring_stick);
+    RigidBody* rb = stirring_stick.createRigidBody(Asset<CollisionShape>("stirring_stick"), 0.0_kg);
+    rb->makeKinematic();
 
     m_engine.initSystems();
     return true;
@@ -86,7 +87,7 @@ void PhysicsExample::handleEvent(In<FrameBufferResizeEvent> event) {
 }
 
 void PhysicsExample::handleEvent(In<KeyPressEvent> event) {
-    if((event.mods & 0x2)  && event.key_id == 'D') { // [Ctrl] + [D]
+    if((event.mods & 0x2) && event.key_id == 'D') { // [Ctrl] + [D]
         events::broadcast(ConfigurePhysicsDebugRenderStageEvent{
             .enable     = ConfigurePhysicsDebugRenderStageEvent::TOGGLE,
             .depth_test = ConfigurePhysicsDebugRenderStageEvent::FALSE,

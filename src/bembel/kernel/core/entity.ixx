@@ -44,6 +44,8 @@ class Entity {
         return m_scene ? m_scene->getComponent<ComponentType>(m_id) : ComponentType();
     }
 
+    EntityID getId() const { return m_id ;}
+
     template <class ComponentType>
     ComponentType acquireComponent() {
         if(!m_scene || m_id == EntityID::INVALID)

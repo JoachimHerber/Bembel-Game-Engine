@@ -10,9 +10,11 @@ import :Types;
 export namespace bembel::base {
 
 struct SignalAwaiter : std::suspend_always {
-    std::vector<std::coroutine_handle<>>* signal;
+    SignalAwaiter(std::vector<std::coroutine_handle<>>& s) : signal{s} {}
 
-    void await_suspend(std::coroutine_handle<> handle) { signal->push_back(handle); }
+    std::vector<std::coroutine_handle<>>& signal;
+
+    void await_suspend(std::coroutine_handle<> handle) { signal.push_back(handle); }
 };
 
 template <typename... TArgs>
@@ -63,8 +65,9 @@ class Signal {
                 slots = m_slots;
                 std::swap(coroutines, m_coroutines);
             }
-            for(auto it : coroutines) it.resume();
-            for(auto it : slots) it(args...);
+            for(auto it : coroutines)
+                if(it && !it.done()) it.resume();
+            for(auto it : slots) it();
         } else {
             std::vector<Slot> slots;
             {
@@ -77,9 +80,11 @@ class Signal {
     void operator()(TArgs... args) { emit(args...); }
 
     SignalAwaiter operator co_await()
-        requires(sizeof...(TArgs) == 0) // For now coroutines are only allowed to await Signals with no Args
+        requires(
+            sizeof...(TArgs) == 0
+        ) // For now coroutines are only allowed to await Signals with no Args
     {
-        return {&m_coroutines};
+        return SignalAwaiter{m_coroutines};
     }
 
   private:
