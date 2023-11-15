@@ -25,6 +25,7 @@ target_sources(Bembel
         serialisation.ixx
         memory.ixx
         memory.cpp
+        await-list.ixx
 		
         CMakeLists.txt
 )

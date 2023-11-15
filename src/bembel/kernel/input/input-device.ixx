@@ -53,12 +53,12 @@ export class InputDevice {
 
 export struct InputDeviceButtonPressEvent {
     // the button that was pressed
-    InputDevice::Button* const button;
+    InputDevice::Button* button;
 };
 
 export struct InputDeviceButtonReleaseEvent {
     // the button that has been released
-    InputDevice::Button* const button;
+    InputDevice::Button* button;
 };
 
 } // namespace bembel::kernel

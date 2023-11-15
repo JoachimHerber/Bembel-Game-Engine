@@ -26,12 +26,8 @@ export class CursorIcon {
 
     static void createStandardCursors();
 
-    static std::unique_ptr<CursorIcon> loadAsset(
-        std::filesystem::path path
-    );
-    static std::unique_ptr<CursorIcon> createAsset(
-        xml::Element const* properties
-    );
+    static std::unique_ptr<CursorIcon> loadAsset(std::filesystem::path path);
+    static std::unique_ptr<CursorIcon> createAsset(xml::Element const* properties);
 
     using DefaultLoaderType = SerialAssetLoader<CursorIcon>;
 
@@ -42,8 +38,8 @@ export class CursorIcon {
 };
 
 export struct SetCursorIconEvent {
-    CursorIcon* const cursor;
-    WindowId          window_id;
+    CursorIcon* cursor;
+    WindowId    window_id;
 };
 
 } // namespace bembel::kernel

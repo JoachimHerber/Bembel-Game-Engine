@@ -6,6 +6,7 @@ export import :Logger;
 export import :ConsoleLogSink;
 export import :ConcurrentQueue;
 export import :Factory;
+export import :AwaitList;
 export import :Signal;
 export import :Slot;
 export import :Types;

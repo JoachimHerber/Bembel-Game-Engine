@@ -1,11 +1,12 @@
 ﻿module;
 #include <mutex>
+#include <typeindex>
 #include <unordered_map>
 #include <vector>
-#include <typeindex>
 export module bembel.base:Events;
 
 import :Types;
+import :AwaitList;
 
 namespace bembel::base {
 
@@ -60,7 +61,11 @@ class EventChannel : public EventChannelBase {
         }
 
         for(auto it : handler) it.forward_event_function(it.event_handler, event);
+
+        m_await_list.notify(event);
     }
+
+    auto& getAwaitList() { return m_await_list; }
 
   private:
     template <typename EventHandlerType>
@@ -77,6 +82,8 @@ class EventChannel : public EventChannelBase {
     std::vector<HandlerAdapter> m_event_handler;
 
     std::mutex m_mutex;
+
+    AwaitList<EventType> m_await_list;
 };
 
 export class EventManager final {
@@ -153,6 +160,13 @@ export namespace events {
     void broadcast(TArgs&&... args) {
         getEventChannel<EventType>().broadcast(EventType{std::forward<TArgs>(args)...});
     }
+
+    export template <typename EventType>
+    class Awaiter : public AwaitList<EventType>::Awaiter {
+      public:
+        Awaiter() : AwaitList<EventType>::Awaiter{getEventChannel<EventType>().getAwaitList()} {}
+    };
+
 } // namespace events
 
 } // namespace bembel::base
