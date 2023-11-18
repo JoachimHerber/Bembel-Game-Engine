@@ -22,7 +22,7 @@ struct PointLightRenderingData {
     float r, g, b;
     float cutoff_radius;
 
-    PointLightRenderingData(In<vec4> pos, In<PointLightData> light)
+    PointLightRenderingData(In<vec4> pos, In<PointLight> light)
       : x{pos.x}
       , y{pos.y}
       , z{pos.z}

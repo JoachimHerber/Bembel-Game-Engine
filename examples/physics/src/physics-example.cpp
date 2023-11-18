@@ -54,9 +54,9 @@ bool PhysicsExample::init(std::span<std::string_view>) {
     m_scene->createComponent<Geometry>(
         m_stirring_stick, Asset<GeometryModel>("stirring_stick"), vec3(4.5f, 0.5f, 0.1f)
     );
-    auto stirring_stick = m_scene->createComponent<PhysicsComponent>(m_stirring_stick);
-    RigidBody* rb = stirring_stick.createRigidBody(Asset<CollisionShape>("stirring_stick"), 0.0_kg);
-    rb->makeKinematic();
+    auto stirring_stick = m_scene->createComponent<RigidBody>(m_stirring_stick);
+    stirring_stick->init(Asset<CollisionShape>("stirring_stick"), vec3{0, 0, 0}, 0.0_kg);
+    stirring_stick->makeKinematic();
 
     m_engine.initSystems();
     return true;
@@ -74,7 +74,7 @@ void PhysicsExample::cleanup() {
 void PhysicsExample::update(double time) {
     m_rotation += time;
 
-    auto transform = m_scene->getComponent<Transform>(m_stirring_stick);
+    Transform* transform = m_scene->getComponent<Transform>(m_stirring_stick);
     if(transform) transform->rotation = quat(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }
 

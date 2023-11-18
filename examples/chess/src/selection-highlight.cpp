@@ -142,11 +142,11 @@ void SelectionRenderingStage::setScene(Scene* scene) {
     if(m_scene) {
         m_scene->registerComponentType<Transform>();
         m_scene->registerComponentType<Geometry>();
-        m_scene->registerComponentType<SelectionHighlightComponent>();
+        m_scene->registerComponentType<SelectionHighlight>();
 
         m_transform_components = m_scene->getComponentContainer<Transform>();
         m_geometry_components  = m_scene->getComponentContainer<Geometry>();
-        m_highlight_components = m_scene->getComponentContainer<SelectionHighlightComponent>();
+        m_highlight_components = m_scene->getComponentContainer<SelectionHighlight>();
     } else {
         m_transform_components = nullptr;
         m_geometry_components  = nullptr;

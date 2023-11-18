@@ -11,6 +11,7 @@ import bembel.graphics;
 import :CollisionShape;
 import :World;
 import :DebugRenderer;
+import :RigidBody;
 
 namespace bembel::physics {
 using namespace bembel::base;
@@ -32,7 +33,7 @@ export class PhysicsSystem : public System {
 
     void addScene(std::shared_ptr<Scene> scene) {
         scene->registerComponentType<Transform>();
-        scene->registerComponentType<PhysicsComponent>();    
+        scene->registerComponentType<RigidBody>();    
         m_scenes.push_back(std::move(scene));
     }
 

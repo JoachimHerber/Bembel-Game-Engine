@@ -87,14 +87,12 @@ Script<Move> selectMove(
 }
 
 void resetHighlights(ChessBoard* board) {
-    using Highlight = SelectionHighlightComponent;
-    using enum SelectionHighlight;
-
     for(uint x = 0; x < 8; ++x) {
         for(uint y = 0; y < 8; ++y) {
-            board->getTileAt({x, y}).getComponent<Highlight>() = NO_HIGHLIGHT;
+            board->getTileAt({x, y}).getComponent<SelectionHighlight>() =
+                SelectionHighlight::NO_HIGHLIGHT;
             if(auto chess_piece = board->getChessPieceAt({x, y}))
-                chess_piece.setHighlight(NO_HIGHLIGHT);
+                chess_piece.setHighlight(SelectionHighlight::NO_HIGHLIGHT);
         }
     }
 }

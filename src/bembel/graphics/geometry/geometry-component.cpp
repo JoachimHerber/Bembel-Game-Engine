@@ -10,9 +10,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-bool initComponent(
-    In<xml::Element const*> properties, InOut<GeometryComponentData> geometry_component
-) {
+bool initComponent(In<xml::Element const*> properties, InOut<Geometry> geometry_component) {
     std::string model_name;
     if(!xml::getAttribute(properties, "model", model_name)) return false;
 

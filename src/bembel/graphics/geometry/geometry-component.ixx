@@ -9,7 +9,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export struct GeometryComponentData {
+export struct Geometry {
     using RendererID = uint;
 
     Asset<GeometryModel> model;
@@ -18,10 +18,11 @@ export struct GeometryComponentData {
     bool                 cast_shadow = true;
 };
 
-export bool initComponent(
-    In<xml::Element const*> properties, InOut<GeometryComponentData> component
-);
+export bool initComponent(In<xml::Element const*> properties, InOut<Geometry> component);
 
-export using Geometry = BasicComponent<"Geometry", GeometryComponentData>;
 
 } // namespace bembel::graphics
+
+export template <>
+struct bembel::kernel::ComponentMetaData<bembel::graphics::Geometry>
+  : BasicComponentMetaData<"Geometry", bembel::graphics::Geometry> {};

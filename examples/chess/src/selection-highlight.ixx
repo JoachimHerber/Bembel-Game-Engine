@@ -5,16 +5,22 @@ export module bembel.examples.chess:SelectionHighlight;
 import bembel;
 
 namespace bembel::examples::chess {
+export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECTED };
+} // namespace bembel::examples::chess
+
+export template <>
+struct ::bembel::kernel::ComponentMetaData<bembel::examples::chess::SelectionHighlight>
+  : BasicComponentMetaData<"SelectionHighlight", bembel::examples::chess::SelectionHighlight> {};
+
+namespace bembel::examples::chess {
 using namespace base;
 using namespace kernel;
 using namespace graphics;
 using namespace gui;
 
-export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECTED };
 export bool initComponent(xml::Element const*, SelectionHighlight&) {
     return true;
 }
-export using SelectionHighlightComponent = BasicComponent<"SelectionHighlight", SelectionHighlight>;
 
 export class SelectionRenderingStage : public RenderingPipeline::Stage {
   public:
@@ -50,10 +56,10 @@ export class SelectionRenderingStage : public RenderingPipeline::Stage {
 
     std::unique_ptr<Texture> m_noise;
 
-    Scene*                                  m_scene;
-    Transform::Container*                   m_transform_components;
-    Geometry::Container*                    m_geometry_components;
-    SelectionHighlightComponent::Container* m_highlight_components;
+    Scene*                                            m_scene;
+    ComponentMetaData<Transform>::Container*          m_transform_components;
+    ComponentMetaData<Geometry>::Container*           m_geometry_components;
+    ComponentMetaData<SelectionHighlight>::Container* m_highlight_components;
 
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;
 };

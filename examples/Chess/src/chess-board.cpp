@@ -25,7 +25,7 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
     m_scene->registerComponentType<Geometry>();
     m_scene->registerComponentType<Transform>();
     m_scene->registerComponentType<ChessPieceComponent>();
-    m_scene->registerComponentType<SelectionHighlightComponent>();
+    m_scene->registerComponentType<SelectionHighlight>();
 
     // clang-format off
     m_assets[u8(PAWN)]  .request("white.pawn",   "black.pawn",   "pawn");
@@ -42,10 +42,10 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
             m_tiles[u][v] = TilesEntity{*m_scene};
 
             auto& [transform, geom, highlight, physics] = m_tiles[u][v];
-            transform->position                         = vec3(2.0f * u, 0, 2.0f * v);
-            geom->model                                 = m_assets.back().models[(u + v) % 2];
-            *highlight                                  = SelectionHighlight::NO_HIGHLIGHT;
-            physics.createRigidBody(m_assets.back().collision_shape, 0_kg);
+            transform.position                          = vec3(2.0f * u, 0, 2.0f * v);
+            geom.model                                  = m_assets.back().models[(u + v) % 2];
+            highlight                                   = SelectionHighlight::NO_HIGHLIGHT;
+            physics.init(m_assets.back().collision_shape, {0, 0, 0}, 0_kg);
         }
     }
     resetBoard();
@@ -112,16 +112,16 @@ void ChessBoard::createChessPiece(ivec2 pos, ChessPieceType type, ChessPlayer ow
 
     chess_piece = ChessPieceEntity{*m_scene};
 
-    auto& [piece, transform, geom, selection, physics] = chess_piece;
+    auto& [piece, transform, geom, selection, rigid_body] = chess_piece;
 
-    piece->type         = type;
-    piece->owner        = owner;
-    piece->position     = pos;
-    transform->position = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
-    transform->rotation = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
-    geom->model         = m_assets[type].models[owner];
-    *selection          = SelectionHighlight::NO_HIGHLIGHT;
-    auto* rb = physics.createRigidBody(m_assets[type].collision_shape, 0_kg, CHESS_PIECE_CENTER_OF_MASS[type]);
+    piece.type         = type;
+    piece.owner        = owner;
+    piece.position     = pos;
+    transform.position = vec3(2.0f * pos.x, 0, 2.0f * pos.y);
+    transform.rotation = (owner == WHITE) ? quat{0, 0, 1, 0} : quat{1, 0, 0, 0};
+    geom.model         = m_assets[type].models[owner];
+    selection          = SelectionHighlight::NO_HIGHLIGHT;
+    rigid_body.init(m_assets[type].collision_shape, CHESS_PIECE_CENTER_OF_MASS[type], 0_kg);
 }
 
 bool ChessBoard::canCaptureEnPassant(ivec2 pos) {
@@ -144,11 +144,12 @@ void ChessBoard::movePiece(ivec2 from_pos, ivec2 to_pos) {
     to   = from;
     from = ChessPieceEntity{};
 
-    if(auto chess_piece = to.getComponent<ChessPieceComponent>()) {
-        if(chess_piece->type == ChessPieceType::PAWN) {
+    if(to) {
+        auto& chess_piece = to.getComponent<ChessPieceComponent>();
+        if(chess_piece.type == ChessPieceType::PAWN) {
             if(canCaptureEnPassant(to_pos)) { m_board[from_pos.x][to_pos.y].deleteEntity(); }
 
-            if(!chess_piece->has_moved && abs(from_pos.x - to_pos.x) == 2) {
+            if(!chess_piece.has_moved && abs(from_pos.x - to_pos.x) == 2) {
                 m_en_passant = ivec2((from_pos.x + to_pos.x) / 2, to_pos.y);
             } else {
                 m_en_passant.reset();
@@ -157,8 +158,8 @@ void ChessBoard::movePiece(ivec2 from_pos, ivec2 to_pos) {
             m_en_passant.reset();
         }
 
-        chess_piece->position  = to_pos;
-        chess_piece->has_moved = true;
+        chess_piece.position  = to_pos;
+        chess_piece.has_moved = true;
     }
 }
 void ChessBoard::promote(ivec2 pos, ChessPieceType new_type) {}

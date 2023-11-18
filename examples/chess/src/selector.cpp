@@ -67,10 +67,9 @@ Selector::Ray Selector::calculateRay(In<vec2> cursor_pos) const {
 }
 
 void Selector::updateSelection(In<Ray> ray) {
-    auto* physics = m_scene->getComponentContainer<PhysicsComponent>();
-    if(!physics) return;
-
-    onSelect(physics->rayTestFirst(ray.origin, ray.origin + 50.0f * ray.direction));
+    onSelect(m_scene->getDataContainer<World>()->rayTestFirst(
+        ray.origin, ray.origin + 50.0f * ray.direction
+    ));
 }
 
 ChessPieceSelector::~ChessPieceSelector() {}
@@ -79,13 +78,12 @@ void ChessPieceSelector::onSelect(EntityID entity) {
     if(m_selection.getId() == entity) return;
 
     if(m_selection) {
-        auto highlight = m_selection.getComponent<SelectionHighlightComponent>();
-        *highlight     = SelectionHighlight::NO_HIGHLIGHT;
+        m_selection.getComponent<SelectionHighlight>() = SelectionHighlight::NO_HIGHLIGHT;
 
         for(uint x = 0; x < 8; ++x) {
             for(uint y = 0; y < 8; ++y) {
-                auto tile                                        = m_board->getTileAt({x, y});
-                tile.getComponent<SelectionHighlightComponent>() = SelectionHighlight::NO_HIGHLIGHT;
+                auto tile                               = m_board->getTileAt({x, y});
+                tile.getComponent<SelectionHighlight>() = SelectionHighlight::NO_HIGHLIGHT;
             }
         }
     }
@@ -96,15 +94,13 @@ void ChessPieceSelector::onSelect(EntityID entity) {
     if(!chess_piece) return;
     if(chess_piece->owner != m_player) return;
 
-    m_selection = ChessPieceEntity(*m_board->getScene(), entity);
-
-    auto highlight = m_selection.getComponent<SelectionHighlightComponent>();
-    *highlight     = SelectionHighlight::FOCUSED;
+    m_selection                                    = ChessPieceEntity(*m_board->getScene(), entity);
+    m_selection.getComponent<SelectionHighlight>() = SelectionHighlight::FOCUSED;
 
     auto moves = getPossibleMoves(m_board, ChessPiece(m_board, m_selection));
     for(auto const& move : moves) {
-        auto highlight = m_board->getTileAt(move.to).getComponent<SelectionHighlightComponent>();
-        highlight      = SelectionHighlight::SELECTABLE;
+        m_board->getTileAt(move.to).getComponent<SelectionHighlight>() =
+            SelectionHighlight::SELECTABLE;
     }
 }
 
@@ -119,10 +115,10 @@ void MoveSelector::onSelect(EntityID id) {
     for(auto const& move : m_possible_moves) {
         auto tile = m_board->getTileAt(move.to);
         if(tile.getId() == id) {
-            tile.getComponent<SelectionHighlightComponent>() = SelectionHighlight::FOCUSED;
-            m_selection = move;
+            tile.getComponent<SelectionHighlight>() = SelectionHighlight::FOCUSED;
+            m_selection                             = move;
         } else {
-            tile.getComponent<SelectionHighlightComponent>() = SelectionHighlight::SELECTABLE;
+            tile.getComponent<SelectionHighlight>() = SelectionHighlight::SELECTABLE;
         }
     }
 }

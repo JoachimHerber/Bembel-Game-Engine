@@ -1,7 +1,9 @@
 module;
 #include <btBulletDynamicsCommon.h>
 
+#include <map>
 #include <memory>
+#include <string_view>
 #include <vector>
 export module bembel.physics:RigidBody;
 
@@ -10,6 +12,7 @@ import bembel.kernel;
 
 import :Units;
 import :CollisionShape;
+import :World;
 
 namespace bembel::physics {
 using namespace bembel::base;
@@ -17,7 +20,7 @@ using namespace bembel::kernel;
 
 class MotionState : public btMotionState {
   public:
-    MotionState(Transform t, In<vec3> center_of_mass_offset = {0, 0, 0})
+    MotionState(In<Transform*> t, In<vec3> center_of_mass_offset = {0, 0, 0})
       : m_transform{t}, m_center_of_mass_offset{center_of_mass_offset} {}
 
     virtual void getWorldTransform(btTransform& center_of_mass_world_trans) const {
@@ -41,40 +44,64 @@ class MotionState : public btMotionState {
     void setCenterOfMassOffset(In<vec3> offset) { m_center_of_mass_offset = offset; }
 
   private:
-    Transform m_transform;
-    vec3      m_center_of_mass_offset;
+    Transform* m_transform;
+    vec3       m_center_of_mass_offset;
 };
-
-class World;
 
 export class RigidBody {
   public:
-    RigidBody(
-        In<World*>                world,
-        In<EntityID>              entity,
-        In<Asset<CollisionShape>> collision_shape,
-        In<vec3>                  center_of_mass_offset,
-        In<units::Kilogram>       mass
-    );
+    RigidBody(In<World*> world, In<EntityID> entity);
     ~RigidBody();
 
-    void makeKinematic();
-    void makeStatic();
-    void makeDynamic(In<units::Kilogram> mass);
+    bool init(
+        In<Asset<CollisionShape>> collision_shape,
+        In<vec3>                  center_of_mass_offset,
+        In<units::Kilogram>       mass,
+        In<float>                 friction = 0.5f
+    );
+
+    void setCenterOfMassOffset(In<vec3> offset) { m_motion_state.setCenterOfMassOffset(offset); }
+
+    bool makeKinematic();
+    bool makeStatic();
+    bool makeDynamic(In<units::Kilogram> mass);
 
     vec3 getLinearVelocity();
     vec3 getAngularVelocity();
 
-    btRigidBody* getRigidBody() { return &m_rigid_body; }
+    btRigidBody* getRigidBody() { return m_rigid_body.get(); }
 
     EntityID getEntityID() const { return m_entity; }
 
   private:
-    World*                m_world;
-    EntityID              m_entity;
-    Asset<CollisionShape> m_collision_shape;
-    MotionState           m_motion_state;
-    btRigidBody           m_rigid_body;
+    World*                       m_world;
+    EntityID                     m_entity;
+    Asset<CollisionShape>        m_collision_shape;
+    MotionState                  m_motion_state;
+    std::unique_ptr<btRigidBody> m_rigid_body;
 };
 
+class RigidBodyContainer : public ComponentContainerBase {
+  public:
+    RigidBodyContainer(ComponentTypeID type_id, Scene* scene);
+    ~RigidBodyContainer() {}
+
+    RigidBody* createComponent(EntityID entity_id);
+    bool       createComponent(EntityID entity_id, xml::Element const* properties) override;
+
+    bool deleteComponent(EntityID entity_id) override;
+
+    RigidBody* getComponent(EntityID entity_id);
+
+  private:
+    Scene* m_scene;
+
+    std::map<EntityID, std::unique_ptr<RigidBody>> m_rigid_bodys;
+};
 } // namespace bembel::physics
+
+export template <>
+struct bembel::kernel::ComponentMetaData<bembel::physics::RigidBody> {
+    static constexpr std::string_view COMPONENT_TYPE_NAME = "RigidBody";
+    using Container                                       = bembel::physics::RigidBodyContainer;
+};

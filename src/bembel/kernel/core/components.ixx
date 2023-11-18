@@ -1,9 +1,9 @@
 ﻿module;
+#include <bit>
 #include <cassert>
 #include <span>
 #include <string_view>
 #include <utility>
-#include <bit>
 export module bembel.kernel.core:Components;
 
 import bembel.base;
@@ -14,29 +14,29 @@ import :Scene;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-export template <typename TComponentType, typename TDataType>
+export template <typename T>
 class ComponentVector : public ComponentContainerBase {
   public:
     ComponentVector(ComponentTypeID type_id, Scene* scene)
       : ComponentContainerBase{type_id}, m_scene{scene} {}
     ~ComponentVector() = default;
 
-    TComponentType createComponent(EntityID entity_id) {
+    T* createComponent(EntityID entity_id) {
         if(std::to_underlying(entity_id) >= m_components.size()) {
             m_components.resize(std::to_underlying(entity_id) + 1);
         }
-        return {&(m_components[std::to_underlying(entity_id)])};
+        return &(m_components[std::to_underlying(entity_id)]);
     }
 
     template <typename... TArgs>
-    TComponentType createComponent(EntityID entity_id, TArgs&&... args) {
-        auto component = createComponent(entity_id);
-        *component     = TDataType(std::forward<TArgs>(args)...);
+    T* createComponent(EntityID entity_id, TArgs&&... args) {
+        T* component = createComponent(entity_id);
+        *component   = T(std::forward<TArgs>(args)...);
         return component;
     }
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
-        TDataType component;
+        T component;
         if(initComponent(properties, component)) {
             if(std::to_underlying(entity_id) >= m_components.size()) {
                 m_components.resize(std::to_underlying(entity_id) + 1);
@@ -51,38 +51,38 @@ class ComponentVector : public ComponentContainerBase {
 
     auto& getComponentData() { return m_components; }
 
-    TComponentType getComponent(EntityID entity_id) {
+    T* getComponent(EntityID entity_id) {
         if(std::to_underlying(entity_id) < m_components.size())
-            return {&m_components[std::to_underlying(entity_id)]};
-        return {nullptr};
+            return &m_components[std::to_underlying(entity_id)];
+        return nullptr;
     }
 
     auto begin() { return m_components.begin(); }
     auto end() { return m_components.end(); }
 
   private:
-    Scene*                 m_scene;
-    std::vector<TDataType> m_components;
+    Scene*         m_scene;
+    std::vector<T> m_components;
 };
 
-export template <typename TComponentType, typename TDataType>
+export template <typename T>
 class ComponentMap : public ComponentContainerBase {
   public:
     ComponentMap(ComponentTypeID type_id, Scene* scene)
       : ComponentContainerBase{type_id}, m_scene{scene} {}
     ~ComponentMap() = default;
 
-    TComponentType createComponent(EntityID entity_id) { return {&(m_components[entity_id])}; }
+    T* createComponent(EntityID entity_id) { return &(m_components[entity_id]); }
 
     template <typename... TArgs>
-    TComponentType createComponent(EntityID entity_id, TArgs&&... args) {
-        auto component = createComponent(entity_id);
-        *component     = TDataType(std::forward<TArgs>(args)...);
+    T* createComponent(EntityID entity_id, TArgs&&... args) {
+        T* component = createComponent(entity_id);
+        *component   = T(std::forward<TArgs>(args)...);
         return component;
     }
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
-        TDataType component;
+        T component;
         if(initComponent(properties, component)) {
             m_components[entity_id] = std::move(component);
             return true;
@@ -101,37 +101,37 @@ class ComponentMap : public ComponentContainerBase {
 
     auto& getComponentData() { return m_components; }
 
-    TComponentType getComponent(EntityID entity_id) {
+    T* getComponent(EntityID entity_id) {
         auto it = m_components.find(entity_id);
-        if(it != m_components.end()) return {&(it->second)};
+        if(it != m_components.end()) return &(it->second);
         return {nullptr};
     }
 
   private:
-    Scene*                        m_scene;
-    std::map<EntityID, TDataType> m_components;
+    Scene*                m_scene;
+    std::map<EntityID, T> m_components;
 };
 
 namespace {}
 
-export template <typename TComponentType, typename TDataType>
+export template <typename T>
 class FixedAddressComponentVector : public ComponentContainerBase {
   public:
     static constexpr u64 ALLOCATION_GRANULARITY = 64 * 1024;
-    static constexpr u64 COMPONENTS_PER_CHUNK   = ALLOCATION_GRANULARITY / sizeof(TDataType);
+    static constexpr u64 COMPONENTS_PER_CHUNK   = ALLOCATION_GRANULARITY / sizeof(T);
 
     static constexpr bool USE_BIT_MASK          = std::has_single_bit(COMPONENTS_PER_CHUNK);
     static constexpr bool USE_STD_ALIGNED_ALLOC = false;
 
-    using Chunk = std::span<TDataType, COMPONENTS_PER_CHUNK>;
+    using Chunk = std::span<T, COMPONENTS_PER_CHUNK>;
 
     struct Iterator {
         std::vector<Chunk>::iterator chunk;
         u64                          index = 0;
 
-        TDataType& operator*() { return (*chunk)[index]; }
-        TDataType* operator->() { return &((*chunk)[index]); }
-                   operator bool() { return chunk; }
+        T& operator*() { return (*chunk)[index]; }
+        T* operator->() { return &((*chunk)[index]); }
+        operator bool() { return chunk; }
 
         Iterator& operator++() {
             if((++index) == COMPONENTS_PER_CHUNK) {
@@ -152,21 +152,21 @@ class FixedAddressComponentVector : public ComponentContainerBase {
     ~FixedAddressComponentVector() {
         for(Chunk it : m_components) { memory::free(it); }
     }
-    TDataType& operator[](EntityID entity_id) {
+    T& operator[](EntityID entity_id) {
         auto [chunk, index] = getLocation(entity_id);
-        while(chunk >= m_components.size()) { m_components.push_back(memory::alloc<TDataType>()); }
+        while(chunk >= m_components.size()) { m_components.push_back(memory::alloc<T>()); }
         return m_components[chunk][index];
     }
 
     template <typename... TArgs>
-    TComponentType createComponent(EntityID entity_id, TArgs&&... args) {
+    T* createComponent(EntityID entity_id, TArgs&&... args) {
         auto* component = &operator[](entity_id);
-        new(component) TDataType(std::forward<TArgs>(args)...);
+        new(component) T(std::forward<TArgs>(args)...);
         return {component};
     }
 
     bool createComponent(EntityID entity_id, xml::Element const* properties) override {
-        TDataType component;
+        T component;
         if(initComponent(properties, component)) {
             operator[](entity_id) = component;
             return true;
@@ -179,7 +179,7 @@ class FixedAddressComponentVector : public ComponentContainerBase {
     Iterator begin() { return {m_components.begin(), 0}; }
     Iterator end() { return {m_components.end(), 0}; }
 
-    TComponentType getComponent(EntityID entity_id) {
+    T* getComponent(EntityID entity_id) {
         auto [chunk, index] = getLocation(entity_id);
         if(chunk < m_components.size()) return {&(m_components[chunk][index])};
         return {nullptr};
@@ -211,42 +211,16 @@ export template <
     StringLiteral TTypeName,
     typename TDataType,
     ComponentContainer TContainer = ComponentContainer::VECTOR>
-class BasicComponent {
-  public:
-    BasicComponent(TDataType* data = nullptr) : m_data{data} {}
-    BasicComponent(BasicComponent const&) = default;
-    BasicComponent(BasicComponent&&)      = default;
-    ~BasicComponent()                     = default;
 
-    BasicComponent& operator=(BasicComponent const&) = default;
-    BasicComponent& operator=(BasicComponent&&)      = default;
-    BasicComponent& operator=(In<TDataType> data) {
-        *m_data = data;
-        return *this;
-    }
-
-    operator bool() const { return m_data != nullptr; }
-
-    bool operator==(BasicComponent other) const { return *m_data == *other.m_data; }
-    bool operator==(In<TDataType> data) const { return *m_data == data; }
-
-    auto& operator*() { return *m_data; }
-    auto* operator->() { return m_data; }
-
-    auto const& operator*() const { return *m_data; }
-    auto const* operator->() const { return m_data; }
-
+struct BasicComponentMetaData {
     static constexpr std::string_view COMPONENT_TYPE_NAME = TTypeName.value;
 
     using Container = std::tuple_element_t<
         std::to_underlying(TContainer),
         std::tuple<
-            ComponentVector<BasicComponent, TDataType>,
-            ComponentMap<BasicComponent, TDataType>,
-            FixedAddressComponentVector<BasicComponent, TDataType>>>;
-
-  private:
-    TDataType* m_data;
+            ComponentVector<TDataType>,
+            ComponentMap<TDataType>,
+            FixedAddressComponentVector<TDataType>>>;
 };
 
 } // namespace bembel::kernel

@@ -15,24 +15,25 @@ using namespace physics::units::literals;
 export enum ChessPieceType : u8 { PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 export enum ChessPlayer : u8 { WHITE, BLACK };
 
-export struct ChessPieceComponentData {
+export struct ChessPieceComponent {
+    static constexpr std::string_view COMPONENT_TYPE_NAME = "ChessPieceComponent";
+    using Container                                       = ComponentVector<ChessPieceComponent>;
+
     ChessPieceType type;
     ChessPlayer    owner;
     ivec2          position;
     bool           has_moved = false;
 };
-export bool initComponent(xml::Element const*, ChessPieceComponentData&) {
+
+export bool initComponent(xml::Element const*, ChessPieceComponent&) {
     return true;
 }
-export using ChessPieceComponent = BasicComponent<"ChessPieceComponent", ChessPieceComponentData>;
-
 class ChessBoard;
 
 export using ChessPieceEntity =
-    Entity<ChessPieceComponent, Transform, Geometry, SelectionHighlightComponent, PhysicsComponent>;
+    Entity<ChessPieceComponent, Transform, Geometry, SelectionHighlight, RigidBody>;
 
-export using TilesEntity =
-    Entity<Transform, Geometry, SelectionHighlightComponent, PhysicsComponent>;
+export using TilesEntity = Entity<Transform, Geometry, SelectionHighlight, RigidBody>;
 
 export class ChessPiece {
   public:
@@ -49,38 +50,26 @@ export class ChessPiece {
 
     operator bool() { return m_board && m_entity; }
 
-    ChessPieceType getType() { return m_entity.getComponent<ChessPieceComponent>()->type; }
-    ChessPlayer    getOwner() { return m_entity.getComponent<ChessPieceComponent>()->owner; }
-    bool           hasMoved() { return m_entity.getComponent<ChessPieceComponent>()->has_moved; }
+    ChessPieceType getType() { return m_entity.getComponent<ChessPieceComponent>().type; }
+    ChessPlayer    getOwner() { return m_entity.getComponent<ChessPieceComponent>().owner; }
+    bool           hasMoved() { return m_entity.getComponent<ChessPieceComponent>().has_moved; }
 
     void  setBoardPosition(ivec2 pos);
-    ivec2 getBoardPosition() { return m_entity.getComponent<ChessPieceComponent>()->position; }
+    ivec2 getBoardPosition() { return m_entity.getComponent<ChessPieceComponent>().position; }
 
-    vec3& getPosition() { return m_entity.getComponent<Transform>()->position; }
-    void  setPosition(vec3 pos) { m_entity.getComponent<Transform>()->position = pos; }
+    vec3& getPosition() { return m_entity.getComponent<Transform>().position; }
+    void  setPosition(vec3 pos) { m_entity.getComponent<Transform>().position = pos; }
 
-    SelectionHighlight getHighlight() {
-        return *(m_entity.getComponent<SelectionHighlightComponent>());
-    }
-    void setHighlight(SelectionHighlight highlight) {
-        *(m_entity.getComponent<SelectionHighlightComponent>()) = highlight;
+    SelectionHighlight& getHighlight() { return m_entity.getComponent<SelectionHighlight>(); }
+    void                setHighlight(SelectionHighlight highlight) {
+        m_entity.getComponent<SelectionHighlight>() = highlight;
     }
 
-    void makeRigidBodyKinematic() {
-        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
-        if(rb) rb->makeKinematic();
-    }
-    void makeRigidBodyStatic() {
-        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
-        if(rb) rb->makeStatic();
-    }
-    void makeRigidBodyDynamic() {
-        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
-        if(rb) rb->makeDynamic(1_kg);
-    }
+    void makeRigidBodyKinematic() { m_entity.getComponent<RigidBody>().makeKinematic(); }
+    void makeRigidBodyStatic() { m_entity.getComponent<RigidBody>().makeStatic(); }
+    void makeRigidBodyDynamic() { m_entity.getComponent<RigidBody>().makeDynamic(1_kg); }
     vec3 getRigidBodyLinearVelocity() {
-        auto* rb = m_entity.getComponent<PhysicsComponent>().getRigidBody();
-        return rb ? rb->getLinearVelocity() : vec3(0, 0, 0);
+        return m_entity.getComponent<RigidBody>().getLinearVelocity();
     }
 
   private:

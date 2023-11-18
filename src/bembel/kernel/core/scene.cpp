@@ -8,7 +8,11 @@ import bembel.base;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-Scene::~Scene() {}
+Scene::~Scene() {
+    m_component_type_map.clear();
+    m_container.clear();
+    m_data_container.clear();
+}
 
 EntityID Scene::createEntity() {
     if(m_unused_entity_ids.empty()) {

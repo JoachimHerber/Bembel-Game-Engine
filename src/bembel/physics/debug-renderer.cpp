@@ -54,9 +54,7 @@ void PhysicsDebugRenderStage::cleanup() {
 void PhysicsDebugRenderStage::execute(In<std::span<const RendererPtr>>) {
     if(!m_enabled || !m_scene) return;
 
-    auto* rigidBodys = m_scene->getComponentContainer<PhysicsComponent>();
-    if(!rigidBodys) return;
-    auto world = rigidBodys->getWorld();
+    auto world = m_scene->getDataContainer<World>()->getWorld();
     if(!world) return;
 
     auto cam = m_pipline.getCamera();
@@ -85,45 +83,6 @@ void PhysicsDebugRenderStage::execute(In<std::span<const RendererPtr>>) {
     world->debugDrawWorld();
     world->setDebugDrawer(nullptr);
 
-    /*
-    std::vector<std::vector<vec3>> outline;
-
-    for(RigidBodyData& rb : rigidBodys->getComponentData()) {
-        if(!rb.motion_state) continue;
-
-        Transform       transform = rb.motion_state->getTransform();
-        CollisionShape* shape     = rb.collision_shape.get();
-
-        mat4 model_matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-        if(transform) {
-            model_matrix = glm::translate(model_matrix, transform->position);
-            model_matrix = model_matrix * glm::mat4_cast(transform->rotation);
-            model_matrix = glm::scale(model_matrix, vec3(transform->scale));
-        }
-        mat4 model_view = view * model_matrix;
-        glLoadMatrixf(glm::value_ptr(model_view));
-
-        glBegin(GL_LINES);
-        glColor3f(1, 0, 0);
-        glVertex3f(0.0f, 0.f, 0.f);
-        glVertex3f(0.5f, 0.f, 0.f);
-        glColor3f(0, 1, 0);
-        glVertex3f(0.f, 0.0f, 0.f);
-        glVertex3f(0.f, 0.5f, 0.f);
-        glColor3f(0, 0, 1);
-        glVertex3f(0.f, 0.f, 0.0f);
-        glVertex3f(0.f, 0.f, 0.5f);
-        glEnd();
-        glColor3f(1, 1, 0);
-
-        if(shape) shape->getOutline(outline);
-        for(auto& line_strip : outline) {
-            glBegin(GL_LINE_STRIP);
-            for(auto p : line_strip) { glVertex3f(p.x, p.y, p.z); }
-            glEnd();
-        }
-    }
-    //**/
     m_fbo->endRenderToTexture();
 }
 

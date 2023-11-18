@@ -108,7 +108,7 @@ void RenderingExample::updateLightDir(In<i64>) {
 
     auto light = m_light.getComponent<DirectionalLight>();
 
-    light->direction = vec3(   //
+    light.direction = vec3(   //
         cos(pitch) * cos(yaw), //
         sin(pitch),
         cos(pitch) * sin(yaw)

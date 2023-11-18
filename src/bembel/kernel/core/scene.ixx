@@ -3,8 +3,11 @@
 #include <compare>
 #include <filesystem>
 #include <stack>
-#include <vector>
 #include <string_view>
+#include <type_traits>
+#include <typeindex>
+#include <unordered_map>
+#include <vector>
 export module bembel.kernel.core:Scene;
 
 import bembel.base;
@@ -38,6 +41,26 @@ export class ComponentContainerBase {
     ComponentMask   m_mask;
 };
 
+export class SceneDataContainerBase {
+  public:
+    SceneDataContainerBase()          = default;
+    virtual ~SceneDataContainerBase() = default;
+};
+
+export template <typename T>
+struct ComponentMetaData;
+
+export template <typename T>
+    requires requires() {
+        T::COMPONENT_TYPE_NAME;
+        typename T::Container;
+        requires std::is_base_of_v<ComponentContainerBase, typename T::Container>;
+    }
+struct ComponentMetaData<T> {
+    static constexpr inline std::string_view COMPONENT_TYPE_NAME = T::COMPONENT_TYPE_NAME;
+    using Container                                              = T::Container;
+};
+
 export template <typename T>
 concept Component = true; /* requires() {
      T::COMPONENT_TYPE_NAME;
@@ -52,22 +75,24 @@ export class Scene {
 
     template <Component T, typename... TArgs>
     void registerComponentType(TArgs&&... args) {
-        auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
+        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
         if(it != m_component_type_map.end()) return;
 
-        auto container = std::make_unique<typename T::Container>(
+        auto container = std::make_unique<typename ComponentMetaData<T>::Container>(
             m_container.size(), this, std::forward<TArgs>(args)...
         );
 
-        m_component_type_map.emplace(T::COMPONENT_TYPE_NAME, m_container.size());
+        m_component_type_map.emplace(ComponentMetaData<T>::COMPONENT_TYPE_NAME, m_container.size());
         m_container.push_back(std::move(container));
     }
 
     template <Component T>
-    typename T::Container* getComponentContainer() {
-        auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
+    typename ComponentMetaData<T>::Container* getComponentContainer() {
+        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
         if(it != m_component_type_map.end()) {
-            return static_cast<typename T::Container*>(m_container[it->second].get());
+            return static_cast<typename ComponentMetaData<T>::Container*>(
+                m_container[it->second].get()
+            );
         }
         return nullptr;
     }
@@ -79,16 +104,16 @@ export class Scene {
     bool loadScene(std::filesystem::path file_name);
 
     template <Component T, typename... TArgs>
-    T createComponent(EntityID id, TArgs&&... args) {
+    T* createComponent(EntityID id, TArgs&&... args) {
         if(std::to_underlying(id) >= m_entities.size()) return {};
 
-        auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
+        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) return {};
 
-        auto container = static_cast<typename T::Container*>(m_container[it->second].get());
+        auto container =
+            static_cast<typename ComponentMetaData<T>::Container*>(m_container[it->second].get());
         if((m_entities[std::to_underlying(id)] & container->getComponentMask()) != 0) {
-            if constexpr (sizeof...(TArgs) > 0)
-              logWarning("Component already exisits");
+            if constexpr(sizeof...(TArgs) > 0) logWarning("Component already exisits");
             return container->getComponent(id);
         }
         m_entities[std::to_underlying(id)] |= container->getComponentMask();
@@ -101,13 +126,14 @@ export class Scene {
     }
 
     template <Component T>
-    T getComponent(EntityID id) {
+    T* getComponent(EntityID id) {
         if(std::to_underlying(id) >= m_entities.size()) return nullptr; // invalided entity id
 
-        auto it = m_component_type_map.find(T::COMPONENT_TYPE_NAME);
+        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
         if(it == m_component_type_map.end()) return nullptr; // component type does not exist
 
-        auto container = static_cast<typename T::Container*>(m_container[it->second].get());
+        auto container =
+            static_cast<typename ComponentMetaData<T>::Container*>(m_container[it->second].get());
 
         if((m_entities[std::to_underlying(id)] & container->getComponentMask()) == 0)
             return nullptr; // entity doesn't have a component of the requested type
@@ -119,6 +145,19 @@ export class Scene {
 
     bool loadAssets(std::filesystem::path file);
 
+    template <typename T>
+    T* getDataContainer()
+        requires std::is_base_of_v<SceneDataContainerBase, T>
+    {
+        auto it = m_data_container.find(std::type_index(typeid(T)));
+        if(it != m_data_container.end()) return static_cast<T*>(it->second.get());
+
+        auto container     = std::make_unique<T>(this);
+        auto container_ptr = container.get();
+        m_data_container.emplace(std::type_index(typeid(T)), std::move(container));
+        return container_ptr;
+    }
+
   private:
     using ContainerPtr = std::unique_ptr<ComponentContainerBase>;
 
@@ -127,6 +166,8 @@ export class Scene {
 
     Dictionary<ComponentTypeID> m_component_type_map;
     std::vector<ContainerPtr>   m_container;
+
+    std::unordered_map<std::type_index, std::unique_ptr<SceneDataContainerBase>> m_data_container;
 
     std::vector<Asset<std::any>> m_assets;
 };

@@ -1,4 +1,5 @@
 ﻿module;
+#include <format>
 #include <string>
 module bembel.examples.input;
 
@@ -87,15 +88,21 @@ void InputExample::handleEvent(In<MouseButtonReleaseEvent> event) {
 }
 
 void InputExample::handleEvent(In<CursorMovedEvent> event) {
-    logInfo("[Cursor Moved] {}", event.position);
+    // For some reason MSVC can't find the tempate specialisation for
+    // std::formatter<bembel::base::ivec2> defined in module bembel.base:Types
+    logInfo("[Cursor Moved] ({}, {})", event.position.x, event.position.y);
 }
 
 void InputExample::handleEvent(In<CursorEnteredEvent> event) {
-    logInfo("[Cursor Entered] window[{}]", event.window->getWindowID());
+    // For some reason MSVC can't find the tempate specialisation for
+    // std::formatter<bembel::base::WindowId> defined in module bembel.base:Types
+    logInfo("[Cursor Entered] window[{}]", std::to_underlying(event.window->getWindowID()));
 }
 
 void InputExample::handleEvent(In<CursorLeftEvent> event) {
-    logInfo("[Cursor Left] window[{}]", event.window->getWindowID());
+    // For some reason MSVC can't find the tempate specialisation for
+    // std::formatter<bembel::base::WindowId> defined in module bembel.base:Types
+    logInfo("[Cursor Left] window[{}]", std::to_underlying(event.window->getWindowID()));
 }
 
 void InputExample::handleEvent(In<ScrollEvent> event) {

@@ -21,9 +21,9 @@ export class GeometryRenderingStage : public RenderingPipeline::Stage {
     virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
   private:
-    Scene*                m_scene      = nullptr;
-    Geometry::Container*  m_geometrys  = nullptr;
-    Transform::Container* m_transforms = nullptr;
+    Scene*                                   m_scene      = nullptr;
+    ComponentMetaData<Geometry>::Container*  m_geometrys  = nullptr;
+    ComponentMetaData<Transform>::Container* m_transforms = nullptr;
 
     GeometryRenderQueue m_render_queue;
 };

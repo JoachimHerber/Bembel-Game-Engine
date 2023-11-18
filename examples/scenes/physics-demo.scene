@@ -28,121 +28,87 @@
     <Entity>
       <Transform x="0" y="-1.0" z="0"/>
       <Geometry model="floor" scale="5.0 0.1 5.0"/>
-      <Physics>
-        <RigidBody shape="floor" mass="0" />
-      </Physics>
+      <RigidBody shape="floor" mass="0" />
     </Entity>
     <Entity>
       <Transform x="-5" y="0" z="0"/>
       <Geometry model="wall" scale="0.1 2 5.0"/>
-      <Physics>
-        <RigidBody shape="wall_1" mass="0" />
-      </Physics>
+      <RigidBody shape="wall_1" mass="0" />
     </Entity>
     <Entity>
       <Transform x="5" y="0" z="0"/>
       <Geometry model="wall" scale="0.1 2 5.0"/>
-      <Physics>
-        <RigidBody shape="wall_1" mass="0" />
-      </Physics>
+      <RigidBody shape="wall_1" mass="0" />
     </Entity>
     <Entity>
       <Transform x="0" y="0" z="-5"/>
       <Geometry model="wall" scale="5.0 2 0.1"/>
-      <Physics>
-        <RigidBody shape="wall_2" mass="0" />
-      </Physics>
+      <RigidBody shape="wall_2" mass="0" />
     </Entity>
     <Entity>
       <Transform x="0" y="0" z="5"/>
       <Geometry model="wall" scale="5.0 2 0.1"/>
-      <Physics>
-        <RigidBody shape="wall_2" mass="0" />
-      </Physics>
+      <RigidBody shape="wall_2" mass="0" />
     </Entity>
     <Entity>
       <Transform x="-2" y="2" z="-2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="2" y="2" z="-2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="-2" y="2" z="2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="2" y="2" z="2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="-2" y="5" z="-1"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="1" y="5" z="-2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="-2" y="5" z="1"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="1" y="5" z="2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="-1" y="7" z="-2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="2" y="7" z="-1"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="-1" y="7" z="2"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
     <Entity>
       <Transform x="2" y="7" z="1"/>
       <Geometry model="sphere" scale="1 1 1"/>
-      <Physics>
-        <RigidBody shape="sphere" mass="1" />
-      </Physics>
+      <RigidBody shape="sphere" mass="1" />
     </Entity>
   </Entities>
 </Scene>

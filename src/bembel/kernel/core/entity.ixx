@@ -26,31 +26,35 @@ class Entity {
     Entity& operator=(Entity /**/&& other) = default;
 
     bool operator==(Entity other) const { return m_scene == other.m_scene && m_id == other.m_id; }
-         operator bool() { return m_id != EntityID::INVALID; }
+    operator bool() { return m_scene && m_id != EntityID::INVALID; }
 
     template <class ComponentType>
     bool hasComponent() {
+        if(!m_scene || m_id == EntityID::INVALID) return false;
+
         return getComponent<ComponentType>() != nullptr;
     }
 
     template <class ComponentType, typename... TArgs>
-    ComponentType createComponent(TArgs&&... args) {
-        return m_scene ? m_scene->createComponent<ComponentType>(m_id, std::forward<TArgs>(args)...)
-                       : ComponentType();
-    }
-
-    template <class ComponentType>
-    ComponentType getComponent() {
-        return m_scene ? m_scene->getComponent<ComponentType>(m_id) : ComponentType();
-    }
-
-    EntityID getId() const { return m_id ;}
-
-    template <class ComponentType>
-    ComponentType acquireComponent() {
+    ComponentType& createComponent(TArgs&&... args) {
         if(!m_scene || m_id == EntityID::INVALID)
             throw Exeption("Tying to acquire component for invalid entity");
-        return m_scene->acquireComponent<ComponentType>(m_id);
+
+        return *m_scene->createComponent<ComponentType>(m_id, std::forward<TArgs>(args)...);
+    }
+
+    template <class ComponentType>
+    ComponentType& getComponent() {
+        if(!m_scene || m_id == EntityID::INVALID)
+            throw Exeption("Tying to acquire component for invalid entity");
+        return *m_scene->getComponent<ComponentType>(m_id);
+    }
+
+    template <class ComponentType>
+    ComponentType& acquireComponent() {
+        if(!m_scene || m_id == EntityID::INVALID)
+            throw Exeption("Tying to acquire component for invalid entity");
+        return *m_scene->acquireComponent<ComponentType>(m_id);
     }
 
     void deleteEntity() {
@@ -59,6 +63,8 @@ class Entity {
             m_id = EntityID::INVALID;
         }
     }
+
+    EntityID getId() const { return m_id; }
 
   private:
     Scene*   m_scene;
@@ -79,7 +85,7 @@ struct tuple_element<TIndex, Entity<TComponents...>>
   : tuple_element<TIndex, tuple<TComponents...>> {};
 
 export template <size_t TIndex, Component... TComponents>
-std::tuple_element_t<TIndex, tuple<TComponents...>> get(Entity<TComponents...>& entity) {
+std::tuple_element_t<TIndex, tuple<TComponents...>>& get(Entity<TComponents...>& entity) {
     return entity.getComponent<std::tuple_element_t<TIndex, tuple<TComponents...>>>();
 }
 
