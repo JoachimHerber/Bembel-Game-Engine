@@ -13,8 +13,6 @@ using namespace bembel::kernel;
 using namespace bembel::gui;
 
 GuiExample::GuiExample() : Application() {
-    m_gui_system = m_engine.addSystem<GuiSystem>();
-
     events::addHandler<WindowShouldCloseEvent>(this);
 }
 
@@ -27,7 +25,7 @@ bool GuiExample::init(std::span<std::string_view>) {
 
     m_engine.initSystems();
 
-    auto gui = m_gui_system->getGUI("main");
+    auto gui = getSystem<GuiSystem>()->getGUI("main");
 
     auto button_1 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_1");
     auto button_2 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_2");

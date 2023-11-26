@@ -10,9 +10,7 @@ using namespace bembel::gui;
 using namespace bembel::kernel;
 using namespace bembel::kernel::i18n::literals;
 
-Application::Application() : kernel::Application() {
-    m_gui_system = m_engine.addSystem<GuiSystem>();
-
+Application::Application() {
     events::addHandler<WindowShouldCloseEvent>(this);
     events::addHandler<WindowResizeEvent>(this);
     events::addHandler<FileDropEvent>(this);
@@ -57,7 +55,9 @@ bool Application::init(std::span<std::string_view> args) {
 
     m_main_window->getViewport(1)->addView(&m_gui->view);
 
-    m_font_view = std::make_unique<FontView>(m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator());
+    m_font_view = std::make_unique<FontView>(
+        m_converter->getGlyphTextureAtlas(), m_converter->getTextureGenerator()
+    );
     m_main_window->getViewport(0)->addView(m_font_view.get());
 
     m_widgets.texture_size_slider->setValue(1024);
@@ -109,7 +109,7 @@ bool Application::initUserInterface() {
 
     if(!gui_shader || !gui_style) return false;
 
-    m_gui = m_gui_system->createGUI("main");
+    m_gui = getSystem<GuiSystem>()->createGUI("main");
     m_gui->renderer.init(gui_shader, gui_style);
 
     using LinearWidgetLayout::Mode::SCALE_TO_FIT;
@@ -149,7 +149,8 @@ void Application::onFontFilePathChanged(In<std::u8string>, In<std::u8string>) {
 
 void Application::onFontFamilyAdded(In<std::u8string_view> name) {
     m_widgets.font_family_selections->addRadioButton(name);
-    if(m_widgets.font_family_selections->getSelection() == -1) m_widgets.font_family_selections->setSelection(0);
+    if(m_widgets.font_family_selections->getSelection() == -1)
+        m_widgets.font_family_selections->setSelection(0);
 
     m_widgets.convert_font_button->enable();
 
@@ -231,10 +232,13 @@ void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     font_selections_label->setHasOutline(true);
 
     font_family_selections = root.createChildWidget<RadioButtonGroupWidget>();
-    type_face_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.default"_i18n());
-    type_face_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.oblique"_i18n());
+    type_face_selection[0] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.default"_i18n());
+    type_face_selection[1] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.oblique"_i18n());
     type_face_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold"_i18n());
-    type_face_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold_oblique"_i18n());
+    type_face_selection[3] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.bold_oblique"_i18n());
 
     type_face_selection[0]->disable();
     type_face_selection[1]->disable();
@@ -244,14 +248,19 @@ void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     char_set_label = root.createChildWidget<LabelWidget>("widgets.labels.character_sets"_i18n());
     char_set_label->setHasOutline(true);
 
-    char_set_selection[0] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.basic_latin"_i18n());
-    char_set_selection[1] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_supplement"_i18n());
-    char_set_selection[2] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_a"_i18n());
-    char_set_selection[3] = root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_b"_i18n());
+    char_set_selection[0] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.basic_latin"_i18n());
+    char_set_selection[1] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_supplement"_i18n());
+    char_set_selection[2] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_a"_i18n());
+    char_set_selection[3] =
+        root.createChildWidget<CheckBoxWidget>("widgets.checkbox.latin_extended_b"_i18n());
 
     char_set_selection[0]->state = CheckBoxWidget::State::SELECTED;
 
-    additional_chars_label = root.createChildWidget<LabelWidget>("widgets.labels.other_chars"_i18n());
+    additional_chars_label =
+        root.createChildWidget<LabelWidget>("widgets.labels.other_chars"_i18n());
     additional_chars_input = root.createChildWidget<TextInputWidget>();
 
     sdf_label = root.createChildWidget<LabelWidget>("widgets.labels.sdf_texture"_i18n());
@@ -260,7 +269,8 @@ void Application::Widgets::createWidgets(GraphicalUserInterface* gui) {
     texture_size_label  = root.createChildWidget<LabelWidget>("widgets.labels.resolution"_i18n());
     texture_size_slider = root.createChildWidget<IntSliderWidget>(256, 4 * 1024, true);
 
-    convert_font_button = root.createChildWidget<ButtonWidget>("widgets.button.convert_font"_i18n());
+    convert_font_button =
+        root.createChildWidget<ButtonWidget>("widgets.button.convert_font"_i18n());
     convert_font_button->disable();
 
     save_font_button = root.createChildWidget<ButtonWidget>("widgets.button.save_font"_i18n());

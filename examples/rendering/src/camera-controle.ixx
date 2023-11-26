@@ -20,7 +20,7 @@ class CameraControle {
     float getPitch() const { return m_pitch; }
     float getYaw() const { return m_yaw; }
 
-    vec3 const& getPosition() const { return m_camera->getPosition(); }
+    vec3 getPosition() const { return m_camera->getPosition(); }
 
     void handleEvent(MouseButtonPressEvent const&);
     void handleEvent(MouseButtonReleaseEvent const&);

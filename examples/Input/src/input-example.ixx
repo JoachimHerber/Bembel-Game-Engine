@@ -1,4 +1,5 @@
-﻿#include <string_view>
+﻿module;
+#include <string_view>
 #include <span>
 export module bembel.examples.input;
 
@@ -8,7 +9,7 @@ namespace bembel {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export class InputExample : public kernel::Application {
+export class InputExample : public kernel::Application<> {
   public:
     InputExample();
     ~InputExample();

@@ -32,10 +32,10 @@ MoveAnimation playMoveAnimation(ChessPiece chess_piece, ivec2 to, Signal<>& fram
     };
     float hop_height = 0;
     float hop_dist   = 0;
-    if(dir.x == 0 || dir.y == 0) {
+    if(dir.x == 0 || dir.z == 0) {
         hop_height = 1;
         hop_dist   = 1;
-    } else if(abs(dir.x) == abs(dir.y)) {
+    } else if(abs(dir.x) == abs(dir.z)) {
         hop_height = 1;
         hop_dist   = 1.414213562373095; // sqrt(2)
     } else {

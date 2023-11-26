@@ -15,10 +15,6 @@ using namespace bembel::physics::units::literals;
 using namespace bembel::gui;
 
 PhysicsExample::PhysicsExample() : Application() {
-    m_graphic_system = m_engine.addSystem<GraphicSystem>();
-    m_physics_system = m_engine.addSystem<PhysicsSystem>();
-    m_gui_system     = m_engine.addSystem<GuiSystem>();
-
     events::addHandler<WindowShouldCloseEvent>(this);
     events::addHandler<FrameBufferResizeEvent>(this);
     events::addHandler<KeyPressEvent>(this);
@@ -32,18 +28,18 @@ PhysicsExample::~PhysicsExample() {
 
 bool PhysicsExample::init(std::span<std::string_view>) {
     if(!m_engine.loadSetting("physics/config.xml")) return false;
-    auto pipline = m_graphic_system->getRenderingPipelines()[0].get();
+    auto pipline = getSystem<GraphicSystem>()->getRenderingPipelines()[0].get();
 
     m_camera = std::make_unique<CameraControle>(pipline->getCamera());
 
-    m_gui = m_gui_system->getGUI("main");
+    m_gui = getSystem<GuiSystem>()->getGUI("main");
 
     m_scene = std::make_shared<Scene>();
 
-    auto& rendering_pipeline = m_graphic_system->getRenderingPipelines()[0];
+    auto& rendering_pipeline = getSystem<GraphicSystem>()->getRenderingPipelines()[0];
 
     rendering_pipeline->setScene(m_scene);
-    m_physics_system->addScene(m_scene);
+    getSystem<PhysicsSystem>()->addScene(m_scene);
 
     m_scene->loadAssets("scenes/assets.xml");
     m_scene->loadScene("scenes/physics-demo.scene");
@@ -83,7 +79,7 @@ void PhysicsExample::handleEvent(In<WindowShouldCloseEvent> event) {
 }
 
 void PhysicsExample::handleEvent(In<FrameBufferResizeEvent> event) {
-    m_graphic_system->getRenderingPipelines()[0]->setResulution(event.size);
+    getSystem<GraphicSystem>()->getRenderingPipelines()[0]->setResulution(event.size);
 }
 
 void PhysicsExample::handleEvent(In<KeyPressEvent> event) {

@@ -34,6 +34,7 @@ export import bembel.kernel;
 export import bembel.graphics;
 export import bembel.gui;
 export import bembel.physics;
+export import bembel.particles;
 
 export namespace bembel {
 using namespace base;
@@ -41,4 +42,5 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 using namespace physics;
+using namespace particles;
 } // namespace bembel

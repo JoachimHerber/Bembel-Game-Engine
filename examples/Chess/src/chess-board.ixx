@@ -60,6 +60,9 @@ export class ChessPiece {
     vec3& getPosition() { return m_entity.getComponent<Transform>().position; }
     void  setPosition(vec3 pos) { m_entity.getComponent<Transform>().position = pos; }
 
+    quat& getRotation() { return m_entity.getComponent<Transform>().rotation; }
+    void  setRotation(quat rot) { m_entity.getComponent<Transform>().rotation = rot; }
+
     SelectionHighlight& getHighlight() { return m_entity.getComponent<SelectionHighlight>(); }
     void                setHighlight(SelectionHighlight highlight) {
         m_entity.getComponent<SelectionHighlight>() = highlight;

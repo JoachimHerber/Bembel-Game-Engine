@@ -26,7 +26,7 @@ using bembel::kernel::Window;
 using bembel::kernel::WindowResizeEvent;
 using bembel::kernel::WindowShouldCloseEvent;
 
-export class Application : public kernel::Application {
+export class Application : public kernel::Application<GuiSystem> {
   public:
     Application();
     ~Application();
@@ -53,7 +53,6 @@ export class Application : public kernel::Application {
 
 
   private:
-    GuiSystem*                       m_gui_system;
     std::unique_ptr<FontConverter>   m_converter;
     std::unique_ptr<FontView>        m_font_view;
 

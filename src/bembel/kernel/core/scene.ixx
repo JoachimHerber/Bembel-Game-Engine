@@ -151,11 +151,20 @@ export class Scene {
     {
         auto it = m_data_container.find(std::type_index(typeid(T)));
         if(it != m_data_container.end()) return static_cast<T*>(it->second.get());
+        return nullptr;
+    }
 
-        auto container     = std::make_unique<T>(this);
-        auto container_ptr = container.get();
-        m_data_container.emplace(std::type_index(typeid(T)), std::move(container));
-        return container_ptr;
+    template <typename T, typename... TArgs>
+    bool createDataContainer(TArgs&&... args)
+        requires std::is_base_of_v<SceneDataContainerBase, T>
+    {
+        auto it = m_data_container.find(std::type_index(typeid(T)));
+        if(it != m_data_container.end()) return false;
+
+        m_data_container.emplace(
+            std::type_index(typeid(T)), std::make_unique<T>(this, std::forward<TArgs>(args)...)
+        );
+        return true;
     }
 
   private:

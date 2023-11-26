@@ -15,7 +15,8 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 
-export class Application : public kernel::Application {
+export class Application
+  : public kernel::Application<GraphicSystem, PhysicsSystem, ParticleSystem, GuiSystem> {
   public:
     Application();
     ~Application();
@@ -30,10 +31,6 @@ export class Application : public kernel::Application {
     void handleEvent(In<KeyPressEvent>);
 
   private:
-    GraphicSystem* m_graphic_system;
-    PhysicsSystem* m_physics_system;
-    GuiSystem*     m_gui_system;
-
     std::shared_ptr<Scene>      m_scene;
     std::unique_ptr<ChessBoard> m_chess_board;
     GameLogicCoroutine          m_game_logic;

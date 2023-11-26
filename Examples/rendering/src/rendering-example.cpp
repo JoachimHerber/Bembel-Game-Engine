@@ -14,9 +14,7 @@ using namespace bembel::kernel::i18n::literals;
 using namespace bembel::gui;
 using namespace ::gl;
 
-RenderingExample::RenderingExample() : kernel::Application() {
-    m_graphic_system = m_engine.addSystem<GraphicSystem>();
-    m_gui_system     = m_engine.addSystem<GuiSystem>();
+RenderingExample::RenderingExample() {
     events::addHandler<WindowShouldCloseEvent>(this);
     events::addHandler<FrameBufferResizeEvent>(this);
 }
@@ -31,9 +29,11 @@ bool RenderingExample::init(std::span<std::string_view> args) {
 
     kernel::i18n::Localisation::init(args, "local");
 
-    m_camera = std::make_unique<CameraControle>(m_graphic_system->getRenderingPipelines()[0]->getCamera());
+    m_camera = std::make_unique<CameraControle>(
+        getSystem<GraphicSystem>()->getRenderingPipelines()[0]->getCamera()
+    );
 
-    auto& rendering_piupeline = m_graphic_system->getRenderingPipelines()[0];
+    auto& rendering_piupeline = getSystem<GraphicSystem>()->getRenderingPipelines()[0];
     auto* lighting_stage      = rendering_piupeline->getRenderingStage<DeferredLightingStage>(1);
     if(!lighting_stage) return false;
 
@@ -55,7 +55,7 @@ bool RenderingExample::init(std::span<std::string_view> args) {
     m_engine.display.getWindow(0)->getViewport(5)->addView(m_views[1].get());
     m_engine.display.getWindow(0)->getViewport(6)->addView(m_views[2].get());
 
-    auto gui = m_gui_system->getGUI("main");
+    auto gui = getSystem<GuiSystem>()->getGUI("main");
 
     m_label = gui->getWidget<LabelWidget>("Label");
 

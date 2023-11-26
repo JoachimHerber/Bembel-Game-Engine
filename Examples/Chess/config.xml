@@ -1,78 +1,78 @@
 <Bembel>
-	<AssetDirectories>
-		<AssetDirectory directory="../assets"/>
-		<AssetDirectory directory="../assets/gui"/>
-		<AssetDirectory directory="../assets/shader"/>
-		<AssetDirectory directory="../assets/fonts"/>
-	</AssetDirectories>
-	<Display>
-		<Window title="Chess">
-			<DisplayMode mode = "Windowed">
-				<Size width="1600" height="900" />
-				<AspectRatio numerator="16" denominator="9" />
-			</DisplayMode>
-			<Viewports>
-				<Viewport relativ_position="0 0" relativ_size="1 1" />
-			</Viewports>
-		</Window>
-	</Display>
-	<Systems>
-		<Graphics>
-			<Renderer>
-				<GeometryRenderer name="default" >
-					<GeometyPassShader>
-						<Shader file="default-geomety-pass.vert"/>
-						<Shader file="default-geomety-pass.frag"/>
-					</GeometyPassShader>
-					<ShadowPassShader>
-						<Shader file="default-shadow-pass.vert"/>
-						<Shader file="default-shadow-pass.frag"/>
-					</ShadowPassShader>
-				</GeometryRenderer>
-			</Renderer>
-			<RenderingPipelines>
-				<RenderingPipeline horizontal_resolution="1600" vertical_resolution="900">
-					<Textures>
-						<Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
-						<Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
-						<Texture name="albedo"   format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="material" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
-						<Texture name="normal"   format="GL_RGB16"             target="GL_TEXTURE_2D"/>
-					</Textures>
-					<RenderingStages>
-						<DeferredGeometryStage>
-							<DepthOutput texture="depth"/>
-							<ColorOutput texture="light"    attachment="0"/>
-							<ColorOutput texture="albedo"   attachment="1"/>
-							<ColorOutput texture="material" attachment="2"/>
-							<ColorOutput texture="normal"   attachment="3"/>
-						</DeferredGeometryStage>
-						<DeferredLightingStage>
-							<DirectionalLightProgram>
-								<Shader file="dir-light.vert"/>
-								<Shader file="cook-torrance.frag"/>
-								<Shader file="read-geom-data.frag"/>
-								<Shader file="dir-light.frag"/>
-							</DirectionalLightProgram>
-							<PointLightShaderProgram>
-								<Shader file="point-light.vert"/>
-								<Shader file="cook-torrance.frag"/>
-								<Shader file="read-geom-data.frag"/>
-								<Shader file="point-light.frag"/>
-							</PointLightShaderProgram>
-							<DirectionalShadows resolution="2048">
-								<Cascade max_distance="15" />
-								<Cascade max_distance="50" />
-								<Cascade max_distance="100"/>
-							</DirectionalShadows>
-							<Output texture="light"/>
-							<Input texture="depth" />
-							<Input texture="albedo" />
-							<Input texture="material" />
-							<Input texture="normal" />
-						</DeferredLightingStage>
-						<EnvironmentMapReflectionStage>
-							<EnvironmentMap
+  <AssetDirectories>
+    <AssetDirectory directory="../assets"/>
+    <AssetDirectory directory="../assets/gui"/>
+    <AssetDirectory directory="../assets/shader"/>
+    <AssetDirectory directory="../assets/fonts"/>
+  </AssetDirectories>
+  <Display>
+    <Window title="Chess">
+      <DisplayMode mode = "Windowed">
+        <Size width="1600" height="900" />
+        <AspectRatio numerator="16" denominator="9" />
+      </DisplayMode>
+      <Viewports>
+        <Viewport relativ_position="0 0" relativ_size="1 1" />
+      </Viewports>
+    </Window>
+  </Display>
+  <Systems>
+    <Graphics>
+      <Renderer>
+        <GeometryRenderer name="default" >
+          <GeometyPassShader>
+            <Shader file="default-geomety-pass.vert"/>
+            <Shader file="default-geomety-pass.frag"/>
+          </GeometyPassShader>
+          <ShadowPassShader>
+            <Shader file="default-shadow-pass.vert"/>
+            <Shader file="default-shadow-pass.frag"/>
+          </ShadowPassShader>
+        </GeometryRenderer>
+      </Renderer>
+      <RenderingPipelines>
+        <RenderingPipeline horizontal_resolution="1600" vertical_resolution="900">
+          <Textures>
+            <Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+            <Texture name="light"    format="GL_RGB16F"            target="GL_TEXTURE_2D"/>
+            <Texture name="albedo"   format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+            <Texture name="material" format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+            <Texture name="normal"   format="GL_RGB16"             target="GL_TEXTURE_2D"/>
+          </Textures>
+          <RenderingStages>
+            <DeferredGeometryStage>
+              <DepthOutput texture="depth"/>
+              <ColorOutput texture="light"    attachment="0"/>
+              <ColorOutput texture="albedo"   attachment="1"/>
+              <ColorOutput texture="material" attachment="2"/>
+              <ColorOutput texture="normal"   attachment="3"/>
+            </DeferredGeometryStage>
+            <DeferredLightingStage>
+              <DirectionalLightProgram>
+                <Shader file="dir-light.vert"/>
+                <Shader file="cook-torrance.frag"/>
+                <Shader file="read-geom-data.frag"/>
+                <Shader file="dir-light.frag"/>
+              </DirectionalLightProgram>
+              <PointLightShaderProgram>
+                <Shader file="point-light.vert"/>
+                <Shader file="cook-torrance.frag"/>
+                <Shader file="read-geom-data.frag"/>
+                <Shader file="point-light.frag"/>
+              </PointLightShaderProgram>
+              <DirectionalShadows resolution="2048">
+                <Cascade max_distance="15" />
+                <Cascade max_distance="50" />
+                <Cascade max_distance="100"/>
+              </DirectionalShadows>
+              <Output texture="light"/>
+              <Input texture="depth" />
+              <Input texture="albedo" />
+              <Input texture="material" />
+              <Input texture="normal" />
+            </DeferredLightingStage>
+            <EnvironmentMapReflectionStage>
+              <EnvironmentMap
 								left   = "skybox/X-.png"
 								right  = "skybox/X+.png"
 								bottom = "skybox/Y-.png"
@@ -80,50 +80,88 @@
 								back   = "skybox/Z+.png"
 								front  = "skybox/Z-.png"
 							/>
-							<Shader>
-								<Shader file="environment-map-reflections.vert"/>
-								<Shader file="read-geom-data.frag"/>
-								<Shader file="environment-map-reflections.frag"/>
-							</Shader>
-							<Output texture="light"/>
-							<Input texture="depth" />
-							<Input texture="albedo" />
-							<Input texture="material" />
-							<Input texture="normal" />
-						</EnvironmentMapReflectionStage>
-						<SelectionRenderingStage>
-							<Shader>
-								<Shader file="selection.vert"/>
-								<Shader file="selection.frag"/>
-							</Shader>
-							<ColorOutput texture="light"/>
-							<DepthOutput texture="depth"/>
-						</SelectionRenderingStage>
-                        <PhysicsDebugRenderStage>
-							<Output texture="light"/>
-							<Depth texture="depth"/>
-                        </PhysicsDebugRenderStage>
-					</RenderingStages>
-					<Views>	
-						<View texture="light" window="0" viewport="0"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
-					</Views>
-					<Camera>
-						<Position x="0" y="0" z="0" />
-						<Projection fild_of_view="75" aspect_ration="1.77777777778" near="0.1" far="25.0" />
-					</Camera>
-				</RenderingPipeline>
-			</RenderingPipelines>
-		</Graphics>
-		<UserInterface>
-			<GUI name="main" window="0" viewport="0">
-				<Renderer>
-					<ShaderProgram file_name="gui.shader-program" />
-					<GuiStyle file_name="dark_gui_style.xml" />
-				</Renderer>
-				<Widgets >
-					<Label name="Label" size="600 80" position="500 820" text="Hello World" alignment="center" outline="true" />
-				</Widgets>
-			</GUI>
-		</UserInterface>
-	</Systems>
+              <Shader>
+                <Shader file="environment-map-reflections.vert"/>
+                <Shader file="read-geom-data.frag"/>
+                <Shader file="environment-map-reflections.frag"/>
+              </Shader>
+              <Output texture="light"/>
+              <Input texture="depth" />
+              <Input texture="albedo" />
+              <Input texture="material" />
+              <Input texture="normal" />
+            </EnvironmentMapReflectionStage>
+            <SelectionRenderingStage>
+              <Shader>
+                <Shader file="selection.vert"/>
+                <Shader file="selection.frag"/>
+              </Shader>
+              <ColorOutput texture="light"/>
+              <DepthOutput texture="depth"/>
+            </SelectionRenderingStage>
+            <PhysicsDebugRenderStage>
+              <Output texture="light"/>
+              <Depth texture="depth"/>
+            </PhysicsDebugRenderStage>
+            <ParticleRenderingStage>
+              <Output texture="light"/>
+              <Depth texture="depth"/>
+              <Texture file_name="particles.png"/>
+              <Shader>
+                <Shader file="particles.vert"/>
+                <Shader file="particles.frag"/>
+              </Shader>
+            </ParticleRenderingStage>
+          </RenderingStages>
+          <Views>
+            <View texture="light" window="0" viewport="0"       left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+          </Views>
+          <Camera>
+            <Position x="0" y="0" z="0" />
+            <Projection fild_of_view="75" aspect_ration="1.77777777778" near="0.1" far="25.0" />
+          </Camera>
+        </RenderingPipeline>
+      </RenderingPipelines>
+    </Graphics>
+    <Particles>
+      <ParticleType name="Smoke" acceleration="0.0 2.5 0.0" drag="0.7" max_age="1.5" size_0="0.0" size_1="5.0" size_2="-5.0">
+        <Frame tex_coords="0.000 0.000 0.125 0.125"/>
+        <Frame tex_coords="0.125 0.000 0.250 0.125"/>
+        <Frame tex_coords="0.250 0.000 0.375 0.125"/>
+        <Frame tex_coords="0.375 0.000 0.500 0.125"/>
+        <Frame tex_coords="0.500 0.000 0.625 0.125"/>
+        <Frame tex_coords="0.625 0.000 0.750 0.125"/>
+        <Frame tex_coords="0.750 0.000 0.875 0.125"/>
+        <Frame tex_coords="0.875 0.000 1.000 0.125"/>
+        <Frame tex_coords="0.000 0.125 0.125 0.250"/>
+        <Frame tex_coords="0.125 0.125 0.250 0.250"/>
+        <Frame tex_coords="0.250 0.125 0.375 0.250"/>
+        <Frame tex_coords="0.375 0.125 0.500 0.250"/>
+        <Frame tex_coords="0.500 0.125 0.625 0.250"/>
+        <Frame tex_coords="0.625 0.125 0.750 0.250"/>
+        <Frame tex_coords="0.750 0.125 0.875 0.250"/>
+        <Frame tex_coords="0.875 0.125 1.000 0.250"/>
+        <Frame tex_coords="0.000 0.250 0.125 0.375"/>
+        <Frame tex_coords="0.125 0.250 0.250 0.375"/>
+        <Frame tex_coords="0.250 0.250 0.375 0.375"/>
+        <Frame tex_coords="0.375 0.250 0.500 0.375"/>
+        <Frame tex_coords="0.500 0.250 0.625 0.375"/>
+        <Frame tex_coords="0.625 0.250 0.750 0.375"/>
+        <Frame tex_coords="0.750 0.250 0.875 0.375"/>
+        <Frame tex_coords="0.875 0.250 1.000 0.375"/>
+        <Frame tex_coords="0.000 0.375 0.125 0.500"/>
+      </ParticleType>
+    </Particles>
+    <UserInterface>
+      <GUI name="main" window="0" viewport="0">
+        <Renderer>
+          <ShaderProgram file_name="gui.shader-program" />
+          <GuiStyle file_name="dark_gui_style.xml" />
+        </Renderer>
+        <Widgets >
+          <Label name="Label" size="600 80" position="500 820" text="Hello World" alignment="center" outline="true" />
+        </Widgets>
+      </GUI>
+    </UserInterface>
+  </Systems>
 </Bembel>

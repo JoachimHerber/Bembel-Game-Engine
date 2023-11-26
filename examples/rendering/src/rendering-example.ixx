@@ -11,7 +11,7 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 
-export class RenderingExample : public kernel::Application {
+export class RenderingExample : public kernel::Application<GraphicSystem, GuiSystem> {
   public:
     RenderingExample();
     ~RenderingExample();
@@ -41,9 +41,6 @@ export class RenderingExample : public kernel::Application {
         u64                            m_resolution;
         uint                           m_layer;
     };
-
-    GraphicSystem*   m_graphic_system;
-    GuiSystem*       m_gui_system;
     LabelWidget*     m_label;
     IntSliderWidget* m_light_slider_pitch;
     IntSliderWidget* m_light_slider_yaw;

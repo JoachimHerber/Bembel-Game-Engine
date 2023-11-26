@@ -128,6 +128,10 @@ GameLogicCoroutine runGameLogic(
 
         chess_piece.makeRigidBodyKinematic();
         auto captured_chess_piece = board->getChessPieceAt(move.to);
+        if(move.type == Move::CAPUTE_EN_PASSANT) {
+            captured_chess_piece =
+                board->getChessPieceAt(ivec2(chess_piece.getBoardPosition().x, move.to.y));
+        }
         if(captured_chess_piece) { captured_chess_piece.makeRigidBodyDynamic(); }
 
         lable->setText(u8"");
@@ -147,6 +151,12 @@ GameLogicCoroutine runGameLogic(
                 if(pos.y < -1.f) break; // the captured piece has rolled of the board
             }
             // @ToDo add particle effect
+            Asset<ParticleEffect> effect    = {"capture_pawn"};
+            auto                  particles = board->getScene()->getDataContainer<ParticleData>();
+            particles->spawnParticleEffect(
+                *effect.get(), captured_chess_piece.getPosition(), captured_chess_piece.getRotation(), 1.0f
+            );
+       
         }
         chess_piece.setBoardPosition(move.to);
 

@@ -20,14 +20,14 @@ export class Camera final {
     Camera()  = default;
     ~Camera() = default;
 
-    vec3 const& getPosition() const { return m_position; }
-    void             setPosition(In<vec3> value) {
+    vec3 getPosition() const { return m_position; }
+    void setPosition(In<vec3> value) {
         m_position = value;
         updateViewMatrix();
     }
 
-    quat const& getOrientation() const { return m_oriantation; }
-    void             setOrientation(In<quat> value) {
+    quat getOrientation() const { return m_oriantation; }
+    void setOrientation(In<quat> value) {
         m_oriantation = value;
         updateViewMatrix();
     }

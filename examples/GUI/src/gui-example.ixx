@@ -6,7 +6,7 @@ import bembel;
 
 namespace bembel {
 
-export class GuiExample : public kernel::Application {
+export class GuiExample : public kernel::Application<gui::GuiSystem> {
   public:
     GuiExample();
     ~GuiExample();
@@ -23,7 +23,6 @@ export class GuiExample : public kernel::Application {
     void         onButton3Click();
 
   private:
-    gui::GuiSystem* m_gui_system;
 };
 
 } // namespace bembel

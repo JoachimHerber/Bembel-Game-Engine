@@ -12,11 +12,7 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 
-Application::Application() : kernel::Application() {
-    m_graphic_system = m_engine.addSystem<GraphicSystem>();
-    m_physics_system = m_engine.addSystem<PhysicsSystem>();
-    m_gui_system     = m_engine.addSystem<GuiSystem>();
-
+Application::Application() {
     RenderingPipeline::Stage::registerStageType<SelectionRenderingStage>("SelectionRenderingStage");
 
     events::addHandler<WindowShouldCloseEvent>(this);
@@ -31,12 +27,19 @@ Application::~Application() {
 }
 
 bool Application::init(std::span<std::string_view> args) {
-    logInfo("Loading Application Settings");
+    logInfo("Loading Application Settings");  
+    /** @ToDo C++26 use #embed
+     *  static constexpr char config[] = {
+     *      #embed "../config.xml"
+     *  };
+     *  if(!m_engine.parseSetting(config)) return false;
+     */
     if(!m_engine.loadSetting("chess/config.xml")) return false;
+
 
     kernel::i18n::Localisation::init(args, "local");
 
-    auto pipline = m_graphic_system->getRenderingPipelines()[0].get();
+    auto pipline = getSystem<GraphicSystem>()->getRenderingPipelines()[0].get();
 
     m_camera = std::make_unique<CameraControle>(pipline->getCamera());
 
@@ -45,7 +48,8 @@ bool Application::init(std::span<std::string_view> args) {
     m_scene->loadAssets("scenes/assets.xml");
 
     pipline->setScene(m_scene);
-    m_physics_system->addScene(m_scene);
+    getSystem<PhysicsSystem>()->addScene(m_scene);
+    getSystem<ParticleSystem>()->addScene(m_scene);
 
     m_chess_board = std::make_unique<ChessBoard>(m_scene.get());
 
@@ -58,7 +62,7 @@ bool Application::init(std::span<std::string_view> args) {
     m_game_logic = runGameLogic(
         m_chess_board.get(),
         pipline->getCamera().get(),
-        m_gui_system->getGUI("main")->getWidget<LabelWidget>("Label"),
+        getSystem<GuiSystem>()->getGUI("main")->getWidget<LabelWidget>("Label"),
         m_engine.input.mouse.getButton(0)->press_signal,
         m_frame_sync
     );
@@ -91,7 +95,7 @@ void Application::handleEvent(In<WindowShouldCloseEvent> event) {
 }
 
 void Application::handleEvent(In<FrameBufferResizeEvent> event) {
-    auto pipline = m_graphic_system->getRenderingPipelines()[0].get();
+    auto pipline = getSystem<GraphicSystem>()->getRenderingPipelines()[0].get();
 
     pipline->setResulution(event.size);
     pipline->getCamera()->setUpProjection(

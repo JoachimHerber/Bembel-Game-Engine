@@ -112,8 +112,6 @@ class ComponentMap : public ComponentContainerBase {
     std::map<EntityID, T> m_components;
 };
 
-namespace {}
-
 export template <typename T>
 class FixedAddressComponentVector : public ComponentContainerBase {
   public:

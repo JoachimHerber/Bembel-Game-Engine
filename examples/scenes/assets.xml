@@ -15,6 +15,14 @@
 		metallic  = "0.50"
 		f0        = "0.04"
 	/>
+  <ParticleEffect 
+    name               = "capture_pawn"
+    particle_type      = "Smoke"
+    particle_count     = "20"
+    position           = "0.00 1.0 0.00"
+    position_diviation = "0.00 1.5 0.00"
+    velocety_diviation = "3.00 1.5 3.00"
+  />
 	<CollisionShape name="pawn" type="compound">
 		<ChildShape position="0.0 -0.85 0.0" type="cylinder" radius="0.45" height="0.3"/>
 		<ChildShape position="0.0 +0.00 0.0" type="cone"     radius="0.45" height="1.4"/>

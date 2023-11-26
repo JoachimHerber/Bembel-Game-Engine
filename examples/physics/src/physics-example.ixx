@@ -13,7 +13,7 @@ using namespace bembel::graphics;
 using namespace bembel::physics;
 using namespace bembel::gui;
 
-export class PhysicsExample : public kernel::Application {
+export class PhysicsExample : public kernel::Application<GraphicSystem, PhysicsSystem, GuiSystem> {
   public:
     PhysicsExample();
     ~PhysicsExample();
@@ -28,10 +28,6 @@ export class PhysicsExample : public kernel::Application {
     void handleEvent(In<KeyPressEvent>);
 
   private:
-    GraphicSystem* m_graphic_system;
-    PhysicsSystem* m_physics_system;
-    GuiSystem*     m_gui_system;
-
     GraphicalUserInterface* m_gui;
     std::shared_ptr<Scene>  m_scene;
 

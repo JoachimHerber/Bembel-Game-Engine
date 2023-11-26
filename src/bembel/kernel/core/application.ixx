@@ -1,5 +1,6 @@
 ﻿module;
 #include <chrono>
+#include <tuple>
 export module bembel.kernel.core:Application;
 
 import bembel.base;
@@ -9,9 +10,10 @@ import :Engine;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-export class Application {
+export template <typename... TSystems>
+class Application {
   public:
-    Application() {}
+    Application() : m_systems{m_engine.addSystem<TSystems>()...} {}
     virtual ~Application() = default;
 
     bool run(std::span<std::string_view> args) {
@@ -33,6 +35,11 @@ export class Application {
         return true;
     }
     void quit() { m_should_exit_main_loop = true; }
+
+    template <typename TSystem>
+    TSystem* getSystem() const {
+        return std::get<TSystem*>(m_systems);
+    }
 
   protected:
     virtual void mainLoop() {
@@ -57,7 +64,7 @@ export class Application {
     }
 
     virtual bool init(std::span<std::string_view> args) = 0;
-    virtual void cleanup() = 0;
+    virtual void cleanup()                              = 0;
 
     virtual void update(double timeDelta) = 0;
 
@@ -65,7 +72,8 @@ export class Application {
     Engine m_engine;
 
   private:
-    bool m_should_exit_main_loop = false;
+    std::tuple<TSystems*...> m_systems;
+    bool                     m_should_exit_main_loop = false;
 };
 
 } // namespace bembel::kernel

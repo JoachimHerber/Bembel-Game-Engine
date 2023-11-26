@@ -34,6 +34,7 @@ export class PhysicsSystem : public System {
     void addScene(std::shared_ptr<Scene> scene) {
         scene->registerComponentType<Transform>();
         scene->registerComponentType<RigidBody>();    
+        scene->createDataContainer<World>();
         m_scenes.push_back(std::move(scene));
     }
 
