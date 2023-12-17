@@ -53,9 +53,9 @@ bool Application::init(std::span<std::string_view> args) {
 
     m_chess_board = std::make_unique<ChessBoard>(m_scene.get());
 
-    Entity<> ligth = {*m_scene, m_scene->createEntity()};
-    ligth.createComponent<DirectionalLight>(
-        vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2)) //, std::make_unique<ShadowMap>(4096)
+    Entity ligth = {*m_scene, m_scene->createEntity()};
+    ligth.assign<DirectionalLight>(
+        vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2)), true
     );
 
     logInfo("Initalizing Game");

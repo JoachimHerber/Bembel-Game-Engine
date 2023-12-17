@@ -30,8 +30,10 @@ export class ComponentContainerBase {
     ComponentContainerBase(ComponentTypeID type_id) : m_type_id{type_id}, m_mask{1ull << type_id} {}
     virtual ~ComponentContainerBase() {}
 
-    virtual bool createComponent(EntityID, xml::Element const*) = 0;
-    virtual bool deleteComponent(EntityID)                      = 0;
+    virtual bool serializeComponent(EntityID, xml::Element*)         = 0;
+    virtual bool deserializeComponent(EntityID, xml::Element const*) = 0;
+
+    virtual bool deleteComponent(EntityID) = 0;
 
     ComponentTypeID getComponentTypeID() { return m_type_id; }
     ComponentMask   getComponentMask() { return m_mask; }
@@ -52,12 +54,10 @@ struct ComponentMetaData;
 
 export template <typename T>
     requires requires() {
-        T::COMPONENT_TYPE_NAME;
         typename T::Container;
         requires std::is_base_of_v<ComponentContainerBase, typename T::Container>;
     }
 struct ComponentMetaData<T> {
-    static constexpr inline std::string_view COMPONENT_TYPE_NAME = T::COMPONENT_TYPE_NAME;
     using Container                                              = T::Container;
 };
 
@@ -75,26 +75,24 @@ export class Scene {
 
     template <Component T, typename... TArgs>
     void registerComponentType(TArgs&&... args) {
-        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
-        if(it != m_component_type_map.end()) return;
+        auto it = m_component_containers.find(std::type_index(typeid(T)));
+        if(it != m_component_containers.end()) return;
 
-        auto container = std::make_unique<typename ComponentMetaData<T>::Container>(
-            m_container.size(), this, std::forward<TArgs>(args)...
+        m_component_containers.emplace(
+            std::type_index(typeid(T)),
+            std::make_unique<typename ComponentMetaData<T>::Container>(
+                m_component_containers.size(), this, std::forward<TArgs>(args)...
+            )
         );
-
-        m_component_type_map.emplace(ComponentMetaData<T>::COMPONENT_TYPE_NAME, m_container.size());
-        m_container.push_back(std::move(container));
     }
 
     template <Component T>
     typename ComponentMetaData<T>::Container* getComponentContainer() {
-        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
-        if(it != m_component_type_map.end()) {
-            return static_cast<typename ComponentMetaData<T>::Container*>(
-                m_container[it->second].get()
-            );
+        auto it = m_component_containers.find(std::type_index(typeid(T)));
+        if(it != m_component_containers.end()) {
+            return static_cast<typename ComponentMetaData<T>::Container*>(it->second.get());
         }
-        return nullptr;
+        return nullptr; // component type does not exist
     }
 
     EntityID createEntity();
@@ -104,36 +102,23 @@ export class Scene {
     bool loadScene(std::filesystem::path file_name);
 
     template <Component T, typename... TArgs>
-    T* createComponent(EntityID id, TArgs&&... args) {
-        if(std::to_underlying(id) >= m_entities.size()) return {};
+    bool assignComponent(EntityID id, TArgs&&... args) {
+        if(std::to_underlying(id) >= m_entities.size()) return false;
 
-        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
-        if(it == m_component_type_map.end()) return {};
+        auto* container = getComponentContainer<T>();
+        if(!container) return false;
 
-        auto container =
-            static_cast<typename ComponentMetaData<T>::Container*>(m_container[it->second].get());
-        if((m_entities[std::to_underlying(id)] & container->getComponentMask()) != 0) {
-            if constexpr(sizeof...(TArgs) > 0) logWarning("Component already exisits");
-            return container->getComponent(id);
-        }
+        container->assignComponent(id, std::forward<TArgs>(args)...);
         m_entities[std::to_underlying(id)] |= container->getComponentMask();
-        return container->createComponent(id, std::forward<TArgs>(args)...);
-    }
-
-    template <Component... T>
-    bool createComponents(EntityID id) {
-        return (... && !!createComponent<T>(id));
+        return true;
     }
 
     template <Component T>
     T* getComponent(EntityID id) {
-        if(std::to_underlying(id) >= m_entities.size()) return nullptr; // invalided entity id
+        if(std::to_underlying(id) >= m_entities.size()) return nullptr;
 
-        auto it = m_component_type_map.find(ComponentMetaData<T>::COMPONENT_TYPE_NAME);
-        if(it == m_component_type_map.end()) return nullptr; // component type does not exist
-
-        auto container =
-            static_cast<typename ComponentMetaData<T>::Container*>(m_container[it->second].get());
+        auto* container = getComponentContainer<T>();
+        if(!container) return nullptr;
 
         if((m_entities[std::to_underlying(id)] & container->getComponentMask()) == 0)
             return nullptr; // entity doesn't have a component of the requested type
@@ -149,8 +134,8 @@ export class Scene {
     T* getDataContainer()
         requires std::is_base_of_v<SceneDataContainerBase, T>
     {
-        auto it = m_data_container.find(std::type_index(typeid(T)));
-        if(it != m_data_container.end()) return static_cast<T*>(it->second.get());
+        auto it = m_data_containers.find(std::type_index(typeid(T)));
+        if(it != m_data_containers.end()) return static_cast<T*>(it->second.get());
         return nullptr;
     }
 
@@ -158,10 +143,10 @@ export class Scene {
     bool createDataContainer(TArgs&&... args)
         requires std::is_base_of_v<SceneDataContainerBase, T>
     {
-        auto it = m_data_container.find(std::type_index(typeid(T)));
-        if(it != m_data_container.end()) return false;
+        auto it = m_data_containers.find(std::type_index(typeid(T)));
+        if(it != m_data_containers.end()) return false;
 
-        m_data_container.emplace(
+        m_data_containers.emplace(
             std::type_index(typeid(T)), std::make_unique<T>(this, std::forward<TArgs>(args)...)
         );
         return true;
@@ -173,10 +158,11 @@ export class Scene {
     std::vector<ComponentMask> m_entities;
     std::stack<EntityID>       m_unused_entity_ids;
 
-    Dictionary<ComponentTypeID> m_component_type_map;
-    std::vector<ContainerPtr>   m_container;
+    template <typename T>
+    using TypeMap = std::unordered_map<std::type_index, std::unique_ptr<T>>;
 
-    std::unordered_map<std::type_index, std::unique_ptr<SceneDataContainerBase>> m_data_container;
+    TypeMap<ComponentContainerBase> m_component_containers;
+    TypeMap<SceneDataContainerBase> m_data_containers;
 
     std::vector<Asset<std::any>> m_assets;
 };

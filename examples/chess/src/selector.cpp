@@ -78,33 +78,32 @@ void ChessPieceSelector::onSelect(EntityID entity) {
     if(m_selection.getId() == entity) return;
 
     if(m_selection) {
-        m_selection.getComponent<SelectionHighlight>() = SelectionHighlight::NO_HIGHLIGHT;
+        m_selection.assign<SelectionHighlight>(SelectionHighlight::NO_HIGHLIGHT);
 
         for(uint x = 0; x < 8; ++x) {
             for(uint y = 0; y < 8; ++y) {
-                auto tile                               = m_board->getTileAt({x, y});
-                tile.getComponent<SelectionHighlight>() = SelectionHighlight::NO_HIGHLIGHT;
+                auto tile = m_board->getTileAt({x, y});
+                tile.assign<SelectionHighlight>(SelectionHighlight::NO_HIGHLIGHT);
             }
         }
     }
 
-    m_selection = ChessPieceEntity();
+    m_selection = Entity();
 
     auto chess_piece = m_scene->getComponent<ChessPieceComponent>(entity);
     if(!chess_piece) return;
     if(chess_piece->owner != m_player) return;
 
-    m_selection                                    = ChessPieceEntity(*m_board->getScene(), entity);
-    m_selection.getComponent<SelectionHighlight>() = SelectionHighlight::FOCUSED;
+    m_selection = Entity(*m_board->getScene(), entity);
+    m_selection.assign<SelectionHighlight>(SelectionHighlight::FOCUSED);
 
     auto moves = getPossibleMoves(m_board, ChessPiece(m_board, m_selection));
     for(auto const& move : moves) {
-        m_board->getTileAt(move.to).getComponent<SelectionHighlight>() =
-            SelectionHighlight::SELECTABLE;
+        m_board->getTileAt(move.to).assign<SelectionHighlight>(SelectionHighlight::SELECTABLE);
     }
 }
 
-MoveSelector::MoveSelector(ChessBoard* board, ChessPieceEntity chess_piece, Camera* camera)
+MoveSelector::MoveSelector(ChessBoard* board, Entity chess_piece, Camera* camera)
   : Selector{board->getScene(), camera}
   , m_board{board}
   , m_chess_piece{chess_piece}
@@ -115,10 +114,10 @@ void MoveSelector::onSelect(EntityID id) {
     for(auto const& move : m_possible_moves) {
         auto tile = m_board->getTileAt(move.to);
         if(tile.getId() == id) {
-            tile.getComponent<SelectionHighlight>() = SelectionHighlight::FOCUSED;
-            m_selection                             = move;
+            tile.assign<SelectionHighlight>(SelectionHighlight::FOCUSED);
+            m_selection = move;
         } else {
-            tile.getComponent<SelectionHighlight>() = SelectionHighlight::SELECTABLE;
+            tile.assign<SelectionHighlight>(SelectionHighlight::SELECTABLE);
         }
     }
 }

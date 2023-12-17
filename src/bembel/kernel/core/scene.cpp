@@ -8,11 +8,7 @@ import bembel.base;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-Scene::~Scene() {
-    m_component_type_map.clear();
-    m_container.clear();
-    m_data_container.clear();
-}
+Scene::~Scene() {}
 
 EntityID Scene::createEntity() {
     if(m_unused_entity_ids.empty()) {
@@ -27,12 +23,9 @@ EntityID Scene::createEntity() {
 
 EntityID Scene::createEntity(xml::Element const* properties) {
     EntityID entity_id = createEntity();
-    for(xml::Element const* component : xml::IterateChildElements(properties)) {
-        auto it = m_component_type_map.find(component->Value());
-        if(it == m_component_type_map.end()) continue; // unknown component type
-
-        if(m_container[it->second]->createComponent(entity_id, component)) {
-            m_entities[u64(entity_id)] |= m_container[it->second]->getComponentMask();
+    for(auto& [_, container] : m_component_containers) {
+        if(container->deserializeComponent(entity_id, properties)) {
+            m_entities[std::to_underlying(entity_id)] |= container->getComponentMask();
         }
     }
     return entity_id;
@@ -42,7 +35,7 @@ bool Scene::deleteEntity(EntityID entity_id) {
     if(u64(entity_id) >= m_entities.size()) return false; // invalid entity id
 
     // delete all components of of the entity
-    for(auto& container : m_container) {
+    for(auto& [_, container] : m_component_containers) {
         if((m_entities[u64(entity_id)] & container->getComponentMask()) != 0)
             container->deleteComponent(entity_id);
     }

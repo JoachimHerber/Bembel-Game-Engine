@@ -46,13 +46,12 @@ bool PhysicsExample::init(std::span<std::string_view>) {
 
     m_stirring_stick = m_scene->createEntity();
 
-    m_scene->createComponent<Transform>(m_stirring_stick, vec3(0, -0.75, 0));
-    m_scene->createComponent<Geometry>(
+    m_scene->assignComponent<Transform>(m_stirring_stick, vec3(0, -0.75, 0));
+    m_scene->assignComponent<Geometry>(
         m_stirring_stick, Asset<GeometryModel>("stirring_stick"), vec3(4.5f, 0.5f, 0.1f)
     );
-    auto stirring_stick = m_scene->createComponent<RigidBody>(m_stirring_stick);
-    stirring_stick->init(Asset<CollisionShape>("stirring_stick"), vec3{0, 0, 0}, 0.0_kg);
-    stirring_stick->makeKinematic();
+    m_scene->assignComponent<RigidBody>(m_stirring_stick, Asset<CollisionShape>("stirring_stick"), vec3{0, 0, 0}, 0.0_kg);
+    m_scene->getComponent<RigidBody>(m_stirring_stick)->makeKinematic();
 
     m_engine.initSystems();
     return true;

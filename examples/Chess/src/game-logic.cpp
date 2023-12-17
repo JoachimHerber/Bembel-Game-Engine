@@ -60,11 +60,11 @@ struct Script {
     handle_type m_hndl;
 };
 
-Script<ChessPieceEntity> selectChessPiece(
+Script<Entity> selectChessPiece(
     ChessBoard* board, ChessPlayer cur_player, Camera* camera, Signal<>& button_press
 ) {
     ChessPieceSelector selection{board, cur_player, camera};
-    ChessPieceEntity   chess_piece;
+    Entity             chess_piece;
     while(!chess_piece) {
         co_await button_press;
         chess_piece = selection.getSelectedChessPiece();
@@ -72,9 +72,7 @@ Script<ChessPieceEntity> selectChessPiece(
     co_return chess_piece;
 }
 
-Script<Move> selectMove(
-    ChessBoard* board, ChessPieceEntity pice, Camera* camera, Signal<>& button_press
-) {
+Script<Move> selectMove(ChessBoard* board, Entity pice, Camera* camera, Signal<>& button_press) {
     std::optional<Move> move;
     {
         MoveSelector selection{board, pice, camera};
@@ -89,8 +87,7 @@ Script<Move> selectMove(
 void resetHighlights(ChessBoard* board) {
     for(uint x = 0; x < 8; ++x) {
         for(uint y = 0; y < 8; ++y) {
-            board->getTileAt({x, y}).getComponent<SelectionHighlight>() =
-                SelectionHighlight::NO_HIGHLIGHT;
+            board->getTileAt({x, y}).assign<SelectionHighlight>(SelectionHighlight::NO_HIGHLIGHT);
             if(auto chess_piece = board->getChessPieceAt({x, y}))
                 chess_piece.setHighlight(SelectionHighlight::NO_HIGHLIGHT);
         }
@@ -154,9 +151,11 @@ GameLogicCoroutine runGameLogic(
             Asset<ParticleEffect> effect    = {"capture_pawn"};
             auto                  particles = board->getScene()->getDataContainer<ParticleData>();
             particles->spawnParticleEffect(
-                *effect.get(), captured_chess_piece.getPosition(), captured_chess_piece.getRotation(), 1.0f
+                *effect.get(),
+                captured_chess_piece.getPosition(),
+                captured_chess_piece.getRotation(),
+                1.0f
             );
-       
         }
         chess_piece.setBoardPosition(move.to);
 

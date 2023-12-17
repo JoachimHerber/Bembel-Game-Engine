@@ -42,20 +42,20 @@ export class ChessPieceSelector : Selector {
       : Selector{board->getScene(), camera}, m_board{board}, m_player{player} {}
     ~ChessPieceSelector() {}
 
-    ChessPieceEntity getSelectedChessPiece() const { return m_selection; }
+    Entity getSelectedChessPiece() const { return m_selection; }
 
   private:
     virtual void onSelect(EntityID id);
 
   private:
-    ChessBoard*      m_board;
-    ChessPlayer      m_player;
-    ChessPieceEntity m_selection;
+    ChessBoard* m_board;
+    ChessPlayer m_player;
+    Entity      m_selection;
 };
 
 export class MoveSelector : Selector {
   public:
-    MoveSelector(ChessBoard* board, ChessPieceEntity chess_piece, Camera* camera);
+    MoveSelector(ChessBoard* board, Entity chess_piece, Camera* camera);
     ~MoveSelector() {}
 
     std::optional<Move> getSelectedMove() const { return m_selection; }
@@ -65,7 +65,7 @@ export class MoveSelector : Selector {
 
   private:
     ChessBoard*         m_board;
-    ChessPieceEntity    m_chess_piece;
+    Entity              m_chess_piece;
     std::vector<Move>   m_possible_moves;
     std::optional<Move> m_selection;
 };

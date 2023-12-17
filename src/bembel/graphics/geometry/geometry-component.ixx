@@ -16,13 +16,10 @@ export struct Geometry {
     vec3                 scale       = {1, 1, 1};
     RendererID           renderer    = 0;
     bool                 cast_shadow = true;
+
+    using Container = ComponentVector<bembel::graphics::Geometry>;
+
+    static bool deserialize(Container* container, EntityID entity_id, xml::Element const* entity);
 };
 
-export bool initComponent(In<xml::Element const*> properties, InOut<Geometry> component);
-
-
 } // namespace bembel::graphics
-
-export template <>
-struct bembel::kernel::ComponentMetaData<bembel::graphics::Geometry>
-  : BasicComponentMetaData<"Geometry", bembel::graphics::Geometry> {};

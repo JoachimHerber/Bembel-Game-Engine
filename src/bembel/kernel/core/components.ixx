@@ -1,6 +1,7 @@
 ﻿module;
 #include <bit>
 #include <cassert>
+#include <map>
 #include <span>
 #include <string_view>
 #include <utility>
@@ -14,6 +15,46 @@ import :Scene;
 namespace bembel::kernel {
 using namespace bembel::base;
 
+export template <typename TComponent>
+bool serializeComponent(TComponent const& component, xml::Element* properties) {
+    if constexpr( //
+        requires(TComponent const& c, xml::Element* p) {
+            { ComponentMetaData<TComponent>::serialize(c, p) } -> std::convertible_to<bool>;
+        } //
+    ) {
+        return TComponent::serialize(component, properties);
+    }
+    if constexpr( //
+        requires(TComponent const& c, xml::Element* p) {
+            { ComponentMetaData<TComponent>::serialize(c, p) } -> std::convertible_to<bool>;
+        } //
+    ) {
+        return TComponent::serialize(component, properties);
+    }
+    return false;
+}
+
+export template <typename TComponent, typename TContainer>
+bool deserializeComponent(
+    TContainer* container, EntityID entity_id, xml::Element const* properties
+) {
+    if constexpr( //
+        requires(TContainer* c, EntityID id, xml::Element const* p) {
+            { ComponentMetaData<TComponent>::deserialize(c, id, p) } -> std::convertible_to<bool>;
+        } //
+    ) {
+        return ComponentMetaData<TComponent>::deserialize(container, entity_id, properties);
+    }
+    if constexpr( //
+        requires(TContainer* c, EntityID id, xml::Element const* p) {
+            { TComponent::deserialize(c, id, p) } -> std::convertible_to<bool>;
+        } //
+    ) {
+      return TComponent::deserialize(container, entity_id, properties);
+    }
+    return false;
+}
+
 export template <typename T>
 class ComponentVector : public ComponentContainerBase {
   public:
@@ -21,30 +62,23 @@ class ComponentVector : public ComponentContainerBase {
       : ComponentContainerBase{type_id}, m_scene{scene} {}
     ~ComponentVector() = default;
 
-    T* createComponent(EntityID entity_id) {
+    template <typename... TArgs>
+    void assignComponent(EntityID entity_id, TArgs&&... args) {
         if(std::to_underlying(entity_id) >= m_components.size()) {
             m_components.resize(std::to_underlying(entity_id) + 1);
         }
-        return &(m_components[std::to_underlying(entity_id)]);
+        m_components[std::to_underlying(entity_id)] = T(std::forward<TArgs>(args)...);
     }
 
-    template <typename... TArgs>
-    T* createComponent(EntityID entity_id, TArgs&&... args) {
-        T* component = createComponent(entity_id);
-        *component   = T(std::forward<TArgs>(args)...);
-        return component;
+    bool serializeComponent(EntityID entity_id, xml::Element* properties) override {
+        if(std::to_underlying(entity_id) >= m_components.size()) return false;
+        return ::bembel::kernel::serializeComponent<T>(
+            m_components[std::to_underlying(entity_id)], properties
+        );
     }
 
-    bool createComponent(EntityID entity_id, xml::Element const* properties) override {
-        T component;
-        if(initComponent(properties, component)) {
-            if(std::to_underlying(entity_id) >= m_components.size()) {
-                m_components.resize(std::to_underlying(entity_id) + 1);
-            }
-            m_components[std::to_underlying(entity_id)] = component;
-            return true;
-        }
-        return false;
+    bool deserializeComponent(EntityID entity_id, xml::Element const* properties) override {
+        return ::bembel::kernel::deserializeComponent<T>(this, entity_id, properties);
     }
 
     bool deleteComponent(EntityID entity_id) override { return true; }
@@ -72,22 +106,18 @@ class ComponentMap : public ComponentContainerBase {
       : ComponentContainerBase{type_id}, m_scene{scene} {}
     ~ComponentMap() = default;
 
-    T* createComponent(EntityID entity_id) { return &(m_components[entity_id]); }
-
     template <typename... TArgs>
-    T* createComponent(EntityID entity_id, TArgs&&... args) {
-        T* component = createComponent(entity_id);
-        *component   = T(std::forward<TArgs>(args)...);
-        return component;
+    void assignComponent(EntityID entity_id, TArgs&&... args) {
+        m_components[entity_id] = T(std::forward<TArgs>(args)...);
     }
 
-    bool createComponent(EntityID entity_id, xml::Element const* properties) override {
-        T component;
-        if(initComponent(properties, component)) {
-            m_components[entity_id] = std::move(component);
-            return true;
-        }
-        return false;
+    bool serializeComponent(EntityID entity_id, xml::Element* properties) override {
+        if(std::to_underlying(entity_id) >= m_components.size()) return false;
+        return ::bembel::kernel::serializeComponent<T>(m_components[entity_id], properties);
+    }
+
+    bool deserializeComponent(EntityID entity_id, xml::Element const* properties) override {
+        return ::bembel::kernel::deserializeComponent<T>(this, entity_id, properties);
     }
 
     bool deleteComponent(EntityID entity_id) override {
@@ -157,19 +187,18 @@ class FixedAddressComponentVector : public ComponentContainerBase {
     }
 
     template <typename... TArgs>
-    T* createComponent(EntityID entity_id, TArgs&&... args) {
+    void assignComponent(EntityID entity_id, TArgs&&... args) {
         auto* component = &operator[](entity_id);
         new(component) T(std::forward<TArgs>(args)...);
-        return {component};
     }
 
-    bool createComponent(EntityID entity_id, xml::Element const* properties) override {
-        T component;
-        if(initComponent(properties, component)) {
-            operator[](entity_id) = component;
-            return true;
-        }
-        return false;
+    bool serializeComponent(EntityID entity_id, xml::Element* properties) override {
+        if(std::to_underlying(entity_id) >= m_components.size()) return false;
+        return ::bembel::kernel::serializeComponent<T>(operator[](entity_id), properties);
+    }
+
+    bool deserializeComponent(EntityID entity_id, xml::Element const* properties) override {
+        return ::bembel::kernel::deserializeComponent<T>(this, entity_id, properties);
     }
 
     bool deleteComponent(EntityID entity_id) override { return true; }
@@ -201,24 +230,6 @@ class FixedAddressComponentVector : public ComponentContainerBase {
   private:
     Scene*             m_scene;
     std::vector<Chunk> m_components;
-};
-
-export enum class ComponentContainer { VECTOR, MAP, FIXED_ADDRESS_VECTOR };
-
-export template <
-    StringLiteral TTypeName,
-    typename TDataType,
-    ComponentContainer TContainer = ComponentContainer::VECTOR>
-
-struct BasicComponentMetaData {
-    static constexpr std::string_view COMPONENT_TYPE_NAME = TTypeName.value;
-
-    using Container = std::tuple_element_t<
-        std::to_underlying(TContainer),
-        std::tuple<
-            ComponentVector<TDataType>,
-            ComponentMap<TDataType>,
-            FixedAddressComponentVector<TDataType>>>;
 };
 
 } // namespace bembel::kernel

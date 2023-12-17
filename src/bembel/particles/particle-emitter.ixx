@@ -20,15 +20,12 @@ export struct ParticleEmitter {
         float                 cooldown;
     };
     std::vector<Effect> effects;
+
+    using Container = ComponentMap<bembel::particles::ParticleEmitter>;
+
+    static bool deserialize(
+        Container* container, EntityID entity_id, xml::Element const* entity
+    );
 };
 
-export bool initComponent(In<xml::Element const*> properties, Out<ParticleEmitter> component);
-
 } // namespace bembel::particles
-
-export template <>
-struct bembel::kernel::ComponentMetaData<bembel::particles::ParticleEmitter>
-  : BasicComponentMetaData<
-        "ParticleEmitter",
-        bembel::particles::ParticleEmitter,
-        ComponentContainer::MAP> {};

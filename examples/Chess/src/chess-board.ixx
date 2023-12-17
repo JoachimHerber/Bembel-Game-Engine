@@ -16,8 +16,7 @@ export enum ChessPieceType : u8 { PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 export enum ChessPlayer : u8 { WHITE, BLACK };
 
 export struct ChessPieceComponent {
-    static constexpr std::string_view COMPONENT_TYPE_NAME = "ChessPieceComponent";
-    using Container                                       = ComponentVector<ChessPieceComponent>;
+    using Container = ComponentVector<ChessPieceComponent>;
 
     ChessPieceType type;
     ChessPlayer    owner;
@@ -30,15 +29,10 @@ export bool initComponent(xml::Element const*, ChessPieceComponent&) {
 }
 class ChessBoard;
 
-export using ChessPieceEntity =
-    Entity<ChessPieceComponent, Transform, Geometry, SelectionHighlight, RigidBody>;
-
-export using TilesEntity = Entity<Transform, Geometry, SelectionHighlight, RigidBody>;
-
 export class ChessPiece {
   public:
     ChessPiece() = default;
-    ChessPiece(ChessBoard* board, ChessPieceEntity entity) : m_board(board), m_entity(entity) {}
+    ChessPiece(ChessBoard* board, Entity entity) : m_board(board), m_entity(entity) {}
     ChessPiece(ChessPiece const&)            = default;
     ChessPiece(ChessPiece&&)                 = default;
     ChessPiece& operator=(ChessPiece const&) = default;
@@ -50,34 +44,32 @@ export class ChessPiece {
 
     operator bool() { return m_board && m_entity; }
 
-    ChessPieceType getType() { return m_entity.getComponent<ChessPieceComponent>().type; }
-    ChessPlayer    getOwner() { return m_entity.getComponent<ChessPieceComponent>().owner; }
-    bool           hasMoved() { return m_entity.getComponent<ChessPieceComponent>().has_moved; }
+    ChessPieceType getType()  { return m_entity.get<ChessPieceComponent>()->type; }
+    ChessPlayer    getOwner() { return m_entity.get<ChessPieceComponent>()->owner; }
+    bool           hasMoved() { return m_entity.get<ChessPieceComponent>()->has_moved; }
 
     void  setBoardPosition(ivec2 pos);
-    ivec2 getBoardPosition() { return m_entity.getComponent<ChessPieceComponent>().position; }
+    ivec2 getBoardPosition() { return m_entity.get<ChessPieceComponent>()->position; }
 
-    vec3& getPosition() { return m_entity.getComponent<Transform>().position; }
-    void  setPosition(vec3 pos) { m_entity.getComponent<Transform>().position = pos; }
+    vec3& getPosition() { return m_entity.get<Transform>()->position; }
+    void  setPosition(vec3 pos) { m_entity.get<Transform>()->position = pos; }
 
-    quat& getRotation() { return m_entity.getComponent<Transform>().rotation; }
-    void  setRotation(quat rot) { m_entity.getComponent<Transform>().rotation = rot; }
+    quat& getRotation() { return m_entity.get<Transform>()->rotation; }
+    void  setRotation(quat rot) { m_entity.get<Transform>()->rotation = rot; }
 
-    SelectionHighlight& getHighlight() { return m_entity.getComponent<SelectionHighlight>(); }
+    SelectionHighlight& getHighlight() { return *m_entity.get<SelectionHighlight>(); }
     void                setHighlight(SelectionHighlight highlight) {
-        m_entity.getComponent<SelectionHighlight>() = highlight;
+        m_entity.assign<SelectionHighlight>(highlight);
     }
 
-    void makeRigidBodyKinematic() { m_entity.getComponent<RigidBody>().makeKinematic(); }
-    void makeRigidBodyStatic() { m_entity.getComponent<RigidBody>().makeStatic(); }
-    void makeRigidBodyDynamic() { m_entity.getComponent<RigidBody>().makeDynamic(1_kg); }
-    vec3 getRigidBodyLinearVelocity() {
-        return m_entity.getComponent<RigidBody>().getLinearVelocity();
-    }
+    void makeRigidBodyKinematic() { m_entity.get<RigidBody>()->makeKinematic(); }
+    void makeRigidBodyStatic() { m_entity.get<RigidBody>()->makeStatic(); }
+    void makeRigidBodyDynamic() { m_entity.get<RigidBody>()->makeDynamic(1_kg); }
+    vec3 getRigidBodyLinearVelocity() { return m_entity.get<RigidBody>()->getLinearVelocity(); }
 
   private:
-    ChessBoard*      m_board = nullptr;
-    ChessPieceEntity m_entity;
+    ChessBoard* m_board = nullptr;
+    Entity      m_entity;
 };
 
 export class ChessBoard {
@@ -95,7 +87,7 @@ export class ChessBoard {
 
         return {this, m_board[pos.x][pos.y]};
     }
-    TilesEntity getTileAt(ivec2 pos) const {
+    Entity getTileAt(ivec2 pos) const {
         if(pos.x < 0 || 8 <= pos.x) return {};
         if(pos.y < 0 || 8 <= pos.y) return {};
         return m_tiles[pos.x][pos.y];
@@ -111,9 +103,9 @@ export class ChessBoard {
     Scene* getScene() { return m_scene; }
 
   private:
-    Scene*                                         m_scene;
-    std::array<std::array<ChessPieceEntity, 8>, 8> m_board;
-    std::array<std::array<TilesEntity, 8>, 8>      m_tiles;
+    Scene*                               m_scene;
+    std::array<std::array<Entity, 8>, 8> m_board;
+    std::array<std::array<Entity, 8>, 8> m_tiles;
 
     struct Assets {
         Asset<GeometryModel>  models[2];

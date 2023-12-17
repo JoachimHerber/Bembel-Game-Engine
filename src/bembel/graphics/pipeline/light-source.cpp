@@ -1,8 +1,8 @@
 ﻿module;
 #include <glm/glm.hpp>
 #include <memory>
-#include <vector>
 #include <string_view>
+#include <vector>
 module bembel.graphics.pipeline;
 
 import bembel.base;
@@ -12,26 +12,41 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-bool initComponent(In<xml::Element const*> properties, InOut<PointLight> component) {
-    xml::getAttribute(properties, "color", component.color);
+bool PointLight::deserialize(Container* container, EntityID entity_id, xml::Element const* entity) {
+    auto* properties = entity->FirstChildElement("PointLight");
+    if(!properties) return false;
+
+    vec3 color;
+    xml::getAttribute(properties, "color", color);
     float intensity;
-    if(xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;
+    if(xml::getAttribute(properties, "intensity", intensity)) color *= intensity;
 
-    xml::getAttribute(properties, "bulbRadius", component.bulb_radius);
-    xml::getAttribute(properties, "cutoffRadius", component.cutoff_radius);
+    float bulb_radius;
+    xml::getAttribute(properties, "bulbRadius", bulb_radius);
+    float cutoff_radius;
+    xml::getAttribute(properties, "cutoffRadius", cutoff_radius);
 
+    container->assignComponent(entity_id, color, bulb_radius, cutoff_radius);
     return true;
 }
 
-bool initComponent(In<xml::Element const*> properties, InOut<DirectionalLight> component) {
-    xml::getAttribute(properties, "color", component.color);
-    float intensity;
-    if(xml::getAttribute(properties, "intensity", intensity)) component.color *= intensity;
-    xml::getAttribute(properties, "direction", component.direction);
-    component.direction = glm::normalize(component.direction);
+bool DirectionalLight::deserialize(
+    Container* container, EntityID entity_id, xml::Element const* entity
+) {
+    auto* properties = entity->FirstChildElement("DirectionalLight");
+    if(!properties) return false;
 
-    xml::getAttribute(properties, "cast_shadow", component.cast_shadow);
+    auto color       = xml::getAttribute<vec3>(properties, "color");
+    auto intensity   = xml::getAttribute<float>(properties, "intensity");
+    auto direction   = xml::getAttribute<vec3>(properties, "direction");
+    auto cast_shadow = xml::getAttribute<bool>(properties, "cast_shadow");
 
+    container->assignComponent(
+        entity_id,
+        color.value_or(vec3{1, 1, 1}) * intensity.value_or(1.0f),
+        glm::normalize(direction.value_or(vec3{0, -1, 0})),
+        cast_shadow.value_or(false)
+    );
     return true;
 }
 

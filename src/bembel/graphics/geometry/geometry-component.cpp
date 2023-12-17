@@ -10,14 +10,18 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-bool initComponent(In<xml::Element const*> properties, InOut<Geometry> geometry_component) {
+bool Geometry::deserialize(Container* container, EntityID entity_id, xml::Element const* entity) {
+    auto* properties = entity->FirstChildElement("Geometry");
+    if(!properties) return false;
+
     std::string model_name;
     if(!xml::getAttribute(properties, "model", model_name)) return false;
 
-    xml::getAttribute(properties, "scale", geometry_component.scale);
+    vec3 scale = {1, 1, 1};
+    xml::getAttribute(properties, "scale", scale);
 
-    geometry_component.model = Asset<GeometryModel>(model_name);
-    return geometry_component.model;
+    container->assignComponent(entity_id, Asset<GeometryModel>(model_name), scale);
+    return true;
 }
 
 } // namespace bembel::graphics

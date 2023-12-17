@@ -51,7 +51,7 @@ export class RenderingExample : public kernel::Application<GraphicSystem, GuiSys
 
     std::shared_ptr<kernel::Scene> m_scene;
 
-    Entity<> m_light;
+    Entity m_light;
 };
 
 } // namespace bembel

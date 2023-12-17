@@ -48,8 +48,8 @@ bool RenderingExample::init(std::span<std::string_view> args) {
     m_views[1] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 1);
     m_views[2] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 2);
 
-    m_light = Entity<>(*m_scene);
-    m_light.createComponent<DirectionalLight>(vec3(3.f, 3.f, 3.f), vec3(0.f, -1.f, 0.f), true);
+    m_light = Entity(*m_scene);
+    m_light.assign<DirectionalLight>(vec3(3.f, 3.f, 3.f), vec3(0.f, -1.f, 0.f), true);
 
     m_engine.display.getWindow(0)->getViewport(4)->addView(m_views[0].get());
     m_engine.display.getWindow(0)->getViewport(5)->addView(m_views[1].get());
@@ -106,9 +106,9 @@ void RenderingExample::updateLightDir(In<i64>) {
     float pitch = DEG_TO_RAD * m_light_slider_pitch->getValue();
     float yaw   = DEG_TO_RAD * m_light_slider_yaw->getValue();
 
-    auto light = m_light.getComponent<DirectionalLight>();
+    auto light = m_light.get<DirectionalLight>();
 
-    light.direction = vec3(   //
+    light->direction = vec3(   //
         cos(pitch) * cos(yaw), //
         sin(pitch),
         cos(pitch) * sin(yaw)

@@ -8,7 +8,9 @@ namespace bembel::particles {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-bool initComponent(In<xml::Element const*> properties, Out<ParticleEmitter> component){
+bool ParticleEmitter::deserialize(
+    Container* container, EntityID entity_id, xml::Element const* entity
+){
   return true;
 }
 

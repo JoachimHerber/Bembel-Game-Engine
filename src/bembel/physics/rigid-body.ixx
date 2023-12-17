@@ -50,15 +50,15 @@ class MotionState : public btMotionState {
 
 export class RigidBody {
   public:
-    RigidBody(In<World*> world, In<EntityID> entity);
-    ~RigidBody();
-
-    bool init(
+    RigidBody(
+        In<World*>                world,
+        In<EntityID>              entity,
         In<Asset<CollisionShape>> collision_shape,
         In<vec3>                  center_of_mass_offset,
         In<units::Kilogram>       mass,
         In<float>                 friction = 0.5f
     );
+    ~RigidBody();
 
     void setCenterOfMassOffset(In<vec3> offset) { m_motion_state.setCenterOfMassOffset(offset); }
 
@@ -69,16 +69,16 @@ export class RigidBody {
     vec3 getLinearVelocity();
     vec3 getAngularVelocity();
 
-    btRigidBody* getRigidBody() { return m_rigid_body.get(); }
+    btRigidBody& getRigidBody() { return m_rigid_body; }
 
     EntityID getEntityID() const { return m_entity; }
 
   private:
-    World*                       m_world;
-    EntityID                     m_entity;
-    Asset<CollisionShape>        m_collision_shape;
-    MotionState                  m_motion_state;
-    std::unique_ptr<btRigidBody> m_rigid_body;
+    World*                m_world;
+    EntityID              m_entity;
+    Asset<CollisionShape> m_collision_shape;
+    MotionState           m_motion_state;
+    btRigidBody           m_rigid_body;
 };
 
 class RigidBodyContainer : public ComponentContainerBase {
@@ -86,8 +86,16 @@ class RigidBodyContainer : public ComponentContainerBase {
     RigidBodyContainer(ComponentTypeID type_id, Scene* scene);
     ~RigidBodyContainer() {}
 
-    RigidBody* createComponent(EntityID entity_id);
-    bool       createComponent(EntityID entity_id, xml::Element const* properties) override;
+    bool assignComponent(
+        EntityID                  entity_id,
+        In<Asset<CollisionShape>> collision_shape,
+        In<vec3>                  center_of_mass_offset,
+        In<units::Kilogram>       mass,
+        In<float>                 friction = 0.5f
+    );
+
+    bool serializeComponent(EntityID, xml::Element*) override { return false; }
+    bool deserializeComponent(EntityID, xml::Element const*) override;
 
     bool deleteComponent(EntityID entity_id) override;
 

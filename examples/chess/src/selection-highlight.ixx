@@ -9,8 +9,9 @@ export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECT
 } // namespace bembel::examples::chess
 
 export template <>
-struct ::bembel::kernel::ComponentMetaData<bembel::examples::chess::SelectionHighlight>
-  : BasicComponentMetaData<"SelectionHighlight", bembel::examples::chess::SelectionHighlight> {};
+struct ::bembel::kernel::ComponentMetaData<bembel::examples::chess::SelectionHighlight>{
+    using Container = ComponentVector<bembel::examples::chess::SelectionHighlight>;
+};
 
 namespace bembel::examples::chess {
 using namespace base;

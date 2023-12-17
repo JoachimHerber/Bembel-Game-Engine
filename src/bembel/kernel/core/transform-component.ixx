@@ -11,29 +11,30 @@ namespace bembel::kernel {
 using namespace bembel::base;
 
 /// This Component stores the 3D position, roation and scale of an entity
-export struct Transform{
-    //static constexpr std::string_view COMPONENT_TYPE_NAME = "Transform";
-    //
-    //using Container = FixedAddressComponentVector<Transform>;
-
+export struct Transform {
     vec3  position = {0.f, 0.f, 0.f};
     float scale    = 1.f;
-    quat  rotation = {1.f, 0.f, 0.f, 0.f};
-};
+    quat  rotation  = {1.f, 0.f, 0.f, 0.f};
 
-export bool initComponent(xml::Element const* properties, Transform& transform) {
-    if(!xml::getAttribute(properties, "position", transform.position)) {
-        xml::getAttribute(properties, "x", transform.position.x);
-        xml::getAttribute(properties, "y", transform.position.y);
-        xml::getAttribute(properties, "z", transform.position.z);
+    using Container = FixedAddressComponentVector<Transform>;
+
+    static bool deserialize(Container* container, EntityID entity_id, xml::Element const* entity) {
+        auto* properties = entity->FirstChildElement("Transform");
+        if(!properties) return false;
+
+        vec3  position = {0.f, 0.f, 0.f};
+        float scale    = 1.f;
+        quat  rotation = {1.f, 0.f, 0.f, 0.f};
+
+        if(!xml::getAttribute(properties, "position", position)) {
+            xml::getAttribute(properties, "x", position.x);
+            xml::getAttribute(properties, "y", position.y);
+            xml::getAttribute(properties, "z", position.z);
+        }
+
+        container->assignComponent(entity_id, position, scale, rotation);
+        return true;
     }
-
-    // xml::getAttribute(properties, "rotation", transform.rotation);
-    return true;
-}
-
-export template <>
-struct ComponentMetaData<Transform>
-  : BasicComponentMetaData<"Transform", Transform, ComponentContainer::FIXED_ADDRESS_VECTOR> {};
+};
 
 } // namespace bembel::kernel

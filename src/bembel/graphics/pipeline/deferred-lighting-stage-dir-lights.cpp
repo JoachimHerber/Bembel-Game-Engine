@@ -141,8 +141,9 @@ void DeferredLightingStage::applyDirectionalLights(In<std::span<const RendererPt
     for(auto const& it : dir_lights->getComponentData()) {
         if(it.second.cast_shadow) ++num_shadow_casting_lights;
     }
-    usize const num_cascadeds =
-        std::min<usize>(3, ShadowMap::MAX_NUM_LAYERS / num_shadow_casting_lights);
+    usize const num_cascadeds = std::min<usize>(
+        3, ShadowMap::MAX_NUM_LAYERS / std::max<usize>(num_shadow_casting_lights, 1)
+    );
 
     auto const camera = m_pipline.getCamera().get();
     auto const frustum_corners =
