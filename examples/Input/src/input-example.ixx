@@ -9,7 +9,9 @@ namespace bembel {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export class InputExample : public kernel::Application<> {
+export class InputExample
+  : public kernel::Application<>
+{
   public:
     InputExample();
     ~InputExample();
@@ -40,6 +42,23 @@ export class InputExample : public kernel::Application<> {
     void nextCursor();
 
   private:
+    EventHandlerGuard<
+        WindowShouldCloseEvent,
+        KeyPressEvent,
+        KeyRepeatEvent,
+        KeyReleaseEvent,
+        TextInputEvent,
+        MouseButtonPressEvent,
+        MouseButtonRepeatEvent,
+        MouseButtonReleaseEvent,
+        CursorMovedEvent,
+        CursorEnteredEvent,
+        CursorLeftEvent,
+        ScrollEvent,
+        InputDeviceButtonPressEvent,
+        InputDeviceButtonReleaseEvent>
+        m_guard{this};
+
     std::vector<Asset<CursorIcon>> m_cursor;
     uint                           m_current_cursor = 0;
 };

@@ -39,8 +39,7 @@ class EventChannel : public EventChannelBase {
         return true;
     }
 
-    template <typename EventHandlerType>
-    bool removeHandler(EventHandlerType* handler) {
+    bool removeHandler(void* handler) {
         Lock lock(m_mutex);
 
         for(auto it = m_event_handler.begin(); it != m_event_handler.end(); ++it) {
@@ -104,8 +103,8 @@ export class EventManager final {
         if(!channel) return false;
         return channel->addHandler(handler);
     }
-    template <typename EventType, typename EventHandlerType>
-    bool removeHandler(EventHandlerType* handler) {
+    template <typename EventType>
+    bool removeHandler(void* handler) {
         auto channel = getChannel<EventType>();
         if(!channel) return false;
         return channel->removeHandler(handler);
@@ -168,5 +167,25 @@ export namespace events {
     };
 
 } // namespace events
+
+export template <class THandler, typename TEvent>
+concept isEventHandler = true;
+//requires(THandler h, TEvent const e) { 
+//    { h.handleEvent(e) };
+//};
+
+export template <typename ... TEvents>
+class EventHandlerGuard final {
+  public:
+    template <class THandler>
+        requires(... && isEventHandler<THandler, TEvents>)
+    EventHandlerGuard(THandler* handler) : m_handler(handler) {
+        (events::addHandler<TEvents>(handler), ...);
+    }
+    ~EventHandlerGuard() { (events::removeHandler<TEvents>(m_handler), ...); }
+
+  private:
+    void* m_handler;
+};
 
 } // namespace bembel::base

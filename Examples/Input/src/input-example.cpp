@@ -8,22 +8,6 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 InputExample::InputExample() : Application() {
-    events::addHandler<WindowShouldCloseEvent>(this);
-
-    events::addHandler<KeyPressEvent>(this);
-    events::addHandler<KeyRepeatEvent>(this);
-    events::addHandler<KeyReleaseEvent>(this);
-    events::addHandler<TextInputEvent>(this);
-    events::addHandler<MouseButtonPressEvent>(this);
-    events::addHandler<MouseButtonRepeatEvent>(this);
-    events::addHandler<MouseButtonReleaseEvent>(this);
-    events::addHandler<CursorMovedEvent>(this);
-    events::addHandler<CursorEnteredEvent>(this);
-    events::addHandler<CursorLeftEvent>(this);
-    events::addHandler<ScrollEvent>(this);
-
-    events::addHandler<InputDeviceButtonPressEvent>(this);
-    events::addHandler<InputDeviceButtonReleaseEvent>(this);
 }
 
 InputExample::~InputExample() {}
