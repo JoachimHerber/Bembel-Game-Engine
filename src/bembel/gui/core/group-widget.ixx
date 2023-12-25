@@ -1,7 +1,7 @@
 ﻿module;
-#include <utility>
 #include <memory>
 #include <optional>
+#include <utility>
 export module bembel.gui.core:GroupWidget;
 
 import bembel.base;
@@ -23,8 +23,8 @@ export class GroupWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties);
 
-    virtual uint getMinWidth() const override;
-    virtual uint getMinHeight() const override;
+    virtual uint getMinWidth(In<std::optional<uint>> height = {}) const override;
+    virtual uint getMinHeight(In<std::optional<uint>> width = {}) const override;
 
     std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 

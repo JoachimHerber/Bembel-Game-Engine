@@ -27,31 +27,32 @@ bool LinearWidgetLayout::configure(In<xml::Element const*> properties) {
     return true;
 }
 
-uint LinearWidgetLayout::getMinWidth() const {
+uint LinearWidgetLayout::getMinWidth(In<std::optional<uint>>) const {
     uint min_width = 0;
     for(auto& row : m_rows) {
-        row.min_width = row.margin_left + m_margin_left + m_margin_right;
+        uint min_row_width = row.margin_left + m_margin_left + m_margin_right;
         for(auto& element : row.elements) {
-            element.width = std::max(element.min_width, element.widget->getMinWidth());
-            row.min_width += element.width + element.margin_right;
+            uint element_width = std::max(element.min_width, element.widget->getMinWidth());
+            min_row_width += element_width + element.margin_right;
         }
-        min_width = std::max(min_width, row.min_width);
+        min_width = std::max(min_width, min_row_width);
     }
     return min_width;
 }
 
-uint LinearWidgetLayout::getMinHeight() const {
+uint LinearWidgetLayout::getMinHeight(In<std::optional<uint>> width) const {
     uint min_height = 0;
     for(auto& row : m_rows) {
+        uint min_row_height = 0;
         if(row.params.height.has_value()) {
-            row.min_height = row.params.height.value();
+            min_row_height = row.params.height.value();
         } else {
-            row.min_height = row.params.min_height;
+            min_row_height = row.params.min_height;
             for(auto& element : row.elements) {
-                row.min_height = std::max(row.min_height, element.widget->getMinHeight());
+                min_row_height = std::max(min_row_height, element.widget->getMinHeight());
             }
         }
-        min_height += row.min_height;
+        min_height += min_row_height;
     }
     return min_height;
 }
@@ -61,8 +62,32 @@ void LinearWidgetLayout::updateLayout() {
 }
 
 void LinearWidgetLayout::updateLayout(In<vec2> size) {
-    uint min_width  = getMinWidth();
-    uint min_height = getMinHeight();
+    for(auto& row : m_rows) {
+        row.min_width = row.margin_left + m_margin_left + m_margin_right;
+        for(auto& element : row.elements) {
+            element.width = std::max(element.min_width, element.widget->getMinWidth());
+            row.min_width += element.width + element.margin_right;
+
+            if(row.params.mode == Mode::SCALE_TO_FIT) {
+                scaleElements(
+                    row.elements, size.x - m_margin_left - m_margin_right - row.margin_left
+                );
+            }
+        }
+    }
+    uint min_height = 0;
+    for(auto& row : m_rows) {
+        if(row.params.height.has_value()) {
+            row.min_height = row.params.height.value();
+        } else {
+            row.min_height = row.params.min_height;
+            for(auto& element : row.elements) {
+                row.min_height =
+                    std::max(row.min_height, element.widget->getMinHeight(element.width));
+            }
+        }
+        min_height += row.min_height;
+    }
 
     float height_Scale = 0;
     if(m_mode == Mode::SCALE_TO_FIT) {
@@ -97,9 +122,6 @@ void LinearWidgetLayout::updateLayout(In<vec2> size) {
                 x += 0.5 * x_spacing;
                 break;
         }
-
-        if(row.params.mode == Mode::SCALE_TO_FIT)
-            scaleElements(row.elements, size.x - m_margin_left - m_margin_right - row.margin_left);
 
         for(auto& elem : row.elements) {
             elem.widget->size.set({elem.width, height});
@@ -176,7 +198,7 @@ bool LinearWidgetLayout::registerd =
 bool RelativeWidgetLayout::configure(xml::Element const*) {
     return true;
 }
-uint RelativeWidgetLayout::getMinWidth() const {
+uint RelativeWidgetLayout::getMinWidth(In<std::optional<uint>>) const {
     uint min_width = 1;
 
     for(auto& elem : m_elements) {
@@ -204,7 +226,7 @@ uint RelativeWidgetLayout::getMinWidth() const {
     return min_width;
 }
 
-uint RelativeWidgetLayout::getMinHeight() const {
+uint RelativeWidgetLayout::getMinHeight(In<std::optional<uint>>) const {
     uint min_height = 1;
 
     for(auto& elem : m_elements) {
@@ -240,7 +262,7 @@ void RelativeWidgetLayout::updateLayout(In<vec2> size) {
     for(auto& elem : m_elements) {
         if(elem.widget->isHidden()) continue;
 
-        vec2 elem_pos = size * elem.rel_pos + elem.pos_offset;
+        vec2 elem_pos  = size * elem.rel_pos + elem.pos_offset;
         vec2 elem_size = size * elem.rel_size + elem.size_offset;
 
         elem_size.x = std::max<int>(elem_size.x, elem.widget->getMinWidth());

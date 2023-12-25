@@ -39,12 +39,22 @@ bool TextInputWidget::configure(xml::Element const* properties) {
     return true;
 }
 
-uint TextInputWidget::getMinWidth() const {
-    return uint(0);
+uint TextInputWidget::getMinWidth(In<std::optional<uint>>) const {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float border   = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
+    float margin = style->getValue(Style::Values::INPUT_HORIZONTAL_MARGIN);
+    return uint(2 * border + 2 * margin);
 }
 
-uint TextInputWidget::getMinHeight() const {
-    return uint(0);
+uint TextInputWidget::getMinHeight(In<std::optional<uint>>) const {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float border   = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
+    float margin = style->getValue(Style::Values::INPUT_VERTICAL_MARGIN);
+    return uint(2 * border + 2 * margin);
 }
 
 void TextInputWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {

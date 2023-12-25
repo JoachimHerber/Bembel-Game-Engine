@@ -30,8 +30,8 @@ export class LinearWidgetLayout : public Widget::Layout {
 
     virtual bool configure(In<xml::Element const*> properties) override;
 
-    virtual uint getMinWidth() const override;
-    virtual uint getMinHeight() const override;
+    virtual uint getMinWidth(In<std::optional<uint>> height) const override;
+    virtual uint getMinHeight(In<std::optional<uint>> width) const override;
 
     virtual void updateLayout() override;
     virtual void updateLayout(In<vec2> size) override;
@@ -65,15 +65,15 @@ export class LinearWidgetLayout : public Widget::Layout {
             uint    min_width    = 0;
             uint    margin_right = 0;
 
-            mutable uint width = 0;
+            uint width = 0;
         };
 
         std::vector<Element> elements;
 
         uint margin_left = 0;
 
-        mutable uint min_width  = 0;
-        mutable uint min_height = 0;
+        uint min_width  = 0;
+        uint min_height = 0;
     };
 
     void scaleElements(std::span<Row::Element>, uint width);
@@ -95,8 +95,8 @@ export class RelativeWidgetLayout : public Widget::Layout {
 
     virtual bool configure(In<xml::Element const*> properties) override;
 
-    virtual uint getMinWidth() const override;
-    virtual uint getMinHeight() const override;
+    virtual uint getMinWidth(In<std::optional<uint>> height) const override;
+    virtual uint getMinHeight(In<std::optional<uint>> width) const override;
 
     virtual void updateLayout() override;
     virtual void updateLayout(In<vec2> size) override;

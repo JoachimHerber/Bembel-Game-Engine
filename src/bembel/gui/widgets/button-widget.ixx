@@ -21,8 +21,8 @@ export class ButtonWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
-    virtual uint getMinWidth() const override;
-    virtual uint getMinHeight() const override;
+    virtual uint getMinWidth(In<std::optional<uint>>) const override;
+    virtual uint getMinHeight(In<std::optional<uint>>) const override;
 
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 

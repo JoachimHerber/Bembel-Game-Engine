@@ -29,23 +29,26 @@ bool CheckBoxWidget::configure(xml::Element const* properties) {
     return false;
 }
 
-uint CheckBoxWidget::getMinWidth() const {
+uint CheckBoxWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
     float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
     float margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
 
-    return box_size + margin + m_label.getMinWidth();
+    return box_size + margin + m_label.getMinWidth(height);
 }
 
-uint CheckBoxWidget::getMinHeight() const {
+uint CheckBoxWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
     float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+    float margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
 
-    return std::max(uint(box_size), m_label.getMinHeight());
+    return std::max(uint(box_size), m_label.getMinHeight(width.and_then([=](uint w) {
+        return std::optional<uint>(std::max(w, uint(box_size + margin)) - uint(box_size + margin));
+    })));
 }
 
 void CheckBoxWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {

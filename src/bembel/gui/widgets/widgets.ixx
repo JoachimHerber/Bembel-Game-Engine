@@ -12,6 +12,7 @@ export import :CheckBox;
 export import :RadioButton;
 export import :Window;
 export import :Tabs;
+export import :SplitGroup;
 
 import bembel.gui.core;
 
@@ -31,6 +32,7 @@ void registerWidgetTypesInFactory() {
     registerWidgetTypeInFactory<CheckBoxWidget>();
     registerWidgetTypeInFactory<WindowWidget>();
     registerWidgetTypeInFactory<TabGroupWidget>();
+    registerWidgetTypeInFactory<SplitGroupWidget>();
 }
 
 } // namespace bembel::gui

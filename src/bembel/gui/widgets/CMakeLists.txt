@@ -29,5 +29,8 @@ target_sources(Bembel
 		tab-group-widget.ixx
 		tab-group-widget.cpp
 		
+		split-group-widget.ixx
+		split-group-widget.cpp
+		
 		CMakeLists.txt
 )

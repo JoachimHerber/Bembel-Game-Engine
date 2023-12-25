@@ -65,22 +65,32 @@ bool WindowWidget::configure(xml::Element const* properties) {
     return true;
 }
 
-uint WindowWidget::getMinWidth() const {
+uint WindowWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    uint border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    uint title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
 
-    return 2 * border_width + std::max(m_window_area.getMinWidth(), m_title_bar.getMinWidth());
+    return 2 * border_width
+         + std::max(
+               m_window_area.getMinWidth(height.and_then([=](uint w) {
+                   uint a = title_bar_height +  border_width;
+                   return std::optional<uint>(std::max(w, a) - a);
+               })),
+               m_title_bar.getMinWidth(title_bar_height)
+         );
 }
 
-uint WindowWidget::getMinHeight() const {
+uint WindowWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
-    float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
-    return title_bar_height + border_width + m_window_area.getMinHeight();
+    uint border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    uint title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
+    return title_bar_height + border_width + m_window_area.getMinHeight(width.and_then([=](uint w) {
+        return std::optional<uint>(std::max(w, 2 * border_width) - 2 * border_width);
+    }));
 }
 
 void WindowWidget::onSizeChanged(In<ivec2>, In<ivec2>) {

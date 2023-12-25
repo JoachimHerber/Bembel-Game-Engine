@@ -65,12 +65,12 @@ Widget* GroupWidget::createChildWidget(
     return m_widgets.back().get();
 }
 
-uint GroupWidget::getMinWidth() const {
-    return m_layout ? m_layout->getMinWidth() : 0;
+uint GroupWidget::getMinWidth(In<std::optional<uint>> height) const {
+    return m_layout ? m_layout->getMinWidth(height) : 0;
 }
 
-uint GroupWidget::getMinHeight() const {
-    return m_layout ? m_layout->getMinHeight() : 0;
+uint GroupWidget::getMinHeight(In<std::optional<uint>> width) const {
+    return m_layout ? m_layout->getMinHeight(width) : 0;
 }
 
 void GroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {

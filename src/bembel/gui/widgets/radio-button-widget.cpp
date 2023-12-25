@@ -28,23 +28,26 @@ bool RadioButtonWidget::configure(xml::Element const* properties) {
     return false;
 }
 
-uint RadioButtonWidget::getMinWidth() const {
+uint RadioButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
-    float margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
+    uint box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+    uint margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
 
-    return box_size + margin + m_label.getMinWidth();
+    return box_size + margin + m_label.getMinWidth(height);
 }
 
-uint RadioButtonWidget::getMinHeight() const {
+uint RadioButtonWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+    uint box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
+    uint margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
 
-    return std::max(uint(box_size), m_label.getMinHeight());
+    return std::max(box_size, m_label.getMinHeight(width.and_then([=](uint w) {
+        return std::optional<uint>(std::max(w, box_size + margin) - (box_size + margin));
+    })));
 }
 
 void RadioButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
@@ -93,30 +96,41 @@ bool RadioButtonGroupWidget::configure(xml::Element const* properties) {
     return false;
 }
 
-uint RadioButtonGroupWidget::getMinWidth() const {
-    uint min_width     = 0;
-    uint min_row_width = 0;
-    for(uint n = 0; n < m_buttons.size(); ++n) {
-        if((n % m_buttons_per_row) == 0) {
-            min_width += std::max(min_width, min_row_width);
-            min_row_width = 0;
-        }
-        min_row_width += m_buttons[n]->getMinWidth();
+uint RadioButtonGroupWidget::getMinWidth(In<std::optional<uint>> height) const {
+    if(m_buttons.empty()) return 0;
+
+    uint min_width = 0;
+    for(auto& button : m_buttons) min_width = std::max(min_width, button->getMinWidth({}));
+
+    if(height) {
+        uint min_height = 0;
+        for(auto& button : m_buttons) min_height = std::max(min_height, button->getMinHeight({}));
+        uint num_rows = std::max<uint>(1, *height / min_height);
+        uint num_collums =
+            std::max<uint>(1, m_buttons.size() / num_rows + (m_buttons.size() % num_rows ? 1 : 0));
+
+        min_width *= num_collums;
     }
-    return std::max(min_width, min_row_width);
+
+    return min_width;
 }
 
-uint RadioButtonGroupWidget::getMinHeight() const {
-    uint min_height     = 0;
-    uint min_row_height = 0;
-    for(uint n = 0; n < m_buttons.size(); ++n) {
-        if((n % m_buttons_per_row) == 0) {
-            min_height += min_row_height;
-            min_row_height = 0;
-        }
-        min_row_height += std::max(min_row_height, m_buttons[n]->getMinHeight());
+uint RadioButtonGroupWidget::getMinHeight(In<std::optional<uint>> width) const {
+    if(m_buttons.empty()) return 0;
+
+    uint min_height = 0;
+    for(auto& button : m_buttons) min_height = std::max(min_height, button->getMinHeight({}));
+
+    if(width) {
+        uint min_width = 0;
+        for(auto& button : m_buttons) min_width = std::max(min_width, button->getMinWidth({}));
+
+        uint num_collums = std::max<uint>(1, *width / min_width);
+        uint num_rows = m_buttons.size() / num_collums + (m_buttons.size() % num_collums ? 1 : 0);
+
+        min_height *= num_rows;
     }
-    return min_height + min_row_height;
+    return min_height;
 }
 
 void RadioButtonGroupWidget::addRadioButton(In<std::u8string_view> lable) {
@@ -146,15 +160,20 @@ void RadioButtonGroupWidget::setSelection(int index) {
 void RadioButtonGroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     if(m_buttons.empty()) return;
 
-    int num_rows =
-        m_buttons.size() / m_buttons_per_row + (m_buttons.size() % m_buttons_per_row ? 1 : 0);
+    uint max_button_width = 0;
+    for(auto& button : m_buttons)
+        max_button_width = std::max(max_button_width, button->getMinWidth({}));
 
-    ivec2 button_size = {new_size.x / m_buttons_per_row, new_size.y / num_rows};
+    uint num_collums =
+        std::max<uint>(1, std::min<uint>(new_size.x / max_button_width, m_buttons.size()));
+    uint num_rows    = m_buttons.size() / num_collums + (m_buttons.size() % num_collums ? 1 : 0);
+
+    ivec2 button_size = {new_size.x / num_collums, new_size.y / num_rows};
     int   y           = new_size.y;
     int   x           = 0;
 
     for(uint n = 0; n < m_buttons.size(); ++n) {
-        if(n % m_buttons_per_row == 0) {
+        if(n % num_collums == 0) {
             x = 0;
             y -= button_size.y;
         }

@@ -34,12 +34,12 @@ bool TextWidget::configure(xml::Element const* properties) {
     return true;
 }
 
-uint TextWidget::getMinWidth() const {
-    return 0;
+uint TextWidget::getMinWidth(In<std::optional<uint>> height) const {
+    return 0;//@ToDo
 }
 
-uint TextWidget::getMinHeight() const {
-    return 0;
+uint TextWidget::getMinHeight(In<std::optional<uint>> width) const {
+    return 0;//@ToDo
 }
 
 void TextWidget::onTextChanged(In<std::u8string>, In<std::u8string> new_text) {

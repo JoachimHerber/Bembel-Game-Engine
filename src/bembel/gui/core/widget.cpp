@@ -1,5 +1,7 @@
 ﻿module;
+#include <span>
 #include <string_view>
+#include <vector>
 module bembel.gui.core;
 
 import bembel.base;
@@ -8,6 +10,11 @@ import bembel.kernel;
 namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
+
+Factory<Widget::Layout>& Widget::Layout::getLayouterFactory() {
+    static Factory<Widget::Layout> factory;
+    return factory;
+}
 
 bool Widget::configure(xml::Element const* properties) {
     if(properties) {

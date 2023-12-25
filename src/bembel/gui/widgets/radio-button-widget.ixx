@@ -21,8 +21,8 @@ export class RadioButtonWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
-    virtual uint getMinWidth() const override;
-    virtual uint getMinHeight() const override;
+    virtual uint getMinWidth(In<std::optional<uint>>) const override;
+    virtual uint getMinHeight(In<std::optional<uint>>) const override;
 
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
@@ -90,8 +90,8 @@ export class RadioButtonGroupWidget : public Widget {
 
     virtual bool configure(xml::Element const* properties) override;
 
-    virtual uint getMinWidth() const override;
-    virtual uint getMinHeight() const override;
+    virtual uint getMinWidth(In<std::optional<uint>>) const override;
+    virtual uint getMinHeight(In<std::optional<uint>>) const override;
 
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
@@ -110,8 +110,6 @@ export class RadioButtonGroupWidget : public Widget {
 
   private:
     std::vector<std::unique_ptr<RadioButtonWidget>> m_buttons;
-
-    uint m_buttons_per_row = 1;
 
     int m_selection = -1;
 };

@@ -47,7 +47,7 @@ bool TabGroupWidget::configure(xml::Element const* properties) {
     return true;
 }
 
-uint TabGroupWidget::getMinWidth() const {
+uint TabGroupWidget::getMinWidth(In<std::optional<uint>>) const {
     // auto style = getStyle();
     // assert(style && "GUI::Style is undefined");
     //
@@ -56,7 +56,7 @@ uint TabGroupWidget::getMinWidth() const {
     return 0;
 }
 
-uint TabGroupWidget::getMinHeight() const {
+uint TabGroupWidget::getMinHeight(In<std::optional<uint>>) const {
     // auto style = getStyle();
     // assert(style && "GUI::Style is undefined");
     //
@@ -107,8 +107,10 @@ void TabGroupWidget::updateLayout() {
 
     int tab_label_width = 64;
     for(auto& tab : m_tabs) {
-        tab_label_width =
-            std::max(tab_label_width, int(tab->m_label.getMinWidth()) + 2 * text_margin);
+        tab_label_width = std::max(
+            tab_label_width,
+            int(tab->m_label.getMinWidth(bar_height - 2 * text_margin)) + 2 * text_margin
+        );
     }
 
     tab_label_width = std::min(tab_label_width, content_size.x / int(m_tabs.size()));

@@ -1,5 +1,8 @@
 ﻿module;
 #include <concepts>
+#include <optional>
+#include <span>
+#include <vector>
 export module bembel.gui.core:Widget;
 
 import bembel.base;
@@ -28,13 +31,13 @@ export class Widget {
       public:
         virtual bool configure(In<xml::Element const*> properties) = 0;
 
-        virtual uint getMinWidth() const  = 0;
-        virtual uint getMinHeight() const = 0;
+        virtual uint getMinWidth(In<std::optional<uint>> height = {}) const = 0;
+        virtual uint getMinHeight(In<std::optional<uint>> width = {}) const = 0;
 
         virtual void updateLayout()              = 0;
         virtual void updateLayout(In<vec2> size) = 0;
 
-        static Factory<Layout>& GetLayouterFactory();
+        static Factory<Layout>& getLayouterFactory();
     };
 
   public:
@@ -46,16 +49,18 @@ export class Widget {
 
     virtual bool configure(xml::Element const* properties);
 
-    virtual uint getMinWidth() const  = 0;
-    virtual uint getMinHeight() const = 0;
+    virtual uint getMinWidth(In<std::optional<uint>> height = {}) const = 0;
+    virtual uint getMinHeight(In<std::optional<uint>> width = {}) const = 0;
 
     virtual std::string_view getWidgetTypeName() const = 0;
 
-    View* getView() { return m_view.get(); }
+    View* getView() const { return m_view.get(); }
 
     bool isHidden() const { return m_hidden; }
     void show();
     void hide();
+
+    bool isOverlay() const { return m_is_overlay; }
 
     std::string const& getName() const { return m_name; }
     void               setName(std::string_view name) { m_name = name; }
@@ -83,7 +88,8 @@ export class Widget {
     std::string m_name;
 
     std::unique_ptr<View> m_view;
-    bool                  m_hidden = false;
+    bool                  m_hidden     = false;
+    bool                  m_is_overlay = false;
 
     std::vector<Widget*>            m_child_widgets;
     std::vector<InteractionHandle*> m_interaction_handles;

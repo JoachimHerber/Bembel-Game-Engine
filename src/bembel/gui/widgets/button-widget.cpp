@@ -38,18 +38,26 @@ bool ButtonWidget::configure(base::xml::Element const* properties) {
     return true;
 }
 
-uint ButtonWidget::getMinWidth() const {
+uint ButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    return 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN) + m_label.getMinWidth();
+    uint margin = 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN);
+
+    return margin + m_label.getMinWidth(height.and_then([=](uint h) {
+        return std::optional<uint> (std::min(h, margin) - margin);
+    }));
 }
 
-uint ButtonWidget::getMinHeight() const {
+uint ButtonWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    return 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN) + m_label.getMinHeight();
+    uint margin = 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN);
+
+    return margin + m_label.getMinHeight(width.and_then([=](uint w) {
+        return std::optional<uint> (std::min(w, margin) - margin);
+    }));
 }
 
 void ButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {

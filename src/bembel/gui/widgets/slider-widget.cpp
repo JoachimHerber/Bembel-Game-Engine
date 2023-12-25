@@ -36,18 +36,21 @@ bool SliderWidget::configure(base::xml::Element const* properties) {
     return true;
 }
 
-uint SliderWidget::getMinWidth() const {
+uint SliderWidget::getMinWidth(In<std::optional<uint>>) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    return 2;
+    float border       = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
+    float handle_width = style->getValue(Style::Values::SLIDER_HANDLE_WIDTH);
+    return 4 * border + handle_width;
 }
 
-uint SliderWidget::getMinHeight() const {
+uint SliderWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    return 2;
+    float border       = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
+    return 4 * border;
 }
 
 void SliderWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {

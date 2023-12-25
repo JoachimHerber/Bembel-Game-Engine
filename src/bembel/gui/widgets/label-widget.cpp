@@ -28,7 +28,9 @@ bool LabelWidget::configure(base::xml::Element const* properties) {
 
     std::string alignment = "";
     if(xml::getAttribute(properties, "alignment", alignment)) {
-        std::transform(alignment.begin(), alignment.end(), alignment.begin(), [](char c) { return std::tolower(c); });
+        std::transform(alignment.begin(), alignment.end(), alignment.begin(), [](char c) {
+            return std::tolower(c);
+        });
         if(alignment == "left") m_alignment = Alignment::Left;
         if(alignment == "right") m_alignment = Alignment::Right;
     }
@@ -39,19 +41,19 @@ bool LabelWidget::configure(base::xml::Element const* properties) {
     return true;
 }
 
-uint LabelWidget::getMinWidth() const {
+uint LabelWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
 
     float line_heigth = font->getAscender() - font->getDescender();
-    float scale       = style->getValue(Style::Values::MIN_FONT_SIZE) / line_heigth;
+    float scale = height.value_or(style->getValue(Style::Values::MIN_FONT_SIZE)) / line_heigth;
 
-    return scale * m_text_length;
+    return scale * (m_text_length + (m_outline ? 0.05 * line_heigth : 0));
 }
 
-uint LabelWidget::getMinHeight() const {
+uint LabelWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = this->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
@@ -78,7 +80,9 @@ void LabelWidget::updateGlyphs() {
         unsigned index = font->getGlyphIndex(c, false, false);
         if(index == SdfFont::INVALIDE_GLYPH_INDEX) continue;
 
-        if(prev_index != SdfFont::INVALIDE_GLYPH_INDEX) { m_text_length += font->getKernig(prev_index, index); }
+        if(prev_index != SdfFont::INVALIDE_GLYPH_INDEX) {
+            m_text_length += font->getKernig(prev_index, index);
+        }
         if(c != ' ') m_glyphs.emplace_back(index, m_text_length);
 
         m_text_length += font->getAdvance(index);
@@ -103,15 +107,20 @@ void LabelWidget::View::draw(RenderBatchInterface& batch) {
 
     vec2 pos = vec2(m_label.position.get());
     switch(m_label.m_alignment) {
-        case LabelWidget::Alignment::Center: pos.x += 0.5f * (size.x - scale * m_label.m_text_length); break;
-        case LabelWidget::Alignment::Right: pos.x += size.x - scale * (m_label.m_text_length + outline_margin); break;
+        case LabelWidget::Alignment::Center:
+            pos.x += 0.5f * (size.x - scale * m_label.m_text_length);
+            break;
+        case LabelWidget::Alignment::Right:
+            pos.x += size.x - scale * (m_label.m_text_length + outline_margin);
+            break;
         case LabelWidget::Alignment::Left: pos.x += scale * outline_margin; break;
     }
-    pos.y += 0.5f * size.y - scale * (0.5 * line_heigth + font->getDescender()); // center text verticaly
+    pos.y +=
+        0.5f * size.y - scale * (0.5 * line_heigth + font->getDescender()); // center text verticaly
 
     if(m_label.m_outline) {
         batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
-        for(auto const& it : m_label.m_glyphs) { 
+        for(auto const& it : m_label.m_glyphs) {
             batch.drawGlyph(it.index, pos + vec2(scale * it.x, 0), scale, true);
         }
     }
