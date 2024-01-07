@@ -1,9 +1,9 @@
 ﻿/******************************************************************************/
 /* ************************************************************************** */
 /* *                                                                        * */
-/* *    MIT License                                                         * */
+/* *   Copyright(c) 2024 Joachim Herber                                     * */
 /* *                                                                        * */
-/* *   Copyright(c) 2021 Joachim Herber                                     * */
+/* *   MIT License                                                          * */
 /* *                                                                        * */
 /* *   Permission is hereby granted, free of charge, to any person          * */
 /* *   obtaining copy of this software and associated documentation files   * */

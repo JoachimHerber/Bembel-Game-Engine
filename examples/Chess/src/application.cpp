@@ -45,6 +45,7 @@ bool Application::init(std::span<std::string_view> args) {
 
     m_scene = std::make_shared<Scene>();
     m_scene->registerComponentType<DirectionalLight>();
+    m_scene->registerComponentType<Geometry>();
     m_scene->loadAssets("scenes/assets.xml");
 
     pipline->setScene(m_scene);

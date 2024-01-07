@@ -1,55 +1,48 @@
 module;
+#include <assimp/scene.h>
+
+#include <assimp/Importer.hpp>
+#include <memory>
 #include <string_view>
 export module bembel.tools.editor:ModelMgr;
 
 import bembel;
+import :MaterialMgr;
 
 namespace bembel::tools {
 using namespace bembel::base;
 using namespace bembel::gui;
+using namespace bembel::graphics;
 
 export class ModelManager {
   public:
-    ModelManager(In<not_null_ptr<TabGroupWidget::Tab>> tab) : m_tab{tab} {
-        using LinearWidgetLayout::Mode::SCALE_TO_FIT;
+    ModelManager(
+        In<TabGroupWidget::Tab*> tab,
+        In<RenderingPipeline*>   pipeline,
+        In<MaterialManager*>     materials
+    );
+    ~ModelManager() = default;
 
-        m_preview = tab->getContentArea().createChildWidget<GroupWidget>();
-        m_buttons = tab->getContentArea().createChildWidget<GroupWidget>();
-
-        auto style = m_preview->getStyle();
-
-        m_tab->getContentArea().background_color = style->getColor(Style::Colors::WINDOW_BORDER);
-
-        m_preview->background_color = style->getColor(Style::Colors::WINDOW_BACKGROUND);
-        m_buttons->background_color = style->getColor(Style::Colors::WINDOW_BACKGROUND);
-
-        auto root_layout = tab->getContentArea().setLayout<LinearWidgetLayout>(SCALE_TO_FIT);
-        root_layout->setMargin(4, 4);
-        root_layout->addRow({.height = 4});
-        root_layout->addRow({.rel_height = 1.0f})
-            .addWidget(m_preview, 1.0f)
-            .addSpacing(4)
-            .addWidget(m_buttons, 0.0f, 100);
-        root_layout->addRow({.height = 4});
-
-        m_import_models = m_buttons->createChildWidget<ButtonWidget>(u8"Import Models");
-
-        auto button_layout = m_buttons->setLayout<LinearWidgetLayout>(SCALE_TO_FIT);
-        button_layout->setMargin(8, 8);
-        button_layout->addRow({.min_height = 8, .rel_height = 0.0});
-        button_layout->addRow().addWidget(m_import_models);
-        button_layout->addRow({.min_height = 0, .rel_height = 1.0});
-
-        tab->getContentArea().updateLayout();
-    }
+    void parseScene(aiScene const* ai_scene);
 
   private:
-    not_null_ptr<TabGroupWidget::Tab> m_tab;
+    void onTabSelected();
 
-    not_null_ptr<GroupWidget> m_preview;
-    not_null_ptr<GroupWidget> m_buttons;
+    void onModelSelection(int index);
 
-    not_null_ptr<ButtonWidget> m_import_models;
+  private:
+    TabGroupWidget::Tab*   m_tab;
+    RenderingPipeline*     m_pipeline;
+    MaterialManager*       m_materials;
+
+    std::shared_ptr<Scene> m_scene;
+
+    RadioButtonGroupWidget* m_model_selection;
+
+    Entity m_model_preview;
+
+    std::vector<Asset<GeometryMesh>>  m_meshes;
+    std::vector<Asset<GeometryModel>> m_models;
 };
 
 } // namespace bembel::tools
