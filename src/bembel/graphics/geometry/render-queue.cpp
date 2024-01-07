@@ -37,9 +37,6 @@ void GeometryRenderQueue::sortRenderData() {
         m_render_data.begin(),
         m_render_data.end(),
         [](GeometryRenderData const& r1, GeometryRenderData const& r2) {
-            if(r1.material->getRenderer() != r2.material->getRenderer())
-                return r1.material->getRenderer() < r2.material->getRenderer();
-
             return (r1.mesh != r2.mesh) ? (r1.mesh < r2.mesh) : (r1.material < r2.material);
         }
     );

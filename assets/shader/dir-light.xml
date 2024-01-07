@@ -1,0 +1,6 @@
+<ShaderProgram>
+	<Shader file="dir-light.vert"/>
+	<Shader file="cook-torrance.frag"/>
+	<Shader file="read-geom-data.frag"/>
+	<Shader file="dir-light.frag"/>
+</ShaderProgram>

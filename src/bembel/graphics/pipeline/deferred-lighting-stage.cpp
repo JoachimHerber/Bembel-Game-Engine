@@ -33,10 +33,7 @@ void DeferredLightingStage::setDirLightShadowResolution(uint resolution) {
 }
 
 void DeferredLightingStage::setDirLightShadowCascadeDistances(In<std::span<const float>> cascades) {
-    m_dir_lights.cascade_distances.clear();
-    m_dir_lights.cascade_distances.insert(
-        m_dir_lights.cascade_distances.end(), cascades.begin(), cascades.end()
-    );
+    m_dir_lights.cascade_distances.assign(cascades.begin(), cascades.end());
 }
 
 bool DeferredLightingStage::configure(xml::Element const* properties) {
@@ -73,7 +70,6 @@ bool DeferredLightingStage::configure(xml::Element const* properties) {
         setDirLightShadowResolution(shadow_resolution);
         setDirLightShadowCascadeDistances(cascade_distances);
     }
-
 
     return true;
 }

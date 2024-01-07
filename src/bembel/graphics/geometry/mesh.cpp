@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <sstream>
+#include <string_view>
 module bembel.graphics.geometry;
 
 import bembel.base;
@@ -13,7 +14,61 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
 
-GeometryMesh::GeometryMesh() {}
+GeometryMesh::GeometryMesh(VertexFormat format) : m_vertex_format{format} {
+    glGenVertexArrays(1, &m_vao);
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ibo);
+}
+
+GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::span<uint>> indices)
+  : GeometryMesh{VertexFormat::Default} {
+    glBindVertexArray(m_vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size_bytes(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size_bytes(), indices.data(), GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+
+    uint stride = sizeof(DefaultVertexFormat);
+    // clang-format off
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride, (void*)(0));  // position
+    glVertexAttribPointer(1, 4, GL_SHORT, GL_TRUE,  stride, (void*)(16)); // normal
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(24)); // tex_coords
+    // clang-format on
+
+    glBindVertexArray(0);
+}
+
+GeometryMesh::GeometryMesh(In<std::span<RiggedVertexFormat>> vertices, In<std::span<uint>> indices)
+  : GeometryMesh{VertexFormat::Rigged} {
+    glBindVertexArray(m_vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size_bytes(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size_bytes(), indices.data(), GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
+
+    uint stride = sizeof(RiggedVertexFormat);
+    // clang-format off
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride, (void*)(0));  // position
+    glVertexAttribPointer(1, 4, GL_SHORT, GL_TRUE,  stride, (void*)(16)); // normal
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(24)); // tex_coords
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, stride, (void*)(32)); // bone_indices
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, stride, (void*)(48)); // bone_weights
+    // clang-format on
+
+    glBindVertexArray(0);
+}
 
 GeometryMesh::~GeometryMesh() {}
 
@@ -26,6 +81,10 @@ std::optional<GeometryMesh::SubMesh> GeometryMesh::getSubMesh(std::string_view n
 
 uint GeometryMesh::getVAO() const {
     return m_vao;
+}
+
+void GeometryMesh::setSubMesh(std::string_view name, uint first_index, uint num_indices) {
+    m_sub_meshs.insert_or_assign(std::string(name), SubMesh{first_index, num_indices});
 }
 
 std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(In<std::filesystem::path> file) {
@@ -73,7 +132,7 @@ std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element cons
         return nullptr;
     }
 
-    auto mesh = std::make_unique<GeometryMesh>();
+    auto mesh = std::make_unique<GeometryMesh>(VertexFormat::Default);
 
     glGenVertexArrays(1, &mesh->m_vao);
     glBindVertexArray(mesh->m_vao);

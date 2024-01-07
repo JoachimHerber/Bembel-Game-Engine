@@ -1,7 +1,9 @@
 ﻿module;
 #include <filesystem>
+#include <glm/glm.hpp>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string_view>
 export module bembel.graphics.geometry:Mesh;
 
@@ -12,26 +14,65 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
+export struct DefaultVertexFormat {
+    DefaultVertexFormat(In<vec3> pos, In<quat> n, In<vec2> tx)
+      : position{pos, 1.0f}
+      , normal{0x7FFF * n.x, 0x7FFF * n.y, 0x7FFF * n.z, 0x7FFF * n.w}
+      // OpenGL 4.2+ u16 to normalized float:
+      //     float = max(int/0x7FFF, -1.0f) 
+      // <=> int   = 0x7FFF*float
+      , tex_coords{tx} {}
+
+    vec4            position;   //   16 Byte -> 16 Byte
+    glm::tvec4<i16> normal;     // +  8 Byte -> 24 Byte (quaternion)
+    vec2            tex_coords; // +  8 Byte -> 32 Byte
+};
+static_assert(sizeof(DefaultVertexFormat) == 32);
+
+export struct RiggedVertexFormat {
+    RiggedVertexFormat(In<vec3> pos, In<quat> n, In<vec2> tx, In<ivec4> bi, In<vec4> bw)
+      : position{pos, 1.0f}
+      , normal{0x7FFF * n.x, 0x7FFF * n.y, 0x7FFF * n.z, 0x7FFF * n.w}
+      // OpenGL 4.2+ u16 to normalized float:
+      //     float = max(int/0x7FFF, -1.0f)
+      // <=> int   = 0x7FFF*float
+      , tex_coords{tx}
+      , bone_indices{bi}
+      , bone_weights{bw} {}
+
+    vec4            position;     //   12 Byte -> 12 Byte
+    glm::tvec4<i16> normal;       // +  8 Byte -> 24 Byte (quaternion)
+    vec2            tex_coords;   // +  8 Byte -> 32 Byte
+    ivec4           bone_indices; // + 16 Byte -> 48 Byte
+    vec4            bone_weights; // + 16 Byte -> 64 Byte
+};
+static_assert(sizeof(RiggedVertexFormat) == 64);
+
 export class GeometryMesh {
   public:
-    GeometryMesh();
-    GeometryMesh(GeometryMesh const&) = delete;
-    GeometryMesh(GeometryMesh&&)      = delete;
-    ~GeometryMesh();
+    enum class VertexFormat { Default, Rigged };
 
     struct SubMesh {
         uint first_index;
         uint num_indices;
     };
+
+  public:
+    GeometryMesh(VertexFormat format);
+    GeometryMesh(In<std::span<DefaultVertexFormat>>, In<std::span<uint>>);
+    GeometryMesh(In<std::span<RiggedVertexFormat>>, In<std::span<uint>>);
+    GeometryMesh(GeometryMesh const&) = delete;
+    GeometryMesh(GeometryMesh&&)      = delete;
+    ~GeometryMesh();
+
+    VertexFormat           getVertexFormat() const { return m_vertex_format; }
     std::optional<SubMesh> getSubMesh(std::string_view name);
     uint                   getVAO() const;
 
-    static std::unique_ptr<GeometryMesh> loadAsset(
-         In<std::filesystem::path> file
-    );
-    static std::unique_ptr<GeometryMesh> createAsset(
-         xml::Element const* properties
-    );
+    void setSubMesh(std::string_view name, uint first_index, uint num_indices);
+
+    static std::unique_ptr<GeometryMesh> loadAsset(In<std::filesystem::path> file);
+    static std::unique_ptr<GeometryMesh> createAsset(xml::Element const* properties);
 
     static constexpr std::string_view ASSET_TYPE_NAME = "GeometryMesh";
 
@@ -47,6 +88,8 @@ export class GeometryMesh {
     uint m_vao = 0;
     uint m_vbo = 0;
     uint m_ibo = 0;
+
+    VertexFormat m_vertex_format = VertexFormat::Default;
 
     Dictionary<SubMesh> m_sub_meshs;
 };

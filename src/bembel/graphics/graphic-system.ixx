@@ -25,10 +25,21 @@ export class GraphicSystem : public kernel::System {
     ~GraphicSystem();
 
     std::vector<RendererPtr> const& getRenderer() const;
-    GeometryRendererBase*           getRenderer(std::string_view name) const;
+    GeometryRendererBase*           getRenderer(GeometryMesh::VertexFormat) const;
 
     RenderingPipeline*                       createRenderingPipline();
     std::vector<RenderingPipelinePtr> const& getRenderingPipelines();
+
+    template <typename TRenderer, typename... TArgs>
+    TRenderer* setRenderer(GeometryMesh::VertexFormat vertex_format, TArgs&&... args) {
+        auto renderer = std::make_unique<TRenderer>(vertex_format, std::forward<TArgs>(args)...);
+
+        TRenderer* ptr = renderer.get();
+        if(m_renderer.size() <= std::to_underlying(vertex_format))
+            m_renderer.resize(std::to_underlying(vertex_format) + 1);
+        m_renderer[std::to_underlying(vertex_format)] = std::move(renderer);
+        return ptr;
+    }
 
     virtual bool configure(xml::Element const*) override;
 
@@ -45,8 +56,6 @@ export class GraphicSystem : public kernel::System {
 
     std::vector<RendererPtr>          m_renderer;
     std::vector<RenderingPipelinePtr> m_pipelines;
-
-    Dictionary<size_t> m_renderer_map;
 };
 
 export struct InitGraphicResourcesEvent {};

@@ -13,42 +13,19 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
 
-bool DefaultGeometryRenderer::updateUniformLocations(ShaderProgram* shader) {
-    if(shader == nullptr) return false;
-
-    m_material_uniform_block_index = shader->getUniformBlockIndex("Material");
-    m_material_uniform_buffer_size =
-        shader->getUniformBlockDataSize(m_material_uniform_block_index);
-
-    std::vector<GLint> active_uniform_indices;
-    shader->getUniformBlockActiveUniformIndices(
-        m_material_uniform_block_index, &active_uniform_indices
-    );
-
-    for(GLint uniform_index : active_uniform_indices) {
-        MaterialParam param;
-        param.offset = shader->getActiveUniformOffset(uniform_index);
-        std::string name;
-        shader->getActiveUniform(uniform_index, &param.size, (uint*)&param.type, &name);
-
-        m_material_params[name]       = param;
-        std::string param_name        = name.substr(name.find_last_of(".") + 1);
-        m_material_params[param_name] = param;
-    }
-
-    shader->use();
-    uint sampler_location = 0;
-    for(auto const& it : m_required_textures) {
-        glUniform1i(shader->getUniformLocation(it.uniform_sampler_name), sampler_location);
-        ++sampler_location;
-    }
-    return true;
-}
-
 void DefaultGeometryRenderer::renderGeometry(
     In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
 ) {
     if(!m_geomety_pass_shader) return;
+    initDummyTextures();
+
+    auto bindTexture = [](Asset<Texture> const& texture, std::unique_ptr<Texture> const& fallback) {
+        if(auto t = texture.get())
+            t->bind();
+        else
+            fallback->bind();
+    };
+
     glCullFace(GL_BACK);
 
     m_geomety_pass_shader->use();
@@ -65,18 +42,16 @@ void DefaultGeometryRenderer::renderGeometry(
         }
         if(it.material != currentMaterial) {
             currentMaterial = it.material;
-            glBindBufferBase(GL_UNIFORM_BUFFER, 0, currentMaterial->getUniformBufferObject());
+            currentMaterial->bindUniformBufferObject();
 
-            GLenum active_texture = GL_TEXTURE0;
-            for(auto const& texture : currentMaterial->textures) {
-                if(!texture) {
-                    logWarning("Texture handle is invalid");
-                    continue;
-                }
-                glActiveTexture(active_texture);
-                texture->bind();
-                active_texture = active_texture + 1;
-            }
+            glActiveTexture(GL_TEXTURE0);
+            bindTexture(currentMaterial->getEmissionTexture(), m_dummy_emission_texture);
+            glActiveTexture(GL_TEXTURE1);
+            bindTexture(currentMaterial->getBaseColorTexture(), m_dummy_base_color_texture);
+            glActiveTexture(GL_TEXTURE2);
+            bindTexture(currentMaterial->getMaterialPropsTexture(), m_dummy_material_props_texture);
+            glActiveTexture(GL_TEXTURE3);
+            bindTexture(currentMaterial->getNormalMapTexture(), m_dummy_normal_map_texture);
         }
 
         glm::mat4 modleView = view * it.transform;
@@ -92,6 +67,7 @@ void DefaultGeometryRenderer::renderGeometry(
         );
     }
 
+    glActiveTexture(GL_TEXTURE0);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     glBindVertexArray(0);
     glUseProgram(0);
@@ -110,6 +86,7 @@ void DefaultGeometryRenderer::renderShadows(
     GeometryMesh* currentMesh = nullptr;
     for(auto const& it : data) {
         if(!it.mesh) continue;
+        if(it.mesh->getVertexFormat() != m_vertex_format) continue;
 
         if(it.mesh != currentMesh) {
             currentMesh = it.mesh;
@@ -134,70 +111,8 @@ void DefaultGeometryRenderer::renderShadows(
     glUseProgram(0);
 }
 
-template <typename T>
-bool ReadMaterialParam(xml::Element const* properties, std::string_view param_name, byte* dest) {
-    T value;
-    if(xml::getAttribute(properties, param_name, value)) {
-        memcpy(dest, &value, sizeof(value));
-        return true;
-    }
-    return false;
-}
-
-bool DefaultGeometryRenderer::readMaterialParameter(
-    xml::Element const*  properties,
-    std::string_view     param_name,
-    MaterialParam const& param,
-    byte*                buffer
-) {
-    switch(param.type) {
-        case GL_FLOAT:
-            return ReadMaterialParam<float>(properties, param_name, buffer + param.offset);
-        case GL_FLOAT_VEC2:
-            return ReadMaterialParam<vec2>(properties, param_name, buffer + param.offset);
-        case GL_FLOAT_VEC3:
-            return ReadMaterialParam<vec3>(properties, param_name, buffer + param.offset);
-        case GL_FLOAT_VEC4:
-            return ReadMaterialParam<vec4>(properties, param_name, buffer + param.offset);
-    }
-    return false;
-}
-
-std::unique_ptr<Material> DefaultGeometryRenderer::createMaterial(xml::Element const* properties) {
-    auto mat = std::make_unique<Material>(getRendererID(), m_material_uniform_buffer_size);
-
-    std::vector<Asset<Texture>> textures;
-    for(auto& it : m_required_textures) {
-        auto texture_name = properties->FirstChildElement(it.texture_name.c_str());
-        if(texture_name == nullptr) {
-            logError("Material does not secify a '{}' texture", it.texture_name);
-            return nullptr;
-        }
-
-        Asset<Texture> texture;
-        if(!texture.request(texture_name)) {
-            logError("Can't find reqired '{}' texture for material", it.texture_name);
-            return nullptr;
-        }
-        textures.push_back(std::move(texture));
-    }
-    mat->textures = std::move(textures);
-
-    std::vector<byte> data;
-    data.resize(m_material_uniform_buffer_size);
-    for(auto& it : m_material_params) {
-        readMaterialParameter(properties, it.first, it.second, &data[0]);
-    }
-
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mat->getUniformBufferObject());
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, m_material_uniform_buffer_size, &data[0]);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-    return std::move(mat);
-}
-
 std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer(
-    xml::Element const* properties, unsigned id
+    xml::Element const* properties, VertexFormat id
 ) {
     Asset<ShaderProgram> geomety_pass_shader;
     if(!geomety_pass_shader.request(properties->FirstChildElement("GeometyPassShader"))) {
@@ -211,18 +126,41 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
     }
     auto renderer = std::make_unique<DefaultGeometryRenderer>(id);
 
-    for(auto it : xml::IterateChildElements(properties, "RequiredTexture")) {
-        std::string texture_name, sampler_uniform;
-        xml::getAttribute(it, "texturen_name", texture_name);
-        xml::getAttribute(it, "sampler_uniform_name", sampler_uniform);
-
-        renderer->addRequiredTexture(texture_name, sampler_uniform);
-    }
-
     if(!renderer->setShaders(std::move(geomety_pass_shader), std::move(shadow_pass_shader)))
         return nullptr;
 
     return std::move(renderer);
+}
+
+void DefaultGeometryRenderer::initDummyTextures() {
+    auto initDummyTexture = [](In<vec3> color) {
+        auto texture =
+            std::make_unique<Texture>(Texture::Target::TEXTURE_2D, Texture::Format::RGB8);
+        texture->init(
+            Texture::MinFilter::NEAREST, 
+            Texture::MagFilter::NEAREST, 
+            Texture::Wrap::CLAMP_TO_EDGE,
+            Texture::Wrap::CLAMP_TO_EDGE
+        );
+        texture->bind();
+        glTexImage2D(
+            GL_TEXTURE_2D, 0, static_cast<GLint>(GL_RGB8), 1, 1, 0, GL_RGB, GL_FLOAT, &color
+        );
+        texture->release();
+        return texture;
+    };
+
+    if(!m_dummy_emission_texture) //
+        m_dummy_emission_texture = initDummyTexture({1.f, 1.f, 1.f});
+
+    if(!m_dummy_base_color_texture) //
+        m_dummy_base_color_texture = initDummyTexture({1.f, 1.f, 1.f});
+
+    if(!m_dummy_material_props_texture)
+        m_dummy_material_props_texture = initDummyTexture({1.f, 1.f, 1.f});
+
+    if(!m_dummy_normal_map_texture)
+        m_dummy_normal_map_texture = initDummyTexture({0.5f, 0.5f, 1.f});
 }
 
 } // namespace bembel::graphics

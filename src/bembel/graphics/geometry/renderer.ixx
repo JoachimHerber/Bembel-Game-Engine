@@ -22,42 +22,32 @@ export struct GeometryRenderData {
 
 export class GeometryRendererBase {
   public:
-    using RendererId = uint;
+    using VertexFormat = GeometryMesh::VertexFormat;
 
-    GeometryRendererBase( RendererId id)
-      :  m_id{id} {};
+    GeometryRendererBase(VertexFormat vertex_format) : m_vertex_format{vertex_format} {};
     virtual ~GeometryRendererBase(){};
 
-    RendererId getRendererID() const { return m_id; };
+    VertexFormat getVertexFormat() const { return m_vertex_format; }
 
     virtual void renderGeometry(
         In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
     ) = 0;
 
-    virtual void renderShadows(
-        In<mat4> view_proj, In<std::vector<GeometryRenderData>> data
-    ) = 0;
-
-    virtual std::unique_ptr<Material> createMaterial(xml::Element const* propertiey) = 0;
+    virtual void renderShadows(In<mat4> view_proj, In<std::vector<GeometryRenderData>> data) = 0;
 
   protected:
-    const RendererId m_id;
+    VertexFormat m_vertex_format;
 };
 
 export class DefaultGeometryRenderer : public GeometryRendererBase {
   public:
-    DefaultGeometryRenderer(uint id)
-      : GeometryRendererBase{id} {}
+    DefaultGeometryRenderer(VertexFormat vertex_format) : GeometryRendererBase{vertex_format} {}
     ~DefaultGeometryRenderer() = default;
 
-    void addRequiredTexture(std::string_view texture_name, std::string_view uniform_sampler_name) {
-        m_required_textures.emplace_back(texture_name, uniform_sampler_name);
-    }
-
-    bool setShaders(Asset<ShaderProgram> geom_pass, Asset<ShaderProgram> depth_pass) {
-        if(updateUniformLocations(geom_pass.get())) {
+    bool setShaders(In<Asset<ShaderProgram>> geom_pass, In<Asset<ShaderProgram>> depth_pass) {
+        if(Material::verifyUniformBlockLayout(geom_pass.get())) {
             m_geomety_pass_shader = std::move(geom_pass);
-            m_depth_pass_shader = std::move(depth_pass);
+            m_depth_pass_shader   = std::move(depth_pass);
             return true;
         }
         return false;
@@ -67,49 +57,26 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
         In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
     ) override;
 
-    virtual void renderShadows(
-        In<mat4> view_proj, In<std::vector<GeometryRenderData>> data
-    ) override;
-
-    virtual std::unique_ptr<Material> createMaterial(xml::Element const* propertiey) override;
+    virtual void renderShadows(In<mat4> view_proj, In<std::vector<GeometryRenderData>> data)
+        override;
 
     static std::unique_ptr<DefaultGeometryRenderer> createRenderer(
-        xml::Element const*, unsigned id
+        xml::Element const*, VertexFormat vertex_format
     );
 
   private:
-    struct MaterialParam {
-        int        offset;
-        int        size;
-        gl::GLenum type;
-    };
-
-    bool updateUniformLocations(ShaderProgram*);
-
-    bool readMaterialParameter(
-        xml::Element const*  properties,
-        std::string_view     param_name,
-        MaterialParam const& param,
-        byte*                buffer
-    );
+    void initDummyTextures();
 
   private:
     Asset<ShaderProgram> m_geomety_pass_shader;
     Asset<ShaderProgram> m_depth_pass_shader;
 
     uint m_material_uniform_block_index;
-    uint m_material_uniform_buffer_size;
 
-    Dictionary<MaterialParam> m_material_params;
-
-    struct RequiredTexture {
-        std::string texture_name;
-        std::string uniform_sampler_name;
-
-        RequiredTexture(std::string_view texture, std::string_view sampler)
-          : texture_name(texture), uniform_sampler_name(sampler) {}
-    };
-    std::vector<RequiredTexture> m_required_textures;
+    std::unique_ptr<Texture> m_dummy_emission_texture;
+    std::unique_ptr<Texture> m_dummy_base_color_texture;
+    std::unique_ptr<Texture> m_dummy_material_props_texture;
+    std::unique_ptr<Texture> m_dummy_normal_map_texture;
 };
 
 } // namespace bembel::graphics

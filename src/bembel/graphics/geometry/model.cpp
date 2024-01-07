@@ -9,12 +9,27 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
+GeometryModel::GeometryModel(In<Asset<GeometryMesh>> mesh) : m_mesh{mesh} {}
+
 GeometryMesh* GeometryModel::getMesh() {
     return m_mesh.get();
 }
 
 std::vector<GeometryModel::MaterialMapping> const& GeometryModel::getMateialMapping() {
     return m_material_mapping;
+}
+
+void GeometryModel::setMaterialMapping(In<std::string_view> sub_mesh, In<Asset<Material>> mat) {
+    for(auto& it : m_material_mapping) {
+        if(it.sub_mesh == sub_mesh) {
+            it.material = mat;
+            return;
+        }
+    }
+    MaterialMapping mm;
+    mm.material = mat;
+    mm.sub_mesh = sub_mesh;
+    m_material_mapping.push_back(std::move(mm));
 }
 
 std::unique_ptr<GeometryModel> GeometryModel::loadAsset(std::filesystem::path file) {

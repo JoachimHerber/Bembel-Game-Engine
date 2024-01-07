@@ -17,7 +17,7 @@ Factory<RenderingPipeline::Stage, RenderingPipeline&>& RenderingPipeline::Stage:
     return factory;
 }
 
-void RenderingPipeline::Stage::setInputTextures(std::vector<std::string> const& textures) {
+void RenderingPipeline::Stage::setInputTextures(std::span<std::string> textures) {
     m_textures.clear();
     for(size_t n = 0; n < textures.size(); ++n) {
         m_textures.push_back(m_pipline.getTexture(textures[n]));

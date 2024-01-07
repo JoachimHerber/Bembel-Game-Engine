@@ -1,0 +1,4 @@
+<ShaderProgram>
+    <Shader file="default-shadow-pass.vert"/>
+    <Shader file="default-shadow-pass.frag"/>
+</ShaderProgram>

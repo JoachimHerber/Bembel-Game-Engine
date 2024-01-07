@@ -1,0 +1,4 @@
+<ShaderProgram>
+   <Shader file="normal-mapped-geomety-pass.vert"/>
+   <Shader file="normal-mapped-geomety-pass.frag"/>
+</ShaderProgram>

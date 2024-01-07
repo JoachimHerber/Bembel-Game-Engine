@@ -1,0 +1,4 @@
+<ShaderProgram>
+   <Shader file="default-geomety-pass.vert"/>
+   <Shader file="default-geomety-pass.frag"/>
+</ShaderProgram>

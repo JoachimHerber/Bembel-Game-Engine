@@ -20,6 +20,12 @@ export class DeferredLightingStage : public RenderingPipeline::Stage {
     void setPointLightShader(Asset<ShaderProgram>);
 
     void setDirLightShadowResolution(uint resolution);
+    template <typename... TArgs>
+        requires(std::is_convertible_v<TArgs, float>&&...)
+    void setDirLightShadowCascadeDistances(TArgs&& ...cascades) {
+        m_dir_lights.cascade_distances.clear();
+        (m_dir_lights.cascade_distances.push_back(cascades),...);
+    }
     void setDirLightShadowCascadeDistances(In<std::span<const float>> cascades);
 
     virtual bool configure(xml::Element const*) override;
@@ -31,6 +37,9 @@ export class DeferredLightingStage : public RenderingPipeline::Stage {
     virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
     ShadowMap& getDirectionalLightShadowMap() { return m_dir_lights.shadows; }
+
+    using RenderingPipeline::Stage::setColorOutputTexture;
+    using RenderingPipeline::Stage::setInputTextures;
 
   private:
     void updateShadowMaps(

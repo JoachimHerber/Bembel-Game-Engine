@@ -1,0 +1,5 @@
+<ShaderProgram>
+	<Shader file="environment-map-reflections.vert"/>
+	<Shader file="read-geom-data.frag"/>
+	<Shader file="environment-map-reflections.frag"/>
+</ShaderProgram>

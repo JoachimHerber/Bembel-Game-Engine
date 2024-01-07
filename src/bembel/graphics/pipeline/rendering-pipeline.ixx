@@ -44,7 +44,13 @@ export class RenderingPipeline final {
         }
 
       protected:
-        void setInputTextures(std::vector<std::string> const&);
+        template <typename... TArgs>
+            requires(std::is_convertible_v<TArgs, std::string_view> && ...)
+        void setInputTextures(TArgs&&... args) {
+            m_textures.clear();
+            (m_textures.push_back(m_pipline.getTexture(std::forward<TArgs>(args))), ...);
+        }
+        void setInputTextures(std::span<std::string>);
 
         void setDepthOutputTexture(std::string_view texture);
         void setColorOutputTexture(uint index, std::string_view texture);
@@ -86,8 +92,8 @@ export class RenderingPipeline final {
         ivec2 m_view_area_pos  = {0, 0};
         uvec2 m_view_area_size = {1, 1};
 
-        vec2 m_relative_view_area_pos;
-        vec2 m_relative_view_area_size;
+        vec2 m_relative_view_area_pos  = {0, 0};
+        vec2 m_relative_view_area_size = {1, 1};
 
         std::unique_ptr<FrameBufferObject> m_fbo = std::make_unique<FrameBufferObject>();
     };
@@ -121,7 +127,7 @@ export class RenderingPipeline final {
 
     template <typename StageType>
     StageType* addRenderingStage() {
-        m_render_stages.push_back(std::make_unique<StageType>(this));
+        m_render_stages.push_back(std::make_unique<StageType>(*this));
         return static_cast<StageType*>(m_render_stages.back().get());
     }
 

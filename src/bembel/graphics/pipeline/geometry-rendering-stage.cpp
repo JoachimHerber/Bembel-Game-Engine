@@ -88,7 +88,7 @@ void GeometryRenderingStage::execute(In<std::span<const RendererPtr>> renderer) 
 
     m_render_queue.sortRenderData();
     for(auto& it : renderer) {
-        it->renderGeometry(
+        if(it) it->renderGeometry(
             cam->getProjectionMatrix(), cam->getViewMatrix(), m_render_queue.getRenderData()
         );
     }

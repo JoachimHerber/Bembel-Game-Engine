@@ -11,17 +11,20 @@ using namespace bembel::kernel;
 
 export class GeometryModel {
   public:
-  public:
-    GeometryModel()  = default;
-    ~GeometryModel() = default;
-
     struct MaterialMapping {
         Asset<Material> material;
         std::string     sub_mesh;
     };
 
+  public:
+    GeometryModel() = default;
+    GeometryModel(In<Asset<GeometryMesh>>);
+    ~GeometryModel() = default;
+
     GeometryMesh*                       getMesh();
     std::vector<MaterialMapping> const& getMateialMapping();
+
+    void setMaterialMapping(In<std::string_view> sub_mesh, In<Asset<Material>> mat);
 
     static constexpr std::string_view ASSET_TYPE_NAME = "GeometryModel";
 
