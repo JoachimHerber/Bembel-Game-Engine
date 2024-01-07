@@ -16,10 +16,8 @@ using namespace bembel::base;
 
 export template <typename T>
 concept AssetType = std::same_as<T, std::any> || requires(T a) {
-                                                     {
-                                                         T::ASSET_TYPE_NAME
-                                                         } -> std::convertible_to<std::string_view>;
-                                                 };
+    { T::ASSET_TYPE_NAME } -> std::convertible_to<std::string_view>;
+};
 
 export template <AssetType T>
 class Asset final {
@@ -59,6 +57,12 @@ class Asset final {
     }
 
     T* get() const { return g_container ? g_container->getAsset(m_handel) : nullptr; }
+    
+    bool init(Move<std::unique_ptr<T>> asset) {
+        if(!g_container) return false;
+        AssetHandle handl = g_container->addAsset(std::move(asset));
+        return this->set(handl, true);
+    }
 
     bool request(std::string_view file_name) {
         if(!g_loader) return false;

@@ -259,6 +259,10 @@ Viewport& Window::createViewport(
     ));
     return *m_viewports.back();
 }
+Viewport& Window::createViewport() {
+    m_viewports.push_back(std::make_unique<Viewport>(m_window_id));
+    return *m_viewports.back();
+}
 
 ivec2 Window::getWindowPosition() const {
     ivec2 pos;

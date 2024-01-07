@@ -110,4 +110,41 @@ export class IntSliderWidget : public SliderWidget {
     i64 m_value;
 };
 
+export class FloatSliderWidget : public SliderWidget {
+  public:
+    static constexpr std::string_view WIDGET_TYPE_NAME = "FloatSlider";
+
+  public:
+    FloatSliderWidget(Widget& parent, float min = 0.0f, float max = 1.0f, bool logarithmic = false);
+    ~FloatSliderWidget() = default;
+
+    virtual bool configure(xml::Element const* properties) override;
+
+    virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
+
+    void  setValue(float value);
+    float getValue() const { return m_value; }
+
+    Signal<In<float>> value_update_signal;
+
+  protected:
+    void onSizeChanged(In<ivec2>, In<ivec2> new_size) { m_label.size = new_size; }
+    void constrainSliderPos(InOut<double> pos);
+
+    void updateLabel();
+
+  private:
+    LabelWidget m_label;
+
+    float m_min;
+    float m_max;
+
+    bool                 m_logarithmic;
+    std::optional<float> m_step;
+
+    i18n::String<float> m_text = u8"{1}";
+
+    float m_value;
+};
+
 } // namespace bembel::gui

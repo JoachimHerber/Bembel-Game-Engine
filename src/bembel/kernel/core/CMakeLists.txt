@@ -11,6 +11,7 @@ target_sources(Bembel
         engine.ixx
         engine.cpp
         application.ixx
+        application.cpp
 
         CMakeLists.txt
 )

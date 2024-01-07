@@ -25,8 +25,15 @@ export class SplitGroupWidget : public Widget {
 
     virtual std::string_view getWidgetTypeName() const override { return WIDGET_TYPE_NAME; }
 
+    bool isHovered() const { return m_handle.isHovered(); }
+    bool isSelected() const { return m_handle.isSelected(); }
+
     GroupWidget& getFirstChildGroup() { return m_first_group; }
     GroupWidget& getSecondChildGroup() { return m_second_group; }
+
+    bool isHorizontal() const { return m_horizontal; }
+    int  getSeperatorPos() const { return m_seperator_pos; }
+    void setSeperatorPos(int i);
 
   protected:
     void onSizeChanged(In<ivec2>, In<ivec2>);
@@ -39,10 +46,21 @@ export class SplitGroupWidget : public Widget {
     GroupWidget m_first_group{*this};
     GroupWidget m_second_group{*this};
 
-    InteractionHandle m_move_seperator;
+    InteractionHandle m_handle;
 
     bool m_horizontal;
     int  m_seperator_pos = 0;
+};
+
+export class SimpleSplitGroupWidgetView : public Widget::View {
+  public:
+    SimpleSplitGroupWidgetView(SplitGroupWidget& widget) : m_widget{widget} {}
+    ~SimpleSplitGroupWidgetView() = default;
+
+    void draw(RenderBatchInterface& batch) override;
+
+  private:
+    SplitGroupWidget& m_widget;
 };
 
 } // namespace bembel::gui

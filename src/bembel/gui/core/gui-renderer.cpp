@@ -36,7 +36,7 @@ bool Renderer::init(In<Asset<ShaderProgram>> shader, In<Asset<Style>> style) {
     return true;
 }
 
-void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
+void Renderer::drawGui(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     auto style  = m_style.get();
     auto shader = m_shader.get();
 
@@ -57,7 +57,7 @@ void Renderer::drawGui(ivec2 viewport_position, uvec2 viewport_size) {
     if(atlasTexture == nullptr) return;
 
     m_batch.setFont(style->getFont());
-    drawWidget(&m_root_widget, vec2(0, 0), vec2(0, 0), viewport_size, 0);
+    drawWidgets(m_root_widget, vec2(0, 0), vec2(0, 0), viewport_size);
 
     shader->use();
     glUniform1i(shader->getUniformLocation("uFontTexture"), 0);
@@ -86,24 +86,24 @@ Style* Renderer::getStyle() {
     return m_style.get();
 }
 
-void Renderer::drawWidget(
-    Widget* widget, ivec2 parent_pos, ivec2 area_min, ivec2 area_max, int layer
+void Renderer::drawWidgets(
+    In<Widget> widget, In<ivec2> parent_pos, In<ivec2> area_min, In<ivec2> area_max
 ) {
-    if(widget->isHidden()) return;
+    if(widget.isHidden()) return;
 
     m_batch.setPositionOffset(parent_pos);
 
-    const ivec2 pos        = parent_pos + widget->position.get();
+    const ivec2 pos        = parent_pos + widget.position.get();
     const ivec2 widget_min = max(area_min, pos);
-    const ivec2 widget_max = min(area_max, pos + widget->size.get());
+    const ivec2 widget_max = min(area_max, pos + widget.size.get());
     m_batch.setDrawArea(widget_min, widget_max);
 
-    auto view = widget->getView();
+    auto view = widget.getView();
     if(view) view->draw(m_batch);
 
-    ++layer;
-    for(auto& child_widget : widget->getChildWidgets())
-        drawWidget(child_widget, pos, widget_min, widget_max, layer);
+    for (auto* child_widget : widget.getChildWidgets()) {
+        drawWidgets(*child_widget, pos, widget_min, widget_max);
+    }
 }
 
 } // namespace bembel::gui

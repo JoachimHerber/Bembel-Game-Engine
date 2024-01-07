@@ -133,11 +133,19 @@ uint RadioButtonGroupWidget::getMinHeight(In<std::optional<uint>> width) const {
     return min_height;
 }
 
+void RadioButtonGroupWidget::deleteAllRadioButtons() {
+    m_child_widgets.clear();
+    m_buttons.clear();
+    m_selection = -1;
+    selection_change_signal.emit(m_selection);
+}
 void RadioButtonGroupWidget::addRadioButton(In<std::u8string_view> lable) {
     m_buttons.push_back(std::make_unique<RadioButtonWidget>(*this, int(m_buttons.size())));
     m_child_widgets.push_back(m_buttons.back().get());
     m_buttons.back()->setText(lable);
     m_buttons.back()->select_signal.bind(this, &RadioButtonGroupWidget::setSelection);
+
+    if(m_selection == -1) setSelection(0);
 }
 
 int RadioButtonGroupWidget::getSelection() const {

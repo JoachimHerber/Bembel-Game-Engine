@@ -178,9 +178,6 @@ InputHandler::Handle InputHandler::findFocusedHndl(Widget& widget, glm::ivec2 co
        || max.y < m_cursor_pos.y)
         return {};
 
-    // Log().info("Widget {} is in Focus", widget.getName());
-    // IndentDefaultLogs indent;
-
     for(auto& it : widget.getChildWidgets()) {
         auto hndl = findFocusedHndl(*it, min);
         if(hndl) return hndl;

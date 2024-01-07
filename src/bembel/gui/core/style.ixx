@@ -14,7 +14,7 @@ export class Style {
     Style()  = default;
     ~Style() = default;
 
-    void  setFont(Asset<SdfFont> font) { m_font = std::move(font); }
+    void     setFont(Asset<SdfFont> font) { m_font = std::move(font); }
     SdfFont* getFont() const { return m_font.get(); }
 
     void setTextureAtlas(Asset<TextureAtlas>);
@@ -51,6 +51,9 @@ export class Style {
         SLIDER_DISABLED,
         SLIDER_HOVERED,
         SLIDER_ACTIVE,
+
+        TAB,
+        TAB_HOVERED,
 
         COUNT // for internal use only
     };
@@ -104,7 +107,7 @@ export class Style {
         u32ToColor(0x80'80'80'ff), // TEXT_DISABLED
         u32ToColor(0x00'00'00'ff), // TEXT_OUTLINE
 
-        u32ToColor(0x0f'0f'0f'f0), // WINDOW_BACKGROUND
+        u32ToColor(0x20'48'79'ff), // WINDOW_BACKGROUND
         u32ToColor(0x0c'0c'0c'ff), // WINDOW_BORDER
         u32ToColor(0x24'24'24'ff), // MENU_BAR_BACKGROUND
 
@@ -132,6 +135,8 @@ export class Style {
         u32ToColor(0x33'79'cc'ff), // SLIDER_HOVERED
         u32ToColor(0x26'6c'bf'ff), // SLIDER_ACTIVE
 
+        u32ToColor(0x15'30'51'ff), // TAB
+        u32ToColor(0x1a'3c'65'ff), // TAB_HOVERED
     };
 
     float m_values[usize(Values::COUNT)]{

@@ -34,7 +34,7 @@ export class TabGroupWidget : public Widget {
         Tab(TabGroupWidget* group, usize index, std::u8string_view label);
         ~Tab();
 
-        bool isHovered() const { return m_handle.isDisabled(); }
+        bool isHovered() const { return m_handle.isHovered(); }
         bool isSelected() const { return m_group->getSelectedTab() == m_index; }
 
         ivec2 getPosition() const { return m_handle.position; }
@@ -42,6 +42,8 @@ export class TabGroupWidget : public Widget {
 
         LabelWidget& getLabel() { return m_label; }
         GroupWidget& getContentArea() { return m_content; }
+
+        Signal<> select_signal;
 
       protected:
         void onAction(InteractionHandle::Action, ivec2);

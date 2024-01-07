@@ -1,8 +1,9 @@
 ﻿module;
 #include <array>
+#include <format>
+#include <nlohmann/json.hpp>
 #include <set>
 #include <string>
-#include <nlohmann/json.hpp>
 module bembel.kernel.i18n;
 
 import bembel.base;
@@ -15,13 +16,12 @@ NumberFormat& NumberFormat::operator=(In<json> j) {
         m_decimal_separator = j["decimal_separator"].get<std::u8string>();
     }
     if(j.is_object() && j.contains("group_separator")) {
-         m_group_separator = j["group_separator"].get<std::u8string>();
+        m_group_separator = j["group_separator"].get<std::u8string>();
     }
     return *this;
 }
 
-void NumberFormat::format(In<u64> value, InOut<std::u8string> str) {
-    // clang-format off
+// clang-format off
     static constexpr std::array<u64, 20> POWERS_OF_10 = {
                                  1,
                                 10,
@@ -44,7 +44,9 @@ void NumberFormat::format(In<u64> value, InOut<std::u8string> str) {
          1'000'000'000'000'000'000,
         10'000'000'000'000'000'000,
     };
-    // clang-format on
+// clang-format on
+
+void NumberFormat::format(In<u64> value, InOut<std::u8string> str) {
     if(value == 0) {
         str += u8"0";
         return;
@@ -58,6 +60,10 @@ void NumberFormat::format(In<u64> value, InOut<std::u8string> str) {
     }
 }
 
-void NumberFormat::format(In<double> value, InOut<std::u8string> str) {}
+void NumberFormat::format(In<double> value, InOut<std::u8string> str) {
+    if(auto s = utf8::fromLocaleEncoding(std::format("{:.3}", value))) { //
+        str += *s;
+    }
+}
 
-} // namespace bembel::text::i18n
+} // namespace bembel::kernel::i18n

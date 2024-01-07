@@ -109,7 +109,7 @@ void SimpleButtonWidgetView::draw(RenderBatchInterface& batch) {
     float const u0 = tc->min.x;
     float const u1 = (tc->min.x + tc->max.x) * 0.5f;
     float const u2 = tc->max.x;
-
+    
     float const v0 = tc->min.y;
     float const v1 = (tc->min.y + tc->max.y) * 0.5f;
     float const v2 = tc->max.y;
@@ -120,7 +120,7 @@ void SimpleButtonWidgetView::draw(RenderBatchInterface& batch) {
     float const x1 = x0 + corner_radius;
     float const x3 = x0 + m_button.size.get().x;
     float const x2 = x3 - corner_radius;
-
+    
     float const y0 = m_button.position.get().y;
     float const y1 = y0 + corner_radius;
     float const y3 = y0 + m_button.size.get().y;

@@ -1,6 +1,7 @@
 module;
 #include <set>
 #include <string>
+#include <locale> 
 
 export module bembel.kernel.i18n:NumberFormat;
 

@@ -60,8 +60,6 @@ export class Widget {
     void show();
     void hide();
 
-    bool isOverlay() const { return m_is_overlay; }
-
     std::string const& getName() const { return m_name; }
     void               setName(std::string_view name) { m_name = name; }
 
@@ -89,7 +87,6 @@ export class Widget {
 
     std::unique_ptr<View> m_view;
     bool                  m_hidden     = false;
-    bool                  m_is_overlay = false;
 
     std::vector<Widget*>            m_child_widgets;
     std::vector<InteractionHandle*> m_interaction_handles;

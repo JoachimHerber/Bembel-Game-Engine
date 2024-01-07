@@ -20,9 +20,11 @@ export class RenderBatchInterface {
     virtual void setSecondaryColor(In<ColorRGB> color) = 0;
     virtual void setAlpha(In<u8> alpha)                = 0;
 
-    virtual void drawRectangle(vec2 min, vec2 max)                                                          = 0;
-    virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max)                     = 0;
-    virtual void drawGlyph(GlyphIndex glyph, vec2 const& pos, float scale, bool outline = false)   = 0;
+    virtual void drawRectangle(vec2 min, vec2 max) = 0;
+    virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) = 0;
+    virtual void drawGlyph(
+        GlyphIndex glyph, vec2 const& pos, float scale, bool outline = false
+    ) = 0;
 };
 
 export struct InstanceData {
@@ -76,7 +78,14 @@ export class RenderBatch : public RenderBatchInterface {
     bool clampToViewArea(vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max);
 
     void addInstance(
-        vec2 pos_min, vec2 pos_max, vec2 tc_min, vec2 tc_max, u8 type, u8 data1 = 0u, u8 data2 = 0u, u8 data3 = 0u
+        vec2 pos_min,
+        vec2 pos_max,
+        vec2 tc_min,
+        vec2 tc_max,
+        u8   type,
+        u8   data1 = 0u,
+        u8   data2 = 0u,
+        u8   data3 = 0u
     ) {
         m_instances.emplace_back(
             pos_min.x,

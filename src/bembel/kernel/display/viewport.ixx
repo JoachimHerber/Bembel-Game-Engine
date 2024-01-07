@@ -1,6 +1,7 @@
 ﻿module;
+#include <optional>
 #include <vector>
-export module bembel.kernel.display : Viewport;
+export module bembel.kernel.display:Viewport;
 
 import bembel.base;
 
@@ -21,7 +22,7 @@ export class Viewport final {
 
         virtual void draw(const ivec2& viewport_position, const uvec2& viewport_size) = 0;
 
-        Viewport*    getViewport() { return m_viewport; }
+        Viewport* getViewport() { return m_viewport; }
 
       protected:
         friend class Viewport;
@@ -30,26 +31,31 @@ export class Viewport final {
 
     Viewport(WindowId window_id) : m_window_id{window_id} {}
     Viewport(
-        WindowId window_id, const vec2& rel_pos, const vec2& rel_size, const vec2& pos_offset, const vec2& size_offset)
-    : m_window_id{window_id}
-    , m_relativ_position{rel_pos}
-    , m_relativ_size{rel_size}
-    , m_position_offset{pos_offset}
-    , m_size_offset{size_offset} {}
+        WindowId    window_id,
+        const vec2& rel_pos,
+        const vec2& rel_size,
+        const vec2& pos_offset,
+        const vec2& size_offset
+    )
+      : m_window_id{window_id}
+      , m_relativ_position{rel_pos}
+      , m_relativ_size{rel_size}
+      , m_position_offset{pos_offset}
+      , m_size_offset{size_offset} {}
     ~Viewport() {
         for(auto it : m_views) it->m_viewport = nullptr;
     }
 
-    void         enable() { m_enabled = true; }
-    void         disable() { m_enabled = false; }
-    bool         isEnabled() { return m_enabled; }
+    void enable() { m_enabled = true; }
+    void disable() { m_enabled = false; }
+    bool isEnabled() { return m_enabled; }
 
     const ivec2& getPosition() const { return m_position; }
     const uvec2& getSize() const { return m_size; }
 
-    WindowId     getWindowID() { return m_window_id; }
+    WindowId getWindowID() { return m_window_id; }
 
-    bool         addView(View* view) {
+    bool addView(View* view) {
         if(!view || view->m_viewport) return false;
 
         m_views.push_back(view);
@@ -61,7 +67,7 @@ export class Viewport final {
         if(!view || view->m_viewport != this) return false;
         view->m_viewport = nullptr;
 
-        auto it        = std::find(m_views.begin(), m_views.end(), view);
+        auto it = std::find(m_views.begin(), m_views.end(), view);
         if(it == m_views.end()) return false;
 
         m_views.erase(it);
@@ -69,11 +75,18 @@ export class Viewport final {
     }
 
     void updatePosition(const vec2& frame_buffer_size) {
-        m_position = ivec2(frame_buffer_size * m_relativ_position + m_position_offset);
+        if(m_relativ_position) {
+            m_position = ivec2(
+                frame_buffer_size * *m_relativ_position + m_position_offset.value_or(vec2{0, 0})
+            );
+        }
     }
     void updateSize(const vec2& frame_buffer_size) {
-        m_size = ivec2(frame_buffer_size * m_relativ_size + m_size_offset);
-        for(auto view : m_views) { view->onResize(m_size); }
+        if (m_relativ_size) {
+            m_size =
+                ivec2(frame_buffer_size * *m_relativ_size + m_size_offset.value_or(vec2{0, 0}));
+            for(auto view : m_views) { view->onResize(m_size); }
+        }
     }
 
     void draw() const {
@@ -86,21 +99,24 @@ export class Viewport final {
         for(auto view : m_views) view->onCurserMove(pos);
     }
 
+    void setPosition(In<ivec2> pos) { m_position = pos; }
+    void setSize(In<uvec2> size) { m_size = size; }
+
   private:
-    WindowId           m_window_id;
+    WindowId m_window_id;
 
     std::vector<View*> m_views;
 
-    vec2               m_relativ_position;
-    vec2               m_relativ_size;
+    std::optional<vec2> m_relativ_position;
+    std::optional<vec2> m_relativ_size;
 
-    vec2               m_position_offset;
-    vec2               m_size_offset;
+    std::optional<vec2> m_position_offset;
+    std::optional<vec2> m_size_offset;
 
-    ivec2              m_position;
-    uvec2              m_size;
+    ivec2 m_position;
+    uvec2 m_size;
 
-    bool               m_enabled = true;
+    bool m_enabled = true;
 };
 
 } // namespace bembel::kernel

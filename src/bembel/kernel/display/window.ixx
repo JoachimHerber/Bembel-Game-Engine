@@ -57,6 +57,7 @@ export class Window {
         vec2 position_offset = {0.f, 0.f},
         vec2 size_offset     = {0.f, 0.f}
     );
+    Viewport& createViewport();
 
     Viewport* getViewport(u32 index = 0) const {
         return index < m_viewports.size() ? m_viewports[index].get() : nullptr;

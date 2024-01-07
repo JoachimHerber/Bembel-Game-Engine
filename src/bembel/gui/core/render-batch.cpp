@@ -10,9 +10,13 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
 
-void setupVertexAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset) {
+void setupVertexAttribute(
+    GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset
+) {
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(index, size, type, normalized, sizeof(InstanceData), (void*)(uintptr_t)offset);
+    glVertexAttribPointer(
+        index, size, type, normalized, sizeof(InstanceData), (void*)(uintptr_t)offset
+    );
     glVertexAttribDivisor(index, 1);
 }
 
@@ -70,7 +74,9 @@ void RenderBatch::draw() {
         glBufferData(GL_ARRAY_BUFFER, m_buffer_size, nullptr, GL_STREAM_DRAW);
     }
     // upload data
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(InstanceData) * m_instances.size(), &(m_instances[0]));
+    glBufferSubData(
+        GL_ARRAY_BUFFER, 0, sizeof(InstanceData) * m_instances.size(), &(m_instances[0])
+    );
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // draw instances
@@ -94,7 +100,7 @@ void RenderBatch::drawRectangle(vec2 min, vec2 max) {
     addInstance(min, max, {0.0f, 0.0f}, {1.0f, 1.0f}, InstanceType::RECTANGLE);
 }
 
-void RenderBatch::drawIcon(glm::vec2 min, glm::vec2 max, glm::vec2 tex_coords_min, glm::vec2 tex_coords_max) {
+void RenderBatch::drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) {
     min += m_position_offset;
     max += m_position_offset;
 
@@ -111,24 +117,6 @@ void RenderBatch::drawIcon(glm::vec2 min, glm::vec2 max, glm::vec2 tex_coords_mi
         m_secondary_color.b
     );
 }
-
-/*
-void RenderBatch::drawText(const kernel::TextLayout& text, glm::vec2 pos, float scale) {
-    auto font = text.getFont();
-    if(!font) return;
-
-    for(const auto& glyph : text.getGlyphs()) {
-        auto      extends    = font->getGlyphExtents(glyph.id);
-        auto      tex_coords = font->getGlyphTexCoord(glyph.id);
-        glm::vec2 p          = pos + scale * glyph.pos;
-        drawGlyph(
-            {p.x + scale * extends.x, p.y + scale * extends.z},
-            {p.x + scale * extends.y, p.y + scale * extends.w},
-            {tex_coords.x, tex_coords.z},
-            {tex_coords.y, tex_coords.w});
-    }
-}
-//*/
 
 void RenderBatch::drawGlyph(GlyphIndex glyph_index, vec2 const& pos, float scale, bool outline) {
     if(!m_font) return;
@@ -155,12 +143,16 @@ void RenderBatch::drawGlyph(GlyphIndex glyph_index, vec2 const& pos, float scale
             vec2 tc_max = sub_glyph.tex_coords_max;
             if(!clampToViewArea(min, max, tc_min, tc_max)) return;
 
-            addInstance(min, max, tc_min, tc_max, InstanceType::GLYPH, threshold_min, threshold_max);
+            addInstance(
+                min, max, tc_min, tc_max, InstanceType::GLYPH, threshold_min, threshold_max
+            );
         }
     }
 }
 
-bool RenderBatch::clampToViewArea(vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max) {
+bool RenderBatch::clampToViewArea(
+    vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max
+) {
     if(max.x <= m_draw_area_min.x || min.x >= m_draw_area_max.x || max.y <= m_draw_area_min.y
        || min.y >= m_draw_area_max.y) {
         return false; // outside of draw area

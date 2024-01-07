@@ -32,5 +32,8 @@ target_sources(Bembel
 		split-group-widget.ixx
 		split-group-widget.cpp
 		
+		viewport-widget.ixx
+		viewport-widget.cpp
+		
 		CMakeLists.txt
 )

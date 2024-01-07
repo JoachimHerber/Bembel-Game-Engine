@@ -53,7 +53,7 @@ export class TextWidget : public Widget {
   private:
     Text       m_text;
     TextLayout m_layout;
-    float      m_fontSize = 8;
+    float      m_fontSize = 20;
 };
 
 } // namespace bembel::gui

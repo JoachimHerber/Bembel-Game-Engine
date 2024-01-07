@@ -48,7 +48,25 @@ class SerialAssetLoader : public AssetLoaderBase {
         }
 
         // we have to load the asset
-        std::unique_ptr<AssetType> asset = AssetType::loadAsset(path.value());
+        std::unique_ptr<AssetType> asset;
+        if constexpr(requires(std::filesystem::path p) {
+           {AssetType::loadAsset(p)} -> std::convertible_to<std::unique_ptr<AssetType>>;//
+        }) {
+            asset = AssetType::loadAsset(path.value());
+        } else {
+            std::string const file_path = path.value().string(); // file.c_str() returns a wchar*
+            xml::Document     doc;
+            if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
+                logError("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
+            } else {
+                xml::Element const* root = doc.FirstChildElement(AssetType::ASSET_TYPE_NAME.data());
+                if(!root) {
+                    logError("File '{}' has no root element '{}'", file_path, AssetType::ASSET_TYPE_NAME);
+                } else {
+                    asset = AssetType::createAsset(root);
+                }
+            }
+        }
         if(!asset) return AssetHandle();
 
         handle = m_container->addAsset(std::move(asset));

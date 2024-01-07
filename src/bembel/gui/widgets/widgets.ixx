@@ -13,6 +13,7 @@ export import :RadioButton;
 export import :Window;
 export import :Tabs;
 export import :SplitGroup;
+export import :Viewport;
 
 import bembel.gui.core;
 
@@ -33,6 +34,7 @@ void registerWidgetTypesInFactory() {
     registerWidgetTypeInFactory<WindowWidget>();
     registerWidgetTypeInFactory<TabGroupWidget>();
     registerWidgetTypeInFactory<SplitGroupWidget>();
+    registerWidgetTypeInFactory<ViewportWidget>();
 }
 
 } // namespace bembel::gui

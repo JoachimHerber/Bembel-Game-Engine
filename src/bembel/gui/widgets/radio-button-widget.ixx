@@ -98,6 +98,7 @@ export class RadioButtonGroupWidget : public Widget {
     void disableButton(size_t index);
     void enableButton(size_t index);
 
+    void deleteAllRadioButtons();
     void addRadioButton(In<std::u8string_view> lable);
 
     int  getSelection() const;

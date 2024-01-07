@@ -21,17 +21,17 @@ SplitGroupWidget::SplitGroupWidget(Widget& parent, bool horizontal)
     m_first_group.setName("First");
     m_second_group.setName("Second");
 
-    m_interaction_handles.push_back(&m_move_seperator);
+    m_interaction_handles.push_back(&m_handle);
 
-    m_move_seperator.cursor = Asset<CursorIcon>(horizontal ? "HResize" : "VResize");
+    m_handle.cursor = Asset<CursorIcon>(horizontal ? "HResize" : "VResize");
 
     this->size.change_signal.bind(this, &SplitGroupWidget::onSizeChanged);
 
-    m_move_seperator.dragging_signal.bind(this, &SplitGroupWidget::onMoveSeperator);
+    m_handle.dragging_signal.bind(this, &SplitGroupWidget::onMoveSeperator);
 
     updateLayout();
 
-    // m_view = std::make_unique<SimpleWindowWidgetView>(*this);
+    m_view = std::make_unique<SimpleSplitGroupWidgetView>(*this);
 }
 
 SplitGroupWidget::~SplitGroupWidget() {}
@@ -84,18 +84,40 @@ uint SplitGroupWidget::getMinHeight(In<std::optional<uint>>) const {
 }
 
 void SplitGroupWidget::onSizeChanged(In<ivec2>, In<ivec2>) {
-    updateLayout();
+    setSeperatorPos(m_seperator_pos);
 }
 
 void SplitGroupWidget::onMoveSeperator(In<ivec2> cursor, InOut<ivec2>) {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    float const border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
-    m_seperator_pos = (m_horizontal ? (m_move_seperator.position.x + cursor.x)
-                                    : (m_move_seperator.position.y + cursor.y))
-                    - (border_width / 2);
+    vec2 const pos = m_handle.position + cursor;
+
+    m_seperator_pos = (m_horizontal ? pos.x : pos.y) - border_width/2;
+
+    updateLayout();
+}
+void SplitGroupWidget::setSeperatorPos(int i) {
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float const border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+
+    auto size = this->size.get();
+
+    if(m_horizontal) {
+        m_seperator_pos = std::max<int>(
+            std::min<int>(i, size.x - border_width - m_second_group.getMinWidth(size.y)),
+            m_first_group.getMinWidth(size.y)
+        );
+    } else {
+        m_seperator_pos = std::max<int>(
+            std::min<int>(i, size.y - border_width - m_second_group.getMinHeight(size.x)),
+            m_first_group.getMinHeight(size.x)
+        );
+    }
 
     updateLayout();
 }
@@ -119,22 +141,49 @@ void SplitGroupWidget::updateLayout() {
         std::max<int>(std::min<int>(m_seperator_pos, max_seperator_pos), min_seperator_pos);
 
     if(m_horizontal) {
-        m_first_group.position    = ivec2{0 /**************************/, 0};
-        m_move_seperator.position = ivec2{m_seperator_pos /************/, 0};
-        m_second_group.position   = ivec2{m_seperator_pos + border_width, 0};
+        m_first_group.position  = ivec2{0 /**************************/, 0};
+        m_handle.position       = ivec2{m_seperator_pos /************/, 0};
+        m_second_group.position = ivec2{m_seperator_pos + border_width, 0};
 
-        m_first_group.size    = ivec2{/********************/ m_seperator_pos, height};
-        m_move_seperator.size = ivec2{/*****/ border_width /***************/, height};
-        m_second_group.size   = ivec2{width - border_width - m_seperator_pos, height};
+        m_first_group.size  = ivec2{/*******************/ m_seperator_pos, height};
+        m_handle.size       = ivec2{/*****/ border_width /***************/, height};
+        m_second_group.size = ivec2{width - border_width - m_seperator_pos, height};
     } else {
-        m_first_group.position    = ivec2{0, 0};
-        m_move_seperator.position = ivec2{0, m_seperator_pos};
-        m_second_group.position   = ivec2{0, m_seperator_pos + border_width};
+        m_first_group.position  = ivec2{0, 0};
+        m_handle.position       = ivec2{0, m_seperator_pos};
+        m_second_group.position = ivec2{0, m_seperator_pos + border_width};
 
-        m_first_group.size    = ivec2{width, /*********************/ m_seperator_pos};
-        m_move_seperator.size = ivec2{width, /******/ border_width /***************/};
-        m_second_group.size   = ivec2{width, height - border_width - m_seperator_pos};
+        m_first_group.size  = ivec2{width, /*********************/ m_seperator_pos};
+        m_handle.size       = ivec2{width, /******/ border_width /***************/};
+        m_second_group.size = ivec2{width, height - border_width - m_seperator_pos};
     }
+}
+
+void SimpleSplitGroupWidgetView::draw(RenderBatchInterface& batch) {
+    auto style = m_widget.getStyle();
+    assert(style && "GUI::Style is undefined");
+
+    float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+
+    if(m_widget.isSelected()) {
+        batch.setPrimaryColor(style->getColor(Style::Colors::BORDER_ACTIVE));
+    } else if(m_widget.isHovered()) {
+        batch.setPrimaryColor(style->getColor(Style::Colors::BORDER_HOVERED));
+    } else {
+        batch.setPrimaryColor(style->getColor(Style::Colors::BORDER));
+    }
+
+    vec2 min = m_widget.position.get();
+    vec2 max = min + vec2(m_widget.size.get());
+
+    if(m_widget.isHorizontal()) {
+        min.x = m_widget.getSeperatorPos();
+        max.x = m_widget.getSeperatorPos() + border_width;
+    } else {
+        min.y = m_widget.getSeperatorPos();
+        max.y = m_widget.getSeperatorPos() + border_width;
+    }
+    batch.drawRectangle(min, max);
 }
 
 } // namespace bembel::gui

@@ -27,6 +27,7 @@ void TabGroupWidget::Tab::onAction(InteractionHandle::Action action, ivec2) {
     if(action != InteractionHandle::Action::INTERACT) return;
 
     m_group->setSelectedTab(m_index);
+    select_signal();
 }
 
 TabGroupWidget::TabGroupWidget(Widget& parent) : Widget{parent} {
@@ -48,20 +49,28 @@ bool TabGroupWidget::configure(xml::Element const* properties) {
 }
 
 uint TabGroupWidget::getMinWidth(In<std::optional<uint>>) const {
-    // auto style = getStyle();
-    // assert(style && "GUI::Style is undefined");
-    //
-    // float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
 
-    return 0;
+    uint const bar_height   = uint(style->getValue(Style::Values::TAB_BAR_HEIGHT));
+    uint const border_width = uint(style->getValue(Style::Values::INPUT_BORDER_WIDTH));
+    uint const text_margin  = uint(style->getValue(Style::Values::BUTTON_TEXT_MARGIN));
+    uint const tab_margin   = uint(style->getValue(Style::Values::TAB_MARGIN));
+
+    uint const label_height = std::max<uint>(bar_height, 2 * text_margin) - 2 * text_margin;
+
+    uint tab_label_width = 64;
+    for(auto& tab : m_tabs) {
+        tab_label_width =
+            std::max(tab_label_width, 2 * text_margin + tab->m_label.getMinWidth(label_height));
+    }
+    return tab_margin + m_tabs.size() * (tab_label_width + tab_margin);
 }
 
 uint TabGroupWidget::getMinHeight(In<std::optional<uint>>) const {
-    // auto style = getStyle();
-    // assert(style && "GUI::Style is undefined");
-    //
-    // float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
-    // float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
+    auto style = getStyle();
+    assert(style && "GUI::Style is undefined");
+
     return 0;
 }
 
@@ -85,6 +94,7 @@ void TabGroupWidget::setSelectedTab(usize index) {
 
     m_selected_tab     = index;
     m_child_widgets[0] = &m_tabs[m_selected_tab]->m_content;
+    updateLayout();
 }
 
 void TabGroupWidget::onSizeChanged(In<ivec2>, In<ivec2>) {
@@ -113,11 +123,14 @@ void TabGroupWidget::updateLayout() {
         );
     }
 
-    tab_label_width = std::min(tab_label_width, content_size.x / int(m_tabs.size()));
+    tab_label_width = std::min(
+        tab_label_width, int(content_size.x - tab_margin * (1 + m_tabs.size())) / int(m_tabs.size())
+    );
 
     int x = tab_margin;
     for(auto& tab : m_tabs) {
-        tab->m_label.position  = ivec2(x, content_size.y) + ivec2(text_margin);
+        tab->m_label.position = ivec2(x, content_size.y)
+                              + ivec2(text_margin, tab->m_handle.isSelected() ? 0 : text_margin);
         tab->m_handle.position = ivec2(x, content_size.y);
         tab->m_label.size      = ivec2(tab_label_width, bar_height) - ivec2(2 * text_margin);
         tab->m_handle.size     = ivec2(tab_label_width, bar_height);
@@ -141,7 +154,7 @@ void SimpleTabGroupWidgetView::draw(RenderBatchInterface& batch) {
     auto tc_bar = style->getTextureCoords("tab_bar");
 
     auto tc_tab_inactive = style->getTextureCoords("tab_inactive");
-    auto tc_tab_active = style->getTextureCoords("tab_active");
+    auto tc_tab_active   = style->getTextureCoords("tab_active");
 
     if(!tc_bar || !tc_tab_inactive || !tc_tab_active) return;
 
@@ -168,12 +181,10 @@ void SimpleTabGroupWidgetView::draw(RenderBatchInterface& batch) {
         float const v0 = tc->min.y;
         float const v1 = tc->max.y;
 
-        if(tab->isSelected()) {
-            batch.setPrimaryColor(style->getColor(Style::Colors::BUTTON_ACTIVE));
-        } else if(tab->isHovered()) {
-            batch.setPrimaryColor(style->getColor(Style::Colors::BUTTON_HOVERED));
+        if(tab->isHovered()) {
+            batch.setPrimaryColor(style->getColor(Style::Colors::TAB_HOVERED));
         } else {
-            batch.setPrimaryColor(style->getColor(Style::Colors::BUTTON));
+            batch.setPrimaryColor(style->getColor(Style::Colors::TAB));
         }
 
         batch.drawIcon({x0, min.y}, {x1, max.y}, {u0, v0}, {u1, v1});
@@ -188,6 +199,9 @@ void SimpleTabGroupWidgetView::draw(RenderBatchInterface& batch) {
         drawTab(tab);
     }
     drawTab(m_widget.getTab(m_widget.getSelectedTab()));
+
+    batch.setPrimaryColor(style->getColor(Style::Colors::TAB));
+    batch.drawRectangle({min.x, m_widget.position.get().y}, {max.x, min.y});
 } // namespace bembel::gui
 
 } // namespace bembel::gui

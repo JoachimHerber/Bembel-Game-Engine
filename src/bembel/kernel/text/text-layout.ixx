@@ -23,7 +23,14 @@ export class TextLayout final {
         Glyph& operator=(Glyph&&) = default;
     };
 
-    bool calculateSimpleLayout(Text const& text, vec2 origin, float font_size, float max_line_length);
+    uint calculateMinWidth(In<Text> text, In<float> font_size, In<std::optional<uint>> height)
+        const;
+    uint calculateMinHeight(In<Text> text, In<float> font_size, In<std::optional<uint>> width)
+        const;
+
+    bool calculateSimpleLayout(
+        Text const& text, vec2 origin, float font_size, float max_line_length
+    );
 
     std::vector<Glyph> const& getGlyphs() const { return m_glyphs; }
 
