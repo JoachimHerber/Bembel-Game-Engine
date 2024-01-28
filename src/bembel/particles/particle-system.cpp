@@ -20,8 +20,8 @@ class ParticleEffectLoader final : public AssetLoaderBase {
       : m_system(system), m_container(container) {}
     virtual ~ParticleEffectLoader() = default;
 
-    AssetHandle requestAsset(std::string_view filename) override {
-        kernel::AssetHandle handle = m_container->getAssetHandle(filename);
+    AssetHandle requestAsset(In<std::filesystem::path> file_name) override {
+        kernel::AssetHandle handle = m_container->getAssetHandle(file_name.string());
 
         if(!m_container->isHandelValid(handle)) {
             // we have to load the asset
@@ -31,7 +31,7 @@ class ParticleEffectLoader final : public AssetLoaderBase {
 
             handle = m_container->addAsset(std::move(asset));
             m_container->incrementAssetRefCount(handle);
-            m_container->registerAssetAlias(handle, filename);
+            m_container->registerAssetAlias(handle, file_name.string());
         }
 
         m_container->incrementAssetRefCount(handle);

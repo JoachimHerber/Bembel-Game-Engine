@@ -30,17 +30,17 @@ export class AssetLocator final {
     void addGenericAssetDirectory(In<std::filesystem::path> directory);
 
     template <typename AssetType>
-    std::optional<std::filesystem::path> findAssetLocation(In<std::string_view> file_name) {
+    std::optional<std::filesystem::path> findAssetLocation(In<std::filesystem::path> file_name) {
         return findAssetLocation(AssetType::ASSET_TYPE_NAME, file_name);
     }
 
     std::optional<std::filesystem::path> findAssetLocation(
-        const std::string_view asset_type_name, std::string_view file_name
+       In<std::string_view> asset_type_name, In<std::filesystem::path> file_name
     );
 
   private:
     std::optional<std::filesystem::path> locateFile(
-        std::vector<std::filesystem::path> const& directories, std::string_view file_name
+        In<std::vector<std::filesystem::path>> directories, In<std::filesystem::path> file_name
     );
 
   private:

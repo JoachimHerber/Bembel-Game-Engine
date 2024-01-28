@@ -23,6 +23,12 @@ export template <AssetType T>
 class Asset final {
   public:
     Asset() {}
+    Asset(Move<std::unique_ptr<T>> asset) {
+        if(g_container){
+            m_handel = g_container->addAsset(std::move(asset));
+            g_container->incrementAssetRefCount(m_handel);
+        }
+    }
     Asset(In<std::string_view> name) {
         if(g_container) {
             m_handel = g_container->getAssetHandle(name);
@@ -57,8 +63,8 @@ class Asset final {
     }
 
     T* get() const { return g_container ? g_container->getAsset(m_handel) : nullptr; }
-    
-    bool init(Move<std::unique_ptr<T>> asset) {
+
+    bool asign(Move<std::unique_ptr<T>> asset) {
         if(!g_container) return false;
         AssetHandle handl = g_container->addAsset(std::move(asset));
         return this->set(handl, true);
