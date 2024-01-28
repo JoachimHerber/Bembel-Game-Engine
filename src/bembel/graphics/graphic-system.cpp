@@ -81,8 +81,8 @@ void GraphicSystem::configureRenderer(xml::Element const* properties) {
     m_renderer.resize(3);
     for(auto renderer_properties : xml::IterateChildElements(properties)) {
         std::string vertex_format;
-        if(xml::getAttribute(renderer_properties, "VertexFormat", vertex_format)) {
-            if(vertex_format == "Default")
+        if(xml::getAttribute(renderer_properties, "vertex_format", vertex_format)) {
+            if(vertex_format == "default")
                 m_renderer[0] = DefaultGeometryRenderer::createRenderer(
                     renderer_properties, GeometryMesh::VertexFormat::Default
                 );

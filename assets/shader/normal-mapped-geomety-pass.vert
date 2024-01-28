@@ -1,8 +1,13 @@
 #version 330
 
-layout(location = 0) in vec4 aPosition;
-layout(location = 1) in vec4 aNormalQuat;
-layout(location = 2) in vec2 aTexCoord;  
+//layout(location = 0) in vec4 aPosition;
+//layout(location = 1) in vec4 aNormalQuat;
+//layout(location = 2) in vec2 aTexCoord;  
+ 
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec3 aTangent;
+layout(location = 3) in vec2 aTexCoord;  
  
 uniform mat4 uNormalMatrix;
 uniform mat4 uModleViewMatrix;
@@ -36,14 +41,14 @@ mat3 quatToMat3(vec4 q)
 
 void main()
 {
-	mat3 normal_transform  = mat3(uNormalMatrix)*quatToMat3(aNormalQuat);
- 	vert_data.tangent   = normalize(normal_transform*vec3(1.0, 0.0, 0.0));
- 	vert_data.binormal  = normalize(normal_transform*vec3(0.0, 1.0, 0.0));
- 	vert_data.normal    = normalize(normal_transform*vec3(0.0, 0.0, 1.0));
+	//mat3 tangent_space = quatToMat3(aNormalQuat);
+	mat3 normal_transform  = mat3(uNormalMatrix);//*tangent_space;
+ 	vert_data.tangent   = normalize(normal_transform*aTangent);
+ 	vert_data.binormal  = normalize(normal_transform*cross(aNormal, aTangent));
+ 	vert_data.normal    = normalize(normal_transform*aNormal);
 	vert_data.tex_coord = aTexCoord;
  
- 
  	gl_Position = 
- 		uProjectionMatrix*uModleViewMatrix*aPosition;
+ 		uProjectionMatrix*uModleViewMatrix*vec4(aPosition -0.1*aNormal, 1.0);
 		
 }

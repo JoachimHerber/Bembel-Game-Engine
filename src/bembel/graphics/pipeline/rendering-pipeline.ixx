@@ -84,7 +84,7 @@ export class RenderingPipeline final {
         void init() { m_fbo->init(); }
         void cleanup() { m_fbo->cleanup(); }
 
-        void draw(ivec2 const& viewport_position, uvec2 const& viewport_size) override;
+        void draw(In<ivec2> viewport_position, In<uvec2> viewport_size) override;
 
       private:
         Texture* m_texture;
@@ -104,7 +104,7 @@ export class RenderingPipeline final {
     RenderingPipeline& operator=(RenderingPipeline const&) = delete;
     ~RenderingPipeline()                                   = default;
 
-    void         setResulution(ivec2 const& value);
+    void         setResulution(In<ivec2> value);
     ivec2 const& getResulution() const { return m_resolution; }
 
     void enable() { m_enabled = true; }

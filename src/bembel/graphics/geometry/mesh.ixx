@@ -1,6 +1,7 @@
 ﻿module;
 #include <filesystem>
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <optional>
 #include <span>
@@ -14,18 +15,21 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
+
 export struct DefaultVertexFormat {
-    DefaultVertexFormat(In<vec3> pos, In<quat> n, In<vec2> tx)
-      : position{pos, 1.0f}
-      , normal{0x7FFF * n.x, 0x7FFF * n.y, 0x7FFF * n.z, 0x7FFF * n.w}
+    DefaultVertexFormat(
+        In<vec3> pos, In<vec3> n, In<vec3> t,  In<vec2> tx)
+      : position{pos}
+      , normal{0x7FFF * n.x, 0x7FFF * n.y, 0x7FFF * n.z}
+      , tangent{0x7FFF * t.x, 0x7FFF * t.y, 0x7FFF * t.z}
       // OpenGL 4.2+ u16 to normalized float:
-      //     float = max(int/0x7FFF, -1.0f) 
+      //     float = max(int/0x7FFF, -1.0f)
       // <=> int   = 0x7FFF*float
       , tex_coords{tx} {}
-
-    vec4            position;   //   16 Byte -> 16 Byte
-    glm::tvec4<i16> normal;     // +  8 Byte -> 24 Byte (quaternion)
-    vec2            tex_coords; // +  8 Byte -> 32 Byte
+    vec3            position;   //  12 Byte ->  12 Byte
+    glm::tvec3<i16> normal;     // + 6 Byte ->  18 Byte
+    glm::tvec3<i16> tangent;    // + 6 Byte ->  24 Byte
+    vec2            tex_coords; // + 8 Byte ->  32 Byte
 };
 static_assert(sizeof(DefaultVertexFormat) == 32);
 

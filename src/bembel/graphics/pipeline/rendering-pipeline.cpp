@@ -50,7 +50,7 @@ void RenderingPipeline::Stage::releaseInputTextures() {
     }
 }
 
-void RenderingPipeline::View::draw(ivec2 const& viewport_position, uvec2 const& viewport_size) {
+void RenderingPipeline::View::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     m_fbo->blitToBackBuffer(
         m_view_area_pos,
         m_view_area_pos + glm::ivec2(m_view_area_size),
@@ -59,7 +59,7 @@ void RenderingPipeline::View::draw(ivec2 const& viewport_position, uvec2 const& 
     );
 }
 
-void RenderingPipeline::setResulution(ivec2 const& value) {
+void RenderingPipeline::setResulution(In<ivec2> value) {
     if(m_resolution == value) return;
 
     m_resolution = value;
@@ -84,7 +84,8 @@ bool RenderingPipeline::configure(xml::Element const* properties) {
 }
 
 void RenderingPipeline::init() {
-    for(auto& [name, texture] : m_textures) texture->init(m_resolution);
+    for(auto& [name, texture] : m_textures)
+        texture->init(m_resolution, Texture::MinFilter::LINEAR, Texture::MagFilter::LINEAR);
 
     for(auto& stage : m_render_stages) stage->init();
 
@@ -120,7 +121,8 @@ bool RenderingPipeline::createTexture(std::string_view name, Texture::Format for
     if(m_textures.find(name) != m_textures.end()) return false; // texture already exists
 
     auto texture = std::make_unique<Texture>(Texture::Target::TEXTURE_2D, format);
-    if(m_initalized) texture->init(m_resolution);
+    if(m_initalized)
+        texture->init(m_resolution, Texture::MinFilter::LINEAR, Texture::MagFilter::LINEAR);
 
     m_textures.emplace(name, std::move(texture));
     return true;

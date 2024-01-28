@@ -32,12 +32,14 @@ GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
 
     uint stride = sizeof(DefaultVertexFormat);
     // clang-format off
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride, (void*)(0));  // position
-    glVertexAttribPointer(1, 4, GL_SHORT, GL_TRUE,  stride, (void*)(16)); // normal
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(24)); // tex_coords
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(0));   // position
+    glVertexAttribPointer(1, 3, GL_SHORT, GL_TRUE,  stride, (void*)(12));  // position
+    glVertexAttribPointer(2, 3, GL_SHORT, GL_TRUE,  stride, (void*)(18));  // position
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(24));  // position
     // clang-format on
 
     glBindVertexArray(0);

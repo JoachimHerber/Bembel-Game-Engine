@@ -18,8 +18,7 @@ using namespace ::gl;
 
 ShadowMap::ShadowMap(Texture::Target target)
   : m_texture{target, Texture::Format::DEPTH_COMPONENT32} {}
-ShadowMap::~ShadowMap() {
-}
+ShadowMap::~ShadowMap() {}
 
 void ShadowMap::setResolution(uint resolution) {
     m_resolution = resolution;
@@ -39,10 +38,10 @@ void ShadowMap::setResolution(uint resolution) {
 }
 
 void ShadowMap::updateLayer(
-    In<GeometryRenderQueue>      render_queue,
+    In<GeometryRenderQueue>          render_queue,
     In<std::span<const RendererPtr>> renderer,
-    In<mat4>                     view_proj,
-    usize                        layer
+    In<mat4>                         view_proj,
+    usize                            layer
 ) {
     if(layer >= MAX_NUM_LAYERS) return;
 
@@ -52,7 +51,9 @@ void ShadowMap::updateLayer(
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glViewport(0, 0, m_resolution, m_resolution);
-    for(auto& it : renderer) { it->renderShadows(view_proj, render_queue.getRenderData()); }
+    for(auto& it : renderer) {
+        if(it) it->renderShadows(view_proj, render_queue.getRenderData());
+    }
 
     m_fbos[layer].endRenderToTexture();
 }
