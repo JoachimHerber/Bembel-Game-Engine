@@ -1,8 +1,8 @@
 target_sources(Bembel
     PRIVATE
         imgui.ixx
-        imgui-system.ixx
-        imgui-system.cpp
+        imgui-view.ixx
+        imgui-view.cpp
         imgui-functions.ixx
         imgui-enums.ixx
 

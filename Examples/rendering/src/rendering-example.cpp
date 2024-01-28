@@ -128,7 +128,8 @@ RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolut
     m_shader->attachShader(std::move(frag));
     if(!m_shader->link()) { m_shader.reset(); }
 }
-void RenderingExample::ShadowDebugView::draw(ivec2 const& viewport_position, uvec2 const& viewport_size) {
+
+void RenderingExample::ShadowDebugView::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     if(!m_shader) return;
     glViewport(viewport_position.x, viewport_position.y, viewport_size.x, viewport_size.y);
 
