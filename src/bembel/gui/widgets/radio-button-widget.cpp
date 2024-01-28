@@ -93,7 +93,7 @@ RadioButtonGroupWidget::RadioButtonGroupWidget(Widget& parent) : Widget{parent} 
 }
 
 bool RadioButtonGroupWidget::configure(xml::Element const* properties) {
-    return false;
+    return Widget::configure(properties);
 }
 
 uint RadioButtonGroupWidget::getMinWidth(In<std::optional<uint>> height) const {

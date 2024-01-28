@@ -17,10 +17,10 @@ export class Viewport final {
             if(m_viewport) m_viewport->removeView(this);
         }
 
-        virtual void onCurserMove(const vec2& pos){};
-        virtual void onResize(const uvec2&){};
+        virtual void onCurserMove(In<vec2> pos){};
+        virtual void onResize(In<uvec2>){};
 
-        virtual void draw(const ivec2& viewport_position, const uvec2& viewport_size) = 0;
+        virtual void draw(In<ivec2> viewport_position, In<uvec2> viewport_size) = 0;
 
         Viewport* getViewport() { return m_viewport; }
 
@@ -29,13 +29,12 @@ export class Viewport final {
         Viewport* m_viewport = nullptr;
     };
 
-    Viewport(WindowId window_id) : m_window_id{window_id} {}
     Viewport(
-        WindowId    window_id,
-        const vec2& rel_pos,
-        const vec2& rel_size,
-        const vec2& pos_offset,
-        const vec2& size_offset
+        In<WindowId>            window_id,
+        In<std::optional<vec2>> rel_pos     = {},
+        In<std::optional<vec2>> rel_size    = {},
+        In<std::optional<vec2>> pos_offset  = {},
+        In<std::optional<vec2>> size_offset = {}
     )
       : m_window_id{window_id}
       , m_relativ_position{rel_pos}
@@ -82,7 +81,7 @@ export class Viewport final {
         }
     }
     void updateSize(const vec2& frame_buffer_size) {
-        if (m_relativ_size) {
+        if(m_relativ_size) {
             m_size =
                 ivec2(frame_buffer_size * *m_relativ_size + m_size_offset.value_or(vec2{0, 0}));
             for(auto view : m_views) { view->onResize(m_size); }

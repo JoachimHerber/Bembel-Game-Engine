@@ -34,6 +34,8 @@ ButtonWidget::~ButtonWidget() {}
 
 bool ButtonWidget::configure(base::xml::Element const* properties) {
     Widget::configure(properties);
+    std::u8string label;
+    if(xml::getAttribute(properties, "label", label)) { m_label.setText(label); }
     // @ToDo configure View
     return true;
 }
@@ -45,7 +47,7 @@ uint ButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
     uint margin = 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN);
 
     return margin + m_label.getMinWidth(height.and_then([=](uint h) {
-        return std::optional<uint> (std::min(h, margin) - margin);
+        return std::optional<uint>(std::min(h, margin) - margin);
     }));
 }
 
@@ -56,7 +58,7 @@ uint ButtonWidget::getMinHeight(In<std::optional<uint>> width) const {
     uint margin = 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN);
 
     return margin + m_label.getMinHeight(width.and_then([=](uint w) {
-        return std::optional<uint> (std::min(w, margin) - margin);
+        return std::optional<uint>(std::min(w, margin) - margin);
     }));
 }
 
@@ -109,7 +111,7 @@ void SimpleButtonWidgetView::draw(RenderBatchInterface& batch) {
     float const u0 = tc->min.x;
     float const u1 = (tc->min.x + tc->max.x) * 0.5f;
     float const u2 = tc->max.x;
-    
+
     float const v0 = tc->min.y;
     float const v1 = (tc->min.y + tc->max.y) * 0.5f;
     float const v2 = tc->max.y;
@@ -120,7 +122,7 @@ void SimpleButtonWidgetView::draw(RenderBatchInterface& batch) {
     float const x1 = x0 + corner_radius;
     float const x3 = x0 + m_button.size.get().x;
     float const x2 = x3 - corner_radius;
-    
+
     float const y0 = m_button.position.get().y;
     float const y1 = y0 + corner_radius;
     float const y3 = y0 + m_button.size.get().y;

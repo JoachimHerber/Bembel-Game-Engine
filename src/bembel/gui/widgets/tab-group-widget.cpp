@@ -39,10 +39,14 @@ TabGroupWidget::TabGroupWidget(Widget& parent) : Widget{parent} {
 TabGroupWidget::~TabGroupWidget() {}
 
 bool TabGroupWidget::configure(xml::Element const* properties) {
-    // for(auto* tab_config: xml::i)
-    // if(!m_title_bar.configure(properties->FirstChildElement("TileBar"))) return false;
-    // if(!m_window_area.configure(properties->FirstChildElement("WindowArea"))) return false;
+    if(!properties) return false;
+    for(auto it : xml::IterateChildElements(properties, "Tab")) {
+        std::u8string label;
+        if(!xml::getAttribute(it, "label", label)) return false;
 
+        auto tab = addTab(label);
+        if(!tab->getContentArea().configure(it)) return false;
+    }
     Widget::configure(properties);
 
     return true;
@@ -198,7 +202,8 @@ void SimpleTabGroupWidgetView::draw(RenderBatchInterface& batch) {
 
         drawTab(tab);
     }
-    drawTab(m_widget.getTab(m_widget.getSelectedTab()));
+    if(m_widget.getNumTabs() > m_widget.getSelectedTab())
+        drawTab(m_widget.getTab(m_widget.getSelectedTab()));
 
     batch.setPrimaryColor(style->getColor(Style::Colors::TAB));
     batch.drawRectangle({min.x, m_widget.position.get().y}, {max.x, min.y});

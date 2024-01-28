@@ -19,16 +19,16 @@ export class GraphicalUserInterface {
       public:
         View(GraphicalUserInterface& gui) : m_gui{gui} {}
 
-        void onCurserMove(vec2 const& pos) override;
-        void onResize(uvec2 const&) override;
+        void onCurserMove(In<vec2> pos) override;
+        void onResize(In<uvec2>) override;
 
-        void draw(ivec2 const& pos, uvec2 const& size) override;
+        void draw(In<ivec2> pos, In<uvec2> size) override;
 
       private:
         GraphicalUserInterface& m_gui;
     };
 
-    GraphicalUserInterface();
+    GraphicalUserInterface(Engine& engine);
     GraphicalUserInterface(GraphicalUserInterface const&)            = delete;
     GraphicalUserInterface& operator=(GraphicalUserInterface const&) = delete;
     ~GraphicalUserInterface();
@@ -41,6 +41,7 @@ export class GraphicalUserInterface {
     Widget*     getWidget(std::string_view path) const;
 
   public:
+    Engine&      engine;
     View         view;
     InputHandler input;
     Renderer     renderer;

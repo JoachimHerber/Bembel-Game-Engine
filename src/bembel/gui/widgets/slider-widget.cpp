@@ -32,7 +32,6 @@ SliderWidget::~SliderWidget() {}
 
 bool SliderWidget::configure(base::xml::Element const* properties) {
     Widget::configure(properties);
-    // @ToDo configure View
     return true;
 }
 

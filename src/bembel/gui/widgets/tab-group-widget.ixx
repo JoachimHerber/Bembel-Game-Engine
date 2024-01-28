@@ -58,7 +58,7 @@ export class TabGroupWidget : public Widget {
         GroupWidget m_content;
     };
 
-    Tab* addTab(std::u8string_view lable);
+    Tab* addTab(std::u8string_view label);
 
     usize getNumTabs() const { return m_tabs.size(); }
     Tab*  getTab(usize i) const { return i <= m_tabs.size() ? m_tabs[i].get() : nullptr; }

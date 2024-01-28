@@ -171,21 +171,15 @@ void Window::init(In<not_null_ptr<const xml::Element>> properties) {
     auto* viewports = properties->FirstChildElement("Viewports");
     if(viewports) {
         for(auto it : xml::IterateChildElements(viewports, "Viewport")) {
-            vec2 relativ_position(0, 0);
-            vec2 relativ_size(1, 1);
-            vec2 position_offset(0, 0);
-            vec2 size_offset(0, 0);
-            xml::getAttribute(it, "relativ_position", relativ_position);
-            xml::getAttribute(it, "relativ_size", relativ_size);
-            xml::getAttribute(it, "position_offset", position_offset);
-            xml::getAttribute(it, "size_offset", size_offset);
-
+            auto relativ_position = xml::getAttribute<vec2>(it, "relativ_position");
+            auto relativ_size     = xml::getAttribute<vec2>(it, "relativ_size");
+            auto position_offset  = xml::getAttribute<vec2>(it, "position_offset");
+            auto size_offset      = xml::getAttribute<vec2>(it, "size_offset");
             m_viewports.push_back(std::make_unique<Viewport>(
                 m_window_id, relativ_position, relativ_size, position_offset, size_offset
             ));
         }
     }
-
     std::string title = "Bembel";
     xml::getAttribute(properties, "title", title);
     this->open(title);

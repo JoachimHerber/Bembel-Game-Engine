@@ -31,6 +31,7 @@ void registerWidgetTypesInFactory() {
     registerWidgetTypeInFactory<SliderWidget>();
     registerWidgetTypeInFactory<IntSliderWidget>();
     registerWidgetTypeInFactory<CheckBoxWidget>();
+    registerWidgetTypeInFactory<RadioButtonGroupWidget>();
     registerWidgetTypeInFactory<WindowWidget>();
     registerWidgetTypeInFactory<TabGroupWidget>();
     registerWidgetTypeInFactory<SplitGroupWidget>();

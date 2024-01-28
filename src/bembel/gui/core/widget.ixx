@@ -75,7 +75,9 @@ export class Widget {
         return m_interaction_handles;
     }
 
-    Widget* getChildWidget(std::string_view path) const;
+    template <typename WidgetType>
+    WidgetType* getChildWidget(std::string_view path) const;
+    Widget*     getChildWidget(std::string_view path) const;
 
     static Factory<Widget, Widget&>& getFactory();
 
@@ -92,4 +94,12 @@ export class Widget {
     std::vector<InteractionHandle*> m_interaction_handles;
 };
 
+template <typename WidgetType>
+inline WidgetType* Widget::getChildWidget(std::string_view path) const {
+    auto widget = this->getChildWidget(path);
+    if(widget != nullptr && widget->getWidgetTypeName() == WidgetType::WIDGET_TYPE_NAME) {
+        return static_cast<WidgetType*>(widget);
+    }
+    return nullptr;
+}
 } // namespace bembel::gui

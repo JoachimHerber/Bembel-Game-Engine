@@ -1,6 +1,7 @@
 module;
 #include <algorithm>
 #include <cctype>
+#include <string_view>
 module bembel.gui.core;
 
 import bembel.base;
@@ -10,20 +11,61 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-/*
-Factory<WidgetLayout>& WidgetLayout::GetLayouterFactory() {
-    static Factory<WidgetLayout> factory{};
-    return factory;
-}
-//*/
-
 inline void stringToLower(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) {
         return std::tolower(c);
     });
 }
 
+LinearWidgetLayout::Mode getMode(
+    In<xml::Element const*> properties, LinearWidgetLayout::Mode _default
+) {
+    std::string mode;
+    xml::getAttribute(properties, "mode", mode);
+
+    std::transform(mode.begin(), mode.end(), mode.begin(), [](unsigned char c) {
+        return std::toupper(c);
+    });
+
+    if(mode == "SCALE_TO_FIT") return LinearWidgetLayout::Mode::SCALE_TO_FIT;
+    if(mode == "ALIGN_BOTTON") return LinearWidgetLayout::Mode::ALIGN_BOTTON;
+    if(mode == "ALIGN_LEFT") return LinearWidgetLayout::Mode::ALIGN_LEFT;
+    if(mode == "ALIGN_CENTER") return LinearWidgetLayout::Mode::ALIGN_CENTER;
+    if(mode == "ALIGN_RIGHT") return LinearWidgetLayout::Mode::ALIGN_RIGHT;
+    if(mode == "ALIGN_TOP") return LinearWidgetLayout::Mode::ALIGN_TOP;
+    if(mode == "SPACE_EQUALLY") return LinearWidgetLayout::Mode::SPACE_EQUALLY;
+
+    return _default;
+}
+
 bool LinearWidgetLayout::configure(In<xml::Element const*> properties) {
+    xml::getAttribute(properties, "left_margin", m_margin_left);
+    xml::getAttribute(properties, "right_margin", m_margin_right);
+    m_mode = getMode(properties, m_mode);
+
+    for(auto row : xml::IterateChildElements(properties, "Row")) {
+        auto mode       = getMode(row, Mode::SCALE_TO_FIT);
+        auto height     = xml::getAttribute<uint>(row, "height");
+        auto min_height = xml::getAttribute<uint>(row, "min_height");
+        auto rel_height = xml::getAttribute<float>(row, "rel_height");
+
+        addRow({mode, height, min_height.value_or(0), rel_height.value_or(0.f)});
+        for(auto element : xml::IterateChildElements(row)) {
+            std::string_view type = element->Value();
+            if(type == "Spacing") {
+                auto width = xml::getAttribute<uint>(element, "width");
+                if(width) addSpacing(*width);
+                continue;
+            }
+
+            auto child = m_group->createChildWidget(type, element);
+            if(!child) return false;
+
+            auto rel_width = xml::getAttribute<float>(element, "rel_width");
+            auto min_width = xml::getAttribute<uint>(element, "min_width");
+            addWidget(child, rel_width.value_or(1.f), min_width.value_or(0.f));
+        }
+    }
     return true;
 }
 
@@ -195,7 +237,20 @@ bool LinearWidgetLayout::registerd =
     WidgetLayout::GetLayouterFactory().registerObjectGenerator<LinearWidgetLayout>("linear");
     //*/
 
-bool RelativeWidgetLayout::configure(xml::Element const*) {
+bool RelativeWidgetLayout::configure(xml::Element const* properties) {
+    for(auto it : xml::IterateChildElements(properties)) {
+        auto child = m_group->createChildWidget(it->Value(), it);
+        if(!child) return false;
+        vec2 position        = {0.0f, 0.0f};
+        vec2 size            = {1.0f, 1.0f};
+        vec2 position_offset = {0.f, 0.f};
+        vec2 size_offset     = {0.f, 0.f};
+        xml::getAttribute(it, "position", position);
+        xml::getAttribute(it, "size", size);
+        xml::getAttribute(it, "position_offset", position_offset);
+        xml::getAttribute(it, "size_offset", size_offset);
+        addWidget(child, position, size, position_offset, size_offset);
+    }
     return true;
 }
 uint RelativeWidgetLayout::getMinWidth(In<std::optional<uint>>) const {

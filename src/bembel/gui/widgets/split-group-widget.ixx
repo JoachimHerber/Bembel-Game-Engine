@@ -12,7 +12,7 @@ using namespace bembel::kernel;
 
 export class SplitGroupWidget : public Widget {
   public:
-    static constexpr std::string_view WIDGET_TYPE_NAME = "ResizableTable";
+    static constexpr std::string_view WIDGET_TYPE_NAME = "SplitGroup";
 
   public:
     SplitGroupWidget(Widget& parent, bool horizontal = true);

@@ -52,6 +52,8 @@ bool SplitGroupWidget::configure(xml::Element const* properties) {
         if(!m_second_group.configure(t)) return false;
     }
 
+    xml::getAttribute(properties, "seperator_pos", m_seperator_pos);
+
     Widget::configure(properties);
 
     return true;

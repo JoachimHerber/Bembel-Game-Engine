@@ -20,6 +20,8 @@ export class ViewportWidget : public Widget {
     ViewportWidget(Widget& parent, Viewport* viewport = nullptr, Camera* camera = nullptr);
     ~ViewportWidget();
 
+    void setCamera(Camera* camera);
+
     virtual bool configure(xml::Element const* properties) override;
 
     virtual uint getMinWidth(In<std::optional<uint>>) const override;
@@ -36,9 +38,9 @@ export class ViewportWidget : public Widget {
     Camera*           m_camera;
     InteractionHandle m_handle;
 
-    float             m_camera_pitch = -0.1f;
-    float             m_camera_yaw   = 0;
-    float             m_camera_dist  = 3.0f;
+    float m_camera_pitch = -0.1f;
+    float m_camera_yaw   = 0;
+    float m_camera_dist  = 3.0f;
 };
 
 } // namespace bembel::gui

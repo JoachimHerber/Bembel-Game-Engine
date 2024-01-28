@@ -2,6 +2,10 @@
 #include <GLFW/glfw3.h>
 
 #include <filesystem>
+
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "imgui.h"
 module bembel.gui;
 
 import bembel.base;
@@ -34,27 +38,32 @@ bool GuiSystem::configure(xml::Element const* properties) {
         auto gui = createGUI(name);
 
         if(!gui->init(properties)) return false;
-
-        unsigned windowId, viewportId;
-        if(xml::getAttribute(properties, "window", windowId)
-           && xml::getAttribute(properties, "viewport", viewportId)) {
-            auto window = m_engine.display.getWindow(windowId);
-
-            if(window && window->getViewports().size() > viewportId) {
-                window->getViewports()[viewportId]->addView(&gui->view);
-            }
-        }
     }
     return true;
 }
 
 bool GuiSystem::init() {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // IF using Docking Branch
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(m_engine.display.getWindow(0)->getGlfwWindow(), true);
+    ImGui_ImplOpenGL3_Init();
     return true;
 }
 
 void GuiSystem::shutdown() {
     m_guis.clear();
     m_named_guis.clear();
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
 
 void GuiSystem::update(double) {}
@@ -67,7 +76,7 @@ GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
         return nullptr;
     }
 
-    m_guis.push_back(std::make_unique<GraphicalUserInterface>());
+    m_guis.push_back(std::make_unique<GraphicalUserInterface>(m_engine));
 
     GraphicalUserInterface* gui = m_guis.back().get();
 

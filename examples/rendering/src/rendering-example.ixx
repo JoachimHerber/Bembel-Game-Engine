@@ -33,7 +33,7 @@ export class RenderingExample : public kernel::Application<GraphicSystem, GuiSys
         ShadowDebugView(Texture* texture, u64 resolution, uint layer);
         ~ShadowDebugView() = default;
 
-        void draw(ivec2 const& viewport_position, uvec2 const& viewport_size) override;
+        void draw(In<ivec2> viewport_position, In<uvec2> viewport_size) override;
 
       private:
         std::unique_ptr<ShaderProgram> m_shader;

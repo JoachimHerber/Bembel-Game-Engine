@@ -1,8 +1,8 @@
 ﻿module;
 #include <algorithm>
 #include <cctype>
-#include <string_view>
 #include <memory>
+#include <string_view>
 module bembel.gui.core;
 
 import bembel.base;
@@ -25,19 +25,29 @@ GroupWidget::GroupWidget(Widget& parent) : Widget{parent} {
 
 GroupWidget::~GroupWidget() {}
 
-bool GroupWidget::configure(base::xml::Element const* properties) {
+bool GroupWidget::configure(xml::Element const* properties) {
     Widget::configure(properties);
 
     if(!properties) return true;
 
     std::string layout_name;
-    if(base::xml::getAttribute(properties, "layout", layout_name)) {
+    if(xml::getAttribute(properties, "layout", layout_name)) {
         std::transform(
             layout_name.begin(),
             layout_name.end(),
             layout_name.begin(),
             [](unsigned char c) { return std::tolower(c); }
         );
+
+        if(layout_name == "relative") {
+            auto layout = this->setLayout<RelativeWidgetLayout>();
+            return layout->configure(properties);
+
+        }
+        if(layout_name == "linear") {
+            auto layout = this->setLayout<LinearWidgetLayout>();
+            return layout->configure(properties);
+        }
 
         // auto layout = Widget::Layout::GetLayouterFactory().createObject(layout_name);
         // if(layout->configure(properties)) setLayout(std::move(layout));
