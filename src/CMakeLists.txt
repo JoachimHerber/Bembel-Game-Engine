@@ -1,5 +1,6 @@
 add_library( Bembel STATIC)
 include_directories( "../dependencies/bullet3/src" )
+include_directories( "../dependencies/imgui" )
 
 target_link_libraries( Bembel glfw )
 target_link_libraries( Bembel glbinding::glbinding )
@@ -19,6 +20,16 @@ target_sources(Bembel
     PRIVATE
         ../dependencies/tinyxml2/tinyxml2.cpp
         ../dependencies/lodepng/lodepng.cpp
+        ../dependencies/imgui/imgui.h
+        ../dependencies/imgui/imgui.cpp
+        ../dependencies/imgui/imgui_demo.cpp
+        ../dependencies/imgui/imgui_draw.cpp
+        ../dependencies/imgui/imgui_tables.cpp
+        ../dependencies/imgui/imgui_widgets.cpp
+        ../dependencies/imgui/backends/imgui_impl_opengl3.h
+        ../dependencies/imgui/backends/imgui_impl_opengl3.cpp
+        ../dependencies/imgui/backends/imgui_impl_glfw.h
+        ../dependencies/imgui/backends/imgui_impl_glfw.cpp
 )
 source_group(dependencies PREFIX "bembel" FILES 
     ../dependencies/tinyxml2/tinyxml2.h
@@ -26,4 +37,16 @@ source_group(dependencies PREFIX "bembel" FILES
     ../dependencies/lodepng/lodepng.h
     ../dependencies/lodepng/lodepng.cpp
     ../dependencies/glm.natvis
+)
+source_group(dependencies/imgui PREFIX "bembel" FILES 
+        ../dependencies/imgui/imgui.h
+        ../dependencies/imgui/imgui.cpp
+        ../dependencies/imgui/imgui_demo.cpp
+        ../dependencies/imgui/imgui_draw.cpp
+        ../dependencies/imgui/imgui_tables.cpp
+        ../dependencies/imgui/imgui_widgets.cpp
+        ../dependencies/imgui/backends/imgui_impl_opengl3.h
+        ../dependencies/imgui/backends/imgui_impl_opengl3.cpp
+        ../dependencies/imgui/backends/imgui_impl_glfw.h
+        ../dependencies/imgui/backends/imgui_impl_glfw.cpp
 )
