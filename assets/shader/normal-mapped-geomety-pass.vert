@@ -49,6 +49,6 @@ void main()
 	vert_data.tex_coord = aTexCoord;
  
  	gl_Position = 
- 		uProjectionMatrix*uModleViewMatrix*vec4(aPosition -0.1*aNormal, 1.0);
+ 		uProjectionMatrix*uModleViewMatrix*vec4(aPosition, 1.0);
 		
 }

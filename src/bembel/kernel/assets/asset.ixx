@@ -23,8 +23,15 @@ export template <AssetType T>
 class Asset final {
   public:
     Asset() {}
+    Asset(AssetHandle hndl) : m_handel{hndl} {
+        if(g_container && g_container->isHandelValid(m_handel)) {
+            g_container->incrementAssetRefCount(m_handel);
+        } else {
+            m_handel = AssetHandle();
+        }
+    }
     Asset(Move<std::unique_ptr<T>> asset) {
-        if(g_container){
+        if(g_container) {
             m_handel = g_container->addAsset(std::move(asset));
             g_container->incrementAssetRefCount(m_handel);
         }
@@ -62,7 +69,8 @@ class Asset final {
         m_handel = AssetHandle();
     }
 
-    T* get() const { return g_container ? g_container->getAsset(m_handel) : nullptr; }
+    T*          get() const { return g_container ? g_container->getAsset(m_handel) : nullptr; }
+    AssetHandle getHndl() const { return m_handel; }
 
     bool asign(Move<std::unique_ptr<T>> asset) {
         if(!g_container) return false;
@@ -85,9 +93,7 @@ class Asset final {
     static void setContainer(std::unique_ptr<AssetContainer<T>> container) {
         g_container = std::move(container);
     }
-    static void setLoader(std::unique_ptr<AssetLoaderBase> loader) {
-        g_loader = std::move(loader);
-    }
+    static void setLoader(std::unique_ptr<AssetLoaderBase> loader) { g_loader = std::move(loader); }
 
     static auto getContainer() { return g_container.get(); }
     static auto getLoader() { return g_loader.get(); }

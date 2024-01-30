@@ -42,4 +42,11 @@ export struct SetCursorIconEvent {
     WindowId    window_id;
 };
 
+export enum class CursorMode { NORMAL, HIDDEN, DISABLED };
+
+export struct SetCursorModeEvent {
+    CursorMode mode;
+    WindowId   window_id;
+};
+
 } // namespace bembel::kernel

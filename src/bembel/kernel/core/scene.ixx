@@ -73,6 +73,11 @@ export class Scene {
     Scene& operator=(Scene const&) = delete;
     ~Scene();
 
+    template <Component ... T>
+    void registerComponentTypes() {
+        (registerComponentType<T>(), ...);
+    }
+
     template <Component T, typename... TArgs>
     void registerComponentType(TArgs&&... args) {
         auto it = m_component_containers.find(std::type_index(typeid(T)));

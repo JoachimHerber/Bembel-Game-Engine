@@ -105,6 +105,8 @@ void RenderingPipeline::cleanup() {
 }
 
 void RenderingPipeline::setScene(std::shared_ptr<Scene> scene) {
+    if(m_scene == scene) return;
+
     m_scene = scene;
 
     for(auto& stage : m_render_stages) stage->setScene(m_scene.get());

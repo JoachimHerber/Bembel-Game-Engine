@@ -21,7 +21,7 @@ void FontView::setFont(FontFamily* font) {
     m_font = font;
 }
 
-void FontView::draw(ivec2 const& viewport_position, uvec2 const& viewport_size) {
+void FontView::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     m_texture_gen.getFBO()->blitToBackBuffer(
         {0, 0}, uvec2{m_texture_gen.getResolution()},
         viewport_position,

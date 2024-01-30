@@ -10,10 +10,18 @@ set( ProjectSources
 	src/main.cpp 
 	src/application.ixx
 	src/application.cpp
-	src/material-manager.ixx
-	src/material-manager.cpp
-	src/model-manager.ixx
-	src/model-manager.cpp
+	src/textures.ixx
+	src/textures.cpp
+	src/materials.ixx
+	src/materials.cpp
+	src/meshes.ixx
+	src/meshes.cpp
+	src/models.ixx
+	src/models.cpp
+	src/scenes.ixx
+	src/scenes.cpp
+	
+	config.xml
 )
 
 foreach( File ${ProjectSources} )
@@ -21,6 +29,8 @@ foreach( File ${ProjectSources} )
 	string(REPLACE "/" "\\" subdir  ${subdir})
 	source_group( ${subdir} FILES ${File} )
 endforeach()
+
+source_group( "resources" FILES config.xml )
 
 add_executable( Editor ${ProjectSources} )
 target_link_libraries( Editor Bembel ${EXTERNAL_LIBRARIES})

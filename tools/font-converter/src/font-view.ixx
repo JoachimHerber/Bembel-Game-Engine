@@ -18,7 +18,7 @@ export class FontView : public Viewport::View {
 
     void setFont(FontFamily*);
 
-    virtual void draw(ivec2 const& viewport_position, uvec2 const& viewport_size) override;
+    virtual void draw(In<ivec2> viewport_position, In<uvec2> viewport_size) override;
 
   private:
     GlyphTextureAtlas&    m_texture_atlas;

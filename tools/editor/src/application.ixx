@@ -3,11 +3,10 @@
 
 #include <assimp/Importer.hpp>
 #include <string_view>
+
 export module bembel.tools.editor;
 
 import bembel;
-import :MaterialMgr;
-import :ModelMgr;
 
 namespace bembel::tools {
 using namespace bembel::base;
@@ -16,7 +15,9 @@ using namespace bembel::graphics;
 using namespace bembel::gui;
 using namespace bembel::physics;
 
-export class Application : public kernel::Application<GraphicSystem, PhysicsSystem, GuiSystem> {
+export class Application
+  : public kernel::Application<GraphicSystem, PhysicsSystem, GuiSystem>
+  , public imgui::View {
   public:
     Application();
     ~Application();
@@ -31,23 +32,23 @@ export class Application : public kernel::Application<GraphicSystem, PhysicsSyst
     void handleEvent(In<FileDropEvent>);
 
   private:
-    bool initUserInterface(Viewport& preview);
-    bool initRenderingPipeline(Viewport& preview);
+    virtual void drawUI(In<ivec2> viewport_position, In<uvec2> viewport_size) override;
+
+    void initScene();
 
   private:
     EventHandlerGuard<WindowShouldCloseEvent, FrameBufferResizeEvent, FileDropEvent> m_guard{this};
 
     Window*                 m_main_window;
     GraphicalUserInterface* m_gui;
-    SplitGroupWidget*       m_root;
-    TabGroupWidget*         m_tabs;
 
-    RenderingPipeline*            m_pipeline;
+    RenderingPipeline*     m_pipeline;
 
-    std::unique_ptr<MaterialManager> m_material_mgr;
-    std::unique_ptr<ModelManager>    m_model_mgr;
+    float m_camera_pitch = 0;
+    float m_camera_yaw   = 0;
+    float m_camera_dist  = 2.5f;
 
-    std::vector<std::pair<std::unique_ptr<Assimp::Importer>, aiScene const*>> m_imports;
+    Assimp::Importer m_importer;
 };
 
 } // namespace bembel::tools

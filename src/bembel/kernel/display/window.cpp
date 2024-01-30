@@ -149,10 +149,12 @@ namespace event_callbacks {
 Window::Window(WindowId id)
   : m_display_mode{std::make_shared<WindowDisplayMode>()}, m_window_id{id} {
     events::addHandler<SetCursorIconEvent>(this);
+    events::addHandler<SetCursorModeEvent>(this);
 }
 
 Window::~Window() {
     events::removeHandler<SetCursorIconEvent>(this);
+    events::removeHandler<SetCursorModeEvent>(this);
     close();
 }
 
@@ -313,7 +315,7 @@ void Window::swapBuffers() {
     glfwSwapBuffers(m_window_impl);
 }
 
-void Window::handleEvent(SetCursorIconEvent const& event) {
+void Window::handleEvent(In<SetCursorIconEvent> event) {
     if(event.window_id == m_window_id) {
         if(event.cursor != nullptr) {
             glfwSetCursor(m_window_impl, event.cursor->getCursor());
@@ -321,6 +323,22 @@ void Window::handleEvent(SetCursorIconEvent const& event) {
             // u64(event.cursor->getCursor()));
         } else {
             glfwSetCursor(m_window_impl, NULL);
+        }
+    }
+}
+
+void Window::handleEvent(In<SetCursorModeEvent> event) {
+    if(event.window_id == m_window_id) {
+        switch(event.mode) {
+            case CursorMode::NORMAL:
+                glfwSetInputMode(m_window_impl, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                return;
+            case CursorMode::HIDDEN:
+                glfwSetInputMode(m_window_impl, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+                return;
+            case CursorMode::DISABLED:
+                glfwSetInputMode(m_window_impl, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                return;
         }
     }
 }

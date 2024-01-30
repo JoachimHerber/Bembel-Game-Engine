@@ -77,7 +77,8 @@ export class Window {
         }
     }
 
-    void handleEvent(SetCursorIconEvent const& event);
+    void handleEvent(In<SetCursorIconEvent> event);
+    void handleEvent(In<SetCursorModeEvent> event);
 
   public:
     vec3 background_color = {0.5f, 0.5f, 0.5f};
