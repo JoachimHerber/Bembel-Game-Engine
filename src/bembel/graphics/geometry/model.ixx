@@ -1,4 +1,7 @@
-﻿export module bembel.graphics.geometry:Model;
+﻿module;
+#include <string>
+#include <vector>
+export module bembel.graphics.geometry : Model;
 
 import bembel.base;
 import bembel.kernel;

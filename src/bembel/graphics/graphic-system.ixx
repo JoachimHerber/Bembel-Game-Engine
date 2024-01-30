@@ -25,19 +25,23 @@ export class GraphicSystem : public kernel::System {
     ~GraphicSystem();
 
     std::vector<RendererPtr> const& getRenderer() const;
-    GeometryRendererBase*           getRenderer(GeometryMesh::VertexFormat) const;
+    GeometryRendererBase*           getRenderer(VertexAttribMask) const;
 
     RenderingPipeline*                       createRenderingPipline();
     std::vector<RenderingPipelinePtr> const& getRenderingPipelines();
 
     template <typename TRenderer, typename... TArgs>
-    TRenderer* setRenderer(GeometryMesh::VertexFormat vertex_format, TArgs&&... args) {
+    TRenderer* setRenderer(VertexAttribMask vertex_format, TArgs&&... args) {
         auto renderer = std::make_unique<TRenderer>(vertex_format, std::forward<TArgs>(args)...);
 
         TRenderer* ptr = renderer.get();
-        if(m_renderer.size() <= std::to_underlying(vertex_format))
-            m_renderer.resize(std::to_underlying(vertex_format) + 1);
-        m_renderer[std::to_underlying(vertex_format)] = std::move(renderer);
+        for(auto& it : m_renderer) {
+            if(it->getRequiredVertexAttributes() == vertex_format) {
+                m_renderer[std::to_underlying(vertex_format)] = std::move(renderer);
+                return ptr;
+            }
+        }
+        m_renderer.push_back(std::move(renderer));
         return ptr;
     }
 

@@ -86,7 +86,7 @@ void DefaultGeometryRenderer::renderShadows(
     GeometryMesh* currentMesh = nullptr;
     for(auto const& it : data) {
         if(!it.mesh) continue;
-        if(it.mesh->getVertexFormat() != m_vertex_format) continue;
+        if(it.mesh->getVertexFormat() != m_required_vertex_attributes) continue;
 
         if(it.mesh != currentMesh) {
             currentMesh = it.mesh;
@@ -112,7 +112,7 @@ void DefaultGeometryRenderer::renderShadows(
 }
 
 std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer(
-    xml::Element const* properties, VertexFormat id
+    xml::Element const* properties
 ) {
     Asset<ShaderProgram> geomety_pass_shader;
     if(!geomety_pass_shader.request(properties->FirstChildElement("GeometyPassShader"))) {
@@ -124,7 +124,27 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
         logError("Could not load ShaderProgram for shadow pass of DefaultGeometryRenderer");
         return nullptr;
     }
-    auto renderer = std::make_unique<DefaultGeometryRenderer>(id);
+
+    GLint count;
+    glGetProgramiv(geomety_pass_shader->getHandl(), GL_ACTIVE_ATTRIBUTES, &count);
+
+    VertexAttribMask mask{0};
+    for(GLint i = 0; i < count; i++) {
+        constexpr GLsizei bufSize = 256;
+        GLchar            name[bufSize];
+        GLsizei           length;
+        GLint             size;
+        GLenum            type; 
+
+        glGetActiveAttrib(
+            geomety_pass_shader->getHandl(), (GLuint)i, bufSize, &length, &size, &type, name
+        );
+        auto loc = glGetAttribLocation(geomety_pass_shader->getHandl(), name);
+        if(loc >= 0)
+            mask |= VertexAttribMask(1 << loc);
+    }
+
+    auto renderer = std::make_unique<DefaultGeometryRenderer>(mask);
 
     if(!renderer->setShaders(std::move(geomety_pass_shader), std::move(shadow_pass_shader)))
         return nullptr;
@@ -137,8 +157,8 @@ void DefaultGeometryRenderer::initDummyTextures() {
         auto texture =
             std::make_unique<Texture>(Texture::Target::TEXTURE_2D, Texture::Format::RGB8);
         texture->init(
-            Texture::MinFilter::NEAREST, 
-            Texture::MagFilter::NEAREST, 
+            Texture::MinFilter::NEAREST,
+            Texture::MagFilter::NEAREST,
             Texture::Wrap::CLAMP_TO_EDGE,
             Texture::Wrap::CLAMP_TO_EDGE
         );

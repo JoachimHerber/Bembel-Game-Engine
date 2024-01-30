@@ -22,12 +22,11 @@ export struct GeometryRenderData {
 
 export class GeometryRendererBase {
   public:
-    using VertexFormat = GeometryMesh::VertexFormat;
-
-    GeometryRendererBase(VertexFormat vertex_format) : m_vertex_format{vertex_format} {};
+    GeometryRendererBase(VertexAttribMask vertex_format)
+      : m_required_vertex_attributes{vertex_format} {};
     virtual ~GeometryRendererBase(){};
 
-    VertexFormat getVertexFormat() const { return m_vertex_format; }
+    VertexAttribMask getRequiredVertexAttributes() const { return m_required_vertex_attributes; }
 
     virtual void renderGeometry(
         In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
@@ -36,12 +35,13 @@ export class GeometryRendererBase {
     virtual void renderShadows(In<mat4> view_proj, In<std::vector<GeometryRenderData>> data) = 0;
 
   protected:
-    VertexFormat m_vertex_format;
+    VertexAttribMask m_required_vertex_attributes;
 };
 
 export class DefaultGeometryRenderer : public GeometryRendererBase {
   public:
-    DefaultGeometryRenderer(VertexFormat vertex_format) : GeometryRendererBase{vertex_format} {}
+    DefaultGeometryRenderer(VertexAttribMask vertex_format)
+      : GeometryRendererBase{vertex_format} {}
     ~DefaultGeometryRenderer() = default;
 
     bool setShaders(In<Asset<ShaderProgram>> geom_pass, In<Asset<ShaderProgram>> depth_pass) {
@@ -60,9 +60,7 @@ export class DefaultGeometryRenderer : public GeometryRendererBase {
     virtual void renderShadows(In<mat4> view_proj, In<std::vector<GeometryRenderData>> data)
         override;
 
-    static std::unique_ptr<DefaultGeometryRenderer> createRenderer(
-        xml::Element const*, VertexFormat vertex_format
-    );
+    static std::unique_ptr<DefaultGeometryRenderer> createRenderer(xml::Element const*);
 
   private:
     void initDummyTextures();

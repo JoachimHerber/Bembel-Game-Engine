@@ -14,14 +14,28 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
 
-GeometryMesh::GeometryMesh(VertexFormat format) : m_vertex_format{format} {
+GeometryMesh::GeometryMesh(VertexAttribMask format) : m_vertex_format{format} {
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
     glGenBuffers(1, &m_ibo);
 }
 
+void setVertexAttrib(
+    VertexAttrib attrib, GLint size, GLenum type, GLboolean normalized, uint stride, uint offset
+) {
+    glEnableVertexAttribArray(std::to_underlying(attrib));
+    glVertexAttribPointer(
+        std::to_underlying(attrib), size, type, normalized, stride, (void*)(offset)
+    );
+}
+
 GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::span<uint>> indices)
-  : GeometryMesh{VertexFormat::Default} {
+  : GeometryMesh{
+      VertexAttribMask::POSITION |   //
+      VertexAttribMask::NORMAL |     //
+      VertexAttribMask::TEX_COORDS | //
+      VertexAttribMask::TANGENT      //
+  } {
     glBindVertexArray(m_vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -29,24 +43,26 @@ GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size_bytes(), indices.data(), GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-
     uint stride = sizeof(DefaultVertexFormat);
     // clang-format off
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(0));   // position
-    glVertexAttribPointer(1, 3, GL_SHORT, GL_TRUE,  stride, (void*)(12));  // position
-    glVertexAttribPointer(2, 3, GL_SHORT, GL_TRUE,  stride, (void*)(18));  // position
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(24));  // position
+    setVertexAttrib(VertexAttrib::POSITION,   3, GL_FLOAT, GL_FALSE, stride,  0);  
+    setVertexAttrib(VertexAttrib::NORMAL,     3, GL_SHORT, GL_TRUE,  stride, 12); 
+    setVertexAttrib(VertexAttrib::TANGENT,    3, GL_SHORT, GL_TRUE,  stride, 18); 
+    setVertexAttrib(VertexAttrib::TEX_COORDS, 2, GL_FLOAT, GL_FALSE, stride, 24);
     // clang-format on
 
     glBindVertexArray(0);
 }
 
 GeometryMesh::GeometryMesh(In<std::span<RiggedVertexFormat>> vertices, In<std::span<uint>> indices)
-  : GeometryMesh{VertexFormat::Rigged} {
+  : GeometryMesh{
+      VertexAttribMask::POSITION |     //
+      VertexAttribMask::NORMAL |       //
+      VertexAttribMask::TEX_COORDS |   //
+      VertexAttribMask::TANGENT |      //
+      VertexAttribMask::BONE_INDICES | //
+      VertexAttribMask::BONE_WEIGHTS   //
+  } {
     glBindVertexArray(m_vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -54,19 +70,14 @@ GeometryMesh::GeometryMesh(In<std::span<RiggedVertexFormat>> vertices, In<std::s
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size_bytes(), indices.data(), GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    glEnableVertexAttribArray(4);
-
     uint stride = sizeof(RiggedVertexFormat);
     // clang-format off
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride, (void*)(0));  // position
-    glVertexAttribPointer(1, 4, GL_SHORT, GL_TRUE,  stride, (void*)(16)); // normal
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(24)); // tex_coords
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, stride, (void*)(32)); // bone_indices
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, stride, (void*)(48)); // bone_weights
+    setVertexAttrib(VertexAttrib::POSITION,     3, GL_FLOAT, GL_FALSE, stride,  0);  
+    setVertexAttrib(VertexAttrib::NORMAL,       3, GL_SHORT, GL_TRUE,  stride, 12); 
+    setVertexAttrib(VertexAttrib::TANGENT,      3, GL_SHORT, GL_TRUE,  stride, 18); 
+    setVertexAttrib(VertexAttrib::TEX_COORDS,   2, GL_FLOAT, GL_FALSE, stride, 24); 
+    setVertexAttrib(VertexAttrib::BONE_INDICES, 4, GL_FLOAT, GL_FALSE, stride, 32); 
+    setVertexAttrib(VertexAttrib::BONE_WEIGHTS, 4, GL_FLOAT, GL_FALSE, stride, 48);
     // clang-format on
 
     glBindVertexArray(0);
@@ -74,11 +85,25 @@ GeometryMesh::GeometryMesh(In<std::span<RiggedVertexFormat>> vertices, In<std::s
 
 GeometryMesh::~GeometryMesh() {}
 
-std::optional<GeometryMesh::SubMesh> GeometryMesh::getSubMesh(std::string_view name) {
-    auto it = m_sub_meshs.find(name);
-    if(it == m_sub_meshs.end()) return {};
+std::optional<uint> GeometryMesh::getSubMeshIndex(std::string_view name) {
+    for(uint i = 0; i < m_sub_meshs.size(); ++i) {
+        if(m_sub_meshs[i].first == name) return i;
+    }
+    return {};
+}
 
-    return it->second;
+std::optional<GeometryMesh::SubMesh> GeometryMesh::getSubMesh(std::string_view name) {
+    if(auto idx = getSubMeshIndex(name)) //
+        return getSubMesh(*idx);
+
+    return {};
+}
+
+std::optional<GeometryMesh::SubMesh> GeometryMesh::getSubMesh(uint index) {
+    if(index < m_sub_meshs.size()) //
+        return m_sub_meshs[index].second;
+
+    return {};
 }
 
 uint GeometryMesh::getVAO() const {
@@ -86,7 +111,11 @@ uint GeometryMesh::getVAO() const {
 }
 
 void GeometryMesh::setSubMesh(std::string_view name, uint first_index, uint num_indices) {
-    m_sub_meshs.insert_or_assign(std::string(name), SubMesh{first_index, num_indices});
+    for(auto& it : m_sub_meshs) {
+        if(it.first == name) //
+            it.second = SubMesh(first_index, num_indices);
+    }
+    m_sub_meshs.emplace_back(std::string(name), SubMesh{first_index, num_indices});
 }
 
 std::unique_ptr<GeometryMesh> GeometryMesh::loadAsset(In<std::filesystem::path> file) {
@@ -134,7 +163,7 @@ std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element cons
         return nullptr;
     }
 
-    auto mesh = std::make_unique<GeometryMesh>(VertexFormat::Default);
+    auto mesh = std::make_unique<GeometryMesh>(VertexAttribMask(0));
 
     glGenVertexArrays(1, &mesh->m_vao);
     glBindVertexArray(mesh->m_vao);
@@ -160,6 +189,8 @@ std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element cons
         xml::getAttribute(attrib, "stride", stride);
         xml::getAttribute(attrib, "offset", offset);
 
+        mesh->m_vertex_format |= VertexAttribMask(1 << index);
+
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(
             index,
@@ -178,7 +209,7 @@ std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element cons
         xml::getAttribute(sub_mesh, "name", name);
         xml::getAttribute(sub_mesh, "first_index", first);
         xml::getAttribute(sub_mesh, "num_indiecs", count);
-        mesh->m_sub_meshs.emplace(name, SubMesh{first, count});
+        mesh->m_sub_meshs.emplace_back(name, SubMesh{first, count});
     }
     return std::move(mesh);
 }

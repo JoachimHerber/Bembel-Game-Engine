@@ -43,11 +43,16 @@ std::vector<std::shared_ptr<GeometryRendererBase>> const& GraphicSystem::getRend
     return m_renderer;
 }
 
-GeometryRendererBase* GraphicSystem::getRenderer(GeometryMesh::VertexFormat vertex_format) const {
-    if(std::to_underlying(vertex_format) < m_renderer.size())
-        return m_renderer[std::to_underlying(vertex_format)].get();
-    else
-        return nullptr;
+GeometryRendererBase* GraphicSystem::getRenderer(VertexAttribMask vertex_format) const {
+    for(auto& it : m_renderer) {
+        if(it->getRequiredVertexAttributes() == vertex_format) // exakt match
+            return it.get();
+    }
+    for(auto& it : m_renderer) {
+        if((it->getRequiredVertexAttributes() & vertex_format) == it->getRequiredVertexAttributes())
+            return it.get();
+    }
+    return nullptr;
 }
 
 bool GraphicSystem::configure(xml::Element const* properties) {
@@ -80,19 +85,10 @@ void GraphicSystem::configureRenderer(xml::Element const* properties) {
 
     m_renderer.resize(3);
     for(auto renderer_properties : xml::IterateChildElements(properties)) {
-        std::string vertex_format;
-        if(xml::getAttribute(renderer_properties, "vertex_format", vertex_format)) {
-            if(vertex_format == "default")
-                m_renderer[0] = DefaultGeometryRenderer::createRenderer(
-                    renderer_properties, GeometryMesh::VertexFormat::Default
-                );
-            // else if(vertex_format == "Position_NormalQuat_TexCoords_Bones")
-            //     m_renderer[2] = DefaultGeometryRenderer::createRenderer(
-            //         renderer_properties, GeometryMesh::VertexFormat::Position_NormalQuat_TexCoords_Bones
-            //     );
-            else
-                logError("");
-        }
+        auto renderer = DefaultGeometryRenderer::createRenderer(renderer_properties);
+        if(!renderer) return;
+
+        m_renderer.push_back(std::move(renderer));
     }
 }
 void GraphicSystem::configurePipelines(xml::Element const* properties) {
