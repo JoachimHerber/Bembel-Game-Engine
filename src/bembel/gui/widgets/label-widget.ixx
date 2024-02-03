@@ -1,6 +1,6 @@
 ﻿module;
-#include <string>
 #include <optional>
+#include <string>
 export module bembel.gui.widgets:Label;
 
 import bembel.base;
@@ -16,7 +16,7 @@ export class LabelWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Label";
 
   public:
-    LabelWidget(Widget& parent, std::u8string_view text = {u8""});
+    LabelWidget(In<Widget*> parent, std::u8string_view text = {u8""});
     ~LabelWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;
@@ -49,14 +49,14 @@ export class LabelWidget : public Widget {
 
     class View : public Widget::View {
       public:
-        View(LabelWidget& label) : m_label{label} {}
+        View(LabelWidget* label) : m_label{label} {}
 
         ~View() = default;
 
-        void draw(RenderBatchInterface& batch) override;
+        void draw(InOut<RenderBatchInterface> batch) override;
 
       private:
-        LabelWidget& m_label;
+        LabelWidget* m_label;
     };
     struct Glyph {
         unsigned index;

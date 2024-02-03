@@ -14,7 +14,7 @@ using namespace bembel::kernel;
 
 export class InputHandler {
   public:
-    InputHandler( Widget& root_widget, Viewport::View& gui_view);
+    InputHandler(Widget& root_widget, Viewport::View& gui_view);
     InputHandler(const InputHandler&)            = delete;
     InputHandler& operator=(const InputHandler&) = delete;
     ~InputHandler();
@@ -52,7 +52,7 @@ export class InputHandler {
         Widget*            widget = nullptr;
         InteractionHandle* handle = nullptr;
 
-             operator bool() { return handle != nullptr && widget != nullptr; }
+        operator bool() { return handle != nullptr && widget != nullptr; }
         bool operator==(const Handle& other) {
             return handle == other.handle && widget == other.widget;
         }
@@ -73,6 +73,8 @@ export class InputHandler {
 
   private:
     using Buttons = std::array<InputDevice::Button*, 7>;
+
+    EventHandlerGuard<TextInputEvent> m_guard{this};
 
     Widget&         m_root_widget;
     Viewport::View& m_gui_view; // the view of the gui, used to access the viewport/window

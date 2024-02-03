@@ -1,7 +1,5 @@
 ﻿module;
 #include <filesystem>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 module bembel.examples.physics;
 
 import bembel;

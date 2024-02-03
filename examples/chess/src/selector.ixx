@@ -32,6 +32,8 @@ export class Selector {
     virtual void onSelect(EntityID id) = 0;
 
   protected:
+    EventHandlerGuard<CursorMovedEvent> m_guard{this};
+
     Scene*  m_scene;
     Camera* m_camera;
 };

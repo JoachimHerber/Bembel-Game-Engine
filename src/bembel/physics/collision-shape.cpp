@@ -1,7 +1,6 @@
 module;
 #include <btBulletDynamicsCommon.h>
 
-#include <glm/glm.hpp>
 #include <memory>
 
 module bembel.physics;

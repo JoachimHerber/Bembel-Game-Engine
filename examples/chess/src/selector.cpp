@@ -2,8 +2,6 @@ module;
 #include <glbinding/gl/gl.h>
 
 #include <chrono>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <optional>
 module bembel.examples.chess;
 
@@ -19,13 +17,9 @@ using namespace gui;
 using namespace ::gl;
 using namespace std::chrono;
 
-Selector::Selector(Scene* scene, Camera* camera) : m_scene{scene}, m_camera{camera} {
-    events::addHandler<CursorMovedEvent>(this);
-}
+Selector::Selector(Scene* scene, Camera* camera) : m_scene{scene}, m_camera{camera} {}
 
-Selector::~Selector() {
-    events::removeHandler<CursorMovedEvent>(this);
-}
+Selector::~Selector() {}
 
 void Selector::handleEvent(CursorMovedEvent const& event) {
     ivec2 windowSize = event.window->getWindowSize();

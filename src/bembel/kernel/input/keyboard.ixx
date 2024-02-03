@@ -1,6 +1,6 @@
 ﻿module;
-#include <string_view>
 #include <map>
+#include <string_view>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 export module bembel.kernel.input:Keyboard;
@@ -148,17 +148,19 @@ export class Keyboard : public InputDevice {
     using Scancode = int;
     using Key      = InputDevice::Button;
 
-    Key*    getKey(KeyId key_id, Scancode scancode = -1);
-    Button* getButton(std::string_view name) override;
+    Key*    getKey(In<KeyId> key_id, In<Scancode> scancode = -1);
+    Button* getButton(In<std::string_view> name) override;
 
-    void handleEvent(KeyPressEvent const&);
-    void handleEvent(KeyReleaseEvent const&);
+    void handleEvent(In<KeyPressEvent>);
+    void handleEvent(In<KeyReleaseEvent>);
 
   private:
-    Button* createButton(KeyId key_id, Scancode scancode);
+    Button* createButton(In<KeyId> key_id, In<Scancode> scancode);
 
   private:
     static constexpr usize MAX_NUM_KEYS = 1024;
+
+    EventHandlerGuard<KeyPressEvent, KeyReleaseEvent> m_guard{this};
 
     std::map<KeyId, Key*>    m_known_keys;
     std::map<Scancode, Key*> m_unknown_keys;

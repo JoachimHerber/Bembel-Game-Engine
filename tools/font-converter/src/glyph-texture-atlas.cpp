@@ -1,6 +1,5 @@
 ﻿module;
 #include <algorithm>
-#include <glm/glm.hpp>
 #include <memory>
 #include <string_view>
 #include <valarray>

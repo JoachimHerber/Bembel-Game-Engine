@@ -2,8 +2,6 @@
 #include <glbinding/gl/gl.h>
 
 #include <chrono>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <random>
 module bembel.examples.chess;
 

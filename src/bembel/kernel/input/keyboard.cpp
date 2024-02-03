@@ -75,15 +75,9 @@ static const std::map<Keyboard::KeyId, std::string_view> KEY_NAMES = {
 };
 // clang-format on
 
-Keyboard::Keyboard() : InputDevice("Keyboard") {
-    events::addHandler<KeyPressEvent>(this);
-    events::addHandler<KeyReleaseEvent>(this);
-}
+Keyboard::Keyboard() : InputDevice("Keyboard") {}
 
-Keyboard::~Keyboard() {
-    events::removeHandler<KeyPressEvent>(this);
-    events::removeHandler<KeyReleaseEvent>(this);
-}
+Keyboard::~Keyboard() {}
 
 void Keyboard::initDefaultKeys() {
     // register keys
@@ -106,7 +100,7 @@ void Keyboard::initDefaultKeys() {
     for(KeyId key_id : GLFW_KEYS) { createButton(key_id, 0); }
 }
 
-Keyboard::Key* Keyboard::getKey(KeyId key_id, Scancode scancode) {
+Keyboard::Key* Keyboard::getKey(In<KeyId> key_id, In<Scancode> scancode) {
     if(key_id != GLFW_KEY_UNKNOWN) {
         auto it = m_known_keys.find(key_id);
         if(it != m_known_keys.end()) return it->second;
@@ -118,26 +112,26 @@ Keyboard::Key* Keyboard::getKey(KeyId key_id, Scancode scancode) {
     return createButton(key_id, scancode);
 }
 
-InputDevice::Button* Keyboard::getButton(std::string_view name) {
+InputDevice::Button* Keyboard::getButton(In<std::string_view> name) {
     for(auto& key : m_keys) {
         if(key.getName() == name) return &key;
     }
     return nullptr;
 }
 
-void Keyboard::handleEvent(KeyPressEvent const& event) {
+void Keyboard::handleEvent(In<KeyPressEvent> event) {
     auto key = this->getKey(KeyId(event.key_id), event.scancode);
     events::broadcast<InputDeviceButtonPressEvent>(key);
     key->setIsPressed(true);
 }
 
-void Keyboard::handleEvent(KeyReleaseEvent const& event) {
+void Keyboard::handleEvent(In<KeyReleaseEvent> event) {
     auto key = this->getKey(KeyId(event.key_id), event.scancode);
     events::broadcast<InputDeviceButtonReleaseEvent>(key);
     key->setIsPressed(false);
 }
 
-Keyboard::Key* Keyboard::createButton(KeyId key_id, Scancode scancode) {
+Keyboard::Key* Keyboard::createButton(In<KeyId> key_id, In<Scancode> scancode) {
     if(m_keys.size() == MAX_NUM_KEYS) {
         logError("Max number of Keys for Keyboard reached");
         return nullptr;
@@ -150,15 +144,15 @@ Keyboard::Key* Keyboard::createButton(KeyId key_id, Scancode scancode) {
     Key* key = &m_keys.back();
 
     if(keyName != nullptr) {
-        new(key) Button(*this, keyName);
+        new(key) Button(this, keyName);
     } else {
         auto it = KEY_NAMES.find(key_id);
         if(it != KEY_NAMES.end()) {
-            new(key) Button(*this, it->second);
+            new(key) Button(this, it->second);
         } else {
             char name[256];
             sprintf(name, "[KEY%d]", scancode);
-            new(key) Button(*this, name);
+            new(key) Button(this, name);
         }
     }
 

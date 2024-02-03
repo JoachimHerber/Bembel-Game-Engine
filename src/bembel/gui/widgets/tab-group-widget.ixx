@@ -17,7 +17,7 @@ export class TabGroupWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Tabs";
 
   public:
-    TabGroupWidget(Widget& parent);
+    TabGroupWidget(In<Widget*> parent);
     ~TabGroupWidget();
 
     virtual bool configure(xml::Element const* properties) override;
@@ -78,13 +78,13 @@ export class TabGroupWidget : public Widget {
 
 export class SimpleTabGroupWidgetView : public Widget::View {
   public:
-    SimpleTabGroupWidgetView(TabGroupWidget& widget) : m_widget{widget} {}
+    SimpleTabGroupWidgetView(In<TabGroupWidget*> widget) : m_widget{widget} {}
     ~SimpleTabGroupWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    TabGroupWidget& m_widget;
+    TabGroupWidget* m_widget;
 };
 
 } // namespace bembel::gui

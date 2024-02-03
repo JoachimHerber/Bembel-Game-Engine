@@ -13,13 +13,9 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 InputHandler::InputHandler(Widget& root_widget, Viewport::View& gui_view)
-  : m_root_widget{root_widget}, m_gui_view{gui_view} {
-    events::addHandler<TextInputEvent>(this);
-}
+  : m_root_widget{root_widget}, m_gui_view{gui_view} {}
 
 InputHandler::~InputHandler() {
-    events::removeHandler<TextInputEvent>(this);
-
     setButton(Action::INTERACT, nullptr);
     setButton(Action::DELETE, nullptr);
     setButton(Action::BACKSPACE, nullptr);
@@ -167,12 +163,12 @@ void InputHandler::updateFocus() {
 }
 
 InputHandler::Handle InputHandler::findFocusedHndl() {
-    return findFocusedHndl(m_root_widget, glm::ivec2{0});
+    return findFocusedHndl(m_root_widget, ivec2{0});
 }
 
-InputHandler::Handle InputHandler::findFocusedHndl(Widget& widget, glm::ivec2 const& offset) {
-    const glm::ivec2 min = offset + widget.position.get();
-    const glm::ivec2 max = min + widget.size.get();
+InputHandler::Handle InputHandler::findFocusedHndl(Widget& widget, ivec2 const& offset) {
+    const ivec2 min = offset + widget.position.get();
+    const ivec2 max = min + widget.size.get();
 
     if(m_cursor_pos.x < min.x || max.x < m_cursor_pos.x || m_cursor_pos.y < min.y
        || max.y < m_cursor_pos.y)
@@ -186,8 +182,8 @@ InputHandler::Handle InputHandler::findFocusedHndl(Widget& widget, glm::ivec2 co
     for(auto& it : widget.getInteractionHandles()) {
         if(it->isDisabled()) continue;
 
-        const glm::ivec2 hndl_min = min + it->position;
-        const glm::ivec2 hndl_max = hndl_min + it->size;
+        const ivec2 hndl_min = min + it->position;
+        const ivec2 hndl_max = hndl_min + it->size;
 
         if(hndl_min.x <= m_cursor_pos.x && m_cursor_pos.x <= hndl_max.x
            && hndl_min.y <= m_cursor_pos.y && m_cursor_pos.y <= hndl_max.y) {

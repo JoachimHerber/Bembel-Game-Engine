@@ -17,7 +17,7 @@ export class GraphicalUserInterface {
   public:
     class View : public kernel::Viewport::View {
       public:
-        View(GraphicalUserInterface& gui) : m_gui{gui} {}
+        View(In<GraphicalUserInterface*> gui) : m_gui{gui} {}
 
         void onCurserMove(In<vec2> pos) override;
         void onResize(In<uvec2>) override;
@@ -25,10 +25,10 @@ export class GraphicalUserInterface {
         void draw(In<ivec2> pos, In<uvec2> size) override;
 
       private:
-        GraphicalUserInterface& m_gui;
+        GraphicalUserInterface* m_gui;
     };
 
-    GraphicalUserInterface(Engine& engine);
+    GraphicalUserInterface(In<Engine*> engine);
     GraphicalUserInterface(GraphicalUserInterface const&)            = delete;
     GraphicalUserInterface& operator=(GraphicalUserInterface const&) = delete;
     ~GraphicalUserInterface();
@@ -41,7 +41,7 @@ export class GraphicalUserInterface {
     Widget*     getWidget(std::string_view path) const;
 
   public:
-    Engine&      engine;
+    Engine*      engine;
     View         view;
     InputHandler input;
     Renderer     renderer;

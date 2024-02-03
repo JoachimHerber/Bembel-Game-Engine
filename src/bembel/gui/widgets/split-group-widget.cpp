@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <cassert>
 #include <filesystem>
-#include <glm/glm.hpp>
 module bembel.gui.widgets;
 
 import bembel.base;
@@ -13,7 +12,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-SplitGroupWidget::SplitGroupWidget(Widget& parent, bool horizontal)
+SplitGroupWidget::SplitGroupWidget(In<Widget*> parent, bool horizontal)
   : Widget{parent}, m_horizontal{horizontal} {
     m_child_widgets.push_back(&m_first_group);
     m_child_widgets.push_back(&m_second_group);
@@ -31,7 +30,7 @@ SplitGroupWidget::SplitGroupWidget(Widget& parent, bool horizontal)
 
     updateLayout();
 
-    m_view = std::make_unique<SimpleSplitGroupWidgetView>(*this);
+    m_view = std::make_unique<SimpleSplitGroupWidgetView>(this);
 }
 
 SplitGroupWidget::~SplitGroupWidget() {}
@@ -97,7 +96,7 @@ void SplitGroupWidget::onMoveSeperator(In<ivec2> cursor, InOut<ivec2>) {
 
     vec2 const pos = m_handle.position + cursor;
 
-    m_seperator_pos = (m_horizontal ? pos.x : pos.y) - border_width/2;
+    m_seperator_pos = (m_horizontal ? pos.x : pos.y) - border_width / 2;
 
     updateLayout();
 }
@@ -161,29 +160,29 @@ void SplitGroupWidget::updateLayout() {
     }
 }
 
-void SimpleSplitGroupWidgetView::draw(RenderBatchInterface& batch) {
-    auto style = m_widget.getStyle();
+void SimpleSplitGroupWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_widget->getStyle();
     assert(style && "GUI::Style is undefined");
 
     float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
-    if(m_widget.isSelected()) {
+    if(m_widget->isSelected()) {
         batch.setPrimaryColor(style->getColor(Style::Colors::BORDER_ACTIVE));
-    } else if(m_widget.isHovered()) {
+    } else if(m_widget->isHovered()) {
         batch.setPrimaryColor(style->getColor(Style::Colors::BORDER_HOVERED));
     } else {
         batch.setPrimaryColor(style->getColor(Style::Colors::BORDER));
     }
 
-    vec2 min = m_widget.position.get();
-    vec2 max = min + vec2(m_widget.size.get());
+    vec2 min = m_widget->position.get();
+    vec2 max = min + vec2(m_widget->size.get());
 
-    if(m_widget.isHorizontal()) {
-        min.x = m_widget.getSeperatorPos();
-        max.x = m_widget.getSeperatorPos() + border_width;
+    if(m_widget->isHorizontal()) {
+        min.x = m_widget->getSeperatorPos();
+        max.x = m_widget->getSeperatorPos() + border_width;
     } else {
-        min.y = m_widget.getSeperatorPos();
-        max.y = m_widget.getSeperatorPos() + border_width;
+        min.y = m_widget->getSeperatorPos();
+        max.y = m_widget->getSeperatorPos() + border_width;
     }
     batch.drawRectangle(min, max);
 }

@@ -31,6 +31,8 @@ export class Application
     void handleEvent(In<KeyPressEvent>);
 
   private:
+    EventHandlerGuard<WindowShouldCloseEvent, FrameBufferResizeEvent, KeyPressEvent> m_guard{this};
+
     std::shared_ptr<Scene>      m_scene;
     std::unique_ptr<ChessBoard> m_chess_board;
     GameLogicCoroutine          m_game_logic;

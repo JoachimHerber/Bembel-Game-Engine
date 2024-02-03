@@ -1,4 +1,4 @@
-﻿export module bembel.gui.core : InteractionHandle;
+﻿export module bembel.gui.core:InteractionHandle;
 
 import bembel.base;
 import bembel.kernel;
@@ -47,7 +47,7 @@ export class InteractionHandle {
   public:
     /**
      * This Signal is emited when ever the curser is moved while the the InteractionHandle is
-     * active. 
+     * active.
      * Fist Signal Argument: Cursor Position (relative to Widget)
      * Second Signal Argument: Accumulated curser movement (can be modified by signal handelers).
      */
@@ -57,20 +57,20 @@ export class InteractionHandle {
      * This Signal is emited when the hovered state (whether the curser is above the
      * InteractionHandle or not) of the InteractionHandle chages.
      */
-    Signal<bool>          hover_signal;
-    Signal<bool>          selection_signal;
+    Signal<bool> hover_signal;
+    Signal<bool> selection_signal;
 
-    Signal<ivec2>         press_signal;
-    Signal<ivec2>         release_signal;
+    Signal<ivec2> press_signal;
+    Signal<ivec2> release_signal;
 
     Signal<Action, ivec2> action_signal;
 
-    Signal<char32_t>      text_input_signal;
+    Signal<char32_t> text_input_signal;
 
-    ivec2                 position{0, 0};
-    ivec2                 size{1, 1};
+    ivec2 position{0, 0};
+    ivec2 size{1, 1};
 
-    Asset<CursorIcon>           cursor;
+    Asset<CursorIcon> cursor;
 
   private:
     bool m_disabled = false;

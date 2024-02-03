@@ -15,7 +15,7 @@ using namespace bembel::kernel;
 
 export class GuiSystem : public System {
   public:
-    GuiSystem(Engine&);
+    GuiSystem(In<Engine*>);
     GuiSystem(GuiSystem const&)            = delete;
     GuiSystem& operator=(GuiSystem const&) = delete;
     ~GuiSystem();
@@ -31,7 +31,7 @@ export class GuiSystem : public System {
     GraphicalUserInterface* getGUI(std::string_view name);
 
   private:
-    Engine&                                              m_engine;
+    Engine*                                              m_engine;
     std::vector<std::unique_ptr<GraphicalUserInterface>> m_guis;
     Dictionary<GraphicalUserInterface*>                  m_named_guis;
 };

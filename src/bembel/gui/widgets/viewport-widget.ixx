@@ -17,7 +17,7 @@ export class ViewportWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Viewport";
 
   public:
-    ViewportWidget(Widget& parent, Viewport* viewport = nullptr, Camera* camera = nullptr);
+    ViewportWidget(In<Widget*> parent, Viewport* viewport = nullptr, Camera* camera = nullptr);
     ~ViewportWidget();
 
     void setCamera(Camera* camera);

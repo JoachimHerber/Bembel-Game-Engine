@@ -15,7 +15,7 @@ export class TextInputWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "TextInput";
 
   public:
-    TextInputWidget(Widget& parent);
+    TextInputWidget(In<Widget*> parent);
     ~TextInputWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;
@@ -44,35 +44,35 @@ export class TextInputWidget : public Widget {
     friend class View;
     class View : public Widget::View {
       public:
-        View(TextInputWidget& widget) : m_widget{widget} {}
+        View(TextInputWidget* widget) : m_widget{widget} {}
         ~View() = default;
 
-        void draw(RenderBatchInterface& batch) override;
+        void draw(InOut<RenderBatchInterface> batch) override;
 
         void updateGlyphs(In<std::u8string> str);
 
       protected:
         virtual void drawBackground(
-            RenderBatchInterface& batch, Style const& style, vec2 min, vec2 max
+            InOut<RenderBatchInterface> batch, In<Style> style, In<vec2> min, In<vec2> max
         );
         virtual void drawText(
-            RenderBatchInterface& batch,
-            Style const&          style,
-            SdfFont const&           font,
-            vec2                  origin,
-            float                 scale
+            InOut<RenderBatchInterface> batch,
+            In<Style>                   style,
+            In<SdfFont>                 font,
+            In<vec2>                    origin,
+            In<float>                   scale
         );
         virtual void drawCursor(
-            RenderBatchInterface& batch,
-            Style const&          style,
-            SdfFont const&           font,
-            vec2                  text_origin,
-            float                 text_scale,
-            usize                 cursor_pos
+            InOut<RenderBatchInterface> batch,
+            In<Style>                   style,
+            In<SdfFont>                 font,
+            In<vec2>                    text_origin,
+            In<float>                   text_scale,
+            In<usize>                   cursor_pos
         );
 
       protected:
-        TextInputWidget&                          m_widget;
+        TextInputWidget*                          m_widget;
         std::vector<std::pair<GlyphIndex, float>> m_glyphs;
         float                                     m_advance = 0;
     };

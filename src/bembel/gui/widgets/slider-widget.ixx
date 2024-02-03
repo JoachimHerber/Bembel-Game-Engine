@@ -17,7 +17,7 @@ export class SliderWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Slider";
 
   public:
-    SliderWidget(Widget& parent);
+    SliderWidget(In<Widget*> parent);
     ~SliderWidget();
 
     virtual bool configure(xml::Element const* properties) override;
@@ -59,13 +59,13 @@ export class SliderWidget : public Widget {
 
 export class SliderWidgetView : public Widget::View {
   public:
-    SliderWidgetView(SliderWidget& slider) : m_slider{slider} {}
+    SliderWidgetView(In<SliderWidget*> slider) : m_slider{slider} {}
     ~SliderWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    SliderWidget& m_slider;
+    SliderWidget* m_slider;
 };
 
 export class IntSliderWidget : public SliderWidget {
@@ -74,10 +74,10 @@ export class IntSliderWidget : public SliderWidget {
 
   public:
     IntSliderWidget(
-        Widget& parent,
-        i64     min         = std::numeric_limits<i64>::lowest(),
-        i64     max         = std::numeric_limits<i64>::max(),
-        bool    logarithmic = false
+        In<Widget*> parent,
+        In<i64>     min         = std::numeric_limits<i64>::lowest(),
+        In<i64>     max         = std::numeric_limits<i64>::max(),
+        In<bool>    logarithmic = false
     );
     ~IntSliderWidget() = default;
 
@@ -115,7 +115,9 @@ export class FloatSliderWidget : public SliderWidget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "FloatSlider";
 
   public:
-    FloatSliderWidget(Widget& parent, float min = 0.0f, float max = 1.0f, bool logarithmic = false);
+    FloatSliderWidget(
+        In<Widget*> parent, In<float> min = 0.0f, In<float> max = 1.0f, In<bool> logarithmic = false
+    );
     ~FloatSliderWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;

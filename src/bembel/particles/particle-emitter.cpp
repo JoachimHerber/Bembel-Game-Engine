@@ -10,8 +10,8 @@ using namespace bembel::kernel;
 
 bool ParticleEmitter::deserialize(
     Container* container, EntityID entity_id, xml::Element const* entity
-){
-  return true;
+) {
+    return true;
 }
 
 } // namespace bembel::particles

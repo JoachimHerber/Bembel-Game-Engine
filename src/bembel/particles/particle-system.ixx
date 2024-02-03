@@ -1,7 +1,7 @@
 ﻿module;
 #include <memory>
-#include <string>
 #include <optional>
+#include <string>
 export module bembel.particles:System;
 
 import bembel.base;
@@ -14,7 +14,7 @@ using namespace bembel::kernel;
 
 export class ParticleSystem : public kernel::System {
   public:
-    ParticleSystem(Engine&);
+    ParticleSystem(In<Engine*>);
     ParticleSystem(ParticleSystem const&)            = delete;
     ParticleSystem& operator=(ParticleSystem const&) = delete;
     ~ParticleSystem();
@@ -30,7 +30,7 @@ export class ParticleSystem : public kernel::System {
     virtual void update(double time_since_last_update) override;
 
   private:
-    Engine& m_engine;
+    Engine* m_engine;
 
     std::vector<ParticleType>         m_particle_types;
     std::vector<std::weak_ptr<Scene>> m_scenes;

@@ -15,7 +15,7 @@ export class SplitGroupWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "SplitGroup";
 
   public:
-    SplitGroupWidget(Widget& parent, bool horizontal = true);
+    SplitGroupWidget(In<Widget*> parent, bool horizontal = true);
     ~SplitGroupWidget();
 
     virtual bool configure(xml::Element const* properties) override;
@@ -43,8 +43,8 @@ export class SplitGroupWidget : public Widget {
     void updateLayout();
 
   private:
-    GroupWidget m_first_group{*this};
-    GroupWidget m_second_group{*this};
+    GroupWidget m_first_group{this};
+    GroupWidget m_second_group{this};
 
     InteractionHandle m_handle;
 
@@ -54,13 +54,13 @@ export class SplitGroupWidget : public Widget {
 
 export class SimpleSplitGroupWidgetView : public Widget::View {
   public:
-    SimpleSplitGroupWidgetView(SplitGroupWidget& widget) : m_widget{widget} {}
+    SimpleSplitGroupWidgetView(SplitGroupWidget* widget) : m_widget{widget} {}
     ~SimpleSplitGroupWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    SplitGroupWidget& m_widget;
+    SplitGroupWidget* m_widget;
 };
 
 } // namespace bembel::gui

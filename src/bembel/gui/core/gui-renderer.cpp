@@ -94,14 +94,14 @@ void Renderer::drawWidgets(
     m_batch.setPositionOffset(parent_pos);
 
     const ivec2 pos        = parent_pos + widget.position.get();
-    const ivec2 widget_min = max(area_min, pos);
-    const ivec2 widget_max = min(area_max, pos + widget.size.get());
+    const ivec2 widget_min = glm::max(area_min, pos);
+    const ivec2 widget_max = glm::min(area_max, pos + widget.size.get());
     m_batch.setDrawArea(widget_min, widget_max);
 
     auto view = widget.getView();
     if(view) view->draw(m_batch);
 
-    for (auto* child_widget : widget.getChildWidgets()) {
+    for(auto* child_widget : widget.getChildWidgets()) {
         drawWidgets(*child_widget, pos, widget_min, widget_max);
     }
 }

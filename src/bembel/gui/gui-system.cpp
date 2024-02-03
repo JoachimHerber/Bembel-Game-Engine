@@ -17,7 +17,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GuiSystem::GuiSystem(Engine& engine) : System{"UserInterface"}, m_engine{engine} {
+GuiSystem::GuiSystem(In<Engine*> engine) : System{"UserInterface"}, m_engine{engine} {
     assets::registerAssetType<Shader>();
     assets::registerAssetType<ShaderProgram>();
     assets::registerAssetType<TextureAtlas>();
@@ -52,7 +52,7 @@ bool GuiSystem::init() {
 
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForOpenGL(m_engine.display.getWindow(0)->getGlfwWindow(), true);
+    ImGui_ImplGlfw_InitForOpenGL(m_engine->display.getWindow(0)->getGlfwWindow(), true);
     ImGui_ImplOpenGL3_Init();
     return true;
 }
@@ -70,9 +70,7 @@ void GuiSystem::update(double) {}
 
 GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
     if(!name.empty() && m_named_guis.find(name) != m_named_guis.end()) {
-        logError(
-            "Can't create GUI with name '{}'. A GUI with the same name already exists.", name
-        );
+        logError("Can't create GUI with name '{}'. A GUI with the same name already exists.", name);
         return nullptr;
     }
 
@@ -81,13 +79,13 @@ GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
     GraphicalUserInterface* gui = m_guis.back().get();
 
     gui->input.setButtons(
-        m_engine.input.mouse.getButton(0),
-        m_engine.input.keyboard.getKey(Keyboard::DELETE),
-        m_engine.input.keyboard.getKey(Keyboard::BACKSPACE),
-        m_engine.input.keyboard.getKey(Keyboard::RIGHT),
-        m_engine.input.keyboard.getKey(Keyboard::LEFT),
-        m_engine.input.keyboard.getKey(Keyboard::UP),
-        m_engine.input.keyboard.getKey(Keyboard::DOWN)
+        m_engine->input.mouse.getButton(0),
+        m_engine->input.keyboard.getKey(Keyboard::DELETE),
+        m_engine->input.keyboard.getKey(Keyboard::BACKSPACE),
+        m_engine->input.keyboard.getKey(Keyboard::RIGHT),
+        m_engine->input.keyboard.getKey(Keyboard::LEFT),
+        m_engine->input.keyboard.getKey(Keyboard::UP),
+        m_engine->input.keyboard.getKey(Keyboard::DOWN)
     );
 
     if(!name.empty()) m_named_guis.emplace(name, gui);

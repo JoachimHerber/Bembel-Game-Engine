@@ -2,9 +2,6 @@
 #include <glbinding/gl/gl.h>
 
 #include <cstdlib>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 module bembel.graphics.pipeline;
 
 import bembel.base;
@@ -78,7 +75,7 @@ void GeometryRenderingStage::execute(In<std::span<const RendererPtr>> renderer) 
         mat4 model_matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
         if(entities[entity] & m_transforms->getComponentMask()) {
             model_matrix = glm::translate(model_matrix, transform->position);
-            model_matrix = model_matrix * glm::mat4_cast(transform->rotation);
+            model_matrix = model_matrix * mat4_cast(transform->rotation);
             model_matrix = glm::scale(model_matrix, vec3(transform->scale));
         }
         model_matrix = glm::scale(model_matrix, geom.scale);
@@ -88,9 +85,10 @@ void GeometryRenderingStage::execute(In<std::span<const RendererPtr>> renderer) 
 
     m_render_queue.sortRenderData();
     for(auto& it : renderer) {
-        if(it) it->renderGeometry(
-            cam->getProjectionMatrix(), cam->getViewMatrix(), m_render_queue.getRenderData()
-        );
+        if(it)
+            it->renderGeometry(
+                cam->getProjectionMatrix(), cam->getViewMatrix(), m_render_queue.getRenderData()
+            );
     }
     m_fbo->endRenderToTexture();
 }

@@ -39,9 +39,11 @@ export class PhysicsDebugRenderStage : public RenderingPipeline::Stage {
     virtual void cleanup() override;
     virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
-    void handleEvent(ConfigurePhysicsDebugRenderStageEvent const& event);
+    void handleEvent(In<ConfigurePhysicsDebugRenderStageEvent> event);
 
   private:
+    EventHandlerGuard<ConfigurePhysicsDebugRenderStageEvent> m_guard{this};
+
     Scene* m_scene      = nullptr;
     bool   m_enabled    = false;
     bool   m_depth_test = false;
@@ -59,7 +61,7 @@ export class PhysicsDebugRenderStage : public RenderingPipeline::Stage {
         ) override {}
 
         virtual void reportErrorWarning(const char* warning_string) override {
-            //log().error("{}", warningString);
+            // log().error("{}", warningString);
         }
 
         virtual void draw3dText(const btVector3& location, const char* text_string) override {}

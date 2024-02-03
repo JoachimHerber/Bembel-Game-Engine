@@ -39,4 +39,4 @@ export using enum ImGuiTableBgTarget_;
 export using enum ImGuiTableBgTarget_;
 
 export using ImVec2 = ::ImVec2;
-} // namespace bembel::imgui
+} // namespace bembel::gui::imgui

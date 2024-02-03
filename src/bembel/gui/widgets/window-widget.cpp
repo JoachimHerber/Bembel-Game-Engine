@@ -1,7 +1,6 @@
 ﻿module;
 #include <cassert>
 #include <filesystem>
-#include <glm/glm.hpp>
 module bembel.gui.widgets;
 
 import bembel.base;
@@ -12,7 +11,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-WindowWidget::WindowWidget(Widget& parent) : Widget{parent} {
+WindowWidget::WindowWidget(In<Widget*> parent) : Widget{parent} {
     m_child_widgets.push_back(&m_title_bar);
     m_child_widgets.push_back(&m_window_area);
 
@@ -51,7 +50,7 @@ WindowWidget::WindowWidget(Widget& parent) : Widget{parent} {
 
     updateLayout();
 
-    m_view = std::make_unique<SimpleWindowWidgetView>(*this);
+    m_view = std::make_unique<SimpleWindowWidgetView>(this);
 }
 
 WindowWidget::~WindowWidget() {}
@@ -75,7 +74,7 @@ uint WindowWidget::getMinWidth(In<std::optional<uint>> height) const {
     return 2 * border_width
          + std::max(
                m_window_area.getMinWidth(height.and_then([=](uint w) {
-                   uint a = title_bar_height +  border_width;
+                   uint a = title_bar_height + border_width;
                    return std::optional<uint>(std::max(w, a) - a);
                })),
                m_title_bar.getMinWidth(title_bar_height)
@@ -196,8 +195,8 @@ void WindowWidget::onBottomRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor
     max.y -= m_window_area.getMinHeight();
     max.y -= border_width;
 
-    glm::ivec2 start   = {pos.x + size.x + cursor_offset.x, pos.y + cursor_offset.y};
-    glm::ivec2 clamped = glm::clamp(start, min, max);
+    ivec2 start   = {pos.x + size.x + cursor_offset.x, pos.y + cursor_offset.y};
+    ivec2 clamped = glm::clamp(start, min, max);
 
     cursor_offset = start - clamped;
 
@@ -257,8 +256,8 @@ void WindowWidget::updateLayout() {
     m_resize_handle_right.size         = ivec2{/*********/ border_width, height - title_bar_height};
 }
 
-void SimpleWindowWidgetView::draw(RenderBatchInterface& batch) {
-    auto style = m_window.getStyle();
+void SimpleWindowWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_window->getStyle();
     assert(style && "GUI::Style is undefined");
 
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
@@ -281,13 +280,13 @@ void SimpleWindowWidgetView::draw(RenderBatchInterface& batch) {
     //  y1 ┃ ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩ ┃
     //  y0 ┗━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┷━┛
     //    x0 x1                                           x2 x3
-    float x0 = m_window.position.get().x;
-    float x3 = x0 + m_window.size.get().x;
+    float x0 = m_window->position.get().x;
+    float x3 = x0 + m_window->size.get().x;
     float x2 = x3 - border_width;
     float x1 = x0 + border_width;
 
-    float y0 = m_window.position.get().y;
-    float y3 = y0 + m_window.size.get().y;
+    float y0 = m_window->position.get().y;
+    float y3 = y0 + m_window->size.get().y;
     float y2 = y3 - title_bar_height;
     float y1 = y0 + border_width;
 

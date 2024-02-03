@@ -147,14 +147,9 @@ namespace event_callbacks {
 } // namespace event_callbacks
 
 Window::Window(WindowId id)
-  : m_display_mode{std::make_shared<WindowDisplayMode>()}, m_window_id{id} {
-    events::addHandler<SetCursorIconEvent>(this);
-    events::addHandler<SetCursorModeEvent>(this);
-}
+  : m_display_mode{std::make_shared<WindowDisplayMode>()}, m_window_id{id} {}
 
 Window::~Window() {
-    events::removeHandler<SetCursorIconEvent>(this);
-    events::removeHandler<SetCursorModeEvent>(this);
     close();
 }
 

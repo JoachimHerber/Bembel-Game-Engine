@@ -1,5 +1,4 @@
 ﻿module;
-#include <glm/glm.hpp>
 #include <memory>
 module bembel.tools.font_converter;
 

@@ -13,7 +13,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GraphicSystem::GraphicSystem(Engine& engine) : System("Graphics"), m_engine{engine} {
+GraphicSystem::GraphicSystem(In<Engine*> engine) : System("Graphics"), m_engine{engine} {
     assets::registerAssetType<Material>();
     assets::registerAssetType<GeometryMesh>();
     assets::registerAssetType<GeometryModel>();
@@ -31,7 +31,7 @@ GraphicSystem::~GraphicSystem() {
 }
 
 RenderingPipeline* GraphicSystem::createRenderingPipline() {
-    m_pipelines.push_back(std::make_unique<RenderingPipeline>(m_engine.display));
+    m_pipelines.push_back(std::make_unique<RenderingPipeline>(m_engine->display));
     return m_pipelines.back().get();
 }
 
@@ -45,8 +45,7 @@ std::vector<std::shared_ptr<GeometryRendererBase>> const& GraphicSystem::getRend
 
 GeometryRendererBase* GraphicSystem::getRenderer(VertexAttribMask vertex_format) const {
     for(auto& it : m_renderer) {
-        if(it->getRequiredVertexAttributes() == vertex_format) // exakt match
-            return it.get();
+        if(it->getRequiredVertexAttributes() == vertex_format) return it.get();
     }
     for(auto& it : m_renderer) {
         if((it->getRequiredVertexAttributes() & vertex_format) == it->getRequiredVertexAttributes())
@@ -95,7 +94,7 @@ void GraphicSystem::configurePipelines(xml::Element const* properties) {
     if(!properties) return;
 
     for(auto pipeline_properties : xml::IterateChildElements(properties, "RenderingPipeline")) {
-        auto pipline = std::make_unique<RenderingPipeline>(m_engine.display);
+        auto pipline = std::make_unique<RenderingPipeline>(m_engine->display);
         if(!pipline->configure(pipeline_properties)) pipline.reset();
 
         m_pipelines.push_back(std::move(pipline));

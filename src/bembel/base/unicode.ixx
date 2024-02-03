@@ -26,8 +26,8 @@ export namespace utf8 {
 
     constexpr Encoding getEncoding(CodeUnit cu) noexcept;
 
-    std::u8string_view encode(CodePoint pc) noexcept;
-    CodePoint          decode(std::u8string_view sv) noexcept;
+    std::u8string_view encode(In<CodePoint> pc) noexcept;
+    CodePoint          decode(In<std::u8string_view> sv) noexcept;
 
     bool  isValidString(In<std::u8string_view> str);
     usize getNumCodePoints(In<std::u8string_view> str);

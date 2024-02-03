@@ -1,8 +1,7 @@
 module;
+#include <locale>
 #include <set>
 #include <string>
-#include <locale> 
-
 export module bembel.kernel.i18n:NumberFormat;
 
 import bembel.base;
@@ -16,7 +15,9 @@ export class NumberFormat {
 
     void setDecimalSeparator(std::u8string_view separator) { m_decimal_separator = separator; }
     void setGroupSeparator(std::u8string_view separator) { m_group_separator = separator; }
-    void setGroupSeparatorLocations(std::set<uint> locations) { m_group_separator_locations = locations; }
+    void setGroupSeparatorLocations(std::set<uint> locations) {
+        m_group_separator_locations = locations;
+    }
 
     void format(In<u64> value, InOut<std::u8string> str);
     void format(In<double> value, InOut<std::u8string> str);
@@ -29,4 +30,4 @@ export class NumberFormat {
     std::set<uint> m_group_separator_locations = {3, 6, 9, 12, 15, 18};
 };
 
-} // namespace bembel::text::i18n
+} // namespace bembel::kernel::i18n

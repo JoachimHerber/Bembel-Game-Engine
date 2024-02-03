@@ -1,11 +1,12 @@
 ﻿module;
-#include <string>
-#include <string_view>
 #include <charconv>
 #include <format>
+#include <string>
+#include <string_view>
 export module bembel.base:Conversion;
 
 import :Types;
+import :Glm;
 import :Logger;
 
 export namespace bembel::base::conversion {
@@ -29,10 +30,10 @@ bool fromString(In<std::string_view> str, std::string& value) {
 }
 
 template <typename T>
-requires std::integral<T>
+    requires std::integral<T>
 bool fromString(In<std::string_view> str, T& value) {
     auto result = std::from_chars(str.data(), str.data() + str.size(), value);
-    
+
     if(result.ec == std::errc::invalid_argument) {
         logError("Can't parse string '{}'", str);
         return false;
@@ -45,31 +46,29 @@ bool fromString(In<std::string_view> str, T& value) {
 }
 
 template <typename T>
-requires std::floating_point<T>
+    requires std::floating_point<T>
 bool fromString(In<std::string_view> str, T& value) {
-    try{
+    try {
         char* end;
         value = std::strtof(str.data(), &end);
-    }catch(...){
-        logError("Can't parse string '{}'", str);
-    }
-    //std::string tmp = {str.begin(), str.end()};
-    //auto [ptr, ec] = std::from_chars(tmp.data(), tmp.data() + tmp.size(), value);
-    //log().info("fromString '{}' -> {}", tmp, value);
+    } catch(...) { logError("Can't parse string '{}'", str); }
+    // std::string tmp = {str.begin(), str.end()};
+    // auto [ptr, ec] = std::from_chars(tmp.data(), tmp.data() + tmp.size(), value);
+    // log().info("fromString '{}' -> {}", tmp, value);
     //
-    //if(ec == std::errc::invalid_argument) {
-    //    log().error("Can't parse string '{}'", str);
-    //    return false;
-    //} else if(ec == std::errc::result_out_of_range) {
-    //    log().error("This number '{}'  is to large", str);
-    //    return false;
-    //}
+    // if(ec == std::errc::invalid_argument) {
+    //     log().error("Can't parse string '{}'", str);
+    //     return false;
+    // } else if(ec == std::errc::result_out_of_range) {
+    //     log().error("This number '{}'  is to large", str);
+    //     return false;
+    // }
 
     return true;
 }
 
 template <typename T>
-requires std::integral<T> || std::floating_point<T>
+    requires std::integral<T> || std::floating_point<T>
 bool fromString(In<std::string_view> str, tvec2<T>& value) {
     auto delim_pos = str.find(' ');
     if(delim_pos == str.npos) {
@@ -82,7 +81,7 @@ bool fromString(In<std::string_view> str, tvec2<T>& value) {
 }
 
 template <typename T>
-requires std::integral<T> || std::floating_point<T>
+    requires std::integral<T> || std::floating_point<T>
 bool fromString(In<std::string_view> str, tvec3<T>& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {
@@ -101,7 +100,7 @@ bool fromString(In<std::string_view> str, tvec3<T>& value) {
 }
 
 template <typename T>
-requires std::integral<T> || std::floating_point<T>
+    requires std::integral<T> || std::floating_point<T>
 bool fromString(In<std::string_view> str, tvec4<T>& value) {
     auto delim_pos_0 = str.find(' ');
     if(delim_pos_0 == str.npos) {

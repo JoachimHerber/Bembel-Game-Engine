@@ -13,8 +13,8 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-ButtonWidget::ButtonWidget(Widget& parent, std::u8string_view text)
-  : Widget{parent}, m_label{*this, text} {
+ButtonWidget::ButtonWidget(In<Widget*> parent, std::u8string_view text)
+  : Widget{parent}, m_label{this, text} {
     m_interaction_handles.push_back(&m_handle);
     m_child_widgets.push_back(&m_label);
 
@@ -27,7 +27,7 @@ ButtonWidget::ButtonWidget(Widget& parent, std::u8string_view text)
 
     m_handle.cursor = Asset<CursorIcon>("Hand");
 
-    m_view = std::make_unique<SimpleButtonWidgetView>(*this);
+    m_view = std::make_unique<SimpleButtonWidgetView>(this);
 }
 
 ButtonWidget::~ButtonWidget() {}
@@ -86,21 +86,21 @@ void ButtonWidget::onRelease(ivec2) {
     if(isHovered()) click_signal.emit();
 }
 
-inline Style::Colors getBorderColor(ButtonWidget& widget) {
+inline Style::Colors getBorderColor(In<ButtonWidget> widget) {
     if(widget.isPressed()) return Style::Colors::BORDER_ACTIVE;
     if(widget.isHovered() || widget.isSelected()) return Style::Colors::BORDER_HOVERED;
     return Style::Colors::BORDER;
 }
 
-inline Style::Colors getButtonColor(ButtonWidget& widget) {
+inline Style::Colors getButtonColor(In<ButtonWidget> widget) {
     if(widget.isDisabled()) return Style::Colors::BUTTON_DISABLED;
     if(widget.isPressed()) return Style::Colors::BUTTON_ACTIVE;
     if(widget.isHovered() || widget.isSelected()) return Style::Colors::BUTTON_HOVERED;
     return Style::Colors::BUTTON;
 }
 
-void SimpleButtonWidgetView::draw(RenderBatchInterface& batch) {
-    auto style = m_button.getStyle();
+void SimpleButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_button->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
@@ -118,14 +118,14 @@ void SimpleButtonWidgetView::draw(RenderBatchInterface& batch) {
 
     float const corner_radius = style->getValue(Style::Values::BUTTON_CORNER_SIZE);
 
-    float const x0 = m_button.position.get().x;
+    float const x0 = m_button->position.get().x;
     float const x1 = x0 + corner_radius;
-    float const x3 = x0 + m_button.size.get().x;
+    float const x3 = x0 + m_button->size.get().x;
     float const x2 = x3 - corner_radius;
 
-    float const y0 = m_button.position.get().y;
+    float const y0 = m_button->position.get().y;
     float const y1 = y0 + corner_radius;
-    float const y3 = y0 + m_button.size.get().y;
+    float const y3 = y0 + m_button->size.get().y;
     float const y2 = y3 - corner_radius;
 
     batch.setPrimaryColor(style->getColor(getButtonColor(m_button)));

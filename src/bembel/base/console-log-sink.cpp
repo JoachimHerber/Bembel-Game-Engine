@@ -54,15 +54,9 @@ void ConsoleLogSink::writeMessage(In<std::string_view> message, In<uint> indenta
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0F);
 }
 
-//*
 Logger Logger::info{std::make_shared<ConsoleLogSink>("", 0x0F)};
 Logger Logger::error{std::make_shared<ConsoleLogSink>("###ERROR### ", 0xCE, true)};
 Logger Logger::debug{std::make_shared<ConsoleLogSink>("", 0x09)};
 Logger Logger::warning{std::make_shared<ConsoleLogSink>("- WARNING - ", 0xE0)};
-/*/
-Logger Logger::info{};
-Logger Logger::error{};
-Logger Logger::debug{};
-Logger Logger::warning{};
-//*/
+
 } // namespace bembel::base

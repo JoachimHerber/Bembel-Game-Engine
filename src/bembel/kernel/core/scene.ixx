@@ -58,7 +58,7 @@ export template <typename T>
         requires std::is_base_of_v<ComponentContainerBase, typename T::Container>;
     }
 struct ComponentMetaData<T> {
-    using Container                                              = T::Container;
+    using Container = T::Container;
 };
 
 export template <typename T>
@@ -73,7 +73,7 @@ export class Scene {
     Scene& operator=(Scene const&) = delete;
     ~Scene();
 
-    template <Component ... T>
+    template <Component... T>
     void registerComponentTypes() {
         (registerComponentType<T>(), ...);
     }

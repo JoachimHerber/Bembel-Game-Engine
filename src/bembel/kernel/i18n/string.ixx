@@ -16,8 +16,9 @@ namespace bembel::kernel::i18n {
 using namespace bembel::base;
 
 export template <typename T>
-concept ValidStringArg = std::is_arithmetic_v<T> || std::is_nothrow_convertible_v<T, std::u8string_view>
-                      || std::is_nothrow_convertible_v<T, std::chrono::time_point<std::chrono::utc_clock>>;
+concept ValidStringArg =
+    std::is_arithmetic_v<T> || std::is_nothrow_convertible_v<T, std::u8string_view>
+    || std::is_nothrow_convertible_v<T, std::chrono::time_point<std::chrono::utc_clock>>;
 
 export template <ValidStringArg... TArgs>
     requires(sizeof...(TArgs) <= 32)
@@ -121,7 +122,8 @@ class String {
                 return;
             }
 
-            if(auto closing_bracket = str.find(u8"}"); closing_bracket != std::u8string_view::npos) {
+            if(auto closing_bracket = str.find(u8"}");
+               closing_bracket != std::u8string_view::npos) {
                 m_formater.push_back(createFormater(str.substr(0, closing_bracket)));
                 str = str.substr(closing_bracket + 1);
             } else {
@@ -190,7 +192,8 @@ class String {
                 if(placeholder.size() <= 1) return nullptr;
                 if constexpr(!std::is_integral_v<Param<N>>) {
                     logError(
-                        "Argument '{}' of i18n::String<> is not an integer and therefor can't be used for "
+                        "Argument '{}' of i18n::String<> is not an integer and therefor can't be "
+                        "used for "
                         "selecting "
                         "plural form",
                         N + 1
@@ -214,4 +217,4 @@ class String {
     std::vector<std::shared_ptr<Formater>> m_formater;
 };
 
-} // namespace bembel::text::i18n
+} // namespace bembel::kernel::i18n

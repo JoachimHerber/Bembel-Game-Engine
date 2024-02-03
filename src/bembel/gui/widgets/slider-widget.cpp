@@ -15,7 +15,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-SliderWidget::SliderWidget(Widget& parent) : Widget{parent} {
+SliderWidget::SliderWidget(In<Widget*> parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);
 
     size.change_signal.bind(this, &SliderWidget::onSizeChanged);
@@ -25,7 +25,7 @@ SliderWidget::SliderWidget(Widget& parent) : Widget{parent} {
 
     m_handle.cursor = Asset<CursorIcon>("Hand");
 
-    m_view = std::make_unique<SliderWidgetView>(*this);
+    m_view = std::make_unique<SliderWidgetView>(this);
 }
 
 SliderWidget::~SliderWidget() {}
@@ -84,14 +84,14 @@ void SliderWidget::updateSliderPos(In<ivec2> cursor) {
     m_position = pos;
 }
 
-void SliderWidgetView::draw(RenderBatchInterface& batch) {
-    auto style = m_slider.getStyle();
+void SliderWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_slider->getStyle();
     assert(style && "GUI::Style is undefined");
 
-    vec2 min = m_slider.position.get();
-    vec2 max = min + vec2(m_slider.size.get());
+    vec2 min = m_slider->position.get();
+    vec2 max = min + vec2(m_slider->size.get());
 
-    if(m_slider.isDisabled()) {
+    if(m_slider->isDisabled()) {
         batch.setColor(style->getColor(Style::Colors::INPUT_DISABLED));
     } else {
         batch.setColor(style->getColor(Style::Colors::INPUT));
@@ -106,14 +106,14 @@ void SliderWidgetView::draw(RenderBatchInterface& batch) {
 
     float slider_length = max.x - min.x - handle_width;
 
-    min.x += slider_length * m_slider.getSliderPosition();
+    min.x += slider_length * m_slider->getSliderPosition();
     max.x = min.x + handle_width;
 
-    if(m_slider.isDisabled()) {
+    if(m_slider->isDisabled()) {
         batch.setColor(style->getColor(Style::Colors::SLIDER_DISABLED));
-    } else if(m_slider.isActive()) {
+    } else if(m_slider->isActive()) {
         batch.setColor(style->getColor(Style::Colors::SLIDER_ACTIVE));
-    } else if(m_slider.isHovered()) {
+    } else if(m_slider->isHovered()) {
         batch.setColor(style->getColor(Style::Colors::SLIDER_HOVERED));
     } else {
         batch.setColor(style->getColor(Style::Colors::SLIDER));
@@ -121,13 +121,13 @@ void SliderWidgetView::draw(RenderBatchInterface& batch) {
     batch.drawRectangle(min, max);
 }
 
-IntSliderWidget::IntSliderWidget(Widget& parent, i64 min, i64 max, bool logarithmic)
+IntSliderWidget::IntSliderWidget(In<Widget*> parent, In<i64> min, In<i64> max, In<bool> logarithmic)
   : SliderWidget{parent}
   , m_min{min}
   , m_max{max}
   , m_value{min}
   , m_logarithmic{logarithmic}
-  , m_label{*this} {
+  , m_label{this} {
     m_child_widgets.push_back(&m_label);
 
     size.change_signal.bind(this, &IntSliderWidget::onSizeChanged);
@@ -152,7 +152,7 @@ bool IntSliderWidget::configure(xml::Element const* properties) {
     return true;
 }
 
-void IntSliderWidget::setValue(i64 value) {
+void IntSliderWidget::setValue(In<i64> value) {
     i64 old_value = m_value;
     if(m_logarithmic) {
         u64 bw = std::bit_width(u64(m_max / m_min));
@@ -196,13 +196,13 @@ void IntSliderWidget::updateLabel() {
     m_label.setText(m_text(m_value));
 }
 
-FloatSliderWidget::FloatSliderWidget(Widget& parent, float min, float max, bool logarithmic)
+FloatSliderWidget::FloatSliderWidget(In<Widget*> parent, In<float> min, In<float> max, In<bool> logarithmic)
   : SliderWidget{parent}
   , m_min{min}
   , m_max{max}
   , m_value{min}
   , m_logarithmic{logarithmic}
-  , m_label{*this} {
+  , m_label{this} {
     m_child_widgets.push_back(&m_label);
 
     size.change_signal.bind(this, &FloatSliderWidget::onSizeChanged);

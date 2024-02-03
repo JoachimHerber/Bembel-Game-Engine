@@ -53,7 +53,8 @@ float SdfFont::getKernig(GlyphIndex left, GlyphIndex right) const {
 SdfFont::Glyph const& SdfFont::getGlypData(unsigned glyph_index) const {
     if(glyph_index < m_glypths.size()) return m_glypths[glyph_index];
 
-    static const Glyph unknow_glyph{0.f, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {}};
+    static const Glyph unknow_glyph{
+        0.f, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {}};
 
     return unknow_glyph;
 }
@@ -115,14 +116,16 @@ std::unique_ptr<SdfFont> SdfFont::createAsset(xml::Element const* properties) {
 
     // compute ascender and descender
     for(auto it : font->m_glypths) {
-        font->m_ascender  = max(font->m_ascender, it.extents_max.y);
-        font->m_descender = min(font->m_descender, it.extents_min.y);
+        font->m_ascender  = glm::max(font->m_ascender, it.extents_max.y);
+        font->m_descender = glm::min(font->m_descender, it.extents_min.y);
     }
 
     return font;
 }
 
-bool SdfFont::readGlyphs(xml::Element const* properties, In<uint> resolution, In<uint> units_per_em) {
+bool SdfFont::readGlyphs(
+    xml::Element const* properties, In<uint> resolution, In<uint> units_per_em
+) {
     if(!properties) return false;
 
     double glyph_scale = 1.0 / units_per_em;
@@ -134,14 +137,15 @@ bool SdfFont::readGlyphs(xml::Element const* properties, In<uint> resolution, In
         glyph.advance *= glyph_scale;
 
         vec4 ext, tc;
-        if(xml::getAttribute(glyphProps, "extends", ext) && base::xml::getAttribute(glyphProps, "texCoord", tc)) {
+        if(xml::getAttribute(glyphProps, "extends", ext)
+           && base::xml::getAttribute(glyphProps, "texCoord", tc)) {
             glyph.extents_min    = {ext.x * glyph_scale, ext.y * glyph_scale};
             glyph.extents_max    = {ext.z * glyph_scale, ext.w * glyph_scale};
             glyph.tex_coords_min = {tc.x * uv_scale, tc.y * uv_scale};
             glyph.tex_coords_max = {tc.z * uv_scale, tc.w * uv_scale};
         }
         for(auto it : xml::IterateChildElements(glyphProps, "SubGlyph")) {
-            int  glyph_index;
+            int   glyph_index;
             dvec2 pos;
             xml::getAttribute(it, "glyph", glyph_index);
             xml::getAttribute(it, "position", pos);

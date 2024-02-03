@@ -22,10 +22,12 @@ export class Material final {
     void setRoughness(In<float> roughness);
     void setMetallic(In<float> metallic);
     void setF0(In<float> f0);
-    void setEmissionTexture(Asset<Texture> texture) { m_textures.emission = texture; }
-    void setBaseColorTexture(Asset<Texture> texture) { m_textures.base_color = texture; }
-    void setMaterialPropsTexture(Asset<Texture> texture) { m_textures.material_props = texture; }
-    void setNormalMapTexture(Asset<Texture> texture) { m_textures.normal_map = texture; }
+    void setEmissionTexture(In<Asset<Texture>> texture) { m_textures.emission = texture; }
+    void setBaseColorTexture(In<Asset<Texture>> texture) { m_textures.base_color = texture; }
+    void setMaterialPropsTexture(In<Asset<Texture>> texture) {
+        m_textures.material_props = texture;
+    }
+    void setNormalMapTexture(In<Asset<Texture>> texture) { m_textures.normal_map = texture; }
 
     void bindUniformBufferObject();
 

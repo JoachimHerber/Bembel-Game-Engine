@@ -12,12 +12,12 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GraphicalUserInterface::GraphicalUserInterface(Engine& engine)
+GraphicalUserInterface::GraphicalUserInterface(In<Engine*> engine)
   : engine{engine}
-  , view{*this}
+  , view{this}
   , input{root_widget, view}
   , renderer{root_widget}
-  , root_widget{*this} {
+  , root_widget{this} {
     this->root_widget.setName("Root");
 }
 
@@ -43,7 +43,7 @@ bool GraphicalUserInterface::init(xml::Element const* properties, bool load_file
     unsigned windowId, viewportId;
     if(xml::getAttribute(properties, "window", windowId)
        && xml::getAttribute(properties, "viewport", viewportId)) {
-        auto window = engine.display.getWindow(windowId);
+        auto window = engine->display.getWindow(windowId);
 
         if(window && window->getViewports().size() > viewportId) {
             window->getViewports()[viewportId]->addView(&this->view);
@@ -71,15 +71,15 @@ Widget* GraphicalUserInterface::getWidget(std::string_view path) const {
 }
 
 void GraphicalUserInterface::View::onCurserMove(In<vec2> pos) {
-    m_gui.input.onCursorMoved(pos);
+    m_gui->input.onCursorMoved(pos);
 }
 
 void GraphicalUserInterface::View::onResize(In<uvec2> size) {
-    m_gui.root_widget.size.set(size);
+    m_gui->root_widget.size.set(size);
 }
 
 void GraphicalUserInterface::View::draw(In<ivec2> pos, In<uvec2> size) {
-    m_gui.renderer.drawGui(pos, size);
+    m_gui->renderer.drawGui(pos, size);
 }
 
 } // namespace bembel::gui

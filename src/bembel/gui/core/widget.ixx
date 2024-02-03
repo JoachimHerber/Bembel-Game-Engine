@@ -24,7 +24,7 @@ export class Widget {
         View(){};
         virtual ~View(){};
 
-        virtual void draw(RenderBatchInterface& batch) = 0;
+        virtual void draw(InOut<RenderBatchInterface> batch) = 0;
     };
 
     class Layout {
@@ -41,8 +41,8 @@ export class Widget {
     };
 
   public:
-    Widget(GraphicalUserInterface& gui) : m_gui{gui}, m_parent{nullptr} {}
-    Widget(Widget& parent) : m_gui{parent.m_gui}, m_parent{&parent} {}
+    Widget(In<GraphicalUserInterface*> gui) : m_gui{gui}, m_parent{nullptr} {}
+    Widget(In<Widget*> parent) : m_gui{parent->m_gui}, m_parent{parent} {}
     Widget(Widget const&)            = delete;
     Widget& operator=(Widget const&) = delete;
     virtual ~Widget()                = default;
@@ -66,7 +66,7 @@ export class Widget {
     ObservableValue<ivec2> position = {0, 0};
     ObservableValue<ivec2> size     = {1, 1};
 
-    GraphicalUserInterface& getGUI() const { return m_gui; }
+    GraphicalUserInterface* getGUI() const { return m_gui; }
     Style*                  getStyle() const;
 
     Widget*                                getParentWidget() const { return m_parent; }
@@ -79,16 +79,16 @@ export class Widget {
     WidgetType* getChildWidget(std::string_view path) const;
     Widget*     getChildWidget(std::string_view path) const;
 
-    static Factory<Widget, Widget&>& getFactory();
+    static Factory<Widget, Widget*>& getFactory();
 
   protected:
-    GraphicalUserInterface& m_gui;
+    GraphicalUserInterface* m_gui;
     Widget*                 m_parent;
 
     std::string m_name;
 
     std::unique_ptr<View> m_view;
-    bool                  m_hidden     = false;
+    bool                  m_hidden = false;
 
     std::vector<Widget*>            m_child_widgets;
     std::vector<InteractionHandle*> m_interaction_handles;

@@ -14,8 +14,9 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-LabelWidget::LabelWidget(Widget& parent, std::u8string_view text) : Widget{parent}, m_text{text} {
-    m_view = std::make_unique<LabelWidget::View>(*this);
+LabelWidget::LabelWidget(In<Widget*> parent, std::u8string_view text)
+  : Widget{parent}, m_text{text} {
+    m_view = std::make_unique<LabelWidget::View>(this);
     updateGlyphs();
 }
 
@@ -35,7 +36,7 @@ bool LabelWidget::configure(base::xml::Element const* properties) {
         if(alignment == "right") m_alignment = Alignment::Right;
     }
 
-    m_view = std::make_unique<LabelWidget::View>(*this);
+    m_view = std::make_unique<LabelWidget::View>(this);
 
     updateGlyphs();
     return true;
@@ -90,48 +91,48 @@ void LabelWidget::updateGlyphs() {
     }
 }
 
-void LabelWidget::View::draw(RenderBatchInterface& batch) {
-    auto style = m_label.getStyle();
+void LabelWidget::View::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_label->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
 
     float border = 3;
 
-    vec2 size = m_label.size.get();
+    vec2 size = m_label->size.get();
 
-    float outline_margin = m_label.m_outline ? 0.1 : 0;
-    float text_length    = m_label.m_text_length + 2 * outline_margin;
+    float outline_margin = m_label->m_outline ? 0.1 : 0;
+    float text_length    = m_label->m_text_length + 2 * outline_margin;
     float line_heigth    = font->getAscender() - font->getDescender() + 2 * outline_margin;
     float scale          = std::min(size.x / text_length, size.y / line_heigth);
 
-    vec2 pos = vec2(m_label.position.get());
-    switch(m_label.m_alignment) {
+    vec2 pos = vec2(m_label->position.get());
+    switch(m_label->m_alignment) {
         case LabelWidget::Alignment::Center:
-            pos.x += 0.5f * (size.x - scale * m_label.m_text_length);
+            pos.x += 0.5f * (size.x - scale * m_label->m_text_length);
             break;
         case LabelWidget::Alignment::Right:
-            pos.x += size.x - scale * (m_label.m_text_length + outline_margin);
+            pos.x += size.x - scale * (m_label->m_text_length + outline_margin);
             break;
         case LabelWidget::Alignment::Left: pos.x += scale * outline_margin; break;
     }
     pos.y +=
         0.5f * size.y - scale * (0.5 * line_heigth + font->getDescender()); // center text verticaly
 
-    if(m_label.m_outline) {
+    if(m_label->m_outline) {
         batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
-        for(auto const& it : m_label.m_glyphs) {
+        for(auto const& it : m_label->m_glyphs) {
             batch.drawGlyph(it.index, pos + vec2(scale * it.x, 0), scale, true);
         }
     }
 
-    if(m_label.m_text_color.has_value()) {
-        batch.setColor(m_label.m_text_color.value());
+    if(m_label->m_text_color.has_value()) {
+        batch.setColor(m_label->m_text_color.value());
     } else {
         batch.setColor(style->getColor(Style::Colors::TEXT));
     }
 
-    for(auto const& it : m_label.m_glyphs) {
+    for(auto const& it : m_label->m_glyphs) {
         batch.drawGlyph(it.index, pos + vec2(scale * it.x, 0), scale);
     }
 }

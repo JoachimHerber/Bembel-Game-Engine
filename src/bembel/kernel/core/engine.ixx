@@ -1,6 +1,6 @@
 ﻿module;
-#include <string_view>
 #include <filesystem>
+#include <string_view>
 export module bembel.kernel.core:Engine;
 
 import bembel.base;
@@ -44,7 +44,7 @@ export class Engine final {
 
 template <typename SystemType, typename... Args>
 inline SystemType* Engine::addSystem(Args&&... args) {
-    auto system         = std::make_unique<SystemType>(*this, args...);
+    auto system         = std::make_unique<SystemType>(this, args...);
     auto system_pointer = system.get();
 
     auto it = m_system_mapping.find(system->name);

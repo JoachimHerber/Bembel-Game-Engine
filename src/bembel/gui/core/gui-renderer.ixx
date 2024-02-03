@@ -27,6 +27,7 @@ export class Renderer {
     void drawWidgets(
         In<Widget> widget, In<ivec2> parent_pos, In<ivec2> area_min, In<ivec2> area_max
     );
+
   protected:
     Widget& m_root_widget;
 

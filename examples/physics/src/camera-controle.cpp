@@ -54,7 +54,7 @@ void CameraControle::handleEvent(const CursorMovedEvent& event) {
 
     if(m_strive) {
         vec3 pos = m_camera->getPosition();
-        mat3 rot = glm::mat3_cast(orientation);
+        mat3 rot = mat3_cast(orientation);
 
         pos += 0.1f * cursor_movement.x * (rot * vec3(1, 0, 0));
         pos -= 0.1f * cursor_movement.y * (rot * vec3(0, 1, 0));
@@ -65,7 +65,7 @@ void CameraControle::handleEvent(const CursorMovedEvent& event) {
 
 void CameraControle::handleEvent(const ScrollEvent& event) {
     vec3 pos = m_camera->getPosition();
-    mat3 rot = glm::mat3_cast(m_camera->getOrientation());
+    mat3 rot = mat3_cast(m_camera->getOrientation());
 
     pos -= float(event.y) * (rot * vec3(0.f, 0.f, 2.f));
 

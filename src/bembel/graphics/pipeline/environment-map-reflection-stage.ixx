@@ -34,7 +34,7 @@ export class EnvironmentMapReflectionStage : public RenderingPipeline::Stage {
     virtual void init() override;
     virtual void cleanup() override;
     virtual void execute(In<std::span<const RendererPtr>> renderer) override;
-    
+
     using RenderingPipeline::Stage::setColorOutputTexture;
     using RenderingPipeline::Stage::setInputTextures;
 

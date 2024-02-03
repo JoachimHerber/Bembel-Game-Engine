@@ -54,7 +54,7 @@ void DefaultGeometryRenderer::renderGeometry(
             bindTexture(currentMaterial->getNormalMapTexture(), m_dummy_normal_map_texture);
         }
 
-        glm::mat4 modleView = view * it.transform;
+        mat4 modleView = view * it.transform;
 
         m_geomety_pass_shader->setUniform("uModleViewMatrix", modleView);
         m_geomety_pass_shader->setUniform("uNormalMatrix", modleView);
@@ -134,14 +134,13 @@ std::unique_ptr<DefaultGeometryRenderer> DefaultGeometryRenderer::createRenderer
         GLchar            name[bufSize];
         GLsizei           length;
         GLint             size;
-        GLenum            type; 
+        GLenum            type;
 
         glGetActiveAttrib(
             geomety_pass_shader->getHandl(), (GLuint)i, bufSize, &length, &size, &type, name
         );
         auto loc = glGetAttribLocation(geomety_pass_shader->getHandl(), name);
-        if(loc >= 0)
-            mask |= VertexAttribMask(1 << loc);
+        if(loc >= 0) mask |= VertexAttribMask(1 << loc);
     }
 
     auto renderer = std::make_unique<DefaultGeometryRenderer>(mask);

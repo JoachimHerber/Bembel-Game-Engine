@@ -13,10 +13,10 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-TextInputWidget::TextInputWidget(Widget& parent) : Widget{parent} {
+TextInputWidget::TextInputWidget(In<Widget*> parent) : Widget{parent} {
     m_interaction_handles.push_back(&m_handle);
 
-    m_view = std::make_unique<TextInputWidget::View>(*this);
+    m_view = std::make_unique<TextInputWidget::View>(this);
 
     this->size.change_signal.bind(this, &TextInputWidget::onSizeChanged);
     this->text.change_signal.bind(this, &TextInputWidget::onTextChanged);
@@ -43,7 +43,7 @@ uint TextInputWidget::getMinWidth(In<std::optional<uint>>) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float border   = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
+    float border = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     float margin = style->getValue(Style::Values::INPUT_HORIZONTAL_MARGIN);
     return uint(2 * border + 2 * margin);
 }
@@ -52,7 +52,7 @@ uint TextInputWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = getStyle();
     assert(style && "GUI::Style is undefined");
 
-    float border   = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
+    float border = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     float margin = style->getValue(Style::Values::INPUT_VERTICAL_MARGIN);
     return uint(2 * border + 2 * margin);
 }
@@ -104,7 +104,7 @@ void TextInputWidget::copy() {}
 void TextInputWidget::paste() {}
 
 void TextInputWidget::View::updateGlyphs(In<std::u8string> str) {
-    auto style = m_widget.getStyle();
+    auto style = m_widget->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
@@ -124,14 +124,14 @@ void TextInputWidget::View::updateGlyphs(In<std::u8string> str) {
     }
 }
 
-void TextInputWidget::View::draw(RenderBatchInterface& batch) {
-    auto style = m_widget.getStyle();
+void TextInputWidget::View::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_widget->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
 
-    vec2 min = m_widget.position.get();
-    vec2 max = min + vec2(m_widget.size.get());
+    vec2 min = m_widget->position.get();
+    vec2 max = min + vec2(m_widget->size.get());
 
     drawBackground(batch, *style, min, max);
 
@@ -142,27 +142,27 @@ void TextInputWidget::View::draw(RenderBatchInterface& batch) {
     float ascender    = font->getAscender();
     float descender   = font->getDescender();
     float line_heigth = ascender - descender;
-    float scale       = (m_widget.size.get().y - 2 * v_margin) / line_heigth;
+    float scale       = (m_widget->size.get().y - 2 * v_margin) / line_heigth;
     vec2  text_origin = {min.x + h_margin, 0.5 * (max.y + min.y - scale * (ascender + descender))};
 
     drawText(batch, *style, *font, text_origin, scale);
-    if(m_widget.isSelected())
-        drawCursor(batch, *style, *font, text_origin, scale, m_widget.m_cursor_pos);
+    if(m_widget->isSelected())
+        drawCursor(batch, *style, *font, text_origin, scale, m_widget->m_cursor_pos);
 }
 
 void TextInputWidget::View::drawBackground(
-    RenderBatchInterface& batch, Style const& style, vec2 outer_min, vec2 outer_max
+    InOut<RenderBatchInterface> batch, In<Style> style, In<vec2> outer_min, In<vec2> outer_max
 ) {
     float border = style.getValue(Style::Values::INPUT_BORDER_WIDTH);
 
     vec2 inner_min = outer_min + vec2(border);
     vec2 inner_max = outer_max - vec2(border);
 
-    if(m_widget.isDisabled()) {
+    if(m_widget->isDisabled()) {
         batch.setColor(style.getColor(Style::Colors::BORDER_DISABLED));
-    } else if(m_widget.isSelected()) {
+    } else if(m_widget->isSelected()) {
         batch.setColor(style.getColor(Style::Colors::BORDER_ACTIVE));
-    } else if(m_widget.isHovered()) {
+    } else if(m_widget->isHovered()) {
         batch.setColor(style.getColor(Style::Colors::BORDER_HOVERED));
     } else {
         batch.setColor(style.getColor(Style::Colors::BORDER));
@@ -172,11 +172,11 @@ void TextInputWidget::View::drawBackground(
     batch.drawRectangle({outer_min.x, outer_min.y}, {inner_min.x, outer_max.y});
     batch.drawRectangle({inner_max.x, outer_min.y}, {outer_max.x, outer_max.y});
 
-    if(m_widget.isDisabled()) {
+    if(m_widget->isDisabled()) {
         batch.setColor(style.getColor(Style::Colors::INPUT_DISABLED));
-    } else if(m_widget.isSelected()) {
+    } else if(m_widget->isSelected()) {
         batch.setColor(style.getColor(Style::Colors::INPUT_ACTIVE));
-    } else if(m_widget.isHovered()) {
+    } else if(m_widget->isHovered()) {
         batch.setColor(style.getColor(Style::Colors::INPUT_HOVERED));
     } else {
         batch.setColor(style.getColor(Style::Colors::INPUT));
@@ -185,7 +185,11 @@ void TextInputWidget::View::drawBackground(
 }
 
 void TextInputWidget::View::drawText(
-    RenderBatchInterface& batch, Style const& style, SdfFont const& font, vec2 origin, float scale
+    InOut<RenderBatchInterface> batch,
+    In<Style>                   style,
+    In<SdfFont>                 font,
+    In<vec2>                    origin,
+    In<float>                   scale
 ) {
     batch.setColor(style.getColor(Style::Colors::TEXT));
     for(auto const& [glyph, x] : m_glyphs) {
@@ -194,12 +198,12 @@ void TextInputWidget::View::drawText(
 }
 
 void TextInputWidget::View::drawCursor(
-    RenderBatchInterface& batch,
-    Style const&          style,
-    SdfFont const&           font,
-    vec2                  text_origin,
-    float                 text_scale,
-    usize                 cursor_pos
+    InOut<RenderBatchInterface> batch,
+    In<Style>                   style,
+    In<SdfFont>                 font,
+    In<vec2>                    text_origin,
+    In<float>                   text_scale,
+    In<usize>                   cursor_pos
 ) {
     using namespace std::chrono;
 

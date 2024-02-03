@@ -34,7 +34,7 @@ void Widget::hide() {
 }
 
 Style* Widget::getStyle() const {
-    return m_gui.renderer.getStyle();
+    return m_gui->renderer.getStyle();
 }
 
 Widget* Widget::getChildWidget(std::string_view path) const {
@@ -54,8 +54,8 @@ Widget* Widget::getChildWidget(std::string_view path) const {
     return nullptr;
 }
 
-Factory<Widget, Widget&>& Widget::getFactory() {
-    static Factory<Widget, Widget&> factory;
+Factory<Widget, Widget*>& Widget::getFactory() {
+    static Factory<Widget, Widget*> factory;
     return factory;
 }
 

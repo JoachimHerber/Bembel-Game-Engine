@@ -1,6 +1,6 @@
 ﻿module;
-#include <string>
 #include <optional>
+#include <string>
 export module bembel.gui.widgets:Text;
 
 import bembel.base;
@@ -16,7 +16,7 @@ export class TextWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Text";
 
   public:
-    TextWidget(Widget& parent);
+    TextWidget(In<Widget*> parent);
     ~TextWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;
@@ -40,14 +40,14 @@ export class TextWidget : public Widget {
 
     class View : public Widget::View {
       public:
-        View(TextWidget& widget) : m_widget{widget} {}
+        View(TextWidget* widget) : m_widget{widget} {}
 
         ~View() = default;
 
-        void draw(RenderBatchInterface& batch) override;
+        void draw(InOut<RenderBatchInterface> batch) override;
 
       private:
-        TextWidget& m_widget;
+        TextWidget* m_widget;
     };
 
   private:

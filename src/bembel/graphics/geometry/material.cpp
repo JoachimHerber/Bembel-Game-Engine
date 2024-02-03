@@ -80,10 +80,10 @@ bool Material::verifyUniformBlockLayout(ShaderProgram* shader) {
     shader->getUniformBlockActiveUniformIndices(uniform_block_index, &active_uniform_indices);
 
     for(GLint uniform_index : active_uniform_indices) {
-        auto          offset = shader->getActiveUniformOffset(uniform_index);
-        std::string   name;
-        int           size;
-        uint          type;
+        auto        offset = shader->getActiveUniformOffset(uniform_index);
+        std::string name;
+        int         size;
+        uint        type;
         shader->getActiveUniform(uniform_index, &size, &type, &name);
 
         switch(offset) {

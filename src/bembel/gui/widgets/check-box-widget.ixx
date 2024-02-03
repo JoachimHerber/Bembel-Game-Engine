@@ -16,7 +16,7 @@ export class CheckBoxWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "CheckBox";
 
   public:
-    CheckBoxWidget(Widget& parent, std::u8string_view label = u8"");
+    CheckBoxWidget(In<Widget*> parent, std::u8string_view label = u8"");
     ~CheckBoxWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;
@@ -59,13 +59,13 @@ export class CheckBoxWidget : public Widget {
 
 export class SimpleCheckBoxWidgetView : public Widget::View {
   public:
-    SimpleCheckBoxWidgetView(CheckBoxWidget& widget) : m_widget{widget} {}
+    SimpleCheckBoxWidgetView(In<CheckBoxWidget*> widget) : m_widget{widget} {}
     ~SimpleCheckBoxWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    CheckBoxWidget& m_widget;
+    CheckBoxWidget* m_widget;
 };
 
 } // namespace bembel::gui

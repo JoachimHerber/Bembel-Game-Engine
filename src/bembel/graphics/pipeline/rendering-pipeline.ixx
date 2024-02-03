@@ -153,9 +153,9 @@ export class RenderingPipeline final {
   private:
     DisplayManager& m_display_mgr;
 
-    glm::ivec2 m_resolution = {800, 600};
-    bool       m_enabled    = true;
-    bool       m_initalized = false;
+    ivec2 m_resolution = {800, 600};
+    bool  m_enabled    = true;
+    bool  m_initalized = false;
 
     std::shared_ptr<Scene>  m_scene  = nullptr;
     std::shared_ptr<Camera> m_camera = std::make_shared<Camera>();

@@ -91,8 +91,8 @@ void RenderBatch::drawRectangle(vec2 min, vec2 max) {
     min += m_position_offset;
     max += m_position_offset;
 
-    min = base::max(m_draw_area_min, min);
-    max = base::min(m_draw_area_max, max);
+    min = glm::max(m_draw_area_min, min);
+    max = glm::min(m_draw_area_max, max);
 
     if(max.x <= min.x || max.y <= min.y) {
         return; // outside of draw area

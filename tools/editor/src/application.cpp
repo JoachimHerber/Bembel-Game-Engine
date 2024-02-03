@@ -4,8 +4,6 @@
 
 #include <assimp/Importer.hpp> // C++ importer interface
 #include <filesystem>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <numbers>
 #include <string_view>
@@ -124,11 +122,10 @@ void Application::drawUI(In<ivec2> view_port_pos, In<uvec2> view_port_size) {
     drawModelManagementUI();
     imgui::End();
 
-    //imgui::ShowDemoWindow();
+    // imgui::ShowDemoWindow();
 }
 
-void Application::handleEvent(In<FrameBufferResizeEvent> event) {
-}
+void Application::handleEvent(In<FrameBufferResizeEvent> event) {}
 
 void Application::handleEvent(In<FileDropEvent> event) {
     for(auto file : event.files) {

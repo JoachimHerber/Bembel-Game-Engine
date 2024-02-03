@@ -12,8 +12,7 @@ namespace bembel::physics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-World::World( Scene* scene)
-  : m_scene{scene} {
+World::World(Scene* scene) : m_scene{scene} {
     m_broadphase       = std::make_unique<btDbvtBroadphase>();
     m_collision_config = std::make_unique<btDefaultCollisionConfiguration>();
     m_dispatcher       = std::make_unique<btCollisionDispatcher>(m_collision_config.get());
@@ -27,7 +26,6 @@ World::World( Scene* scene)
 void World::update(double time_since_last_update) {
     m_world->stepSimulation(1.f / 60.f, 10);
 }
-
 
 EntityID World::rayTestFirst(In<vec3> ray_start, In<vec3> ray_end) {
     btVector3 start = {ray_start.x, ray_start.y, ray_start.z};

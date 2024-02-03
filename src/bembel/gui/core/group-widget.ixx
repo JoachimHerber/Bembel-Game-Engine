@@ -17,8 +17,8 @@ export class GroupWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Group";
 
   public:
-    GroupWidget(GraphicalUserInterface& gui);
-    GroupWidget(Widget& parent);
+    GroupWidget(In<GraphicalUserInterface*> gui);
+    GroupWidget(In<Widget*> parent);
     ~GroupWidget();
 
     virtual bool configure(xml::Element const* properties);
@@ -66,12 +66,12 @@ export class GroupWidget : public Widget {
 
 export class SimpleGroupWidgetView : public Widget::View {
   public:
-    SimpleGroupWidgetView(GroupWidget& widget) : m_widget{widget} {}
+    SimpleGroupWidgetView(In<GroupWidget*> widget) : m_widget{widget} {}
     ~SimpleGroupWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    GroupWidget& m_widget;
+    GroupWidget* m_widget;
 };
 } // namespace bembel::gui

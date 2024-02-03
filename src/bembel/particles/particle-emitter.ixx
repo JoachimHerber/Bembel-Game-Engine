@@ -23,9 +23,7 @@ export struct ParticleEmitter {
 
     using Container = ComponentMap<bembel::particles::ParticleEmitter>;
 
-    static bool deserialize(
-        Container* container, EntityID entity_id, xml::Element const* entity
-    );
+    static bool deserialize(Container* container, EntityID entity_id, xml::Element const* entity);
 };
 
 } // namespace bembel::particles

@@ -20,8 +20,8 @@ export class GeometryRenderingStage : public RenderingPipeline::Stage {
     virtual void setScene(Scene*) override;
     virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
-    using RenderingPipeline::Stage::setDepthOutputTexture;
     using RenderingPipeline::Stage::setColorOutputTexture;
+    using RenderingPipeline::Stage::setDepthOutputTexture;
 
   private:
     Scene*                                   m_scene      = nullptr;

@@ -35,7 +35,7 @@ export class AssetLocator final {
     }
 
     std::optional<std::filesystem::path> findAssetLocation(
-       In<std::string_view> asset_type_name, In<std::filesystem::path> file_name
+        In<std::string_view> asset_type_name, In<std::filesystem::path> file_name
     );
 
   private:

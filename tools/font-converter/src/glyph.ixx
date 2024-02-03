@@ -1,5 +1,4 @@
 ﻿module;
-#include <glm/glm.hpp>
 #include <map>
 #include <span>
 #include <vector>
@@ -26,7 +25,7 @@ export class Glyph {
     struct SubGlyph {
         int        index;
         dvec2      position;
-        glm::dmat2 transform;
+        dmat2     transform;
     };
 
     std::span<const std::vector<ivec2>> getOutline()   const { return m_outline; }
@@ -39,8 +38,8 @@ export class Glyph {
 
     ivec2 const& getSize() const { return m_size; }
 
-    void         setTexCoordMin(ivec2 const& value) { m_tex_corrds_min = value; }
-    void         setTexCoordMax(ivec2 const& value) { m_tex_corrds_max = value; }
+    void         setTexCoordMin(In<ivec2> value) { m_tex_corrds_min = value; }
+    void         setTexCoordMax(In<ivec2> value) { m_tex_corrds_max = value; }
     ivec2 const& getTexCoordMin() const { return m_tex_corrds_min; }
     ivec2 const& getTexCoordMax() const { return m_tex_corrds_max; }
 

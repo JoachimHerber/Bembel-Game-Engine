@@ -2,7 +2,6 @@ module;
 #include <chrono>
 #include <cmath>
 #include <coroutine>
-#include <glm/glm.hpp>
 #include <memory>
 #include <string_view>
 module bembel.examples.chess;

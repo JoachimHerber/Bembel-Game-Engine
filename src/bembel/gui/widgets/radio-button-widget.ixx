@@ -16,7 +16,7 @@ export class RadioButtonWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "RadioButton";
 
   public:
-    RadioButtonWidget(Widget& parent, int index);
+    RadioButtonWidget(In<Widget*> parent, int index);
     ~RadioButtonWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;
@@ -60,7 +60,7 @@ export class RadioButtonWidget : public Widget {
     void onAction(InteractionHandle::Action, ivec2);
 
   private:
-    LabelWidget m_label{*this};
+    LabelWidget m_label{this};
 
     int  m_index;
     bool m_selected = false;
@@ -70,14 +70,14 @@ export class RadioButtonWidget : public Widget {
 
 export class SimpleRadioButtonWidgetView : public Widget::View {
   public:
-    SimpleRadioButtonWidgetView(RadioButtonWidget& widget) : m_widget{widget} {}
+    SimpleRadioButtonWidgetView(RadioButtonWidget* widget) : m_widget{widget} {}
 
     ~SimpleRadioButtonWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    RadioButtonWidget& m_widget;
+    RadioButtonWidget* m_widget;
 };
 
 export class RadioButtonGroupWidget : public Widget {
@@ -85,7 +85,7 @@ export class RadioButtonGroupWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "RadioButtonGroup";
 
   public:
-    RadioButtonGroupWidget(Widget& parent);
+    RadioButtonGroupWidget(In<Widget*> parent);
     ~RadioButtonGroupWidget() = default;
 
     virtual bool configure(xml::Element const* properties) override;

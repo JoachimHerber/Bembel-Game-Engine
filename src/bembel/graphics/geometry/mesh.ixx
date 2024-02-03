@@ -1,7 +1,5 @@
 ﻿module;
 #include <filesystem>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <optional>
 #include <span>
@@ -55,10 +53,10 @@ export struct DefaultVertexFormat {
     //     float = max(int/0x7FFF, -1.0f)
     // <=> int   = 0x7FFF*float
 
-    vec3            position;   //  12 Byte ->  12 Byte
-    glm::tvec3<i16> normal;     // + 6 Byte ->  18 Byte
-    glm::tvec3<i16> tangent;    // + 6 Byte ->  24 Byte
-    vec2            tex_coords; // + 8 Byte ->  32 Byte
+    vec3       position;   //  12 Byte ->  12 Byte
+    tvec3<i16> normal;     // + 6 Byte ->  18 Byte
+    tvec3<i16> tangent;    // + 6 Byte ->  24 Byte
+    vec2       tex_coords; // + 8 Byte ->  32 Byte
 };
 static_assert(sizeof(DefaultVertexFormat) == 32);
 
@@ -73,12 +71,12 @@ export struct RiggedVertexFormat {
                             //     float = max(int/0x7FFF, -1.0f)
                             // <=> int   = 0x7FFF*float
 
-    vec3            position;     //  12 Byte ->  12 Byte
-    glm::tvec3<i16> normal;       // + 6 Byte ->  18 Byte
-    glm::tvec3<i16> tangent;      // + 6 Byte ->  24 Byte
-    vec2            tex_coords;   // +  8 Byte -> 32 Byte
-    ivec4           bone_indices; // + 16 Byte -> 48 Byte
-    vec4            bone_weights; // + 16 Byte -> 64 Byte
+    vec3       position;     //  12 Byte ->  12 Byte
+    tvec3<i16> normal;       // + 6 Byte ->  18 Byte
+    tvec3<i16> tangent;      // + 6 Byte ->  24 Byte
+    vec2       tex_coords;   // +  8 Byte -> 32 Byte
+    ivec4      bone_indices; // + 16 Byte -> 48 Byte
+    vec4       bone_weights; // + 16 Byte -> 64 Byte
 };
 static_assert(sizeof(RiggedVertexFormat) == 64);
 

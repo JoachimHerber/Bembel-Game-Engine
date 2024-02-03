@@ -2,7 +2,6 @@ module;
 #include <glbinding/gl/gl.h>
 
 #include <algorithm>
-#include <glm/glm.hpp>
 #include <memory>
 module bembel.tools.font_converter;
 

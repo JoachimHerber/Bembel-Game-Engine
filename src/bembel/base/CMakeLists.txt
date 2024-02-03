@@ -4,6 +4,7 @@ target_sources(Bembel
 		
 	PRIVATE
         base.ixx
+        glm.ixx
         types.ixx
         types.cpp
         unicode.ixx
@@ -25,7 +26,7 @@ target_sources(Bembel
         serialisation.ixx
         memory.ixx
         memory.cpp
-        await-list.ixx
+        awaitable.ixx
 		
         CMakeLists.txt
 )

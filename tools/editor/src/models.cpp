@@ -3,8 +3,6 @@ module;
 #include <assimp/scene.h>
 
 #include <assimp/Importer.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <string_view>
 module bembel.tools.editor;

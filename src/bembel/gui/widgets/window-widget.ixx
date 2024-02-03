@@ -15,7 +15,7 @@ export class WindowWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Window";
 
   public:
-    WindowWidget(Widget& parent);
+    WindowWidget(In<Widget*> parent);
     ~WindowWidget();
 
     virtual bool configure(xml::Element const* properties) override;
@@ -42,8 +42,8 @@ export class WindowWidget : public Widget {
     void updateLayout();
 
   private:
-    GroupWidget m_title_bar{*this};
-    GroupWidget m_window_area{*this};
+    GroupWidget m_title_bar{this};
+    GroupWidget m_window_area{this};
 
     InteractionHandle m_top_handle;
     InteractionHandle m_resize_handle_left;
@@ -55,13 +55,13 @@ export class WindowWidget : public Widget {
 
 export class SimpleWindowWidgetView : public Widget::View {
   public:
-    SimpleWindowWidgetView(WindowWidget& window) : m_window{window} {}
+    SimpleWindowWidgetView(WindowWidget* window) : m_window{window} {}
     ~SimpleWindowWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    WindowWidget& m_window;
+    WindowWidget* m_window;
 };
 
 } // namespace bembel::gui

@@ -20,8 +20,10 @@ using namespace bembel::graphics;
 
 export class PhysicsSystem : public System {
   public:
-    PhysicsSystem(Engine& engine) : System{"Physics"}, m_engine{engine} {
-        RenderingPipeline::Stage::registerStageType<PhysicsDebugRenderStage>("PhysicsDebugRenderStage");
+    PhysicsSystem(In<Engine*> engine) : System{"Physics"}, m_engine{engine} {
+        RenderingPipeline::Stage::registerStageType<PhysicsDebugRenderStage>(
+            "PhysicsDebugRenderStage"
+        );
 
         assets::registerAssetType<CollisionShape>();
 
@@ -33,7 +35,7 @@ export class PhysicsSystem : public System {
 
     void addScene(std::shared_ptr<Scene> scene) {
         scene->registerComponentType<Transform>();
-        scene->registerComponentType<RigidBody>();    
+        scene->registerComponentType<RigidBody>();
         scene->createDataContainer<World>();
         m_scenes.push_back(std::move(scene));
     }
@@ -45,7 +47,7 @@ export class PhysicsSystem : public System {
     virtual void update(double time_since_last_update) override;
 
   private:
-    Engine& m_engine;
+    Engine* m_engine;
 
     std::vector<std::shared_ptr<Scene>> m_scenes;
 };

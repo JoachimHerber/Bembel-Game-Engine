@@ -1,25 +1,13 @@
 ﻿module;
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 module bembel.examples.chess;
 
 namespace bembel::examples::chess {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-CameraControle::CameraControle(std::shared_ptr<graphics::Camera> camera) : m_camera(camera) {
-    events::addHandler<kernel::MouseButtonPressEvent>(this);
-    events::addHandler<kernel::MouseButtonReleaseEvent>(this);
-    events::addHandler<kernel::CursorMovedEvent>(this);
-    events::addHandler<kernel::ScrollEvent>(this);
-}
+CameraControle::CameraControle(std::shared_ptr<graphics::Camera> camera) : m_camera(camera) {}
 
-CameraControle::~CameraControle() {
-    events::removeHandler<kernel::MouseButtonPressEvent>(this);
-    events::removeHandler<kernel::MouseButtonReleaseEvent>(this);
-    events::removeHandler<kernel::CursorMovedEvent>(this);
-    events::removeHandler<kernel::ScrollEvent>(this);
-}
+CameraControle::~CameraControle() {}
 
 void CameraControle::update(double dTime) {
     vec2 cursor_movement = m_cursor_pos - m_prev_pos;

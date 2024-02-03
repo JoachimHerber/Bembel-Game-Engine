@@ -73,4 +73,4 @@ bool Text::applyFormating(std::string_view format, bool& bold, bool& oblique) {
     return false;
 }
 
-} // namespace bembel::text
+} // namespace bembel::kernel

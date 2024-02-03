@@ -53,9 +53,9 @@ void RenderingPipeline::Stage::releaseInputTextures() {
 void RenderingPipeline::View::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     m_fbo->blitToBackBuffer(
         m_view_area_pos,
-        m_view_area_pos + glm::ivec2(m_view_area_size),
+        m_view_area_pos + ivec2(m_view_area_size),
         viewport_position,
-        viewport_position + glm::ivec2(viewport_size)
+        viewport_position + ivec2(viewport_size)
     );
 }
 

@@ -4,14 +4,11 @@ module;
 
 #include <assimp/Importer.hpp> // C++ importer interface
 #include <format>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <numbers>
 #include <optional>
 #include <string_view>
+#include <cassert>
 module bembel.tools.editor;
 
 import bembel;
@@ -46,7 +43,7 @@ Asset<GeometryModel> initMaterialPreviewModel() {
             float const u   = j / float(horizontal_subdivisions);
             quat const  yaw = glm::angleAxis(std::numbers::pi_v<float> * (2 * u), vec3(0, 1, 0));
 
-            mat3 const rot = glm::mat3_cast(yaw * pitch);
+            mat3 const rot = mat3_cast(yaw * pitch);
 
             vertices.emplace_back(
                 rot * vec3(0, 0, 1), // Pos

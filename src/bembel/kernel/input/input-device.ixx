@@ -11,14 +11,15 @@ export class InputDevice {
   public:
     class Button {
       public:
-        Button(InputDevice& device, std::string_view name) : m_device{device}, m_name{name} {}
+        Button(In<InputDevice*> device, In<std::string_view> name)
+          : m_device{device}, m_name{name} {}
         ~Button() = default;
 
-        InputDevice&       getDevice() const { return m_device; }
-        std::string const& getName() const { return m_name; }
+        InputDevice*     getDevice() const { return m_device; }
+        std::string_view getName() const { return m_name; }
 
         bool getIsPressed() const { return m_pressed; }
-        void setIsPressed(bool pressed) {
+        void setIsPressed(In<bool> pressed) {
             if(m_pressed == pressed) return;
 
             m_pressed = pressed;
@@ -32,18 +33,18 @@ export class InputDevice {
         Signal<> release_signal;
 
       protected:
-        InputDevice& m_device;
+        InputDevice* m_device;
         std::string  m_name;
 
         bool m_pressed = false;
     };
 
-    virtual Button* getButton(std::string_view name) = 0;
+    virtual Button* getButton(In<std::string_view> name) = 0;
 
-    std::string const& getDeviceName() const { return m_name; }
+    std::string_view getDeviceName() const { return m_name; }
 
   protected:
-    InputDevice(std::string_view name) : m_name{name} {}
+    InputDevice(In<std::string_view> name) : m_name{name} {}
     InputDevice(InputDevice const& other) = delete;
     virtual ~InputDevice()                = default;
 

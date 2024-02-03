@@ -3,8 +3,6 @@ module;
 #include <glbinding/gl/gl.h>
 
 #include <filesystem>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <memory>
 module bembel.physics:DebugRenderer;
 
@@ -22,13 +20,9 @@ using namespace bembel::graphics;
 using namespace ::gl;
 
 PhysicsDebugRenderStage::PhysicsDebugRenderStage(RenderingPipeline& pipline)
-  : RenderingPipeline::Stage{pipline} {
-    events::addHandler<ConfigurePhysicsDebugRenderStageEvent>(this);
-}
+  : RenderingPipeline::Stage{pipline} {}
 
-PhysicsDebugRenderStage::~PhysicsDebugRenderStage() {
-    events::removeHandler<ConfigurePhysicsDebugRenderStageEvent>(this);
-}
+PhysicsDebugRenderStage::~PhysicsDebugRenderStage() {}
 
 bool PhysicsDebugRenderStage::configure(xml::Element const* properties) {
     std::string texture_name;
@@ -86,7 +80,7 @@ void PhysicsDebugRenderStage::execute(In<std::span<const RendererPtr>>) {
     m_fbo->endRenderToTexture();
 }
 
-void PhysicsDebugRenderStage::handleEvent(ConfigurePhysicsDebugRenderStageEvent const& event) {
+void PhysicsDebugRenderStage::handleEvent(In<ConfigurePhysicsDebugRenderStageEvent> event) {
     switch(event.enable) {
         case ConfigurePhysicsDebugRenderStageEvent::FALSE: m_enabled = false; break;
         case ConfigurePhysicsDebugRenderStageEvent::TRUE: m_enabled = true; break;

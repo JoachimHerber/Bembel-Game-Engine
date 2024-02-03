@@ -1,5 +1,4 @@
 ﻿module;
-#include <glm/glm.hpp>
 #include <memory>
 #include <string_view>
 module bembel.examples.chess;
@@ -14,20 +13,12 @@ using namespace gui;
 
 Application::Application() {
     RenderingPipeline::Stage::registerStageType<SelectionRenderingStage>("SelectionRenderingStage");
-
-    events::addHandler<WindowShouldCloseEvent>(this);
-    events::addHandler<FrameBufferResizeEvent>(this);
-    events::addHandler<KeyPressEvent>(this);
 }
 
-Application::~Application() {
-    events::removeHandler<WindowShouldCloseEvent>(this);
-    events::removeHandler<FrameBufferResizeEvent>(this);
-    events::removeHandler<KeyPressEvent>(this);
-}
+Application::~Application() {}
 
 bool Application::init(std::span<std::string_view> args) {
-    logInfo("Loading Application Settings");  
+    logInfo("Loading Application Settings");
     /** @ToDo C++26 use #embed
      *  static constexpr char config[] = {
      *      #embed "../config.xml"
@@ -35,7 +26,6 @@ bool Application::init(std::span<std::string_view> args) {
      *  if(!m_engine.parseSetting(config)) return false;
      */
     if(!m_engine.loadSetting("chess/config.xml")) return false;
-
 
     kernel::i18n::Localisation::init(args, "local");
 
@@ -55,9 +45,7 @@ bool Application::init(std::span<std::string_view> args) {
     m_chess_board = std::make_unique<ChessBoard>(m_scene.get());
 
     Entity ligth = {*m_scene, m_scene->createEntity()};
-    ligth.assign<DirectionalLight>(
-        vec3(5.0f), glm::normalize(glm::vec3(-0.3, -1, -0.2)), true
-    );
+    ligth.assign<DirectionalLight>(vec3(5.0f), glm::normalize(vec3(-0.3, -1, -0.2)), true);
 
     logInfo("Initalizing Game");
     m_game_logic = runGameLogic(

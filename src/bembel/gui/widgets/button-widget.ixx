@@ -16,7 +16,7 @@ export class ButtonWidget : public Widget {
     static constexpr std::string_view WIDGET_TYPE_NAME = "Button";
 
   public:
-    ButtonWidget(Widget& parent, std::u8string_view text = u8"");
+    ButtonWidget(In<Widget*> parent, std::u8string_view text = u8"");
     ~ButtonWidget();
 
     virtual bool configure(xml::Element const* properties) override;
@@ -64,13 +64,13 @@ export class ButtonWidget : public Widget {
 
 export class SimpleButtonWidgetView : public Widget::View {
   public:
-    SimpleButtonWidgetView(ButtonWidget& button) : m_button{button} {}
+    SimpleButtonWidgetView(ButtonWidget* button) : m_button{button} {}
     ~SimpleButtonWidgetView() = default;
 
-    void draw(RenderBatchInterface& batch) override;
+    void draw(InOut<RenderBatchInterface> batch) override;
 
   private:
-    ButtonWidget& m_button;
+    ButtonWidget* m_button;
 };
 
 } // namespace bembel::gui

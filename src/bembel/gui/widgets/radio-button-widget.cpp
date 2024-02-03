@@ -12,7 +12,8 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-RadioButtonWidget::RadioButtonWidget(Widget& parent, int index) : Widget{parent}, m_index{index} {
+RadioButtonWidget::RadioButtonWidget(In<Widget*> parent, int index)
+  : Widget{parent}, m_index{index} {
     m_interaction_handles.push_back(&m_handle);
     m_child_widgets.push_back(&m_label);
 
@@ -21,7 +22,7 @@ RadioButtonWidget::RadioButtonWidget(Widget& parent, int index) : Widget{parent}
     size.change_signal.bind(this, &RadioButtonWidget::onSizeChanged);
     m_handle.action_signal.bind(this, &RadioButtonWidget::onAction);
 
-    m_view = std::make_unique<SimpleRadioButtonWidgetView>(*this);
+    m_view = std::make_unique<SimpleRadioButtonWidgetView>(this);
 }
 
 bool RadioButtonWidget::configure(xml::Element const* properties) {
@@ -67,18 +68,18 @@ void RadioButtonWidget::onAction(InteractionHandle::Action action, ivec2) {
     if(action == InteractionHandle::Action::INTERACT) { select(); }
 }
 
-void SimpleRadioButtonWidgetView::draw(RenderBatchInterface& batch) {
-    auto style = m_widget.getStyle();
+void SimpleRadioButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_widget->getStyle();
     assert(style && "GUI::Style is undefined");
 
     float size = style->getValue(Style::Values::CHECKBOX_SIZE);
 
     float border = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
-    float x      = m_widget.position.get().x;
-    float y      = m_widget.position.get().y + 0.5f * (m_widget.size.get().y - size);
+    float x      = m_widget->position.get().x;
+    float y      = m_widget->position.get().y + 0.5f * (m_widget->size.get().y - size);
 
     auto tc =
-        style->getTextureCoords(m_widget.isSelected() ? "radio_button_selected" : "radio_button");
+        style->getTextureCoords(m_widget->isSelected() ? "radio_button_selected" : "radio_button");
 
     if(!tc) { return; }
 
@@ -88,7 +89,7 @@ void SimpleRadioButtonWidgetView::draw(RenderBatchInterface& batch) {
     batch.drawIcon({x, y}, {x + size, y + size}, tc->min, tc->max);
 }
 
-RadioButtonGroupWidget::RadioButtonGroupWidget(Widget& parent) : Widget{parent} {
+RadioButtonGroupWidget::RadioButtonGroupWidget(In<Widget*> parent) : Widget{parent} {
     size.change_signal.bind(this, &RadioButtonGroupWidget::onSizeChanged);
 }
 
@@ -140,7 +141,7 @@ void RadioButtonGroupWidget::deleteAllRadioButtons() {
     selection_change_signal.emit(m_selection);
 }
 void RadioButtonGroupWidget::addRadioButton(In<std::u8string_view> lable) {
-    m_buttons.push_back(std::make_unique<RadioButtonWidget>(*this, int(m_buttons.size())));
+    m_buttons.push_back(std::make_unique<RadioButtonWidget>(this, int(m_buttons.size())));
     m_child_widgets.push_back(m_buttons.back().get());
     m_buttons.back()->setText(lable);
     m_buttons.back()->select_signal.bind(this, &RadioButtonGroupWidget::setSelection);
@@ -174,7 +175,7 @@ void RadioButtonGroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
 
     uint num_collums =
         std::max<uint>(1, std::min<uint>(new_size.x / max_button_width, m_buttons.size()));
-    uint num_rows    = m_buttons.size() / num_collums + (m_buttons.size() % num_collums ? 1 : 0);
+    uint num_rows = m_buttons.size() / num_collums + (m_buttons.size() % num_collums ? 1 : 0);
 
     ivec2 button_size = {new_size.x / num_collums, new_size.y / num_rows};
     int   y           = new_size.y;

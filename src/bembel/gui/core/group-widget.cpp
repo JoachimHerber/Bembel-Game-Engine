@@ -13,14 +13,14 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-GroupWidget::GroupWidget(GraphicalUserInterface& gui) : Widget{gui} {
+GroupWidget::GroupWidget(In<GraphicalUserInterface*> gui) : Widget{gui} {
     size.change_signal.bind(this, &GroupWidget::onSizeChanged);
 }
 
-GroupWidget::GroupWidget(Widget& parent) : Widget{parent} {
+GroupWidget::GroupWidget(In<Widget*> parent) : Widget{parent} {
     size.change_signal.bind(this, &GroupWidget::onSizeChanged);
 
-    m_view = std::make_unique<SimpleGroupWidgetView>(*this);
+    m_view = std::make_unique<SimpleGroupWidgetView>(this);
 }
 
 GroupWidget::~GroupWidget() {}
@@ -42,7 +42,6 @@ bool GroupWidget::configure(xml::Element const* properties) {
         if(layout_name == "relative") {
             auto layout = this->setLayout<RelativeWidgetLayout>();
             return layout->configure(properties);
-
         }
         if(layout_name == "linear") {
             auto layout = this->setLayout<LinearWidgetLayout>();
@@ -62,7 +61,7 @@ bool GroupWidget::configure(xml::Element const* properties) {
 Widget* GroupWidget::createChildWidget(
     std::string_view widget_type_name, xml::Element const* properties
 ) {
-    auto widget = getFactory().createObject(widget_type_name, *this);
+    auto widget = getFactory().createObject(widget_type_name, this);
     if(!widget) {
         logError("Unknown WidgetType {}", widget_type_name);
         return nullptr;
@@ -86,12 +85,12 @@ uint GroupWidget::getMinHeight(In<std::optional<uint>> width) const {
 void GroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     if(m_layout) m_layout->updateLayout(vec2{new_size});
 }
-void SimpleGroupWidgetView::draw(RenderBatchInterface& batch) {
-    if(m_widget.background_color) {
-        batch.setColor(m_widget.background_color.value());
+void SimpleGroupWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    if(m_widget->background_color) {
+        batch.setColor(*(m_widget->background_color));
 
-        auto pos  = m_widget.position.get();
-        auto size = m_widget.size.get();
+        auto pos  = m_widget->position.get();
+        auto size = m_widget->size.get();
 
         batch.drawRectangle(pos, pos + size);
     }

@@ -17,7 +17,7 @@ using namespace bembel::kernel;
 void ParticlePopulation::spawnParticleEffect(
     In<ParticleEffect> effect, In<vec3> position, In<quat> rotation, In<float> scale
 ) {
-    mat3 rotate = glm::mat3_cast(rotation);
+    mat3 rotate = mat3_cast(rotation);
     for(size_t n = 0; n < effect.getParticleCount(); ++n) {
         vec3 pos   = rotate * effect.getRandomStartPosition();
         vec3 speed = rotate * effect.getRandomStartVelocety();

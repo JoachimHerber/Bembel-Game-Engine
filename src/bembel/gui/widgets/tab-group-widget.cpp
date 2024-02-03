@@ -1,7 +1,6 @@
 ﻿module;
 #include <cassert>
 #include <filesystem>
-#include <glm/glm.hpp>
 module bembel.gui.widgets:Tabs;
 
 import bembel.base;
@@ -13,7 +12,7 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 TabGroupWidget::Tab::Tab(TabGroupWidget* group, usize index, std::u8string_view label)
-  : m_group{group}, m_index{index}, m_label{*group, label}, m_content{*group} {
+  : m_group{group}, m_index{index}, m_label{group, label}, m_content{group} {
     m_handle.action_signal.bind(this, &Tab::onAction);
     m_handle.cursor = Asset<CursorIcon>("Hand");
 
@@ -30,10 +29,10 @@ void TabGroupWidget::Tab::onAction(InteractionHandle::Action action, ivec2) {
     select_signal();
 }
 
-TabGroupWidget::TabGroupWidget(Widget& parent) : Widget{parent} {
+TabGroupWidget::TabGroupWidget(In<Widget*> parent) : Widget{parent} {
     size.change_signal.bind(this, &TabGroupWidget::onSizeChanged);
 
-    m_view = std::make_unique<SimpleTabGroupWidgetView>(*this);
+    m_view = std::make_unique<SimpleTabGroupWidgetView>(this);
 }
 
 TabGroupWidget::~TabGroupWidget() {}
@@ -143,16 +142,16 @@ void TabGroupWidget::updateLayout() {
     }
 }
 
-void SimpleTabGroupWidgetView::draw(RenderBatchInterface& batch) {
-    auto style = m_widget.getStyle();
+void SimpleTabGroupWidgetView::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_widget->getStyle();
     assert(style && "GUI::Style is undefined");
 
     int bar_height   = int(style->getValue(Style::Values::TAB_BAR_HEIGHT));
     int border_width = int(style->getValue(Style::Values::INPUT_BORDER_WIDTH));
     int tab_margin   = int(style->getValue(Style::Values::TAB_MARGIN));
 
-    auto min = m_widget.position.get();
-    auto max = min + m_widget.size.get();
+    auto min = m_widget->position.get();
+    auto max = min + m_widget->size.get();
     min.y    = max.y - bar_height;
 
     auto tc_bar = style->getTextureCoords("tab_bar");
@@ -196,17 +195,17 @@ void SimpleTabGroupWidgetView::draw(RenderBatchInterface& batch) {
         batch.drawIcon({x2, min.y}, {x3, max.y}, {u1, v0}, {u2, v1});
     };
 
-    for(usize i = 0; i < m_widget.getNumTabs(); ++i) {
-        auto tab = m_widget.getTab(i);
+    for(usize i = 0; i < m_widget->getNumTabs(); ++i) {
+        auto tab = m_widget->getTab(i);
         if(tab->isSelected()) continue;
 
         drawTab(tab);
     }
-    if(m_widget.getNumTabs() > m_widget.getSelectedTab())
-        drawTab(m_widget.getTab(m_widget.getSelectedTab()));
+    if(m_widget->getNumTabs() > m_widget->getSelectedTab())
+        drawTab(m_widget->getTab(m_widget->getSelectedTab()));
 
     batch.setPrimaryColor(style->getColor(Style::Colors::TAB));
-    batch.drawRectangle({min.x, m_widget.position.get().y}, {max.x, min.y});
+    batch.drawRectangle({min.x, m_widget->position.get().y}, {max.x, min.y});
 } // namespace bembel::gui
 
 } // namespace bembel::gui

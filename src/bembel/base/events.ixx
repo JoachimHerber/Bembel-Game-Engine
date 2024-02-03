@@ -6,7 +6,7 @@
 export module bembel.base:Events;
 
 import :Types;
-import :AwaitList;
+import :Awaitable;
 
 namespace bembel::base {
 
@@ -61,10 +61,10 @@ class EventChannel : public EventChannelBase {
 
         for(auto it : handler) it.forward_event_function(it.event_handler, event);
 
-        m_await_list.notify(event);
+        m_awaitable.notify(event);
     }
 
-    auto& getAwaitList() { return m_await_list; }
+    Awaitable<EventType>& operator co_await() { return m_awaitable; }
 
   private:
     template <typename EventHandlerType>
@@ -82,7 +82,7 @@ class EventChannel : public EventChannelBase {
 
     std::mutex m_mutex;
 
-    AwaitList<EventType> m_await_list;
+    Awaitable<EventType> m_awaitable;
 };
 
 export class EventManager final {
@@ -146,8 +146,8 @@ export namespace events {
     void addHandler(EventHandlerType* handler) {
         getEventChannel<EventType>().addHandler(handler);
     }
-    template <typename EventType, typename EventHandlerType>
-    void removeHandler(EventHandlerType* handler) {
+    template <typename EventType>
+    void removeHandler(void* handler) {
         getEventChannel<EventType>().removeHandler(handler);
     }
 
@@ -161,20 +161,22 @@ export namespace events {
     }
 
     export template <typename EventType>
-    class Awaiter : public AwaitList<EventType>::Awaiter {
+    class Awaiter {
       public:
-        Awaiter() : AwaitList<EventType>::Awaiter{getEventChannel<EventType>().getAwaitList()} {}
+        Awaitable<EventType>& operator co_await() {
+            return getEventChannel<EventType>().operator co_await();
+        }
     };
 
 } // namespace events
 
 export template <class THandler, typename TEvent>
 concept isEventHandler = true;
-//requires(THandler h, TEvent const e) { 
-//    { h.handleEvent(e) };
-//};
+// requires(THandler h, TEvent const e) {
+//     { h.handleEvent(e) };
+// };
 
-export template <typename ... TEvents>
+export template <typename... TEvents>
 class EventHandlerGuard final {
   public:
     template <class THandler>

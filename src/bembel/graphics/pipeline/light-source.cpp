@@ -1,5 +1,4 @@
 ﻿module;
-#include <glm/glm.hpp>
 #include <memory>
 #include <string_view>
 #include <vector>

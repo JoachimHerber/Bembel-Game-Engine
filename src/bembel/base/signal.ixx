@@ -6,16 +6,17 @@ export module bembel.base:Signal;
 
 import :Slot;
 import :Types;
+import :Awaitable;
 
 export namespace bembel::base {
 
-struct SignalAwaiter : std::suspend_always {
-    SignalAwaiter(std::vector<std::coroutine_handle<>>& s) : signal{s} {}
+template <typename... TArgs>
+struct SignalAwaitable {};
 
-    std::vector<std::coroutine_handle<>>& signal;
-
-    void await_suspend(std::coroutine_handle<> handle) { signal.push_back(handle); }
-};
+template <>
+struct SignalAwaitable<> : public Awaitable<void> {};
+template <typename T>
+struct SignalAwaitable<T> : public Awaitable<std::remove_cvref_t<T>> {};
 
 template <typename... TArgs>
 class Signal {
@@ -57,39 +58,28 @@ class Signal {
         // Create a temporaty copy of m_slots so m_slots can be modified witin
         // the loop without invalidating the iterator (this allows slots to be
         // removed or added by the methodes/functions bound to this signal).
-        if constexpr(sizeof...(TArgs) == 0) {
-            std::vector<Slot>                    slots;
-            std::vector<std::coroutine_handle<>> coroutines;
-            {
-                Lock lock(m_mutex);
-                slots = m_slots;
-                std::swap(coroutines, m_coroutines);
-            }
-            for(auto it : coroutines)
-                if(it && !it.done()) it.resume();
-            for(auto it : slots) it();
-        } else {
-            std::vector<Slot> slots;
-            {
-                Lock lock(m_mutex);
-                slots = m_slots;
-            }
-            for(auto it : slots) it(args...);
+        std::vector<Slot> slots;
+        {
+            Lock lock(m_mutex);
+            slots = m_slots;
         }
+        for(auto it : slots) it(args...);
+
+        if constexpr(sizeof...(TArgs) <= 1) m_awaitable.notify(args...);
     }
     void operator()(TArgs... args) { emit(args...); }
 
-    SignalAwaiter operator co_await()
+    auto& operator co_await()
         requires(
-            sizeof...(TArgs) == 0
-        ) // For now coroutines are only allowed to await Signals with no Args
+            sizeof...(TArgs) <= 1
+        ) // For now coroutines are only allowed to await Signals with atmost on argument
     {
-        return SignalAwaiter{m_coroutines};
+        return m_awaitable;
     }
 
   private:
-    std::vector<Slot>                    m_slots;
-    std::vector<std::coroutine_handle<>> m_coroutines;
+    std::vector<Slot>                               m_slots;
+    [[no_unique_address]] SignalAwaitable<TArgs...> m_awaitable;
 
     std::mutex m_mutex;
 };

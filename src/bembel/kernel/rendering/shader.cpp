@@ -185,7 +185,6 @@ bool ShaderProgram::setUniform(std::string_view name, In<std::span<const float>>
     return true;
 }
 
-
 bool ShaderProgram::link() {
     if(m_shader_handles.empty()) return false;
 

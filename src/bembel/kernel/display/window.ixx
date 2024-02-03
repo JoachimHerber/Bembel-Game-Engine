@@ -84,6 +84,8 @@ export class Window {
     vec3 background_color = {0.5f, 0.5f, 0.5f};
 
   private:
+    EventHandlerGuard<SetCursorIconEvent, SetCursorModeEvent> m_guard{this};
+
     GLFWwindow*    m_window_impl = nullptr;
     DisplayModePtr m_display_mode;
 

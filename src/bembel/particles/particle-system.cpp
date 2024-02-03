@@ -85,7 +85,7 @@ class ParticleEffectLoader final : public AssetLoaderBase {
     ContainerType*  m_container;
 };
 
-ParticleSystem::ParticleSystem(Engine& engine) : System("Particles"), m_engine{engine} {
+ParticleSystem::ParticleSystem(In<Engine*> engine) : System("Particles"), m_engine{engine} {
     assets::registerAssetType<ParticleEffect, ParticleEffectLoader>(this);
 
     RenderingPipeline::Stage::registerStageType<ParticleRenderingStage>("ParticleRenderingStage");

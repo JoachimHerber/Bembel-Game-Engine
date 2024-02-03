@@ -39,12 +39,12 @@ uint TextLayout::calculateMinHeight(
 
     float const space = font_size * font->getAdvance(font->getGlyphIndex(' ', false, false));
 
-    uint min_height  = 2*font_size;
+    uint min_height  = 2 * font_size;
     uint line_length = 0;
     for(auto& text_element : text.getText()) {
         if(std::holds_alternative<Text::Formating>(text_element)) {
             auto formating = std::get<Text::Formating>(text_element);
-            if(formating.option == Text::Formating::NEW_LINE) { 
+            if(formating.option == Text::Formating::NEW_LINE) {
                 min_height += font_size;
                 line_length = 0;
             }

@@ -20,7 +20,7 @@ export class RenderBatchInterface {
     virtual void setSecondaryColor(In<ColorRGB> color) = 0;
     virtual void setAlpha(In<u8> alpha)                = 0;
 
-    virtual void drawRectangle(vec2 min, vec2 max) = 0;
+    virtual void drawRectangle(vec2 min, vec2 max)                                      = 0;
     virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) = 0;
     virtual void drawGlyph(
         GlyphIndex glyph, vec2 const& pos, float scale, bool outline = false

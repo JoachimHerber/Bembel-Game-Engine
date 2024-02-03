@@ -48,7 +48,9 @@ void Localisation::format(In<std::u8string_view> fmt, In<u64> value, InOut<std::
 void Localisation::format(In<std::u8string_view> fmt, In<double> value, InOut<std::u8string> str) {
     number_format.format(value, str);
 }
-void Localisation::format(In<std::u8string_view> fmt, In<TimePoint> value, InOut<std::u8string> str) {}
+void Localisation::format(
+    In<std::u8string_view> fmt, In<TimePoint> value, InOut<std::u8string> str
+) {}
 
 Localisation::Error Localisation::load(std::filesystem::path file_path) {
     if(!std::filesystem::exists(file_path)) {
@@ -75,7 +77,8 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
 
         if(root.contains("local")) {
             auto& local = root["local"];
-            if(local.is_object() && local.contains("number_format")) this->number_format = local["number_format"];
+            if(local.is_object() && local.contains("number_format"))
+                this->number_format = local["number_format"];
         }
         auto& translations = root["translations"];
 
@@ -124,7 +127,8 @@ TranslationKeyIndex Localisation::getTranslationKeyIndex(std::string_view key) {
 }
 
 void Localisation::init(std::span<std::string_view> args, std::filesystem::path base_dir) {
-    if(auto it = std::find(args.begin(), args.end(), "-local"); it != args.end() && ++it != args.end()) {
+    if(auto it = std::find(args.begin(), args.end(), "-local");
+       it != args.end() && ++it != args.end()) {
         DEFAULT->load(base_dir / std::format("{}.json", *it));
     } else {
         DEFAULT->load(base_dir / "en.json");

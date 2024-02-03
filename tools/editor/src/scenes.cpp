@@ -4,10 +4,6 @@ module;
 
 #include <assimp/Importer.hpp> // C++ importer interface
 #include <format>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <numbers>
 #include <optional>
@@ -32,9 +28,9 @@ Scene* createScene(In<std::string_view> name) {
     Entity ligth1 = {*scene, scene->createEntity()};
     Entity ligth2 = {*scene, scene->createEntity()};
 
-    ligth0.assign<DirectionalLight>(vec3(0.6f), glm::normalize(glm::vec3(-0.3, -1, -0.2)), true);
-    ligth1.assign<DirectionalLight>(vec3(0.3f), glm::normalize(glm::vec3(0.7, -1, 0.0)), true);
-    ligth2.assign<DirectionalLight>(vec3(0.2f), glm::normalize(glm::vec3(0.3, -1, +0.6)), true);
+    ligth0.assign<DirectionalLight>(vec3(0.6f), glm::normalize(vec3(-0.3, -1, -0.2)), true);
+    ligth1.assign<DirectionalLight>(vec3(0.3f), glm::normalize(vec3(+0.7, -1, +0.0)), true);
+    ligth2.assign<DirectionalLight>(vec3(0.2f), glm::normalize(vec3(+0.3, -1, +0.6)), true);
     return scene;
 }
 
@@ -86,7 +82,7 @@ class CameraControl {
         quat yaw   = glm::angleAxis(m_yaw, vec3(0, 1, 0));
         cam.setOrientation(yaw * pitch);
 
-        vec3 pos = m_dist * glm::mat3_cast(yaw * pitch) * vec3(0, 0, 1);
+        vec3 pos = m_dist * mat3_cast(yaw * pitch) * vec3(0, 0, 1);
         cam.setPosition(pos);
     }
 

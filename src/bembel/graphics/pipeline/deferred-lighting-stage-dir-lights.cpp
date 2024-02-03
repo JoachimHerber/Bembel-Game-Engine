@@ -1,9 +1,6 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <utility>
 module bembel.graphics.pipeline;
 
@@ -93,7 +90,7 @@ void DeferredLightingStage::initRenderQueueForShadowPass() {
         mat4 model_matrix = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
         if(entities[entity] & transform_container->getComponentMask()) {
             model_matrix = glm::translate(model_matrix, transform->position);
-            model_matrix = model_matrix * glm::mat4_cast(transform->rotation);
+            model_matrix = model_matrix * mat4_cast(transform->rotation);
             model_matrix = glm::scale(model_matrix, vec3(transform->scale));
         }
         model_matrix = glm::scale(model_matrix, geom.scale);

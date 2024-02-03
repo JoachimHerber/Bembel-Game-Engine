@@ -1,6 +1,4 @@
 ﻿module;
-#include <glm/glm.hpp>
-//
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_IMAGE_H

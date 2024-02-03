@@ -14,7 +14,7 @@ using namespace bembel::base;
 export struct Transform {
     vec3  position = {0.f, 0.f, 0.f};
     float scale    = 1.f;
-    quat  rotation  = {1.f, 0.f, 0.f, 0.f};
+    quat  rotation = {1.f, 0.f, 0.f, 0.f};
 
     using Container = FixedAddressComponentVector<Transform>;
 

@@ -1,6 +1,6 @@
 ﻿module;
 #include <filesystem>
-#include <glm/glm.hpp>
+
 #include <memory>
 #include <type_traits>
 //

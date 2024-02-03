@@ -50,7 +50,7 @@ bool deserializeComponent(
             { TComponent::deserialize(c, id, p) } -> std::convertible_to<bool>;
         } //
     ) {
-      return TComponent::deserialize(container, entity_id, properties);
+        return TComponent::deserialize(container, entity_id, properties);
     }
     return false;
 }

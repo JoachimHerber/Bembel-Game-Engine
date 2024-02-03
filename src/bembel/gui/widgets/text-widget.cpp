@@ -12,10 +12,10 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-TextWidget::TextWidget(Widget& parent) : Widget{parent} {
+TextWidget::TextWidget(In<Widget*> parent) : Widget{parent} {
     text.change_signal.bind(this, &TextWidget::onTextChanged);
     size.change_signal.bind(this, &TextWidget::onSizeChanged);
-    m_view = std::make_unique<TextWidget::View>(*this);
+    m_view = std::make_unique<TextWidget::View>(this);
 }
 
 bool TextWidget::configure(xml::Element const* properties) {
@@ -30,7 +30,7 @@ bool TextWidget::configure(xml::Element const* properties) {
 
     xml::getAttribute(properties, "FontSize", m_fontSize);
 
-    m_view = std::make_unique<TextWidget::View>(*this);
+    m_view = std::make_unique<TextWidget::View>(this);
     return true;
 }
 
@@ -67,30 +67,30 @@ void TextWidget::recalculateLayout(In<ivec2> size) {
     m_layout.calculateSimpleLayout(m_text, origin, m_fontSize, size.x);
 }
 
-void TextWidget::View::draw(RenderBatchInterface& batch) {
-    auto style = m_widget.getStyle();
+void TextWidget::View::draw(InOut<RenderBatchInterface> batch) {
+    auto style = m_widget->getStyle();
     assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
     assert(font && "Font is undefined");
 
-    glm::vec2 size     = m_widget.size.get();
-    glm::vec2 position = m_widget.position.get();
+    vec2 size     = m_widget->size.get();
+    vec2 position = m_widget->position.get();
 
     // batch.setColor(style->getColor(Style::Colors::TEXT_BACKGROUND));
     // batch.drawRectangle(position, position + size);
 
-    //batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
-    //for(auto& g : m_widget.m_layout.getGlyphs()) {
-    //    batch.drawGlyph(g.glyph, g.pos + position, m_widget.m_fontSize, true);
-    //}
-    if(m_widget.text_color.has_value()) {
-        batch.setColor(m_widget.text_color.value());
+    // batch.setColor(style->getColor(Style::Colors::TEXT_OUTLINE));
+    // for(auto& g : m_widget.m_layout.getGlyphs()) {
+    //     batch.drawGlyph(g.glyph, g.pos + position, m_widget.m_fontSize, true);
+    // }
+    if(m_widget->text_color.has_value()) {
+        batch.setColor(m_widget->text_color.value());
     } else {
         batch.setColor(style->getColor(Style::Colors::TEXT));
     }
 
-    for(auto& g : m_widget.m_layout.getGlyphs()) {
-        batch.drawGlyph(g.glyph, g.pos + position, m_widget.m_fontSize);
+    for(auto& g : m_widget->m_layout.getGlyphs()) {
+        batch.drawGlyph(g.glyph, g.pos + position, m_widget->m_fontSize);
     }
 }
 

@@ -1,8 +1,4 @@
 ﻿module;
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 module bembel.graphics.pipeline;
 
 import bembel.base;
@@ -12,8 +8,7 @@ using namespace bembel::base;
 
 void Camera::setUpProjection(float fildOfFiew, float aspectRation, float near, float far) {
     m_proj_matrix         = glm::perspective(fildOfFiew, aspectRation, near, far);
-    mat4 tmp              = m_proj_matrix;
-    m_inverse_proj_matrix = glm::inverse(tmp);
+    m_inverse_proj_matrix = glm::inverse(m_proj_matrix);
 
     float const y         = glm::sin(fildOfFiew);
     float const x         = y * aspectRation;
@@ -27,7 +22,7 @@ void Camera::setUpProjection(float fildOfFiew, float aspectRation, float near, f
 }
 
 void Camera::updateViewMatrix() {
-    m_view_matrix = glm::translate(glm::mat4_cast(glm::inverse(m_oriantation)), -m_position);
+    m_view_matrix         = glm::translate(mat4_cast(inverse(m_oriantation)), -m_position);
     m_inverse_view_matrix = glm::affineInverse(m_view_matrix);
 }
 

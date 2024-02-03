@@ -2,8 +2,6 @@ module;
 #include <cstdint>
 #include <filesystem>
 #include <format>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <source_location>
@@ -26,43 +24,6 @@ using i32 = int32_t;
 using i64 = int64_t;
 
 using byte = std::byte;
-
-using glm::vec2;
-using glm::vec3;
-using glm::vec4;
-
-using glm::dvec2;
-using glm::dvec3;
-using glm::dvec4;
-
-using glm::ivec2;
-using glm::ivec3;
-using glm::ivec4;
-
-using glm::uvec2;
-using glm::uvec3;
-using glm::uvec4;
-
-using glm::tvec2;
-using glm::tvec3;
-using glm::tvec4;
-
-using ColorRGB  = glm::tvec3<u8>;
-using ColorRGBA = glm::tvec4<u8>;
-
-using glm::mat3;
-using glm::mat4;
-
-using glm::operator+;
-using glm::operator-;
-using glm::operator*;
-using glm::operator/;
-using glm::operator==;
-
-using glm::max;
-using glm::min;
-
-using glm::quat;
 
 using nlohmann::json;
 
@@ -123,92 +84,6 @@ using not_null_ptr = T*;
 template <typename T, typename... TArgs>
 concept AllowedTypes = (std::same_as<T, TArgs> || ...);
 } // namespace bembel::base
-
-using bembel::base::In;
-using bembel::base::InOut;
-using bembel::base::Out;
-export template <>
-struct std::formatter<glm::vec2> : std::formatter<std::string> {
-    auto format(In<glm::vec2> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::vec3> : std::formatter<std::string> {
-    auto format(In<glm::vec3> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::vec4> : std::formatter<std::string> {
-    auto format(In<glm::vec4> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
-    }
-};
-
-export template <>
-struct std::formatter<glm::dvec2> : std::formatter<std::string> {
-    auto format(In<glm::dvec2> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::dvec3> : std::formatter<std::string> {
-    auto format(In<glm::dvec3> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::dvec4> : std::formatter<std::string> {
-    auto format(In<glm::dvec4> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
-    }
-};
-
-export template <>
-struct std::formatter<glm::ivec2> : std::formatter<std::string> {
-    auto format(In<glm::ivec2> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::ivec3> : std::formatter<std::string> {
-    auto format(In<glm::ivec3> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::ivec4> : std::formatter<std::string> {
-    auto format(In<glm::ivec4> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
-    }
-};
-
-export template <>
-struct std::formatter<glm::uvec2> : std::formatter<std::string> {
-    auto format(In<glm::uvec2> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {})", v.x, v.y), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::uvec3> : std::formatter<std::string> {
-    auto format(In<glm::uvec3> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {})", v.x, v.y, v.z), ctx);
-    }
-};
-export template <>
-struct std::formatter<glm::uvec4> : std::formatter<std::string> {
-    auto format(In<glm::uvec4> v, format_context& ctx) {
-        return formatter<string>::format(std::format("({}; {}; {}; {})", v.x, v.y, v.z, v.w), ctx);
-    }
-};
-
-export template <>
-struct std::formatter<bembel::base::WindowId> : std::formatter<std::string> {
-    auto format(In<bembel::base::WindowId> v, format_context& ctx) {
-        return formatter<string>::format(std::format("{}", uint32_t(v)), ctx);
-    }
-};
 
 // partial specializations for nlohmann::json
 export template <>

@@ -66,7 +66,7 @@ export class ShaderProgram final {
 
     bool use();
 
-    uint getHandl() const { return m_program_handle;}
+    uint getHandl() const { return m_program_handle; }
 
     static constexpr std::string_view ASSET_TYPE_NAME = "ShaderProgram";
 

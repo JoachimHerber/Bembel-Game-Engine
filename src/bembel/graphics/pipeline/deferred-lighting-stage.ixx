@@ -21,10 +21,10 @@ export class DeferredLightingStage : public RenderingPipeline::Stage {
 
     void setDirLightShadowResolution(uint resolution);
     template <typename... TArgs>
-        requires(std::is_convertible_v<TArgs, float>&&...)
-    void setDirLightShadowCascadeDistances(TArgs&& ...cascades) {
+        requires(std::is_convertible_v<TArgs, float> && ...)
+    void setDirLightShadowCascadeDistances(TArgs&&... cascades) {
         m_dir_lights.cascade_distances.clear();
-        (m_dir_lights.cascade_distances.push_back(cascades),...);
+        (m_dir_lights.cascade_distances.push_back(cascades), ...);
     }
     void setDirLightShadowCascadeDistances(In<std::span<const float>> cascades);
 
