@@ -16,6 +16,7 @@ import :Materials;
 import :Meshes;
 import :Models;
 import :Scenes;
+import :ExortDialog;
 
 namespace bembel::tools {
 using namespace bembel::base;
@@ -74,7 +75,7 @@ void Application::drawUI(In<ivec2> view_port_pos, In<uvec2> view_port_size) {
     imgui::SetNextWindowViewport(viewport->ID);
     imgui::PushStyleVar(imgui::ImGuiStyleVar_WindowRounding, 0.0f);
     imgui::PushStyleVar(imgui::ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::PushStyleVar(imgui::ImGuiStyleVar_WindowPadding, imgui::ImVec2(0.0f, 0.0f));
+    imgui::PushStyleVar(imgui::ImGuiStyleVar_WindowPadding, imgui::ImVec2(0.0f, 0.0f));
 
     int dockspace_flags = imgui::ImGuiDockNodeFlags_None;
     int window_flags    = imgui::ImGuiWindowFlags_MenuBar | imgui::ImGuiWindowFlags_NoDocking
@@ -84,12 +85,14 @@ void Application::drawUI(In<ivec2> view_port_pos, In<uvec2> view_port_size) {
                      | imgui::ImGuiWindowFlags_NoBringToFrontOnFocus
                      | imgui::ImGuiWindowFlags_NoNavFocus;
 
+    bool open_exort_dialog = false;
     if(imgui::Begin("DockSpace", nullptr, window_flags)) {
         if(imgui::BeginMenuBar()) {
             if(imgui::BeginMenu("File")) {
                 if(imgui::MenuItem("Import", "Ctrl+I")) { /* Do stuff */
                 }
-                if(imgui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */
+                if(imgui::MenuItem("Export Assets", "Ctrl+S")) { //
+                    open_exort_dialog = true;
                 }
                 if(imgui::MenuItem("Close", "Ctrl+W")) quit();
                 imgui::EndMenu();
@@ -98,11 +101,17 @@ void Application::drawUI(In<ivec2> view_port_pos, In<uvec2> view_port_size) {
         }
         auto dockspace_id = imgui::GetID("MyDockSpace");
         imgui::DockSpace(dockspace_id, {0.0f, 0.0f}, dockspace_flags);
+
     }
     imgui::End();
     imgui::PopStyleVar(3);
 
-    ImGui::PushStyleVar(imgui::ImGuiStyleVar_WindowPadding, imgui::ImVec2(0.0f, 0.0f));
+    if(open_exort_dialog) { //
+        openExortDialog();
+    }
+    drawExortDialog();
+
+    imgui::PushStyleVar(imgui::ImGuiStyleVar_WindowPadding, imgui::ImVec2(0.0f, 0.0f));
     imgui::Begin("SceneView", nullptr, imgui::ImGuiWindowFlags_None);
     drawScenePreviewUI(m_pipeline);
 
@@ -122,7 +131,7 @@ void Application::drawUI(In<ivec2> view_port_pos, In<uvec2> view_port_size) {
     drawModelManagementUI();
     imgui::End();
 
-    // imgui::ShowDemoWindow();
+    imgui::ShowDemoWindow();
 }
 
 void Application::handleEvent(In<FrameBufferResizeEvent> event) {}

@@ -20,6 +20,8 @@ set( ProjectSources
 	src/models.cpp
 	src/scenes.ixx
 	src/scenes.cpp
+	src/export-dialog.ixx
+	src/export-dialog.cpp
 	
 	config.xml
 )
