@@ -21,6 +21,7 @@ bool WindowDisplayMode::configure(xml::Element const* properties) {
     getAttribute(properties, "Size", "width", m_width);
     getAttribute(properties, "Size", "height", m_height);
     getAttribute(properties, "resizable", m_resizable);
+    getAttribute(properties, "decorated", m_decorated);
     if(getAttribute(properties, "SizeLimit", "min_width", m_min_size.x)
        && getAttribute(properties, "SizeLimit", "min_height", m_min_size.y)
        && getAttribute(properties, "SizeLimit", "max_width", m_min_size.x)

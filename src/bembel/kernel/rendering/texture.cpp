@@ -210,10 +210,12 @@ bool Texture::setData(In<Image> image, In<int> mipMapLevel) {
 }
 
 std::unique_ptr<Texture> Texture::loadAsset(std::filesystem::path file) {
-    base::Image image;
+    auto path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
+    if(!path) return nullptr;
 
-    if(image.load(file)) {
-        auto texture = std::make_unique<Texture>();
+    base::Image image;
+    if(image.load(*path)) {
+        auto texture = std::make_unique<Texture>(Target::TEXTURE_2D, Format::SRGB8);
         texture->init(image);
         return texture;
     }
@@ -222,7 +224,24 @@ std::unique_ptr<Texture> Texture::loadAsset(std::filesystem::path file) {
 
 std::unique_ptr<Texture> Texture::createAsset(xml::Element const* properties) {
     std::string file;
-    if(xml::getAttribute(properties, "file", file)) { return Texture::loadAsset(file); }
+    if(xml::getAttribute(properties, "file", file)) {
+        auto path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
+        if(!path) return nullptr;
+
+        Format format = Format::SRGB8;
+
+        if(auto str = xml::getAttribute<std::string>(properties, "format")) {
+            if(auto fmt = stringToTextureFormat(*str)) //
+                format = *fmt;
+        }
+
+        base::Image image;
+        if(image.load(*path)) {
+            auto texture = std::make_unique<Texture>(Target::TEXTURE_2D, format);
+            texture->init(image);
+            return texture;
+        }
+    }
     return nullptr;
 }
 
@@ -232,16 +251,17 @@ std::optional<Texture::Format> Texture::stringToTextureFormat(std::string_view f
         {"GL_DEPTH_COMPONENT24", Format::DEPTH_COMPONENT24},
         {"GL_DEPTH_COMPONENT16", Format::DEPTH_COMPONENT16},
         {"GL_DEPTH_COMPONENT", Format::DEPTH_COMPONENT},
-        {"GL_RGBA", Format::RGBA},
-        {"GL_RGBA8", Format::RGBA8},
-        {"GL_RGBA16", Format::RGBA16},
-        {"GL_RGBA16F", Format::RGBA16F},
-        {"GL_RGBA32F", Format::RGBA32F},
+        {"GL_R8", Format::R8},
         {"GL_RGB", Format::RGB},
         {"GL_RGB8", Format::RGB8},
         {"GL_RGB16", Format::RGB16},
         {"GL_RGB16F", Format::RGB16F},
         {"GL_RGB32F", Format::RGB32F},
+        {"GL_RGBA", Format::RGBA},
+        {"GL_RGBA8", Format::RGBA8},
+        {"GL_RGBA16", Format::RGBA16},
+        {"GL_RGBA16F", Format::RGBA16F},
+        {"GL_RGBA32F", Format::RGBA32F},
 
         {"GL_SRGB8", Format::SRGB8},
         {"GL_SRGB8_ALPHA8", Format::SRGB8_ALPHA8},

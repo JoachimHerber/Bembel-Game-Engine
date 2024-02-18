@@ -25,9 +25,9 @@ export class Window {
     DisplayModePtr getDisplayMode() const { return m_display_mode; }
     void           setDisplayMode(Copy<DisplayModePtr> val) { m_display_mode = std::move(val); }
 
-    void init(In<not_null_ptr<const xml::Element>> properties);
+    void init(In<not_null_ptr<const xml::Element>> properties, In<Window*> shared_context);
 
-    void open(In<std::string_view> titel);
+    void open(In<std::string_view> titel, In<Window*> shared_context);
     void close();
 
     WindowId getWindowID() const { return m_window_id; }

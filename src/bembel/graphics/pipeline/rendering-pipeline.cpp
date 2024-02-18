@@ -50,13 +50,63 @@ void RenderingPipeline::Stage::releaseInputTextures() {
     }
 }
 
+void RenderingPipeline::View::init() {
+    Asset<Shader> vert = Shader::createShader(Shader::Type::VERTEX, R"(#version 330 compatibility
+      uniform vec2 uTexCoordMin;
+      uniform vec2 uTexCoordMax;
+
+      out vec2 vTexCoords;
+
+      const vec2 gCoords[4] = vec2[](
+	      vec2( 0.0, 0.0 ),
+	      vec2( 1.0, 0.0 ),
+	      vec2( 0.0, 1.0 ),
+	      vec2( 1.0, 1.0 )
+      );
+
+      void main() {
+        gl_Position = vec4(2.0*gCoords[gl_VertexID] - vec2(1.0), 0, 1);
+        vTexCoords  = mix(uTexCoordMin, uTexCoordMax, gCoords[gl_VertexID]);
+      }
+    )");
+    Asset<Shader> frag = Shader::createShader(Shader::Type::FRAGMENT, R"(#version 330
+      in vec2 vTexCoords;
+      
+      uniform sampler2D uTexture;
+
+      layout(location = 0) out vec4 oColor;
+
+      void main()
+      {	
+ 	      oColor = texture2D(uTexture, vTexCoords);
+      }
+    )");
+
+    m_shader = std::make_unique<ShaderProgram>();
+    m_shader->attachShader(vert);
+    m_shader->attachShader(frag);
+    m_shader->link();
+
+    //m_fbo->init();
+}
+void RenderingPipeline::View::cleanup() {
+    m_shader.release();
+    //m_fbo->cleanup();
+}
 void RenderingPipeline::View::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
-    m_fbo->blitToBackBuffer(
-        m_view_area_pos,
-        m_view_area_pos + ivec2(m_view_area_size),
-        viewport_position,
-        viewport_position + ivec2(viewport_size)
-    );
+    gl::glViewport(viewport_position.x, viewport_position.y, viewport_size.x, viewport_size.y);
+    m_shader->use();
+    m_shader->setUniform("uTexCoordMin", m_relative_view_area_pos);
+    m_shader->setUniform("uTexCoordMax", m_relative_view_area_size);
+    m_texture->bind();
+    glDisable(GL_BLEND);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    //m_fbo->blitToBackBuffer(
+    //    m_view_area_pos,
+    //    m_view_area_pos + ivec2(m_view_area_size),
+    //    viewport_position,
+    //    viewport_position + ivec2(viewport_size)
+    //);
 }
 
 void RenderingPipeline::setResulution(In<ivec2> value) {

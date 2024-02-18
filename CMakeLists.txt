@@ -31,6 +31,7 @@ bembel_conditional_add_sub_project(Rendering "examples/rendering" "rendering exa
 bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
 bembel_conditional_add_sub_project(GUI "examples/GUI" "GUI example application")
 bembel_conditional_add_sub_project(Physics "examples/physics" "Physics example application")
+bembel_conditional_add_sub_project(GMHelper "examples/gm-helper" "GM-Helper example application")
 
 bembel_conditional_add_sub_project(FontConverter "tools/font-converter" "A tool for converting fonts")
 bembel_conditional_add_sub_project(FontConverter "tools/editor" "A tool for converting fonts")

@@ -119,6 +119,19 @@ export class Scene {
     }
 
     template <Component T>
+    void removeComponent(EntityID id) {
+        if(std::to_underlying(id) >= m_entities.size()) return;
+
+        auto* container = getComponentContainer<T>();
+        if(!container) return;
+
+        if((m_entities[std::to_underlying(id)] & container->getComponentMask()) == 0) return;
+
+        container->deleteComponent(id);
+        m_entities[std::to_underlying(id)] &= ~container->getComponentMask();
+    }
+
+    template <Component T>
     T* getComponent(EntityID id) {
         if(std::to_underlying(id) >= m_entities.size()) return nullptr;
 

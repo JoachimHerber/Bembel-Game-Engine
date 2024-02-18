@@ -12,8 +12,8 @@ using bembel::base::Exeption;
 export class Entity {
   public:
     Entity(/***********************/) : m_scene{nullptr}, m_id{EntityID::INVALID} {}
-    Entity(Scene& scene /**********/) : m_scene{&scene}, m_id{scene.createEntity()} {}
-    Entity(Scene& scene, EntityID id) : m_scene{&scene}, m_id{id} {}
+    Entity(Scene* scene /**********/) : m_scene{scene}, m_id{scene->createEntity()} {}
+    Entity(Scene* scene, EntityID id) : m_scene{scene}, m_id{id} {}
     Entity(Entity const& other) = default;
     Entity(Entity /**/&& other) = default;
 
@@ -24,7 +24,7 @@ export class Entity {
     operator bool() { return m_scene && m_id != EntityID::INVALID; }
 
     template <class ComponentType>
-    bool has() {
+    bool has() const {
         if(!m_scene || m_id == EntityID::INVALID) return false;
 
         return get<ComponentType>() != nullptr;
@@ -33,11 +33,18 @@ export class Entity {
     template <class ComponentType, typename... TArgs>
     bool assign(TArgs&&... args) {
         if(!m_scene || m_id == EntityID::INVALID)
-            throw Exeption("Tying to acquire component for invalid entity");
+            throw Exeption("Tying to assign component to invalid entity");
 
         return m_scene->assignComponent<ComponentType>(m_id, std::forward<TArgs>(args)...);
     }
 
+    template <class ComponentType>
+    ComponentType const* get() const {
+        if(!m_scene || m_id == EntityID::INVALID)
+            throw Exeption("Tying to acquire component for invalid entity");
+
+        return m_scene->getComponent<ComponentType>(m_id);
+    }
     template <class ComponentType>
     ComponentType* get() {
         if(!m_scene || m_id == EntityID::INVALID)
@@ -46,8 +53,13 @@ export class Entity {
         return m_scene->getComponent<ComponentType>(m_id);
     }
 
+    template <class ComponentType>
+    void remove() {
+        if(m_scene && m_id != EntityID::INVALID) m_scene->removeComponent<ComponentType>(m_id); 
+    }
+
     void deleteEntity() {
-        if(m_id != EntityID::INVALID && m_scene) {
+        if(m_scene && m_id != EntityID::INVALID) {
             m_scene->deleteEntity(m_id);
             m_id = EntityID::INVALID;
         }

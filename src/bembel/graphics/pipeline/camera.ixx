@@ -33,6 +33,7 @@ export class Camera final {
     }
 
     void setUpProjection(float fildOfFiew, float aspectRation, float near, float far);
+    void setOrtho(float left, float right, float bottom, float top, float near, float far);
 
     mat4 const& getViewMatrix() const { return m_view_matrix; }
     mat4 const& getProjectionMatrix() const { return m_proj_matrix; }

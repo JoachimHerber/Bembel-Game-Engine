@@ -1,6 +1,7 @@
 module;
 #include <memory>
 #include <stack>
+#include <string>
 #include <string_view>
 #include <vector>
 export module bembel.kernel.assets:AssetContainer;

@@ -137,7 +137,7 @@ void FrameBufferObject::blitToBackBuffer(
     glBindFramebufferEXT(GL_READ_FRAMEBUFFER, m_handle);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-    glBlitFramebufferEXT(
+    glBlitFramebuffer(
         source_min.x,
         source_min.y,
         source_max.x,

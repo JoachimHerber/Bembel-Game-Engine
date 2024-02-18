@@ -1,0 +1,115 @@
+<Bembel>
+  <AssetDirectories>
+    <AssetDirectory directory="../assets"/>
+    <AssetDirectory directory="../assets/gui"/>
+    <AssetDirectory directory="../assets/shader"/>
+    <AssetDirectory directory="../assets/fonts"/>
+    <AssetDirectory directory="../assets/textures"/>
+  </AssetDirectories>
+  <Display>
+    <Window title="GM Helper" background_color="1 0 1">
+      <DisplayMode mode = "Windowed">
+        <Size width="800" height="450" />
+      </DisplayMode>
+      <Viewports>
+        <Viewport relativ_position="0 0" relativ_size="1 1" />
+      </Viewports>
+    </Window>
+    <Window title="GM Helper (Player View)" background_color="1 0 0" >
+      <DisplayMode mode = "Windowed" decorated="false">
+        <Size width="800" height="450" />
+      </DisplayMode>
+      <Viewports>
+        <Viewport relativ_position="0 0" relativ_size="1 1" />
+      </Viewports>
+    </Window>
+  </Display>
+  <Systems>
+    <Graphics>
+      <Renderer>
+        <GeometryRenderer name="default" >
+          <GeometyPassShader>
+            <Shader file="default-geomety-pass.vert"/>
+            <Shader file="default-geomety-pass.frag"/>
+          </GeometyPassShader>
+          <ShadowPassShader>
+            <Shader file="default-shadow-pass.vert"/>
+            <Shader file="default-shadow-pass.frag"/>
+          </ShadowPassShader>
+        </GeometryRenderer>
+      </Renderer>
+      <RenderingPipelines>
+        <RenderingPipeline horizontal_resolution="1600" vertical_resolution="900">
+          <Textures>
+            <Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+            <Texture name="scene"    format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+            <Texture name="light"    format="GL_R8"                target="GL_TEXTURE_2D"/>
+          </Textures>
+          <RenderingStages>
+            <SpriteRenderingStage show_hidden_tokens="true">
+              <ColorOutput texture="scene"/>
+              <DepthOutput texture="depth"/>
+            </SpriteRenderingStage>
+            <TokenRenderingStage show_hidden_tokens="true">
+              <ColorOutput texture="scene"/>
+              <DepthOutput texture="depth"/>
+              <OverlayTexture file="token_overlay.png" format="GL_SRGB8_ALPHA8"/>
+              <MaskTexture file="token_mask.png" format="GL_SRGB8_ALPHA8"/>
+            </TokenRenderingStage>
+            <LightingOverlayStage>
+              <ColorOutput texture="light"/>
+            </LightingOverlayStage>
+            <ApplyLightingOverlayStage intensity="0.5">
+              <Output texture="scene"/>
+              <Input texture="light"/>
+            </ApplyLightingOverlayStage>
+          </RenderingStages>
+          <Views>
+            <View texture="scene" window="0" viewport="0" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+          </Views>
+          <Camera>
+            <Position x="0" y="0" z="2" />
+            <Projection fild_of_view="75" aspect_ration="1.77777777778" near="0.1" far="25.0" />
+          </Camera>
+        </RenderingPipeline>
+        <RenderingPipeline horizontal_resolution="1600" vertical_resolution="900">
+          <Textures>
+            <Texture name="depth"    format="GL_DEPTH_COMPONENT24" target="GL_TEXTURE_2D"/>
+            <Texture name="scene"    format="GL_RGB8"              target="GL_TEXTURE_2D"/>
+            <Texture name="light"    format="GL_R8"                target="GL_TEXTURE_2D"/>
+          </Textures>
+          <RenderingStages>
+            <SpriteRenderingStage>
+              <ColorOutput texture="scene"/>
+              <DepthOutput texture="depth"/>
+            </SpriteRenderingStage>
+            <TokenRenderingStage>
+              <ColorOutput texture="scene"/>
+              <DepthOutput texture="depth"/>
+              <OverlayTexture file="token_overlay.png" format="GL_SRGB8_ALPHA8"/>
+              <MaskTexture file="token_mask.png" format="GL_SRGB8_ALPHA8"/>
+            </TokenRenderingStage>
+            <LightingOverlayStage>
+              <ColorOutput texture="light"/>
+            </LightingOverlayStage>
+            <ApplyLightingOverlayStage intensity="1.0">
+              <Output texture="scene"/>
+              <Input texture="light"/>
+            </ApplyLightingOverlayStage>
+          </RenderingStages>
+          <Views>
+            <View texture="scene" window="1" viewport="0" left="0.0" right="1.0" bottom="0.0" top="1.0"/>
+          </Views>
+          <Camera>
+            <Position x="0" y="0" z="2" />
+            <Projection fild_of_view="75" aspect_ration="1.77777777778" near="0.1" far="25.0" />
+          </Camera>
+        </RenderingPipeline>
+      </RenderingPipelines>
+    </Graphics>
+    <Particles>
+    </Particles>
+    <UserInterface>
+    </UserInterface>
+  </Systems>
+</Bembel>

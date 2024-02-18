@@ -152,6 +152,27 @@ bool ShaderProgram::setUniform(std::string_view name, float value) {
     glUniform1f(location, value);
     return true;
 }
+bool ShaderProgram::setUniform(std::string_view name, vec2 value) {
+    GLint location = getUniformLocation(name);
+    if(location == -1) return false;
+
+    glUniform2f(location, value.x, value.y);
+    return true;
+}
+bool ShaderProgram::setUniform(std::string_view name, vec3 value) {
+    GLint location = getUniformLocation(name);
+    if(location == -1) return false;
+
+    glUniform3f(location, value.x, value.y, value.z);
+    return true;
+}
+bool ShaderProgram::setUniform(std::string_view name, In<vec4> value) {
+    GLint location = getUniformLocation(name);
+    if(location == -1) return false;
+
+    glUniform4f(location, value.x, value.y, value.z, value.w);
+    return true;
+}
 
 bool ShaderProgram::setUniform(std::string_view name, int value) {
     GLint location = getUniformLocation(name);

@@ -153,7 +153,7 @@ Window::~Window() {
     close();
 }
 
-void Window::init(In<not_null_ptr<const xml::Element>> properties) {
+void Window::init(In<not_null_ptr<const xml::Element>> properties, In<Window*> shared_context) {
     if(!properties) return;
 
     std::string mode;
@@ -179,13 +179,15 @@ void Window::init(In<not_null_ptr<const xml::Element>> properties) {
     }
     std::string title = "Bembel";
     xml::getAttribute(properties, "title", title);
-    this->open(title);
+    this->open(title, shared_context);
 }
 
-void Window::open(std::string_view titel) {
+void Window::open(std::string_view titel, In<Window*> shared_context) {
     if(m_window_impl) return; // window already opend;
 
-    m_window_impl = m_display_mode->creatWindow(titel, nullptr);
+    m_window_impl = m_display_mode->creatWindow(
+        titel, shared_context ? shared_context->getGlfwWindow() : nullptr
+    );
 
     glbinding::initialize(glfwGetProcAddress, false);
 

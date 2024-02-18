@@ -67,7 +67,9 @@ export class RenderingPipeline final {
 
     class View : public Viewport::View {
       public:
-        View(Texture* texture) : m_texture{texture} { m_fbo->setColorAttechment(0, texture); }
+        View(Texture* texture) : m_texture{texture} {//
+          //m_fbo->setColorAttechment(0, texture);
+        }
         ~View() = default;
 
         void setRelativeViewArea(In<vec2> pos, In<vec2> size) {
@@ -81,8 +83,8 @@ export class RenderingPipeline final {
         ivec2 getViewAreaPosition() const { return m_view_area_pos; }
         uvec2 getViewAreaSize() const { return m_view_area_size; }
 
-        void init() { m_fbo->init(); }
-        void cleanup() { m_fbo->cleanup(); }
+        void init();
+        void cleanup();
 
         void draw(In<ivec2> viewport_position, In<uvec2> viewport_size) override;
 
@@ -95,7 +97,8 @@ export class RenderingPipeline final {
         vec2 m_relative_view_area_pos  = {0, 0};
         vec2 m_relative_view_area_size = {1, 1};
 
-        std::unique_ptr<FrameBufferObject> m_fbo = std::make_unique<FrameBufferObject>();
+        //std::unique_ptr<FrameBufferObject> m_fbo = std::make_unique<FrameBufferObject>();
+        std::unique_ptr<ShaderProgram> m_shader;
     };
 
   public:

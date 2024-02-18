@@ -57,6 +57,7 @@ using ::glm::mat3_cast;
 
 namespace glm{
 using ::glm::translate;
+using ::glm::rotate;
 using ::glm::scale;
 using ::glm::perspective;
 using ::glm::lookAt;
@@ -65,6 +66,7 @@ using ::glm::ortho;
 using ::glm::normalize;
 using ::glm::dot;
 using ::glm::cross;
+using ::glm::length;
 
 using ::glm::inverse;
 using ::glm::affineInverse;
