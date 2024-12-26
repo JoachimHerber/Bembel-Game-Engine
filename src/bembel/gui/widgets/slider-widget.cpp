@@ -1,12 +1,6 @@
-﻿module;
-#include <algorithm>
-#include <bit>
-#include <cassert>
-#include <cmath>
-#include <memory>
-#include <string>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -37,7 +31,7 @@ bool SliderWidget::configure(base::xml::Element const* properties) {
 
 uint SliderWidget::getMinWidth(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border       = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     float handle_width = style->getValue(Style::Values::SLIDER_HANDLE_WIDTH);
@@ -46,7 +40,7 @@ uint SliderWidget::getMinWidth(In<std::optional<uint>>) const {
 
 uint SliderWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     return 4 * border;
@@ -71,7 +65,7 @@ void SliderWidget::onHandleMoved(In<ivec2> cursor, InOut<ivec2>) {
 
 void SliderWidget::updateSliderPos(In<ivec2> cursor) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border       = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     float handle_width = style->getValue(Style::Values::SLIDER_HANDLE_WIDTH);
@@ -86,7 +80,7 @@ void SliderWidget::updateSliderPos(In<ivec2> cursor) {
 
 void SliderWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_slider->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     vec2 min = m_slider->position.get();
     vec2 max = min + vec2(m_slider->size.get());
@@ -196,7 +190,9 @@ void IntSliderWidget::updateLabel() {
     m_label.setText(m_text(m_value));
 }
 
-FloatSliderWidget::FloatSliderWidget(In<Widget*> parent, In<float> min, In<float> max, In<bool> logarithmic)
+FloatSliderWidget::FloatSliderWidget(
+    In<Widget*> parent, In<float> min, In<float> max, In<bool> logarithmic
+)
   : SliderWidget{parent}
   , m_min{min}
   , m_max{max}

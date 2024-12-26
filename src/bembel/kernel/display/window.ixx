@@ -1,8 +1,6 @@
-﻿module;
-#include <memory>
-#include <string>
-export module bembel.kernel.display:Window;
+﻿export module bembel.kernel.display:Window;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 
@@ -27,7 +25,7 @@ export class Window {
 
     void init(In<not_null_ptr<const xml::Element>> properties, In<Window*> shared_context);
 
-    void open(In<std::string_view> titel, In<Window*> shared_context);
+    void open(In<std::string_view> titel, In<Window*> shared_context = nullptr);
     void close();
 
     WindowId getWindowID() const { return m_window_id; }

@@ -1,6 +1,6 @@
-﻿module;
-export module bembel.tools.font_converter:GlyphTextureAtlas;
+﻿export module bembel.tools.font_converter:GlyphTextureAtlas;
 
+import std;
 import bembel;
 import :TextureAtlasNode;
 import :Glyph;

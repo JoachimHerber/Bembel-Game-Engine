@@ -1,7 +1,6 @@
-﻿module;
-#include <memory>
-export module bembel.kernel.display:DisplayManager;
+﻿export module bembel.kernel.display:DisplayManager;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

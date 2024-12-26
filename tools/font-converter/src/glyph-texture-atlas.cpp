@@ -1,10 +1,6 @@
-﻿module;
-#include <algorithm>
-#include <memory>
-#include <string_view>
-#include <valarray>
-#include <vector>
-module bembel.tools.font_converter;
+﻿module bembel.tools.font_converter;
+
+import std;
 
 namespace bembel::tools {
 using namespace bembel::base;
@@ -19,7 +15,7 @@ Fraction roundScale(double scale) {
     double frat = scale - std::floor(scale);
 
     uint denominator = std::floor(1 / frat);
-    int numerator   = denominator * int(std::floor(scale)) + 1;
+    int  numerator   = denominator * int(std::floor(scale)) + 1;
 
     logInfo("Scale = {}/{}", numerator, denominator);
     return {numerator, denominator};
@@ -44,7 +40,7 @@ void GlyphTextureAtlas::update(std::vector<Glyph>& glyphs, uint units_per_EM) {
     std::sort(glyph_ptrs.begin(), glyph_ptrs.end(), [](Glyph const* g1, Glyph const* g2) {
         return g1->getSize().x * g1->getSize().y > g2->getSize().x * g2->getSize().y;
     });
-    double scale   = 0.95 * m_resolution / sqrt(reqiredArea);
+    double scale   = 0.95 * m_resolution / std::sqrt(reqiredArea);
     bool   success = false;
     while(!success) {
         // try to fill texture atlas
@@ -57,7 +53,11 @@ void GlyphTextureAtlas::update(std::vector<Glyph>& glyphs, uint units_per_EM) {
             scale *= 0.95;
         }
     }
-    logInfo("GlyphTextureAtlas filled successfully: scale = {}/{}", m_scale.numerator, m_scale.denominator);
+    logInfo(
+        "GlyphTextureAtlas filled successfully: scale = {}/{}",
+        m_scale.numerator,
+        m_scale.denominator
+    );
 
     this->update_signal.emit();
 }
@@ -66,8 +66,12 @@ bool GlyphTextureAtlas::fillAtlas(std::vector<Glyph*> const& glypes) {
     for(auto& glyph : glypes) {
         ivec2 size = glyph->getSize();
 
-        if(size.x % m_scale.denominator != 0) { size.x += m_scale.denominator - (size.x % m_scale.denominator); }
-        if(size.y % m_scale.denominator != 0) { size.y += m_scale.denominator - (size.y % m_scale.denominator); }
+        if(size.x % m_scale.denominator != 0) {
+            size.x += m_scale.denominator - (size.x % m_scale.denominator);
+        }
+        if(size.y % m_scale.denominator != 0) {
+            size.y += m_scale.denominator - (size.y % m_scale.denominator);
+        }
 
         int w = m_scale.numerator * size.x / m_scale.denominator;
         int h = m_scale.numerator * size.y / m_scale.denominator;

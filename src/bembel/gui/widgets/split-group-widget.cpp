@@ -1,9 +1,6 @@
-﻿module;
-#include <algorithm>
-#include <cassert>
-#include <filesystem>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -60,7 +57,7 @@ bool SplitGroupWidget::configure(xml::Element const* properties) {
 
 uint SplitGroupWidget::getMinWidth(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
@@ -73,7 +70,7 @@ uint SplitGroupWidget::getMinWidth(In<std::optional<uint>>) const {
 
 uint SplitGroupWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
@@ -90,7 +87,7 @@ void SplitGroupWidget::onSizeChanged(In<ivec2>, In<ivec2>) {
 
 void SplitGroupWidget::onMoveSeperator(In<ivec2> cursor, InOut<ivec2>) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float const border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
@@ -102,7 +99,7 @@ void SplitGroupWidget::onMoveSeperator(In<ivec2> cursor, InOut<ivec2>) {
 }
 void SplitGroupWidget::setSeperatorPos(int i) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float const border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
@@ -125,7 +122,7 @@ void SplitGroupWidget::setSeperatorPos(int i) {
 
 void SplitGroupWidget::updateLayout() {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
@@ -162,7 +159,7 @@ void SplitGroupWidget::updateLayout() {
 
 void SimpleSplitGroupWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_widget->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 

@@ -1,9 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <memory>
-#include <string_view>
-export module bembel.kernel.rendering:Shader;
+﻿export module bembel.kernel.rendering:Shader;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-export module bembel.tools.font_converter;
+﻿export module bembel.tools.font_converter;
 
+import std;
 import bembel;
 import :FontConverter;
 import :FontView;
@@ -51,10 +50,9 @@ export class Application : public kernel::Application<GuiSystem> {
     void onConvertFont();
     void onSaveFont();
 
-
   private:
-    std::unique_ptr<FontConverter>   m_converter;
-    std::unique_ptr<FontView>        m_font_view;
+    std::unique_ptr<FontConverter> m_converter;
+    std::unique_ptr<FontView>      m_font_view;
 
     Window* m_main_window;
 
@@ -77,7 +75,7 @@ export class Application : public kernel::Application<GuiSystem> {
         LabelWidget*     additional_chars_label;
         TextInputWidget* additional_chars_input;
 
-        LabelWidget*     sdf_label;
+        LabelWidget* sdf_label;
 
         LabelWidget*     texture_size_label;
         IntSliderWidget* texture_size_slider;

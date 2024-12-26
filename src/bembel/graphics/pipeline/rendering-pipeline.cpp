@@ -1,9 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <memory>
 module bembel.graphics.pipeline;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 
@@ -87,11 +86,11 @@ void RenderingPipeline::View::init() {
     m_shader->attachShader(frag);
     m_shader->link();
 
-    //m_fbo->init();
+    // m_fbo->init();
 }
 void RenderingPipeline::View::cleanup() {
     m_shader.release();
-    //m_fbo->cleanup();
+    // m_fbo->cleanup();
 }
 void RenderingPipeline::View::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     gl::glViewport(viewport_position.x, viewport_position.y, viewport_size.x, viewport_size.y);
@@ -101,11 +100,11 @@ void RenderingPipeline::View::draw(In<ivec2> viewport_position, In<uvec2> viewpo
     m_texture->bind();
     glDisable(GL_BLEND);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    //m_fbo->blitToBackBuffer(
-    //    m_view_area_pos,
-    //    m_view_area_pos + ivec2(m_view_area_size),
-    //    viewport_position,
-    //    viewport_position + ivec2(viewport_size)
+    // m_fbo->blitToBackBuffer(
+    //     m_view_area_pos,
+    //     m_view_area_pos + ivec2(m_view_area_size),
+    //     viewport_position,
+    //     viewport_position + ivec2(viewport_size)
     //);
 }
 

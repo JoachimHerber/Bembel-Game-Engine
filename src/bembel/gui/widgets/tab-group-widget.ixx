@@ -1,8 +1,6 @@
-﻿module;
-#include <memory>
-#include <string_view>
-export module bembel.gui.widgets:Tabs;
+﻿export module bembel.gui.widgets:Tabs;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

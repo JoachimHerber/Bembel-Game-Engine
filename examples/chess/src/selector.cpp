@@ -1,10 +1,8 @@
 module;
 #include <glbinding/gl/gl.h>
-
-#include <chrono>
-#include <optional>
 module bembel.examples.chess;
 
+import std;
 import bembel;
 import :Selector;
 import :Moves;
@@ -55,7 +53,7 @@ Selector::Ray Selector::calculateRay(In<vec2> cursor_pos) const {
 
     Ray ray;
     ray.origin    = m_camera->getPosition();
-    ray.direction = glm::vec3(rel_pos) - ray.origin;
+    ray.direction = vec3(rel_pos) - ray.origin;
     ray.direction = glm::normalize(ray.direction);
     return ray;
 }
@@ -88,7 +86,7 @@ void ChessPieceSelector::onSelect(EntityID entity) {
     if(!chess_piece) return;
     if(chess_piece->owner != m_player) return;
 
-    m_selection = Entity(*m_board->getScene(), entity);
+    m_selection = Entity(m_board->getScene(), entity);
     m_selection.assign<SelectionHighlight>(SelectionHighlight::FOCUSED);
 
     auto moves = getPossibleMoves(m_board, ChessPiece(m_board, m_selection));

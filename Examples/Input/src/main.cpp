@@ -1,5 +1,4 @@
-﻿#include <string_view>
-#include <vector>
+﻿import std;
 import bembel.examples.input;
 import bembel.base;
 

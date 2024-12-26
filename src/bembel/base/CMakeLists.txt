@@ -27,6 +27,8 @@ target_sources(Bembel
         memory.ixx
         memory.cpp
         awaitable.ixx
+		coroutine.ixx
+		coroutine.cpp
 		
         CMakeLists.txt
 )

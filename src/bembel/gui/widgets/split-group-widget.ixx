@@ -1,7 +1,6 @@
-﻿module;
-#include <string>
-export module bembel.gui.widgets:SplitGroup;
+﻿export module bembel.gui.widgets:SplitGroup;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

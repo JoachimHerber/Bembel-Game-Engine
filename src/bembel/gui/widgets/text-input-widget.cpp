@@ -1,10 +1,6 @@
-module;
-#include <cassert>
-#include <chrono>
-#include <memory>
-#include <string_view>
 module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -41,7 +37,7 @@ bool TextInputWidget::configure(xml::Element const* properties) {
 
 uint TextInputWidget::getMinWidth(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     float margin = style->getValue(Style::Values::INPUT_HORIZONTAL_MARGIN);
@@ -50,7 +46,7 @@ uint TextInputWidget::getMinWidth(In<std::optional<uint>>) const {
 
 uint TextInputWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border = style->getValue(Style::Values::INPUT_BORDER_WIDTH);
     float margin = style->getValue(Style::Values::INPUT_VERTICAL_MARGIN);
@@ -105,9 +101,9 @@ void TextInputWidget::paste() {}
 
 void TextInputWidget::View::updateGlyphs(In<std::u8string> str) {
     auto style = m_widget->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     m_glyphs.clear();
     m_advance = 0;
@@ -126,9 +122,9 @@ void TextInputWidget::View::updateGlyphs(In<std::u8string> str) {
 
 void TextInputWidget::View::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_widget->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     vec2 min = m_widget->position.get();
     vec2 max = min + vec2(m_widget->size.get());

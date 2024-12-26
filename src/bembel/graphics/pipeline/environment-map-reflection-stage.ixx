@@ -1,7 +1,6 @@
-﻿module;
-#include <string>
-export module bembel.graphics.pipeline:EnvironmentMapReflectionStage;
+﻿export module bembel.graphics.pipeline:EnvironmentMapReflectionStage;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics.geometry;

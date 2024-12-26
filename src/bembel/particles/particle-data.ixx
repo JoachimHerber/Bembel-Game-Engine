@@ -1,11 +1,6 @@
-﻿module;
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <span>
-#include <vector>
-export module bembel.particles:Data;
+﻿export module bembel.particles:Data;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Effects;

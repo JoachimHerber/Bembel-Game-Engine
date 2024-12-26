@@ -1,15 +1,6 @@
-﻿module;
-#include <any>
-#include <compare>
-#include <filesystem>
-#include <stack>
-#include <string_view>
-#include <type_traits>
-#include <typeindex>
-#include <unordered_map>
-#include <vector>
-export module bembel.kernel.core:Scene;
+﻿export module bembel.kernel.core:Scene;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 
@@ -20,10 +11,14 @@ export using ComponentTypeID = u64;
 export using ComponentMask   = u64;
 
 export enum class EntityID : u64 { INVALID = ~u64(0) };
-
-export inline std::strong_ordering operator<=>(EntityID a, EntityID b) {
-    return u64(a) <=> u64(b);
-}
+// clang-format off
+export inline auto operator<=>(EntityID a, EntityID b) { return u64(a) <=> u64(b);}
+export inline auto operator<=>(EntityID a, u64      b) { return u64(a) <=>     b; }
+export inline auto operator<=>(u64      a, EntityID b) { return     a  <=> u64(b);}
+        
+export inline auto operator++(InOut<EntityID> i     ) {  return i = EntityID(u64(i) + 1);  } // prefix ++ operator
+export inline auto operator++(InOut<EntityID> i, int) {  EntityID tmp = i; ++i; return tmp;} // postfix operator ++
+// clang-format on
 
 export class ComponentContainerBase {
   public:
@@ -105,6 +100,7 @@ export class Scene {
     bool     deleteEntity(EntityID);
 
     bool loadScene(std::filesystem::path file_name);
+    bool saveScene(std::filesystem::path file_name);
 
     template <Component T, typename... TArgs>
     bool assignComponent(EntityID id, TArgs&&... args) {

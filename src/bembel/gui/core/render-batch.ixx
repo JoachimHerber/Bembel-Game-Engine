@@ -1,7 +1,6 @@
-﻿module;
-#include <vector>
-export module bembel.gui.core:RenderBatch;
+﻿export module bembel.gui.core:RenderBatch;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

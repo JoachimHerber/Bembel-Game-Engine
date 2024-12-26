@@ -1,11 +1,6 @@
-module;
-#include <memory>
-#include <stack>
-#include <string>
-#include <string_view>
-#include <vector>
 export module bembel.kernel.assets:AssetContainer;
 
+import std;
 import bembel.base;
 
 import :AssetHandle;
@@ -85,6 +80,13 @@ class AssetContainer : public AssetContainerBase {
 
         m_asset_aliasses.emplace(alias, handle);
         return true;
+    }
+
+    std::string_view getAlias(AssetHandle handle) {
+        for(auto& it : m_asset_aliasses) {
+            if(it.second == handle) return it.first;
+        }
+        return {};
     }
 
     bool addAsset(AssetPtr asset, std::string_view alias) {

@@ -1,10 +1,6 @@
-module;
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <vector>
 export module bembel.base:Serialisation;
 
+import std;
 import :Types;
 import :ObservableValue;
 import :Conversion;
@@ -35,9 +31,7 @@ export namespace serialisation {
     struct TypeTraits {};
 
     template <typename TClass>
-    requires requires() {
-        TClass::SERIALISATION_METADATA;
-    }
+        requires requires() { TClass::SERIALISATION_METADATA; }
     struct TypeTraits<TClass> {
         static inline constexpr auto METADATA = TClass::SERIALISATION_METADATA;
     };

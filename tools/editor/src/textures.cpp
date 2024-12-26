@@ -1,9 +1,6 @@
-module;
-#include <array>
-#include <format>
-#include <string>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :Textures;
 
@@ -21,7 +18,7 @@ void drawTextureManagementUI() {
         imgui::BeginGroup();
         imgui::Text(TEXTURES[n].name.c_str());
         imgui::Image(
-            (void*)(intptr_t)TEXTURES[n].asset->getTextureHandle(),
+            (void*)(std::intptr_t)TEXTURES[n].asset->getTextureHandle(),
             imgui::ImVec2(image_width, image_width),
             imgui::ImVec2(0.0f, 1.0f),
             imgui::ImVec2(1.0f, 0.0f)

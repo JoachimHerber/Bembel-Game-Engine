@@ -1,10 +1,6 @@
-﻿module;
-#include <algorithm>
-#include <cctype>
-#include <memory>
-#include <string_view>
-module bembel.gui.core;
+﻿module bembel.gui.core;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Widget;

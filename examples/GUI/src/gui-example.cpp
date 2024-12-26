@@ -1,9 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <string>
-#include <string_view>
-module bembel.examples.gui;
+﻿module bembel.examples.gui;
 
+import std;
 import bembel.base;
 
 namespace bembel {

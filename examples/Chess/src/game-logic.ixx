@@ -1,8 +1,6 @@
-module;
-#include <coroutine>
-#include <filesystem>
 export module bembel.examples.chess:Logic;
 
+import std;
 import bembel;
 import :Board;
 import :Camera;

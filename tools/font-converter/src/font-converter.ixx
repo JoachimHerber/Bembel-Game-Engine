@@ -1,11 +1,10 @@
 ﻿module;
-#include <string_view>
-//
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 export module bembel.tools.font_converter:FontConverter;
 
+import std;
 import :FontFamily;
 import :FontTextureGenerator;
 
@@ -38,7 +37,9 @@ export class FontConverter {
 
     bool save(In<std::filesystem::path>);
 
-    void converSelectedFont(std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces);
+    void converSelectedFont(
+        std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces
+    );
 
     Signal<std::u8string_view> font_family_added_signal;
 

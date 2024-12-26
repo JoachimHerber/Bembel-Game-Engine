@@ -1,5 +1,6 @@
-﻿module;
-module bembel.examples.chess;
+﻿module bembel.examples.chess;
+
+import std;
 
 namespace bembel::examples::chess {
 using namespace bembel::base;
@@ -28,7 +29,7 @@ void CameraControle::update(double dTime) {
     quat yaw   = glm::angleAxis(m_yaw, Y_AXIS);
     m_camera->setOrientation(yaw * pitch);
 
-    vec3 pos = m_offset + m_dist * glm::mat3_cast(yaw * pitch) * Z_AXIS;
+    vec3 pos = m_offset + m_dist * mat3_cast(yaw * pitch) * Z_AXIS;
     m_camera->setPosition(pos);
 }
 

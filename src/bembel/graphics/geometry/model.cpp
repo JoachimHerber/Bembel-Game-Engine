@@ -1,7 +1,6 @@
-﻿module;
-#include <filesystem>
-module bembel.graphics.geometry;
+﻿module bembel.graphics.geometry;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

@@ -1,8 +1,6 @@
-﻿module;
-#include <memory>
-#include <string_view>
-export module bembel.kernel.rendering:TextureAtlas;
+﻿export module bembel.kernel.rendering:TextureAtlas;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 import :Texture;

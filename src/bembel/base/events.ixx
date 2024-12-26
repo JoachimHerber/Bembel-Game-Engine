@@ -1,10 +1,6 @@
-﻿module;
-#include <mutex>
-#include <typeindex>
-#include <unordered_map>
-#include <vector>
-export module bembel.base:Events;
+﻿export module bembel.base:Events;
 
+import std;
 import :Types;
 import :Awaitable;
 

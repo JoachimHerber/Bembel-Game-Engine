@@ -1,10 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <format>
-#include <memory>
-#include <string>
 module bembel.examples.rendering;
+
+import std;
 
 namespace bembel {
 using namespace bembel::graphics;
@@ -48,7 +46,7 @@ bool RenderingExample::init(std::span<std::string_view> args) {
     m_views[1] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 1);
     m_views[2] = std::make_unique<ShadowDebugView>(&shadow_map.getTexture(), 1024, 2);
 
-    m_light = Entity(*m_scene);
+    m_light = Entity(m_scene.get());
     m_light.assign<DirectionalLight>(vec3(3.f, 3.f, 3.f), vec3(0.f, -1.f, 0.f), true);
 
     m_engine.display.getWindow(0)->getViewport(4)->addView(m_views[0].get());

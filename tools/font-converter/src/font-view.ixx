@@ -1,6 +1,6 @@
-﻿module;
-export module bembel.tools.font_converter:FontView;
+﻿export module bembel.tools.font_converter:FontView;
 
+import std;
 import bembel;
 import :FontFamily;
 import :GlyphTextureAtlas;

@@ -1,9 +1,6 @@
-﻿module;
-#include <span>
-#include <string_view>
-#include <memory>
-export module bembel.examples.gm_helper;
+﻿export module bembel.examples.gm_helper;
 
+import std;
 import bembel;
 
 namespace bembel::examples::gm_helper {
@@ -46,14 +43,12 @@ export class Application
     Window* m_secondary_window;
     vec2    m_cursor_pos;
 
-    Camera* m_primary_camera;
-    Camera* m_secondary_camera;
+    std::shared_ptr<Camera> m_primary_camera   = std::make_shared<Camera>();
+    std::shared_ptr<Camera> m_secondary_camera = std::make_shared<Camera>();
 
-    std::shared_ptr<Scene>      m_scene;
-
-    bool  m_dragging_active  = false;
-    float m_primary_zoom     = 1.0f;
-    float m_secondary_zoom   = 5.0f;
+    bool  m_dragging_active = false;
+    float m_primary_zoom    = 1.0f;
+    float m_secondary_zoom  = 5.0f;
 };
 
 } // namespace bembel::examples::gm_helper

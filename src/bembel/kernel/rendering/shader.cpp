@@ -1,10 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <fstream>
-#include <memory>
 module bembel.kernel.rendering;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

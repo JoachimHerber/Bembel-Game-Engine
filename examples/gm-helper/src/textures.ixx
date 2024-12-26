@@ -1,10 +1,6 @@
-module;
-#include <filesystem>
-#include <string>
-#include <string_view>
-#include <vector>
 export module bembel.examples.gm_helper:Texture;
 
+import std;
 import bembel;
 
 namespace bembel::examples::gm_helper {
@@ -32,6 +28,7 @@ export void loadTokenTextrues(In<std::filesystem::path> dir) {
             texture->init(image);
             g_token_names.push_back(stem.string());
             g_token_textures.push_back(std::move(texture));
+            g_token_textures.back().registerAlias(stem.string());
         }
     }
 }

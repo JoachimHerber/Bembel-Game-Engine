@@ -1,10 +1,6 @@
-module;
-#include <any>
-#include <cassert>
-#include <memory>
-#include <string_view>
 export module bembel.kernel.assets:Asset;
 
+import std;
 import bembel.base;
 
 import :AssetHandle;
@@ -98,6 +94,16 @@ class Asset final {
     static auto getContainer() { return g_container.get(); }
     static auto getLoader() { return g_loader.get(); }
 
+    bool registerAlias(std::string_view alias) {
+        if(!g_container) return false;
+        return g_container->registerAssetAlias(m_handel, alias);
+    }
+
+    std::string_view getAlias() const {
+        if(!g_container) return {};
+        return g_container->getAlias(m_handel);
+    }
+
   private:
     bool set(AssetHandle handel, bool incrementRefCount) {
         if(!g_container || !g_loader) return false;
@@ -135,13 +141,15 @@ namespace assets {
         auto  it             = asset_type_map.find(TAssetType::ASSET_TYPE_NAME);
         if(it != asset_type_map.end()) return false; // Asset type has already been registered
 
-        assert(asset_type_map.size() < 0xFFFFLU && "number of asset-types surpasses the maximum");
+        // assert(asset_type_map.size() < 0xFFFFLU && "number of asset-types surpasses the
+        // maximum");
         u16 type_id = asset_type_map.size();
 
         auto container = std::make_unique<AssetContainer<TAssetType>>(type_id);
         auto loader    = std::make_unique<TAssetType::DefaultLoaderType>(container.get());
         std::pair<AssetContainerBase*, AssetLoaderBase*> container_and_loader{
-            container.get(), loader.get()};
+            container.get(), loader.get()
+        };
 
         Asset<TAssetType>::setContainer(std::move(container));
         Asset<TAssetType>::setLoader(std::move(loader));
@@ -156,7 +164,8 @@ namespace assets {
         auto  it             = asset_type_map.find(TAssetType::ASSET_TYPE_NAME);
         if(it != asset_type_map.end()) return false; // Asset type has already been registered
 
-        assert(asset_type_map.size() < 0xFFFFLU && "number of asset-types surpasses the maximum");
+        // assert(asset_type_map.size() < 0xFFFFLU && "number of asset-types surpasses the
+        // maximum");
         u16 type_id = asset_type_map.size();
 
         auto      container = std::make_unique<AssetContainer<TAssetType>>(type_id);
@@ -201,6 +210,7 @@ class Asset<std::any> final {
         set(other.m_handel, true);
         return *this;
     }
+
     template <AssetType T>
     Asset<std::any>& operator=(Asset<T>&& other) {
         set(other.m_handel, false);

@@ -1,7 +1,6 @@
-﻿module;
-#include <filesystem>
-export module bembel.graphics.geometry:RenderQueue;
+﻿export module bembel.graphics.geometry:RenderQueue;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Material;

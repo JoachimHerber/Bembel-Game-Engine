@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <string_view>
-#include <vector>
-export module bembel.graphics.pipeline:LightSource;
+﻿export module bembel.graphics.pipeline:LightSource;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

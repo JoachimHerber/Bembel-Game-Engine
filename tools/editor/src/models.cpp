@@ -1,12 +1,11 @@
 module;
-#include <assimp/postprocess.h> // Post processing flags
+#include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
 #include <assimp/Importer.hpp>
-#include <memory>
-#include <string_view>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :Models;
 import :Meshes;
@@ -23,7 +22,9 @@ void drawModelManagementUI() {
     // m_model_preview.assign<Geometry>(m_models[index]);
 
     static uint selected_model = 0;
-    if(imgui::BeginListBox("##ModelSelection", ImVec2(-FLT_MIN, 5 * imgui::GetTextLineHeightWithSpacing()))) {
+    if(imgui::BeginListBox(
+           "##ModelSelection", ImVec2(-FLT_MIN, 5 * imgui::GetTextLineHeightWithSpacing())
+       )) {
         for(uint i = 0; i < MODELS.size(); ++i) {
             const bool is_selected = (i == selected_model);
             if(imgui::Selectable((char const*)MODELS[i].name.c_str(), is_selected)) {

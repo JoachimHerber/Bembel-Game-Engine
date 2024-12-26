@@ -1,10 +1,6 @@
-﻿module;
-#include <concepts>
-#include <optional>
-#include <span>
-#include <vector>
-export module bembel.gui.core:Widget;
+﻿export module bembel.gui.core:Widget;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Style;

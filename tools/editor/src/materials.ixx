@@ -1,13 +1,10 @@
 module;
 #include <assimp/scene.h>
 
-#include <array>
 #include <assimp/Importer.hpp>
-#include <memory>
-#include <optional>
-#include <string_view>
 export module bembel.tools.editor:Materials;
 
+import std;
 import bembel;
 
 namespace bembel::tools {

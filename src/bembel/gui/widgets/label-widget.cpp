@@ -1,11 +1,6 @@
-﻿module;
-#include <algorithm>
-#include <cassert>
-#include <cctype>
-#include <memory>
-#include <string_view>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -44,9 +39,9 @@ bool LabelWidget::configure(base::xml::Element const* properties) {
 
 uint LabelWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = this->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     float line_heigth = font->getAscender() - font->getDescender();
     float scale = height.value_or(style->getValue(Style::Values::MIN_FONT_SIZE)) / line_heigth;
@@ -56,9 +51,9 @@ uint LabelWidget::getMinWidth(In<std::optional<uint>> height) const {
 
 uint LabelWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = this->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     auto min_font_size = style->getValue(Style::Values::MIN_FONT_SIZE);
     if(m_outline) {
@@ -70,9 +65,9 @@ uint LabelWidget::getMinHeight(In<std::optional<uint>>) const {
 
 void LabelWidget::updateGlyphs() {
     auto style = this->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     m_glyphs.clear();
     m_text_length       = 0;
@@ -93,9 +88,9 @@ void LabelWidget::updateGlyphs() {
 
 void LabelWidget::View::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_label->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     float border = 3;
 

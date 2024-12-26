@@ -1,8 +1,6 @@
-﻿module;
-#include <cstdint>
-#include <ratio>
-export module bembel.physics:Units;
+﻿export module bembel.physics:Units;
 
+import std;
 import bembel.base;
 
 export namespace bembel::physics::units {
@@ -15,11 +13,11 @@ struct Quantity {
 };
 
 // clang-format off
-template <typename T>                 constexpr bool IS_QUANTITY                    = false;
-template <int T, int L, int M>        constexpr bool IS_QUANTITY<Quantity<T, L, M>> = true;
-
-template <typename T>                 constexpr bool IS_RATIO                       = false;
-template <intmax_t Num, intmax_t Den> constexpr bool IS_RATIO<std::ratio<Num, Den>> = true;
+template <typename T>                           constexpr bool IS_QUANTITY                    = false;
+template <int T, int L, int M>                  constexpr bool IS_QUANTITY<Quantity<T, L, M>> = true;
+                                             
+template <typename T>                           constexpr bool IS_RATIO                       = false;
+template <std::intmax_t Num, std::intmax_t Den> constexpr bool IS_RATIO<std::ratio<Num, Den>> = true;
 
 template <typename T> concept QuantityType = IS_QUANTITY<T>;
 template <typename T> concept RatioType    = IS_RATIO<T>;

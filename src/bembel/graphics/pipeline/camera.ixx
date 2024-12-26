@@ -1,5 +1,4 @@
-﻿module;
-export module bembel.graphics.pipeline:Camera;
+﻿export module bembel.graphics.pipeline:Camera;
 
 import bembel.base;
 

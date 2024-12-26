@@ -1,10 +1,8 @@
 module;
 #include <btBulletDynamicsCommon.h>
-
-#include <cassert>
-#include <memory>
 module bembel.physics;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :RigidBody;
@@ -36,7 +34,8 @@ btRigidBody::btRigidBodyConstructionInfo createRigidBodyConstructionInfo(
         btScalar(mass.value),
         motion_state,
         collision_shape->getCollisionShape(),
-        calculateLocalInertia(collision_shape, mass)};
+        calculateLocalInertia(collision_shape, mass)
+    };
 
     info.m_friction = friction;
     return info;
@@ -54,8 +53,8 @@ RigidBody::RigidBody(
   , m_entity{entity}
   , m_motion_state{world->getScene()->getComponent<Transform>(entity)}
   , m_collision_shape{collision_shape}
-  , m_rigid_body{
-        createRigidBodyConstructionInfo(collision_shape, mass, &m_motion_state, friction)} {
+  , m_rigid_body{createRigidBodyConstructionInfo(collision_shape, mass, &m_motion_state, friction)
+    } {
     m_motion_state.setCenterOfMassOffset(
         {center_of_mass_offset.x, center_of_mass_offset.y, center_of_mass_offset.z}
     );

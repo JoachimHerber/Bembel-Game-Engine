@@ -1,10 +1,7 @@
-﻿module;
-#include <filesystem>
-#include <span>
-export module bembel.kernel.display:Events;
+﻿export module bembel.kernel.display:Events;
 
+import std;
 import bembel.base;
-
 import :Window;
 
 namespace bembel::kernel {

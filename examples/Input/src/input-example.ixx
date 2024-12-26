@@ -1,17 +1,13 @@
-﻿module;
-#include <string_view>
-#include <span>
-export module bembel.examples.input;
+﻿export module bembel.examples.input;
 
+import std;
 import bembel;
 
 namespace bembel {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-export class InputExample
-  : public kernel::Application<>
-{
+export class InputExample : public kernel::Application<> {
   public:
     InputExample();
     ~InputExample();

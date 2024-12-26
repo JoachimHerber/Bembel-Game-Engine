@@ -1,11 +1,6 @@
-module;
-#include <chrono>
-#include <cmath>
-#include <coroutine>
-#include <memory>
-#include <string_view>
 module bembel.examples.chess;
 
+import std;
 import bembel;
 import :Board;
 import :Selector;
@@ -19,47 +14,7 @@ using namespace graphics;
 using namespace gui;
 using namespace kernel::i18n::literals;
 
-template <typename TReturn>
-struct Script {
-    struct Promise {
-        using Handle = std::coroutine_handle<Promise>;
-
-        Script              get_return_object() { return Script(Handle::from_promise(*this)); }
-        std::suspend_never  initial_suspend() { return {}; }
-        std::suspend_always final_suspend() noexcept { return {}; }
-        void                return_value(In<TReturn> v) noexcept {
-            value = v;
-            if(parent && !parent.done()) parent.resume();
-        }
-        TReturn await_resume() { return value; }
-        void    unhandled_exception() { logError("Unhandled exception in coroutine\n"); }
-
-        TReturn                 value;
-        std::coroutine_handle<> parent;
-    };
-    struct Awaiter : std::suspend_always {
-        Awaiter(std::coroutine_handle<Promise> handle) : m_handle{handle} {}
-        void await_suspend(std::coroutine_handle<> handle) { m_handle.promise().parent = handle; }
-
-        TReturn await_resume() { return m_handle.promise().value; }
-
-      private:
-        std::coroutine_handle<Promise> m_handle;
-    };
-
-    using promise_type = Promise;
-    using handle_type  = std::coroutine_handle<promise_type>;
-
-    Script(handle_type hndl) : m_hndl(hndl) {}
-    ~Script() { m_hndl.destroy(); }
-
-    Awaiter operator co_await() { return {m_hndl}; }
-
-  private:
-    handle_type m_hndl;
-};
-
-Script<Entity> selectChessPiece(
+Task<Entity> selectChessPiece(
     ChessBoard* board, ChessPlayer cur_player, Camera* camera, Signal<>& button_press
 ) {
     ChessPieceSelector selection{board, cur_player, camera};
@@ -71,7 +26,7 @@ Script<Entity> selectChessPiece(
     co_return chess_piece;
 }
 
-Script<Move> selectMove(ChessBoard* board, Entity pice, Camera* camera, Signal<>& button_press) {
+Task<Move> selectMove(ChessBoard* board, Entity pice, Camera* camera, Signal<>& button_press) {
     std::optional<Move> move;
     {
         MoveSelector selection{board, pice, camera};

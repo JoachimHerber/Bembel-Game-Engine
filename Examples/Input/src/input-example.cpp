@@ -1,14 +1,12 @@
-﻿module;
-#include <format>
-#include <string>
-module bembel.examples.input;
+﻿module bembel.examples.input;
+
+import std;
 
 namespace bembel {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-InputExample::InputExample() : Application() {
-}
+InputExample::InputExample() : Application() {}
 
 InputExample::~InputExample() {}
 

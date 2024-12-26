@@ -1,9 +1,6 @@
-module;
-#include <coroutine>
-#include <mutex>
-#include <vector>
 export module bembel.base:Signal;
 
+import std;
 import :Slot;
 import :Types;
 import :Awaitable;

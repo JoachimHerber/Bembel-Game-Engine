@@ -2,6 +2,7 @@
 #include <glbinding/gl/gl.h>
 module bembel.tools.font_converter;
 
+import std;
 import bembel;
 
 namespace bembel::tools {
@@ -21,7 +22,8 @@ void FontView::setFont(FontFamily* font) {
 
 void FontView::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
     m_texture_gen.getFBO()->blitToBackBuffer(
-        {0, 0}, uvec2{m_texture_gen.getResolution()},
+        {0, 0},
+        uvec2{m_texture_gen.getResolution()},
         viewport_position,
         viewport_position + ivec2(viewport_size)
     );

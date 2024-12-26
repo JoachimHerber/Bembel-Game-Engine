@@ -1,7 +1,6 @@
-module;
-#include <array>
 export module bembel.graphics.pipeline:ShadowMap;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics.geometry;

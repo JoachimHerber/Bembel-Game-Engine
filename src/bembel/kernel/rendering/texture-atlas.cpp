@@ -1,11 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <memory>
-#include <string>
-#include <string_view>
-#include <utility>
-module bembel.kernel.rendering;
+﻿module bembel.kernel.rendering;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

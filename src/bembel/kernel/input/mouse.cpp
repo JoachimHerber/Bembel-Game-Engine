@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-module bembel.kernel.input;
+﻿module bembel.kernel.input;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

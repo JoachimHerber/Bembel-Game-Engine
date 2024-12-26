@@ -1,11 +1,8 @@
 ﻿module;
-#include <array>
-#include <format>
 #include <nlohmann/json.hpp>
-#include <set>
-#include <string>
 module bembel.kernel.i18n;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel::i18n {

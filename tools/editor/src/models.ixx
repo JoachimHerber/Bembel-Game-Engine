@@ -2,11 +2,9 @@ module;
 #include <assimp/scene.h>
 
 #include <assimp/Importer.hpp>
-#include <memory>
-#include <string_view>
-#include <unordered_map>
 export module bembel.tools.editor:Models;
 
+import std;
 import bembel;
 
 namespace bembel::tools {

@@ -1,13 +1,10 @@
 ﻿module;
-#include <filesystem>
-
-#include <memory>
-#include <type_traits>
-//
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 module bembel.tools.font_converter;
+
+import std;
 
 namespace bembel::tools {
 using namespace bembel::base;
@@ -80,7 +77,9 @@ bool FontConverter::save(In<std::filesystem::path> path) {
     return true;
 }
 
-void FontConverter::converSelectedFont(std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces) {
+void FontConverter::converSelectedFont(
+    std::vector<char32_t> characters, std::span<FontFamily::FaceType> faces
+) {
     m_characters = std::move(characters);
     m_faces.fill(false);
     for(auto it : faces) { m_faces[std::to_underlying(it)] = true; }
@@ -90,10 +89,10 @@ void FontConverter::converSelectedFont(std::vector<char32_t> characters, std::sp
 
         m_selected_font_family->parseGlypes(m_characters, faces, max_dist);
 
-        m_texture_atlas.update(m_selected_font_family->getGlyphs(), m_selected_font_family->getUnitsPerEM());
-        m_texture_generator.generateTexture(
-            *m_selected_font_family, m_texture_atlas, max_dist
+        m_texture_atlas.update(
+            m_selected_font_family->getGlyphs(), m_selected_font_family->getUnitsPerEM()
         );
+        m_texture_generator.generateTexture(*m_selected_font_family, m_texture_atlas, max_dist);
     }
 }
 
@@ -111,7 +110,11 @@ void FontConverter::saveGlypes(xml::Element* root) {
             xml::setAttribute(glyph, "extends", extends);
 
             vec4 tex_coord = {
-                it.getTexCoordMin().x, it.getTexCoordMin().y, it.getTexCoordMax().x, it.getTexCoordMax().y};
+                it.getTexCoordMin().x,
+                it.getTexCoordMin().y,
+                it.getTexCoordMax().x,
+                it.getTexCoordMax().y
+            };
             xml::setAttribute(glyph, "texCoord", tex_coord);
         }
         for(auto& sub_glyph : it.getSubGlyphs()) {
@@ -130,7 +133,8 @@ void FontConverter::saveCharMap(xml::Element* root) {
             m_selected_font_family->getGlypheID(c, false, false),
             m_selected_font_family->getGlypheID(c, false, true),
             m_selected_font_family->getGlypheID(c, true, false),
-            m_selected_font_family->getGlypheID(c, true, true)};
+            m_selected_font_family->getGlypheID(c, true, true)
+        };
 
         if(glypes[0] || glypes[1] || glypes[2] || glypes[3]) {
             xml::Element* entry = root->GetDocument()->NewElement("Entry");
@@ -139,7 +143,8 @@ void FontConverter::saveCharMap(xml::Element* root) {
             if(m_faces[0] && glypes[0]) xml::setAttribute(entry, "glyph", u64(glypes[0]));
             if(m_faces[1] && glypes[1]) xml::setAttribute(entry, "glyph_oblique", u64(glypes[1]));
             if(m_faces[2] && glypes[2]) xml::setAttribute(entry, "glyph_bold", u64(glypes[2]));
-            if(m_faces[3] && glypes[3]) xml::setAttribute(entry, "glyph_bold_oblique", u64(glypes[3]));
+            if(m_faces[3] && glypes[3])
+                xml::setAttribute(entry, "glyph_bold_oblique", u64(glypes[3]));
         }
     }
 }

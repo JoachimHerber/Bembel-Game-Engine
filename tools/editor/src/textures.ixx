@@ -1,10 +1,6 @@
-module;
-#include <filesystem>
-#include <memory>
-#include <string_view>
-#include <vector>
 export module bembel.tools.editor:Textures;
 
+import std;
 import bembel;
 
 namespace bembel::tools {

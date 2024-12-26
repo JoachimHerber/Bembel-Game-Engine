@@ -1,9 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <utility>
 export module bembel.graphics.geometry:Renderer;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Material;
@@ -40,8 +39,7 @@ export class GeometryRendererBase {
 
 export class DefaultGeometryRenderer : public GeometryRendererBase {
   public:
-    DefaultGeometryRenderer(VertexAttribMask vertex_format)
-      : GeometryRendererBase{vertex_format} {}
+    DefaultGeometryRenderer(VertexAttribMask vertex_format) : GeometryRendererBase{vertex_format} {}
     ~DefaultGeometryRenderer() = default;
 
     bool setShaders(In<Asset<ShaderProgram>> geom_pass, In<Asset<ShaderProgram>> depth_pass) {

@@ -1,8 +1,6 @@
-﻿module;
-#include <cassert>
-#include <filesystem>
-module bembel.gui.widgets:Tabs;
+﻿module bembel.gui.widgets:Tabs;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -53,7 +51,7 @@ bool TabGroupWidget::configure(xml::Element const* properties) {
 
 uint TabGroupWidget::getMinWidth(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint const bar_height   = uint(style->getValue(Style::Values::TAB_BAR_HEIGHT));
     uint const border_width = uint(style->getValue(Style::Values::INPUT_BORDER_WIDTH));
@@ -72,7 +70,7 @@ uint TabGroupWidget::getMinWidth(In<std::optional<uint>>) const {
 
 uint TabGroupWidget::getMinHeight(In<std::optional<uint>>) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     return 0;
 }
@@ -106,7 +104,7 @@ void TabGroupWidget::onSizeChanged(In<ivec2>, In<ivec2>) {
 
 void TabGroupWidget::updateLayout() {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     if(m_tabs.empty()) return;
 
@@ -144,7 +142,7 @@ void TabGroupWidget::updateLayout() {
 
 void SimpleTabGroupWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_widget->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     int bar_height   = int(style->getValue(Style::Values::TAB_BAR_HEIGHT));
     int border_width = int(style->getValue(Style::Values::INPUT_BORDER_WIDTH));

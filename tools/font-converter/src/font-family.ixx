@@ -1,15 +1,10 @@
 ﻿module;
-#include <array>
-#include <map>
-#include <string_view>
-#include <utility>
-#include <memory>
-//
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 export module bembel.tools.font_converter:FontFamily;
 
+import std;
 import bembel;
 import :GlyphTextureAtlas;
 import :Glyph;

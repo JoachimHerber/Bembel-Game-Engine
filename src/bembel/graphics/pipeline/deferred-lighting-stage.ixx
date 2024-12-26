@@ -1,5 +1,6 @@
 ﻿export module bembel.graphics.pipeline:DeferredLightingStage;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics.geometry;

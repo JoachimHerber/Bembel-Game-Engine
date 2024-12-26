@@ -1,7 +1,6 @@
-﻿module;
-#include <array>
-export module bembel.gui.core:InputHandler;
+﻿export module bembel.gui.core:InputHandler;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

@@ -1,10 +1,6 @@
-﻿module;
-#include <memory>
-#include <string>
-#include <string_view>
-#include <utility>
-module bembel.kernel.text;
+﻿module bembel.kernel.text;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {
@@ -54,7 +50,8 @@ SdfFont::Glyph const& SdfFont::getGlypData(unsigned glyph_index) const {
     if(glyph_index < m_glypths.size()) return m_glypths[glyph_index];
 
     static const Glyph unknow_glyph{
-        0.f, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {}};
+        0.f, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {}
+    };
 
     return unknow_glyph;
 }

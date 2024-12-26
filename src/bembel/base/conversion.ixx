@@ -1,10 +1,6 @@
-﻿module;
-#include <charconv>
-#include <format>
-#include <string>
-#include <string_view>
-export module bembel.base:Conversion;
+﻿export module bembel.base:Conversion;
 
+import std;
 import :Types;
 import :Glm;
 import :Logger;
@@ -163,6 +159,10 @@ std::string toString(In<vec3> value) {
 }
 
 std::string toString(In<vec4> value) {
+    return std::format("{} {} {} {}", value.x, value.y, value.z, value.w);
+}
+
+std::string toString(In<quat> value) {
     return std::format("{} {} {} {}", value.x, value.y, value.z, value.w);
 }
 

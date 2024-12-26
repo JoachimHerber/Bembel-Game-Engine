@@ -1,14 +1,6 @@
-module;
-#include <chrono>
-#include <filesystem>
-#include <memory>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <vector>
 export module bembel.kernel.i18n:String;
 
+import std;
 import bembel.base;
 import :Localisation;
 

@@ -1,8 +1,6 @@
-﻿module;
-#include <string>
-#include <string_view>
-export module bembel.kernel.core:System;
+﻿export module bembel.kernel.core:System;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

@@ -1,10 +1,6 @@
-﻿module;
-#include <memory>
-#include <span>
-#include <string_view>
-#include <vector>
-export module bembel.graphics.pipeline:RenderingPipeline;
+﻿export module bembel.graphics.pipeline:RenderingPipeline;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics.geometry;
@@ -67,8 +63,9 @@ export class RenderingPipeline final {
 
     class View : public Viewport::View {
       public:
-        View(Texture* texture) : m_texture{texture} {//
-          //m_fbo->setColorAttechment(0, texture);
+        View(Texture* texture)
+          : m_texture{texture} { //
+                                 // m_fbo->setColorAttechment(0, texture);
         }
         ~View() = default;
 
@@ -97,7 +94,7 @@ export class RenderingPipeline final {
         vec2 m_relative_view_area_pos  = {0, 0};
         vec2 m_relative_view_area_size = {1, 1};
 
-        //std::unique_ptr<FrameBufferObject> m_fbo = std::make_unique<FrameBufferObject>();
+        // std::unique_ptr<FrameBufferObject> m_fbo = std::make_unique<FrameBufferObject>();
         std::unique_ptr<ShaderProgram> m_shader;
     };
 
@@ -122,6 +119,7 @@ export class RenderingPipeline final {
     void                   setScene(std::shared_ptr<Scene>);
     std::shared_ptr<Scene> getScene() const { return m_scene; }
 
+    void                    setCamera(In<std::shared_ptr<Camera>> camera) { m_camera = camera; }
     std::shared_ptr<Camera> getCamera() const { return m_camera; }
 
     kernel::Texture* getTexture(std::string_view name) const;

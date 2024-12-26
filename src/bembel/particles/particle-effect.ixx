@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-export module bembel.particles:Effects;
+﻿export module bembel.particles:Effects;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

@@ -1,9 +1,6 @@
-﻿module;
-#include <cassert>
-#include <memory>
-#include <string_view>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -44,9 +41,9 @@ uint TextWidget::getMinHeight(In<std::optional<uint>> width) const {
 
 void TextWidget::onTextChanged(In<std::u8string>, In<std::u8string> new_text) {
     auto style = this->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     m_text.setFont(font);
     m_text.parse(new_text);
@@ -69,9 +66,9 @@ void TextWidget::recalculateLayout(In<ivec2> size) {
 
 void TextWidget::View::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_widget->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     vec2 size     = m_widget->size.get();
     vec2 position = m_widget->position.get();

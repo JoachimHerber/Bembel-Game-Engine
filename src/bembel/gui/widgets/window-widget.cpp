@@ -1,8 +1,6 @@
-﻿module;
-#include <cassert>
-#include <filesystem>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -33,7 +31,7 @@ WindowWidget::WindowWidget(In<Widget*> parent) : Widget{parent} {
     m_resize_handle_right.cursor         = Asset<CursorIcon>("HResize");
 
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     m_title_bar.background_color   = style->getColor(Style::Colors::WINDOW_BACKGROUND);
     m_window_area.background_color = style->getColor(Style::Colors::MENU_BAR_BACKGROUND);
 
@@ -66,7 +64,7 @@ bool WindowWidget::configure(xml::Element const* properties) {
 
 uint WindowWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     uint title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
@@ -83,7 +81,7 @@ uint WindowWidget::getMinWidth(In<std::optional<uint>> height) const {
 
 uint WindowWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     uint title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
@@ -114,7 +112,7 @@ void WindowWidget::moveWidget(In<ivec2>, InOut<ivec2> cursor_offset) {
 
 void WindowWidget::onLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     ivec2 position = this->position;
     ivec2 size     = this->size;
@@ -133,7 +131,7 @@ void WindowWidget::onLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset
 
 void WindowWidget::onBottomLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
@@ -158,7 +156,7 @@ void WindowWidget::onBottomLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_
 
 void WindowWidget::onBottomResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = this->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
@@ -178,7 +176,7 @@ void WindowWidget::onBottomResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offs
 
 void WindowWidget::onBottomRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
@@ -206,7 +204,7 @@ void WindowWidget::onBottomRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor
 
 void WindowWidget::onRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     ivec2 pos          = this->position;
@@ -225,7 +223,7 @@ void WindowWidget::onRightResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offse
 
 void WindowWidget::updateLayout() {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);
@@ -258,7 +256,7 @@ void WindowWidget::updateLayout() {
 
 void SimpleWindowWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_window->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float border_width     = style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
     float title_bar_height = style->getValue(Style::Values::WINDOW_TITLE_BAR_HEIGHT);

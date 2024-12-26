@@ -1,9 +1,6 @@
-﻿module;
-#include <span>
-#include <string_view>
-#include <vector>
-module bembel.gui.core;
+﻿module bembel.gui.core;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

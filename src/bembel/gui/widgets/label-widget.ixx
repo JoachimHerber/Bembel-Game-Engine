@@ -1,8 +1,6 @@
-﻿module;
-#include <optional>
-#include <string>
-export module bembel.gui.widgets:Label;
+﻿export module bembel.gui.widgets:Label;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

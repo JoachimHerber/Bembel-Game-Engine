@@ -1,10 +1,6 @@
-module;
-#include <filesystem>
-#include <optional>
-#include <string_view>
-#include <vector>
 module bembel.kernel.assets;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {
@@ -47,6 +43,8 @@ void AssetLocator::addGenericAssetDirectory(In<std::filesystem::path> directory)
 std::optional<std::filesystem::path> AssetLocator::findAssetLocation(
     In<std::string_view> asset_type_name, In<std::filesystem::path> file_name
 ) {
+    if(std::filesystem::exists(file_name)) { return file_name; }
+
     auto it = m_type_specivic_asset_directories.find(asset_type_name);
     if(it != m_type_specivic_asset_directories.end()) {
         if(auto path = locateFile(it->second, file_name)) return path;

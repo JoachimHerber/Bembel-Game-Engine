@@ -1,11 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <memory>
-#include <sstream>
-#include <string_view>
 module bembel.graphics.geometry;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

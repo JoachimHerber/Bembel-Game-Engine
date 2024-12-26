@@ -2,14 +2,11 @@
 #include <glbinding/gl/gl.h>
 #include <glbinding/glbinding.h>
 
-#include <filesystem>
-#include <memory>
-#include <span>
-
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 module bembel.kernel.display;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

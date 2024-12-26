@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-export module bembel.gui.core:Style;
+﻿export module bembel.gui.core:Style;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

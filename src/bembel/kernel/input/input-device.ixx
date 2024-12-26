@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-export module bembel.kernel.input:InputDevice;
+﻿export module bembel.kernel.input:InputDevice;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

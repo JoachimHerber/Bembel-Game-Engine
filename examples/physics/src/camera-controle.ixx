@@ -1,7 +1,6 @@
-﻿module;
-#include <memory>
-export module bembel.examples.physics:CameraControle;
+﻿export module bembel.examples.physics:CameraControle;
 
+import std;
 import bembel;
 
 namespace bembel {

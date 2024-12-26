@@ -1,11 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <memory>
-#include <optional>
-#include <span>
-#include <string_view>
-export module bembel.graphics.geometry:Mesh;
+﻿export module bembel.graphics.geometry:Mesh;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

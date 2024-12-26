@@ -1,5 +1,4 @@
-﻿module;
-module bembel.graphics.pipeline;
+﻿module bembel.graphics.pipeline;
 
 import bembel.base;
 

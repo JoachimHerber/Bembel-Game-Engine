@@ -1,8 +1,6 @@
-﻿module;
-#include <span>
-#include <string>
-#include <variant>
-module bembel.kernel.text;
+﻿module bembel.kernel.text;
+
+import std;
 
 namespace bembel::kernel {
 using namespace bembel::base;

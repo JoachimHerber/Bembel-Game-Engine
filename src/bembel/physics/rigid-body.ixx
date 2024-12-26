@@ -1,12 +1,8 @@
 module;
 #include <btBulletDynamicsCommon.h>
-
-#include <map>
-#include <memory>
-#include <string_view>
-#include <vector>
 export module bembel.physics:RigidBody;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

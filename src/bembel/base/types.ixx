@@ -1,14 +1,8 @@
 module;
-#include <cstdint>
-#include <filesystem>
-#include <format>
-#include <map>
 #include <nlohmann/json.hpp>
-#include <source_location>
-#include <span>
-#include <stdexcept>
-#include <string_view>
 export module bembel.base:Types;
+
+import std;
 
 export namespace bembel::base {
 using u8    = uint8_t;

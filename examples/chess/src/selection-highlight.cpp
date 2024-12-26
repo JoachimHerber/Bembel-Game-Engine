@@ -1,10 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <chrono>
-#include <random>
 module bembel.examples.chess;
 
+import std;
 import bembel;
 
 namespace bembel::examples::chess {
@@ -82,8 +80,8 @@ void SelectionRenderingStage::execute(In<std::span<const RendererPtr>>) {
     m_noise->bind();
 
     auto         cam  = m_pipline.getCamera();
-    glm::mat4    proj = cam->getProjectionMatrix();
-    glm::mat4    view = cam->getViewMatrix();
+    mat4         proj = cam->getProjectionMatrix();
+    mat4         view = cam->getViewMatrix();
     milliseconds ms   = duration_cast<milliseconds>(high_resolution_clock::now() - m_start_time);
     float        time = 0.001f * (ms.count());
 
@@ -101,9 +99,9 @@ void SelectionRenderingStage::execute(In<std::span<const RendererPtr>>) {
 
     GeometryMesh* currentMesh = nullptr;
     for(auto& it : geometry) {
-        glm::mat4 modelView{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+        mat4 modelView{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
-        modelView = view * glm::translate(glm::mat4(1), it.position) * glm::mat4_cast(it.rotation);
+        modelView = view * glm::translate(mat4(1), it.position) * mat4_cast(it.rotation);
 
         m_shader_program->setUniform("uState", int(it.state));
         m_shader_program->setUniform("uModleViewMatrix", modelView);
@@ -168,7 +166,7 @@ bool SelectionRenderingStage::configure(xml::Element const* properties) {
 }
 
 void SelectionRenderingStage::getHiglightedObjects(std::vector<GeometryObject>& objects) {
-    glm::vec3 camPos = m_pipline.getCamera()->getPosition();
+    vec3 camPos = m_pipline.getCamera()->getPosition();
 
     auto const& entitis = m_scene->getEntitys();
 

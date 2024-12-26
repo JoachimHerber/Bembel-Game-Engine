@@ -1,7 +1,6 @@
-module;
-#include <vector>
 export module bembel.examples.chess:Moves;
 
+import std;
 import bembel;
 import :Board;
 
@@ -19,6 +18,6 @@ struct Move {
     ivec2    to;
 };
 
-std::vector<Move> getPossibleMoves(ChessBoard* board , ChessPiece pice);
+std::vector<Move> getPossibleMoves(ChessBoard* board, ChessPiece pice);
 
 } // namespace bembel::examples::chess

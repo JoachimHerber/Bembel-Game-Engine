@@ -1,7 +1,6 @@
-﻿module;
-#include <utility>
-export module bembel.base:ObservableValue;
+﻿export module bembel.base:ObservableValue;
 
+import std;
 import :Signal;
 import :Types;
 

@@ -1,5 +1,4 @@
-﻿module;
-module bembel.particles;
+﻿module bembel.particles;
 
 import bembel.base;
 import bembel.kernel;

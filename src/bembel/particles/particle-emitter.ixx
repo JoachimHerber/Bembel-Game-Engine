@@ -1,9 +1,6 @@
-﻿module;
-#include <chrono>
-#include <memory>
-#include <string>
-export module bembel.particles:Emitter;
+﻿export module bembel.particles:Emitter;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Effects;

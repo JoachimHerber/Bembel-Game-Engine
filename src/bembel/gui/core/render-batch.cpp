@@ -2,6 +2,7 @@
 #include <glbinding/gl/gl.h>
 module bembel.gui.core;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

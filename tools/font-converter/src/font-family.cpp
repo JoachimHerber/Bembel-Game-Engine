@@ -1,10 +1,10 @@
 ﻿module;
-#include <memory>
-//
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 module bembel.tools.font_converter;
+
+import std;
 
 namespace bembel::tools {
 using namespace bembel::base;
@@ -29,7 +29,9 @@ bool FontFamily::addFace(FT_Face const& face) {
     return true;
 }
 
-bool FontFamily::parseGlypes(std::span<char32_t> characters, std::span<FaceType> faces, uint border) {
+bool FontFamily::parseGlypes(
+    std::span<char32_t> characters, std::span<FaceType> faces, uint border
+) {
     m_glyphs.clear();
     m_kerning.clear();
 
@@ -43,7 +45,7 @@ bool FontFamily::parseGlypes(std::span<char32_t> characters, std::span<FaceType>
     for(auto i : faces) {
         if(!m_faces[i]) continue;
 
-        FT_Face  face    = m_faces[i]->face;
+        FT_Face  face     = m_faces[i]->face;
         CharMap& char_map = m_faces[i]->char_map;
         glyph_map.clear();
 

@@ -1,7 +1,6 @@
-﻿module;
-#include <filesystem>
-export module bembel.examples.gui;
+﻿export module bembel.examples.gui;
 
+import std;
 import bembel;
 
 namespace bembel {
@@ -16,11 +15,11 @@ export class GuiExample : public kernel::Application<gui::GuiSystem> {
 
     virtual void update(double time) override;
 
-    void         handleEvent(const kernel::WindowShouldCloseEvent&);
+    void handleEvent(const kernel::WindowShouldCloseEvent&);
 
-    void         onButton1Click();
-    void         onButton2Click();
-    void         onButton3Click();
+    void onButton1Click();
+    void onButton2Click();
+    void onButton3Click();
 
   private:
 };

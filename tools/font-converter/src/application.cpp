@@ -1,8 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <memory>
-#include <string_view>
-module bembel.tools.font_converter;
+﻿module bembel.tools.font_converter;
+
+import std;
 
 namespace bembel::tools {
 using namespace bembel::base;

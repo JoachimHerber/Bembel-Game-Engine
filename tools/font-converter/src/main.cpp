@@ -1,5 +1,4 @@
-﻿#include <string_view>
-#include <vector>
+﻿import std;
 import bembel.tools.font_converter;
 
 int main(int argc, char* argv[]) {

@@ -4,6 +4,7 @@
 #include FT_IMAGE_H
 module bembel.tools.font_converter;
 
+import std;
 import bembel;
 import :FontFamily;
 
@@ -20,7 +21,11 @@ Glyph::Glyph() {}
 Glyph::~Glyph() {}
 
 void Glyph::init(
-    FT_Face& face, uint glyph_index, uint border, std::map<unsigned, int>& glyph_map, std::vector<Glyph>& glyphs
+    FT_Face&                 face,
+    uint                     glyph_index,
+    uint                     border,
+    std::map<unsigned, int>& glyph_map,
+    std::vector<Glyph>&      glyphs
 ) {
     auto error = FT_Load_Glyph(
         face,        /* handle to face object */
@@ -37,15 +42,17 @@ void Glyph::init(
             uint      flags;
             int       pos_x, pos_y;
             FT_Matrix transform;
-            FT_Get_SubGlyph_Info(face->glyph, i, &sub_glyph_index, &flags, &pos_x, &pos_y, &transform);
+            FT_Get_SubGlyph_Info(
+                face->glyph, i, &sub_glyph_index, &flags, &pos_x, &pos_y, &transform
+            );
             dvec2 pos = {pos_x, pos_y};
             m_sub_glyphs.emplace_back(
-                sub_glyph_index, pos, glm::dmat2{transform.xx, transform.xy, transform.yx, transform.yy}
+                sub_glyph_index, pos, dmat2{transform.xx, transform.xy, transform.yx, transform.yy}
             );
         }
-        for(auto& it_sub_glyph : m_sub_glyphs) { 
+        for(auto& it_sub_glyph : m_sub_glyphs) {
             uint sub_glyph_index = it_sub_glyph.index;
-            auto it             = glyph_map.find(sub_glyph_index);
+            auto it              = glyph_map.find(sub_glyph_index);
             if(it != glyph_map.end()) {
                 it_sub_glyph.index = it->second;
             } else {
@@ -77,8 +84,8 @@ void Glyph::init(
         if(!points.empty()) {
             m_extends_min = m_extends_max = points[0].pos;
             for(size_t n = 1; n < points.size(); ++n) {
-                m_extends_min = min(m_extends_min, points[n].pos);
-                m_extends_max = max(m_extends_max, points[n].pos);
+                m_extends_min = glm::min(m_extends_min, points[n].pos);
+                m_extends_max = glm::max(m_extends_max, points[n].pos);
             }
         }
         if(m_extends_min != m_extends_max) {
@@ -143,16 +150,18 @@ void Glyph::addBézier(vec2 const& start, vec2 const& control, vec2 const& end) 
         m_outline.back().emplace_back(point);
     }
 }
-void Glyph::addBézier(vec2 const& start, vec2 const& control1, vec2 const& control2, vec2 const& end) {
+void Glyph::addBézier(
+    vec2 const& start, vec2 const& control1, vec2 const& control2, vec2 const& end
+) {
     for(int i = 0; i < 16; ++i) {
         double f = (i + 1.0f) / (16.0f);
         double g = 1 - f;
 
         vec2 point;
-        point.x =
-            1 * g * g * g * start.x + 3 * g * g * f * control1.x + 3 * g * f * f * control2.x + 1 * f * f * f * end.x;
-        point.y =
-            1 * g * g * g * start.y + 3 * g * g * f * control1.y + 3 * g * f * f * control2.y + 1 * f * f * f * end.y;
+        point.x = 1 * g * g * g * start.x + 3 * g * g * f * control1.x + 3 * g * f * f * control2.x
+                + 1 * f * f * f * end.x;
+        point.y = 1 * g * g * g * start.y + 3 * g * g * f * control1.y + 3 * g * f * f * control2.y
+                + 1 * f * f * f * end.y;
         m_outline.back().push_back(point);
     }
 }

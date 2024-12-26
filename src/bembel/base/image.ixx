@@ -1,8 +1,6 @@
-﻿module;
-#include <vector>
-#include <filesystem>
-export module bembel.base:Image;
+﻿export module bembel.base:Image;
 
+import std;
 import :Types;
 
 export namespace bembel::base {

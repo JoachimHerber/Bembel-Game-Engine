@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-export module bembel.kernel.core:Transform;
+﻿export module bembel.kernel.core:Transform;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 
@@ -31,8 +30,20 @@ export struct Transform {
             xml::getAttribute(properties, "y", position.y);
             xml::getAttribute(properties, "z", position.z);
         }
+        xml::getAttribute(properties, "scale", scale);
+        xml::getAttribute(properties, "rotation", rotation);
 
         container->assignComponent(entity_id, position, scale, rotation);
+        return true;
+    }
+
+    static bool serialize(Transform data, xml::Element* entity) {
+        auto* properties = entity->GetDocument()->NewElement("Transform");
+        entity->InsertEndChild(properties);
+
+        xml::setAttribute(properties, "position", data.position);
+        xml::setAttribute(properties, "scale", data.scale);
+        xml::setAttribute(properties, "rotation", data.rotation);
         return true;
     }
 };

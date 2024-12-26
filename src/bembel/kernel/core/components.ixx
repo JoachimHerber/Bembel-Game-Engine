@@ -1,12 +1,6 @@
-﻿module;
-#include <bit>
-#include <cassert>
-#include <map>
-#include <span>
-#include <string_view>
-#include <utility>
-export module bembel.kernel.core:Components;
+﻿export module bembel.kernel.core:Components;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 
@@ -22,11 +16,11 @@ bool serializeComponent(TComponent const& component, xml::Element* properties) {
             { ComponentMetaData<TComponent>::serialize(c, p) } -> std::convertible_to<bool>;
         } //
     ) {
-        return TComponent::serialize(component, properties);
+        return ComponentMetaData<TComponent>::serialize(component, properties);
     }
     if constexpr( //
         requires(TComponent const& c, xml::Element* p) {
-            { ComponentMetaData<TComponent>::serialize(c, p) } -> std::convertible_to<bool>;
+            { TComponent::serialize(c, p) } -> std::convertible_to<bool>;
         } //
     ) {
         return TComponent::serialize(component, properties);
@@ -193,7 +187,8 @@ class FixedAddressComponentVector : public ComponentContainerBase {
     }
 
     bool serializeComponent(EntityID entity_id, xml::Element* properties) override {
-        if(std::to_underlying(entity_id) >= m_components.size()) return false;
+        if(std::to_underlying(entity_id) >= COMPONENTS_PER_CHUNK * m_components.size())
+            return false;
         return ::bembel::kernel::serializeComponent<T>(operator[](entity_id), properties);
     }
 
@@ -218,12 +213,13 @@ class FixedAddressComponentVector : public ComponentContainerBase {
             constexpr u64 BIT_MASK  = COMPONENTS_PER_CHUNK - 1;
             constexpr u64 BIT_SHIFT = std::bit_width(COMPONENTS_PER_CHUNK);
             return {
-                std::to_underlying(entity_id) >> BIT_SHIFT,
-                std::to_underlying(entity_id) & BIT_MASK};
+                std::to_underlying(entity_id) >> BIT_SHIFT, std::to_underlying(entity_id) & BIT_MASK
+            };
         } else {
             return {
                 std::to_underlying(entity_id) / COMPONENTS_PER_CHUNK,
-                std::to_underlying(entity_id) % COMPONENTS_PER_CHUNK};
+                std::to_underlying(entity_id) % COMPONENTS_PER_CHUNK
+            };
         }
     }
 

@@ -1,5 +1,4 @@
-﻿module;
-export module bembel.kernel.text:TextLayout;
+﻿export module bembel.kernel.text:TextLayout;
 
 import bembel.base;
 import bembel.kernel.assets;

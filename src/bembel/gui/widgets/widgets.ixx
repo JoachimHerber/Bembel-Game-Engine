@@ -1,7 +1,6 @@
-module;
-#include <filesystem>
-#include <string_view>
 export module bembel.gui.widgets;
+
+import std;
 
 export import :Label;
 export import :Button;

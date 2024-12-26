@@ -1,10 +1,6 @@
-﻿module;
-#include <cassert>
-#include <cctype>
-#include <memory>
-#include <string_view>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -42,7 +38,7 @@ bool ButtonWidget::configure(base::xml::Element const* properties) {
 
 uint ButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint margin = 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN);
 
@@ -53,7 +49,7 @@ uint ButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
 
 uint ButtonWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint margin = 2 * style->getValue(Style::Values::BUTTON_TEXT_MARGIN);
 
@@ -64,7 +60,7 @@ uint ButtonWidget::getMinHeight(In<std::optional<uint>> width) const {
 
 void ButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     m_handle.size = new_size;
 
@@ -101,9 +97,9 @@ inline Style::Colors getButtonColor(In<ButtonWidget> widget) {
 
 void SimpleButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_button->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
     auto font = style->getFont();
-    assert(font && "Font is undefined");
+    // assert(font && "Font is undefined");
 
     auto tc = style->getTextureCoords("button");
     if(!tc) { return; }

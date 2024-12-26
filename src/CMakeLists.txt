@@ -12,6 +12,8 @@ add_subdirectory(bembel)
 get_target_property( BEMBEL_SRC_FILES Bembel SOURCES )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/bembel PREFIX "bembel" FILES ${BEMBEL_SRC_FILES})
 
+bembel_Build_Stl_Modules(Bembel)
+
 target_sources(Bembel
     PUBLIC
         ../dependencies/tinyxml2/tinyxml2.h

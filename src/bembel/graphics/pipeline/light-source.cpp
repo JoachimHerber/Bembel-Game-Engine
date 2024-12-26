@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <string_view>
-#include <vector>
-module bembel.graphics.pipeline;
+﻿module bembel.graphics.pipeline;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

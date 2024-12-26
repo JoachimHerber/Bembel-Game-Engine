@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <optional>
-#include <utility>
-export module bembel.gui.core:GroupWidget;
+﻿export module bembel.gui.core:GroupWidget;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Widget;
@@ -30,7 +27,7 @@ export class GroupWidget : public Widget {
 
     template <typename WidgetType, typename... TArgs>
     WidgetType* createChildWidget(TArgs&&... args) {
-        auto widget = std::make_unique<WidgetType>(*(Widget*)this, std::forward<TArgs>(args)...);
+        auto widget     = std::make_unique<WidgetType>((Widget*)this, std::forward<TArgs>(args)...);
         auto widget_ptr = widget.get();
         m_widgets.push_back(std::move(widget));
         m_child_widgets.push_back(widget_ptr);

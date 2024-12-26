@@ -2,6 +2,8 @@
 #include <lodepng/lodepng.h>
 module bembel.base;
 
+import std;
+
 namespace bembel::base {
 
 bool Image::load(In<std::filesystem::path> file, In<bool> invert_y_axis) {

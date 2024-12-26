@@ -1,6 +1,6 @@
-﻿module;
-export module bembel.gui.core:GraphicalUserInterface;
+﻿export module bembel.gui.core:GraphicalUserInterface;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :RenderBatch;

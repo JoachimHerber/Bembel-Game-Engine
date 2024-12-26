@@ -1,8 +1,6 @@
-﻿module;
-#include <cassert>
-#include <filesystem>
-module bembel.gui.core;
+﻿module bembel.gui.core;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 
@@ -15,12 +13,12 @@ void Style::setTextureAtlas(Asset<TextureAtlas> texture_atlas) {
 }
 
 ColorRGBA const& Style::getColor(Colors color) const {
-    assert(color != Colors::COUNT);
+    // assert(color != Colors::COUNT);
     return m_colors[u32(color)];
 }
 
 float Style::getValue(Values value) const {
-    assert(value != Values::COUNT);
+    // assert(value != Values::COUNT);
     return m_values[u64(value)];
 }
 

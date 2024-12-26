@@ -1,10 +1,8 @@
 module;
 #include <btBulletDynamicsCommon.h>
-
-#include <map>
-#include <memory>
 export module bembel.physics:World;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

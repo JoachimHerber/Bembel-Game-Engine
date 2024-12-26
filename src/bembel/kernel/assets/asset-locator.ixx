@@ -1,10 +1,6 @@
-module;
-#include <filesystem>
-#include <optional>
-#include <string_view>
-#include <vector>
 export module bembel.kernel.assets:AssetLocator;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

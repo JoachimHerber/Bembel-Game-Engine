@@ -1,10 +1,6 @@
-module;
-#include <chrono>
-#include <cmath>
-#include <coroutine>
-#include <string_view>
 module bembel.examples.chess;
 
+import std;
 import bembel;
 import :Board;
 import :Moves;

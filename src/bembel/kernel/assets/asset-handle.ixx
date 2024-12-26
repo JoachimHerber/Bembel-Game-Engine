@@ -1,8 +1,6 @@
-module;
-#include <bit>
-#include <limits>
 export module bembel.kernel.assets:AssetHandle;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

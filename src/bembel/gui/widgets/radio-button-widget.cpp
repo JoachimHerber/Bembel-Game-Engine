@@ -1,9 +1,6 @@
-module;
-#include <cassert>
-#include <memory>
-#include <string_view>
 module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;
@@ -31,7 +28,7 @@ bool RadioButtonWidget::configure(xml::Element const* properties) {
 
 uint RadioButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
     uint margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
@@ -41,7 +38,7 @@ uint RadioButtonWidget::getMinWidth(In<std::optional<uint>> height) const {
 
 uint RadioButtonWidget::getMinHeight(In<std::optional<uint>> width) const {
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     uint box_size = style->getValue(Style::Values::CHECKBOX_SIZE);
     uint margin   = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
@@ -55,7 +52,7 @@ void RadioButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
     m_handle.size = new_size;
 
     auto style = getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float box_size   = style->getValue(Style::Values::CHECKBOX_SIZE);
     float box_margin = style->getValue(Style::Values::CHECKBOX_LABLE_MARGIN);
@@ -70,7 +67,7 @@ void RadioButtonWidget::onAction(InteractionHandle::Action action, ivec2) {
 
 void SimpleRadioButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto style = m_widget->getStyle();
-    assert(style && "GUI::Style is undefined");
+    // assert(style && "GUI::Style is undefined");
 
     float size = style->getValue(Style::Values::CHECKBOX_SIZE);
 

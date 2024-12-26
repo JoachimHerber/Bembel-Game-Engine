@@ -1,9 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <memory>
 module bembel.kernel.display;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

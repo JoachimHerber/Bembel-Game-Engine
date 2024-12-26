@@ -1,10 +1,8 @@
 module;
 #include <tinyxml2/tinyxml2.h>
-
-#include <optional>
-#include <string_view>
-#include <type_traits>
 export module bembel.base:Xml;
+
+import std;
 
 import :Types;
 import :ObservableValue;
@@ -33,6 +31,10 @@ bool setAttribute(In<not_null_ptr<Element>> node, In<std::string_view> name, T c
     if constexpr(IsObservableValue<T>::value) {
         node->SetAttribute(name_str.c_str(), conversion::toString(value.get()).c_str());
     } else if constexpr(std::is_same_v<std::remove_cv_t<T>, std::u8string>) {
+        node->SetAttribute(
+            name_str.c_str(), value.c_str()
+        ); // TinyXML-2 assumes all inputs and outputs are UTF-8
+    } else if constexpr(std::is_same_v<std::remove_cv_t<T>, std::string>) {
         node->SetAttribute(
             name_str.c_str(), value.c_str()
         ); // TinyXML-2 assumes all inputs and outputs are UTF-8

@@ -1,8 +1,6 @@
-﻿module;
-#include <string>
-#include <vector>
-export module bembel.graphics.geometry:Model;
+﻿export module bembel.graphics.geometry:Model;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Material;

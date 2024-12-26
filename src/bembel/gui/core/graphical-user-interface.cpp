@@ -1,7 +1,6 @@
-﻿module;
-#include <filesystem>
-module bembel.gui.core;
+﻿module bembel.gui.core;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :RenderBatch;
@@ -13,11 +12,7 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 GraphicalUserInterface::GraphicalUserInterface(In<Engine*> engine)
-  : engine{engine}
-  , view{this}
-  , input{root_widget, view}
-  , renderer{root_widget}
-  , root_widget{this} {
+  : engine{engine}, view{this}, input{root_widget, view}, renderer{root_widget}, root_widget{this} {
     this->root_widget.setName("Root");
 }
 

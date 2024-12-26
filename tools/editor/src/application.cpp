@@ -1,15 +1,11 @@
 ﻿module;
-#include <assimp/postprocess.h> // Post processing flags
-#include <assimp/scene.h>       // Output data structure
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
-#include <assimp/Importer.hpp> // C++ importer interface
-#include <filesystem>
-#include <memory>
-#include <numbers>
-#include <string_view>
-
+#include <assimp/Importer.hpp>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :Textures;
 import :Materials;
@@ -101,7 +97,6 @@ void Application::drawUI(In<ivec2> view_port_pos, In<uvec2> view_port_size) {
         }
         auto dockspace_id = imgui::GetID("MyDockSpace");
         imgui::DockSpace(dockspace_id, {0.0f, 0.0f}, dockspace_flags);
-
     }
     imgui::End();
     imgui::PopStyleVar(3);

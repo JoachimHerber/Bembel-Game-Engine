@@ -1,7 +1,6 @@
-﻿module;
-#include <chrono>
-export module bembel.examples.chess:SelectionHighlight;
+﻿export module bembel.examples.chess:SelectionHighlight;
 
+import std;
 import bembel;
 
 namespace bembel::examples::chess {
@@ -9,7 +8,7 @@ export enum class SelectionHighlight { NO_HIGHLIGHT, SELECTABLE, FOCUSED, SELECT
 } // namespace bembel::examples::chess
 
 export template <>
-struct ::bembel::kernel::ComponentMetaData<bembel::examples::chess::SelectionHighlight>{
+struct ::bembel::kernel::ComponentMetaData<bembel::examples::chess::SelectionHighlight> {
     using Container = ComponentVector<bembel::examples::chess::SelectionHighlight>;
 };
 

@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <optional>
-#include <string>
-export module bembel.particles:System;
+﻿export module bembel.particles:System;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import :Data;

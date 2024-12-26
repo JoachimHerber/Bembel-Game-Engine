@@ -1,10 +1,8 @@
 module;
 #include <glbinding/gl/gl.h>
-
-#include <algorithm>
-#include <memory>
 module bembel.tools.font_converter;
 
+import std;
 import bembel;
 
 namespace bembel::tools {
@@ -29,7 +27,9 @@ void FontTextureGenerator::setResolution(uint resolution) {
     m_texture->setSize(uvec2{resolution});
 }
 
-void FontTextureGenerator::generateTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist) {
+void FontTextureGenerator::generateTexture(
+    FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist
+) {
     glUseProgram(0);
 
     float oldViewport[4];
@@ -79,7 +79,9 @@ bool FontTextureGenerator::saveTexture(std::filesystem::path path) {
     return output.save(path, true);
 }
 
-void FontTextureGenerator::renderToTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist) {
+void FontTextureGenerator::renderToTexture(
+    FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist
+) {
     glDisable(GL_BLEND);
     glLineWidth(1);
     glColor4f(0, 1, 0, 1);
@@ -92,14 +94,17 @@ void FontTextureGenerator::renderToTexture(FontFamily& font, GlyphTextureAtlas& 
         std::sort(
             intersections.begin(),
             intersections.end(),
-            [](Intersection const& first, Intersection const& second) { return first.pos < second.pos; }
+            [](Intersection const& first, Intersection const& second) {
+                return first.pos < second.pos;
+            }
         );
 
         float        start = 0.0f;
         int          c     = 0;
         Intersection last  = {-1, false};
         for(auto& it : intersections) {
-            if(abs(last.pos - it.pos) < 0.01 && last.direction == it.direction) continue; // ignore duplicates.
+            if(abs(last.pos - it.pos) < 0.01 && last.direction == it.direction)
+                continue; // ignore duplicates.
 
             if(c == 0) start = it.pos;
 
@@ -177,7 +182,9 @@ void FontTextureGenerator::drawGlypeOutline(TextureAtlasNode const* node, double
     }
 }
 
-void FontTextureGenerator::getIntersections(int row, TextureAtlasNode const* node, Intersections& intersections) {
+void FontTextureGenerator::getIntersections(
+    int row, TextureAtlasNode const* node, Intersections& intersections
+) {
     if(!node) return; // node doesn't exist
     if(row < node->getPos().y || node->getPos().y + node->getSize().y < row)
         return; // the y-position is outside of the node area
@@ -211,8 +218,7 @@ void FontTextureGenerator::getIntersections(int row, TextureAtlasNode const* nod
                 for(int j = 2; end.y == y && i < n; ++i) end = contour[(i + j) % n];
                 if(prev.y < y && y < end.y) intersections.emplace_back(mapX(start.x), false);
                 if(end.y < y && y < prev.y) intersections.emplace_back(mapX(start.x), true);
-            }
-            else if((start.y < y && y < end.y) || (end.y < y && y < start.y)) {
+            } else if((start.y < y && y < end.y) || (end.y < y && y < start.y)) {
                 vec2 dir = end - start;
 
                 double dist = glm::length(dir);

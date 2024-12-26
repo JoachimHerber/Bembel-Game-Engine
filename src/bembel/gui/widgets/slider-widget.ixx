@@ -1,8 +1,6 @@
-﻿module;
-#include <limits>
-#include <string>
-export module bembel.gui.widgets:Slider;
+﻿export module bembel.gui.widgets:Slider;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

@@ -1,11 +1,8 @@
 module;
-#include <filesystem>
-#include <fstream>
 #include <nlohmann/json.hpp>
-#include <string>
-#include <unordered_map>
 module bembel.kernel.i18n;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

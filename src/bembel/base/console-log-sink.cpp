@@ -3,13 +3,9 @@
 #pragma warning(disable : 5106) // macro redefinition with different parameter names
 
 #include <windows.h>
-
-#include <iostream>
-#include <sstream>
-#include <stacktrace>
-#include <string>
 module bembel.base;
 
+import std;
 import :Logger;
 import :ConsoleLogSink;
 

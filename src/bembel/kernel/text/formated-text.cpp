@@ -1,8 +1,6 @@
-﻿module;
-#include <limits>
-#include <string_view>
-module bembel.kernel.text;
+﻿module bembel.kernel.text;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

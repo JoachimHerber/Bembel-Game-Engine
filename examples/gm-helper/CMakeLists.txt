@@ -2,6 +2,8 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( ProjectSources 
 	src/main.cpp 
+	src/maps.ixx
+	src/initiative.ixx
 	src/application.ixx
 	src/application.cpp
 	src/components.ixx

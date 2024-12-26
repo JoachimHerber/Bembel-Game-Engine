@@ -2,10 +2,9 @@
 #include <assimp/scene.h>
 
 #include <assimp/Importer.hpp>
-#include <string_view>
-
 export module bembel.tools.editor;
 
+import std;
 import bembel;
 
 namespace bembel::tools {
@@ -42,7 +41,7 @@ export class Application
     Window*                 m_main_window;
     GraphicalUserInterface* m_gui;
 
-    RenderingPipeline*     m_pipeline;
+    RenderingPipeline* m_pipeline;
 
     float m_camera_pitch = 0;
     float m_camera_yaw   = 0;

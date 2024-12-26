@@ -56,9 +56,9 @@
               <OverlayTexture file="token_overlay.png" format="GL_SRGB8_ALPHA8"/>
               <MaskTexture file="token_mask.png" format="GL_SRGB8_ALPHA8"/>
             </TokenRenderingStage>
-            <LightingOverlayStage>
+            <CreateLightingOverlayStage>
               <ColorOutput texture="light"/>
-            </LightingOverlayStage>
+            </CreateLightingOverlayStage>
             <ApplyLightingOverlayStage intensity="0.5">
               <Output texture="scene"/>
               <Input texture="light"/>
@@ -89,13 +89,18 @@
               <OverlayTexture file="token_overlay.png" format="GL_SRGB8_ALPHA8"/>
               <MaskTexture file="token_mask.png" format="GL_SRGB8_ALPHA8"/>
             </TokenRenderingStage>
-            <LightingOverlayStage>
+            <CreateLightingOverlayStage>
               <ColorOutput texture="light"/>
-            </LightingOverlayStage>
+            </CreateLightingOverlayStage>
             <ApplyLightingOverlayStage intensity="1.0">
               <Output texture="scene"/>
               <Input texture="light"/>
             </ApplyLightingOverlayStage>
+            <InitiativeOverlayStage size="128 128" margin="8 16 -24">
+              <Output texture="scene"/>
+              <OverlayTexture file="initiative_overlay.png" format="GL_SRGB8_ALPHA8"/>
+              <MaskTexture file="initiative_mask.png" format="GL_SRGB8_ALPHA8"/>
+            </InitiativeOverlayStage>
           </RenderingStages>
           <Views>
             <View texture="scene" window="1" viewport="0" left="0.0" right="1.0" bottom="0.0" top="1.0"/>

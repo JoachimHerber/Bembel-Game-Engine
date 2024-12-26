@@ -1,8 +1,6 @@
-module;
-#include <filesystem>
-#include <string_view>
 export module bembel.kernel.assets:SerialAssetLoader;
 
+import std;
 import :AssetLoader;
 import :AssetContainer;
 import :AssetLocator;
@@ -56,9 +54,9 @@ class SerialAssetLoader : public AssetLoaderBase {
         // we have to load the asset
         std::unique_ptr<AssetType> asset;
         if constexpr(HasStaticLoadAssetMethode<AssetType>) {
-            asset = AssetType::loadAsset(path.value());
+            asset = AssetType::loadAsset(*path);
         } else {
-            std::string const file_path = path.value().string(); // file.c_str() returns a wchar*
+            std::string const file_path = path->string(); // file.c_str() returns a wchar*
             xml::Document     doc;
             if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
                 logError("Failed to load file '{}' \n {}", file_path, doc.ErrorName());
@@ -73,7 +71,10 @@ class SerialAssetLoader : public AssetLoaderBase {
                 }
             }
         }
-        if(!asset) return AssetHandle();
+        if(!asset) {
+            logWarning("failed to load asset-file '{}'", path->string());
+            return AssetHandle();
+        }
 
         handle = m_container->addAsset(std::move(asset));
         m_container->registerAssetAlias(handle, file_name.string());

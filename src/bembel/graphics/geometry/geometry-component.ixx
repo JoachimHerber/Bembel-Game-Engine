@@ -1,5 +1,4 @@
-﻿module;
-export module bembel.graphics.geometry:Components;
+﻿export module bembel.graphics.geometry:Components;
 
 import bembel.base;
 import bembel.kernel;

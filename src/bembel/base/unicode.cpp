@@ -1,8 +1,6 @@
-module;
-#include <array>
-#include <cuchar>
-#include <string_view>
 module bembel.base;
+
+import std;
 
 namespace bembel::base {
 
@@ -126,7 +124,9 @@ bool utf8::insertCodePoint(InOut<std::u8string> str, size_t position, utf8::Code
 
 std::optional<std::string> utf8::toLocaleEncoding(In<std::u8string_view> str) {
     std::mbstate_t state{};
-    char           buffer[MB_LEN_MAX]{};
+
+    static constexpr uint MB_LEN_MAX = 5; // import std; dosn't provide macros
+    char                  buffer[MB_LEN_MAX]{};
 
     std::string out;
     out.reserve(str.size());

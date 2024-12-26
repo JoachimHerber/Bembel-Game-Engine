@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-module bembel.physics;
+﻿module bembel.physics;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

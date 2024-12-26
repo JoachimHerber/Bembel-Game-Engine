@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <string_view>
-#include <utility>
-module bembel.particles;
+﻿module bembel.particles;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics.geometry;

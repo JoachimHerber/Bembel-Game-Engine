@@ -1,8 +1,6 @@
-﻿module;
-#include <optional>
-#include <vector>
-export module bembel.kernel.display:Viewport;
+﻿export module bembel.kernel.display:Viewport;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

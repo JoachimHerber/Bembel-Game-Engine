@@ -1,8 +1,6 @@
-﻿module;
-#include <string>
-#include <string_view>
-export module bembel.base:ConsoleLogSink;
+﻿export module bembel.base:ConsoleLogSink;
 
+import std;
 import :Logger;
 
 namespace bembel::base {

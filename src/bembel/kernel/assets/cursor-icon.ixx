@@ -1,10 +1,9 @@
 ﻿module;
-#include <filesystem>
-#include <string_view>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 export module bembel.kernel.assets:CursorIcon;
 
+import std;
 import bembel.base;
 
 import :SerialAssetLoader;

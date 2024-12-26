@@ -1,8 +1,6 @@
-﻿module;
-#include <mutex>
-#include <queue>
-export module bembel.base:ConcurrentQueue;
+﻿export module bembel.base:ConcurrentQueue;
 
+import std;
 import :Types;
 
 export namespace bembel::base {

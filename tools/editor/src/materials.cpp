@@ -1,16 +1,11 @@
 module;
-#include <assimp/postprocess.h> // Post processing flags
-#include <assimp/scene.h>       // Output data structure
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
-#include <assimp/Importer.hpp> // C++ importer interface
-#include <format>
-#include <memory>
-#include <numbers>
-#include <optional>
-#include <string_view>
-#include <cassert>
+#include <assimp/Importer.hpp>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :Materials;
 import :Textures;
@@ -109,7 +104,7 @@ void getTexture(
 };
 
 void parseMaterial(aiMaterial const* ai_mat) {
-    assert(ai_mat);
+    // assert(ai_mat);
 
     MATERIALS.emplace_back(ai_mat->GetName().C_Str(), std::make_unique<Material>());
 

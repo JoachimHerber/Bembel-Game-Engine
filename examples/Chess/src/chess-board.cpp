@@ -1,9 +1,6 @@
-module;
-#include <cstdlib>
-#include <source_location>
-#include <string_view>
 module bembel.examples.chess:Board;
 
+import std;
 import bembel;
 import :SelectionHighlight;
 
@@ -19,7 +16,8 @@ constexpr std::array<vec3, 6> CHESS_PIECE_CENTER_OF_MASS = {
      {0.0f, 1.1f, 0.0f},
      {0.0f, 1.5f, 0.0f},
      {0.0f, 1.6f, 0.0f},
-     {0.0f, 1.6f, 0.0f}}};
+     {0.0f, 1.6f, 0.0f}}
+};
 
 ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
     m_scene->registerComponentType<Geometry>();
@@ -39,7 +37,7 @@ ChessBoard::ChessBoard(Scene* scene) : m_scene{scene} {
 
     for(unsigned u = 0; u < 8; ++u) {
         for(unsigned v = 0; v < 8; ++v) {
-            Entity tile{*m_scene};
+            Entity tile{m_scene};
 
             tile.assign<Transform>(vec3(2.0f * u, 0, 2.0f * v));
             tile.assign<Geometry>(m_assets.back().models[(u + v) % 2]);
@@ -111,7 +109,7 @@ void ChessBoard::createChessPiece(ivec2 pos, ChessPieceType type, ChessPlayer ow
 
     if(chess_piece) chess_piece.deleteEntity();
 
-    chess_piece = Entity{*m_scene};
+    chess_piece = Entity{m_scene};
 
     chess_piece.assign<Transform>(
         vec3(2.0f * pos.x, 0, 2.0f * pos.y),
@@ -151,7 +149,7 @@ void ChessBoard::movePiece(ivec2 from_pos, ivec2 to_pos) {
         if(chess_piece->type == ChessPieceType::PAWN) {
             if(canCaptureEnPassant(to_pos)) { m_board[from_pos.x][to_pos.y].deleteEntity(); }
 
-            if(!chess_piece->has_moved && abs(from_pos.x - to_pos.x) == 2) {
+            if(!chess_piece->has_moved && std::abs(from_pos.x - to_pos.x) == 2) {
                 m_en_passant = ivec2((from_pos.x + to_pos.x) / 2, to_pos.y);
             } else {
                 m_en_passant.reset();

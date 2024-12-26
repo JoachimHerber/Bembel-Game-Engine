@@ -1,8 +1,6 @@
-module;
-#include <filesystem>
-#include <string_view>
 export module bembel.kernel.assets:AssetLoader;
 
+import std;
 import bembel.base;
 
 import :AssetHandle;

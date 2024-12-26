@@ -1,7 +1,6 @@
-﻿module;
-#include <vector>
-export module bembel.particles:RenderingStage;
+﻿export module bembel.particles:RenderingStage;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics;

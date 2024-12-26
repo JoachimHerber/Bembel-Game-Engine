@@ -1,7 +1,6 @@
-﻿module;
-#include <filesystem>
-module bembel.examples.physics;
+﻿module bembel.examples.physics;
 
+import std;
 import bembel;
 
 namespace bembel::examples::physics {
@@ -48,7 +47,9 @@ bool PhysicsExample::init(std::span<std::string_view>) {
     m_scene->assignComponent<Geometry>(
         m_stirring_stick, Asset<GeometryModel>("stirring_stick"), vec3(4.5f, 0.5f, 0.1f)
     );
-    m_scene->assignComponent<RigidBody>(m_stirring_stick, Asset<CollisionShape>("stirring_stick"), vec3{0, 0, 0}, 0.0_kg);
+    m_scene->assignComponent<RigidBody>(
+        m_stirring_stick, Asset<CollisionShape>("stirring_stick"), vec3{0, 0, 0}, 0.0_kg
+    );
     m_scene->getComponent<RigidBody>(m_stirring_stick)->makeKinematic();
 
     m_engine.initSystems();

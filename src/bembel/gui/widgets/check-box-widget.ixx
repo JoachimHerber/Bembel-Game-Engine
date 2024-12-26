@@ -1,7 +1,6 @@
-module;
-#include <string_view>
 export module bembel.gui.widgets:CheckBox;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

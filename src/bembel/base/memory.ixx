@@ -1,7 +1,6 @@
-module;
-#include <span>
 export module bembel.base:Memory;
 
+import std;
 import :Types;
 
 namespace bembel::base {
@@ -18,7 +17,8 @@ export namespace memory {
     template <typename T>
     std::span<T, ALLOCATION_GRANULARITY / sizeof(T)> alloc() {
         std::span<T, ALLOCATION_GRANULARITY / sizeof(T)> c{
-            (T*)alloc().data(), ALLOCATION_GRANULARITY / sizeof(T)};
+            (T*)alloc().data(), ALLOCATION_GRANULARITY / sizeof(T)
+        };
         return c;
     }
     template <typename T>

@@ -1,8 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <string_view>
-module bembel.kernel.core;
+﻿module bembel.kernel.core;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {
@@ -64,6 +62,43 @@ bool Scene::loadScene(std::filesystem::path file) {
 
     xml::Element const* entities = root->FirstChildElement("Entities");
     for(auto entity : xml::IterateChildElements(entities, "Entity")) { createEntity(entity); }
+    return true;
+}
+
+bool Scene::saveScene(std::filesystem::path file) {
+    std::string const file_path = file.string(); // file.c_str() returns a wchar*
+    xml::Document     doc;
+    // if(doc.LoadFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
+    //     logError("Failed to lode file '{}'\n{}", file_path, doc.ErrorName());
+    //     return false;
+    // }
+
+    auto* root = doc.NewElement("Scene");
+    doc.InsertFirstChild(root);
+
+    auto* assets = doc.NewElement("Assets");
+    root->InsertEndChild(assets);
+
+    // for(auto it : xml::IterateChildElements(assets)) {
+    //     Asset<std::any> asset;
+    //     if(asset.request(it)) { m_assets.push_back(std::move(asset)); }
+    // }
+
+    auto* entities = doc.NewElement("Entities");
+    root->InsertEndChild(entities);
+
+    for(EntityID i = EntityID(0); i < m_entities.size(); ++i) {
+        auto* entity = doc.NewElement("Entity");
+        entities->InsertEndChild(entity);
+        for(auto& [_, component] : m_component_containers) {
+            if(m_entities[u64(i)] & component->getComponentMask())
+                component->serializeComponent(i, entity);
+        }
+    }
+    if(doc.SaveFile(file_path.c_str()) != tinyxml2::XML_SUCCESS) {
+        logError("Failed to save file '{}'\n{}", file_path, doc.ErrorName());
+        return false;
+    }
     return true;
 }
 

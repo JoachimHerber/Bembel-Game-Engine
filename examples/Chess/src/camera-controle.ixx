@@ -1,7 +1,6 @@
-﻿module;
-#include <memory>
-export module bembel.examples.chess:Camera;
+﻿export module bembel.examples.chess:Camera;
 
+import std;
 import bembel;
 
 namespace bembel::examples::chess {

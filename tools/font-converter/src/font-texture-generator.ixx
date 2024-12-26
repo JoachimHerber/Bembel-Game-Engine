@@ -1,7 +1,6 @@
-module;
-#include <filesystem>
 export module bembel.tools.font_converter:FontTextureGenerator;
 
+import std;
 import bembel;
 import :FontFamily;
 import :GlyphTextureAtlas;
@@ -21,9 +20,9 @@ export class FontTextureGenerator {
 
     bool saveTexture(std::filesystem::path path);
 
-    FrameBufferObject* getFBO()        { return m_fbo.get();     }
-    Texture*           getTexture()    { return m_texture.get(); }
-    uint               getResolution() { return m_resolution;    }
+    FrameBufferObject* getFBO() { return m_fbo.get(); }
+    Texture*           getTexture() { return m_texture.get(); }
+    uint               getResolution() { return m_resolution; }
 
   private:
     void renderToTexture(FontFamily& font, GlyphTextureAtlas& texture_atlas, uint max_dist);
@@ -33,7 +32,9 @@ export class FontTextureGenerator {
         double pos;       // the postilions along the ray
         bool   direction; // indicates whether the ray enters or leaves a glyph
 
-        bool operator!=(Intersection other) { return pos != other.pos || direction != other.direction; }
+        bool operator!=(Intersection other) {
+            return pos != other.pos || direction != other.direction;
+        }
     };
     using Intersections = std::vector<Intersection>;
 
@@ -47,7 +48,6 @@ export class FontTextureGenerator {
     std::unique_ptr<Texture>           m_texture;
 
     uint m_resolution = 1024;
-
 };
 
 } // namespace bembel::tools

@@ -1,8 +1,8 @@
 ﻿module;
 #include <GLFW/glfw3.h>
-
-#include <glm/gtc/quaternion.hpp>
 module bembel.examples.physics;
+
+import std;
 
 namespace bembel {
 using namespace bembel::base;

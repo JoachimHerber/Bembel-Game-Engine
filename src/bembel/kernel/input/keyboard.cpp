@@ -1,10 +1,9 @@
 ﻿module;
-#include <array>
-#include <string_view>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 module bembel.kernel.input;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {
@@ -150,8 +149,7 @@ Keyboard::Key* Keyboard::createButton(In<KeyId> key_id, In<Scancode> scancode) {
         if(it != KEY_NAMES.end()) {
             new(key) Button(this, it->second);
         } else {
-            char name[256];
-            sprintf(name, "[KEY%d]", scancode);
+            auto name = std::format("[KEY{}]", scancode);
             new(key) Button(this, name);
         }
     }

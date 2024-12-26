@@ -1,11 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <map>
-#include <memory>
-#include <span>
-#include <string_view>
-export module bembel.kernel.text:SdfFont;
+﻿export module bembel.kernel.text:SdfFont;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 import bembel.kernel.rendering;

@@ -1,10 +1,6 @@
-﻿module;
-#include <filesystem>
-#include <memory>
-#include <string_view>
-#include <vector>
-export module bembel.gui:System;
+﻿export module bembel.gui:System;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

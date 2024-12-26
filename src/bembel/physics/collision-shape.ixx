@@ -1,12 +1,8 @@
 module;
 #include <btBulletDynamicsCommon.h>
-
-#include <array>
-#include <filesystem>
-#include <memory>
-#include <vector>
 export module bembel.physics:CollisionShape;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 

@@ -1,9 +1,6 @@
-﻿module;
-#include <cmath>
-#include <cstdlib>
-#include <string_view>
-module bembel.particles;
+﻿module bembel.particles;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 
@@ -20,7 +17,9 @@ ParticleEffect::ParticleEffect(uint type, uint count, xml::Element const* proper
 }
 
 inline float generateRandomFloat() {
-    return 2.0f * float(rand()) / float(RAND_MAX) - 1.0f;
+    static std::default_random_engine         generator;
+    static std::uniform_int_distribution<int> distribution(-1.f, 1.f);
+    return distribution(generator);
 }
 
 vec3 ParticleEffect::RandomDistribution::get() const {

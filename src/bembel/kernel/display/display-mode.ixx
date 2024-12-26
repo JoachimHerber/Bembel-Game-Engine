@@ -1,9 +1,9 @@
 ﻿module;
-#include <string_view>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 export module bembel.kernel.display:DisplayMode;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel {

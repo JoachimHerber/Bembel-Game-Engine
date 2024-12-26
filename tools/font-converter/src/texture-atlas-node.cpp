@@ -1,6 +1,6 @@
-﻿module;
-#include <memory>
-module bembel.tools.font_converter;
+﻿module bembel.tools.font_converter;
+
+import std;
 
 namespace bembel::tools {
 using bembel::base::ivec2;
@@ -50,11 +50,11 @@ TextureAtlasNode* TextureAtlasNode::getNode(unsigned w, unsigned h) {
     return this->child1->getNode(w, h);
 }
 
-glm::uvec2 const& TextureAtlasNode::getPos() const {
+uvec2 const& TextureAtlasNode::getPos() const {
     return this->pos;
 }
 
-glm::uvec2 const& TextureAtlasNode::getSize() const {
+uvec2 const& TextureAtlasNode::getSize() const {
     return this->size;
 }
 

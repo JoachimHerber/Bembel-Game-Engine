@@ -1,12 +1,9 @@
 module;
 #include <btBulletDynamicsCommon.h>
 // #include <btIDebugDraw.h>
-
-#include <filesystem>
-#include <memory>
-#include <span>
 export module bembel.physics:DebugRenderer;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics;

@@ -1,13 +1,10 @@
 ﻿module;
-#include <map>
-#include <span>
-#include <vector>
-//
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 export module bembel.tools.font_converter:Glyph;
 
+import std;
 import bembel;
 
 namespace bembel::tools {
@@ -20,15 +17,17 @@ export class Glyph {
     Glyph();
     ~Glyph();
 
-    void init(FT_Face& face, uint, uint, std::map<unsigned, int>& glyph_map, std::vector<Glyph>& glyphs);
+    void init(
+        FT_Face& face, uint, uint, std::map<unsigned, int>& glyph_map, std::vector<Glyph>& glyphs
+    );
 
     struct SubGlyph {
-        int        index;
-        dvec2      position;
-        dmat2     transform;
+        int   index;
+        dvec2 position;
+        dmat2 transform;
     };
 
-    std::span<const std::vector<ivec2>> getOutline()   const { return m_outline; }
+    std::span<const std::vector<ivec2>> getOutline() const { return m_outline; }
     std::span<const SubGlyph>           getSubGlyphs() const { return m_sub_glyphs; }
 
     ivec2 getExtendsMin() const { return m_extends_min; }
@@ -63,8 +62,8 @@ export class Glyph {
     void addBézier(vec2 const&, vec2 const&, vec2 const&, vec2 const&);
 
   private:
-    std::vector <std::vector<ivec2>> m_outline;
-    std::vector<SubGlyph>            m_sub_glyphs;
+    std::vector<std::vector<ivec2>> m_outline;
+    std::vector<SubGlyph>           m_sub_glyphs;
 
     ivec2 m_extends_min = {0, 0};
     ivec2 m_extends_max = {0, 0};

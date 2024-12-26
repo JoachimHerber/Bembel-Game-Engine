@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <string_view>
-#include <vector>
-export module bembel.physics:System;
+﻿export module bembel.physics:System;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics;

@@ -1,13 +1,11 @@
 module;
-#include <assimp/postprocess.h> // Post processing flags
+#include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
 #include <assimp/Importer.hpp>
-#include <memory>
-#include <string_view>
-#include <cassert>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :Meshes;
 
@@ -17,7 +15,7 @@ using namespace bembel::gui;
 using namespace bembel::imgui;
 
 bool parseMesh(aiMesh const* ai_mesh) {
-    assert(ai_mesh);
+    // assert(ai_mesh);
 
     if(!ai_mesh->HasFaces()) {
         logError("Mesh '{}' has no Faces", ai_mesh->mName.C_Str());

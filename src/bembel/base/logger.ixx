@@ -1,10 +1,6 @@
-﻿module;
-#include <format>
-#include <memory>
-#include <string>
-#include <string_view>
-export module bembel.base:Logger;
+﻿export module bembel.base:Logger;
 
+import std;
 import :Types;
 
 namespace bembel::base {
@@ -61,20 +57,20 @@ export void logWarning(In<std::string_view> message) {
 }
 
 export template <typename... TArgs>
-void logInfo(In<std::string_view> format, TArgs&&... args) {
-    logInfo(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+void logInfo(std::format_string<TArgs...> format, TArgs&&... args) {
+    logInfo(std::format(format, std::forward<TArgs>(args)...));
 }
 export template <typename... TArgs>
-void logError(In<std::string_view> format, TArgs&&... args) {
-    logError(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+void logError(std::format_string<TArgs...> format, TArgs&&... args) {
+    logError(std::format(format, std::forward<TArgs>(args)...));
 }
 export template <typename... TArgs>
-void logDebug(In<std::string_view> format, TArgs&&... args) {
-    logDebug(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+void logDebug(std::format_string<TArgs...> format, TArgs&&... args) {
+    logDebug(std::format(format, std::forward<TArgs>(args)...));
 }
 export template <typename... TArgs>
-void logWarning(In<std::string_view> format, TArgs&&... args) {
-    logWarning(std::vformat(format, std::make_format_args(std::forward<TArgs>(args)...)));
+void logWarning(std::format_string<TArgs...> format, TArgs&&... args) {
+    logWarning(std::format(format, std::forward<TArgs>(args)...));
 }
 
 export class IndentDefaultLogs {

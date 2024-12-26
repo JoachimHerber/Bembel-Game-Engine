@@ -1,8 +1,6 @@
-﻿module;
-#include <string_view>
-#include <variant>
-export module bembel.kernel.text:Text;
+﻿export module bembel.kernel.text:Text;
 
+import std;
 import bembel.base;
 import :SdfFont;
 

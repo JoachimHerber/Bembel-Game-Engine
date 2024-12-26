@@ -1,10 +1,6 @@
-module;
-#include <functional>
-#include <memory>
-#include <string_view>
-#include <vector>
 export module bembel.base:Factory;
 
+import std;
 import :Types;
 
 export namespace bembel::base {

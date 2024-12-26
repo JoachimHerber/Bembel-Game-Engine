@@ -1,9 +1,6 @@
-module;
-#include <locale>
-#include <set>
-#include <string>
 export module bembel.kernel.i18n:NumberFormat;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel::i18n {

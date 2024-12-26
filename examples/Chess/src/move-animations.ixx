@@ -1,7 +1,6 @@
-module;
-#include <coroutine>
 export module bembel.examples.chess:MoveAnimation;
 
+import std;
 import bembel;
 import :Board;
 import :Moves;

@@ -1,9 +1,6 @@
-﻿module;
-#include <cassert>
-#include <filesystem>
-#include <numbers>
-module bembel.gui.widgets;
+﻿module bembel.gui.widgets;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

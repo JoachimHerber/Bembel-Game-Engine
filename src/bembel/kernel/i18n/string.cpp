@@ -1,10 +1,6 @@
-module;
-#include <filesystem>
-#include <fstream>
-#include <string>
-#include <unordered_map>
 module bembel.kernel.i18n;
 
+import std;
 import bembel.base;
 
 namespace bembel::kernel::i18n {

@@ -1,7 +1,6 @@
-﻿module;
-#include <optional>
-export module bembel.kernel.rendering:FBO;
+﻿export module bembel.kernel.rendering:FBO;
 
+import std;
 import bembel.base;
 import :Texture;
 

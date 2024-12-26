@@ -2,11 +2,9 @@ module;
 #include <assimp/scene.h>
 
 #include <assimp/Importer.hpp>
-#include <memory>
-#include <vector>
-#include <string_view>
 export module bembel.tools.editor:Meshes;
 
+import std;
 import bembel;
 
 namespace bembel::tools {
@@ -21,9 +19,9 @@ export struct MeshData {
     std::vector<graphics::DefaultVertexFormat> vertices;
     std::vector<uint>                          indices;
     struct SubMesh {
-        std::string   name;
-        uint          first_index;
-        uint          num_indices;
+        std::string name;
+        uint        first_index;
+        uint        num_indices;
     };
     std::vector<SubMesh> sub_meshes;
 };

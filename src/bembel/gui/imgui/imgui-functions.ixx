@@ -385,8 +385,8 @@ export using ImGui::DestroyPlatformWindows;
 export using ImGui::FindViewportByID;
 export using ImGui::FindViewportByPlatformHandle;
 
-namespace internal{
-export using ImGui::BeginViewportSideBar;
+namespace internal {
+    export using ImGui::BeginViewportSideBar;
 }
 
-} // namespace bembel::imgui
+} // namespace bembel::gui::imgui

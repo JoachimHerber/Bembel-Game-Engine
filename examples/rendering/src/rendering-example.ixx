@@ -1,7 +1,6 @@
-﻿module;
-#include <string>
-export module bembel.examples.rendering;
+﻿export module bembel.examples.rendering;
 
+import std;
 import bembel;
 import :CameraControle;
 

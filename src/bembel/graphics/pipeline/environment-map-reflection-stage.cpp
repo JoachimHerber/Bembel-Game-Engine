@@ -1,10 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <glm/gtc/matrix_inverse.hpp>
-#include <utility>
 module bembel.graphics.pipeline;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics.geometry;

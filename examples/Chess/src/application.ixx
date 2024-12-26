@@ -1,9 +1,6 @@
-﻿module;
-#include <memory>
-#include <span>
-#include <string_view>
-export module bembel.examples.chess;
+﻿export module bembel.examples.chess;
 
+import std;
 import bembel;
 import :Board;
 import :Camera;

@@ -2,12 +2,10 @@ module;
 #include <Windows.h>
 #include <assimp/scene.h>
 
-#include <array>
 #include <assimp/Importer.hpp>
-#include <filesystem>
-#include <string_view>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :ExortDialog;
 
@@ -43,12 +41,8 @@ std::filesystem::path drawPathSelection() {
 
     auto root = current_folder.root_name();
 
-    if(imgui::BeginChild(
-           "Path",
-           ImVec2(0.0f, 0.0f),
-           ImGuiChildFlags_AutoResizeY)) {
-        imgui::PushStyleVar(imgui::ImGuiStyleVar_ItemSpacing, imgui::ImVec2(0.0f, 0.0f)
-        );
+    if(imgui::BeginChild("Path", ImVec2(0.0f, 0.0f), ImGuiChildFlags_AutoResizeY)) {
+        imgui::PushStyleVar(imgui::ImGuiStyleVar_ItemSpacing, imgui::ImVec2(0.0f, 0.0f));
         if(imgui::BeginCombo(
                "##RootDirSelect",
                (char const*)root.u8string().c_str(),

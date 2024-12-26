@@ -1,7 +1,6 @@
-﻿module;
-#include <string>
-export module bembel.gui.widgets:Window;
+﻿export module bembel.gui.widgets:Window;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.gui.core;

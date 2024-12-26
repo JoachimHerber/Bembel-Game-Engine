@@ -1,11 +1,7 @@
 ﻿module;
-#include <cmath>
-#include <glm/gtc/quaternion.hpp>
-#include <memory>
-#include <string_view>
-#include <utility>
 module bembel.particles;
 
+import std;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics;

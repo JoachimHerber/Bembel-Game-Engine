@@ -1,11 +1,8 @@
 ﻿module;
 #include <glbinding/gl/gl.h>
-
-#include <memory>
-#include <optional>
-#include <string_view>
 export module bembel.kernel.rendering:Texture;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

@@ -1,7 +1,6 @@
-﻿module;
-#include <string_view>
-export module bembel.kernel.input:Mouse;
+﻿export module bembel.kernel.input:Mouse;
 
+import std;
 import bembel.base;
 import bembel.kernel.display;
 
@@ -44,7 +43,8 @@ export class Mouse : public InputDevice {
         {this, "Mouse 13"},
         {this, "Mouse 14"},
         {this, "Mouse 15"},
-        {this, "Mouse 16"}};
+        {this, "Mouse 16"}
+    };
 };
 
 } // namespace bembel::kernel

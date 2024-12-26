@@ -1,15 +1,11 @@
 module;
-#include <assimp/postprocess.h> // Post processing flags
-#include <assimp/scene.h>       // Output data structure
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
-#include <assimp/Importer.hpp> // C++ importer interface
-#include <format>
-#include <memory>
-#include <numbers>
-#include <optional>
-#include <string_view>
+#include <assimp/Importer.hpp>
 module bembel.tools.editor;
 
+import std;
 import bembel;
 import :Scenes;
 import :Materials;
@@ -24,9 +20,9 @@ Scene* createScene(In<std::string_view> name) {
     auto scene = SCENES.back().scene.get();
     scene->registerComponentTypes<Transform, Geometry, DirectionalLight>();
 
-    Entity ligth0 = {*scene, scene->createEntity()};
-    Entity ligth1 = {*scene, scene->createEntity()};
-    Entity ligth2 = {*scene, scene->createEntity()};
+    Entity ligth0 = {scene, scene->createEntity()};
+    Entity ligth1 = {scene, scene->createEntity()};
+    Entity ligth2 = {scene, scene->createEntity()};
 
     ligth0.assign<DirectionalLight>(vec3(0.6f), glm::normalize(vec3(-0.3, -1, -0.2)), true);
     ligth1.assign<DirectionalLight>(vec3(0.3f), glm::normalize(vec3(+0.7, -1, +0.0)), true);
@@ -37,13 +33,13 @@ Scene* createScene(In<std::string_view> name) {
 void initDefaultScenes(RenderingPipeline* pipeline) {
     if(!SCENES.empty()) return;
 
-    auto* mat_preview =createScene("Material Preview");
+    auto* mat_preview   = createScene("Material Preview");
     auto* model_preview = createScene("Model Preview");
 
-    Entity material_preview = {*mat_preview, mat_preview->createEntity()};
+    Entity material_preview = {mat_preview, mat_preview->createEntity()};
     material_preview.assign<Transform>(vec3(0.f, 0.f, 0.f));
 
-    MODEL_PREVIEW_ENTITY = Entity{*model_preview, model_preview->createEntity()};
+    MODEL_PREVIEW_ENTITY = Entity{model_preview, model_preview->createEntity()};
     MODEL_PREVIEW_ENTITY.assign<Transform>(vec3(0.f, 0.f, 0.f));
 
     material_preview.assign<Geometry>(initMaterialPreviewModel());

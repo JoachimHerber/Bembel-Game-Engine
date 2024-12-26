@@ -1,5 +1,4 @@
-#include <string_view>
-#include <vector>
+import std;
 import bembel.examples.physics;
 
 int main(int argc, char* argv[]) {

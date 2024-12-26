@@ -1,8 +1,6 @@
-module;
-#include <array>
-#include <string_view>
 export module bembel.examples.chess:Board;
 
+import std;
 import bembel;
 import :SelectionHighlight;
 
@@ -44,7 +42,7 @@ export class ChessPiece {
 
     operator bool() { return m_board && m_entity; }
 
-    ChessPieceType getType()  { return m_entity.get<ChessPieceComponent>()->type; }
+    ChessPieceType getType() { return m_entity.get<ChessPieceComponent>()->type; }
     ChessPlayer    getOwner() { return m_entity.get<ChessPieceComponent>()->owner; }
     bool           hasMoved() { return m_entity.get<ChessPieceComponent>()->has_moved; }
 

@@ -1,11 +1,6 @@
-module;
-#include <filesystem>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <vector>
 export module bembel.kernel.i18n:Localisation;
 
+import std;
 import bembel.base;
 import :NumberFormat;
 

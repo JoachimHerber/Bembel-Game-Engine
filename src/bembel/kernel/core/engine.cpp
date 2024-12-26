@@ -5,6 +5,7 @@
 #include <Windows.h>
 module bembel.kernel.core;
 
+import std;
 import bembel.base;
 import bembel.kernel.assets;
 

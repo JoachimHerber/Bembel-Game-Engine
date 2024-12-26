@@ -1,11 +1,9 @@
-module;
-#include <limits>
-#include <optional>
-#include <string_view>
 export module bembel.examples.gm_helper:Selection;
 
+import std;
 import bembel;
 import :Components;
+import :Maps;
 
 namespace bembel::examples::gm_helper {
 using namespace base;
@@ -27,7 +25,8 @@ export void updateSelection(In<std::optional<Entity>> entity) {
     }
 }
 
-export void updateSelection(In<vec2> cursor_pos, In<Scene*> scene) {
+export void updateSelection(In<vec2> cursor_pos) {
+    auto& scene                 = getCurrentScene();
     auto* transform_components  = scene->getComponentContainer<Transform>();
     auto* selectable_components = scene->getComponentContainer<Selectable>();
 
@@ -52,9 +51,9 @@ export void updateSelection(In<vec2> cursor_pos, In<Scene*> scene) {
         }
     }
     if(min_dist < 1.0f) {
-        updateSelection(Entity{scene, selected});
+        updateSelection(Entity{scene.get(), selected});
     } else {
-        updateSelection({});
+        updateSelection(std::optional<Entity>{});
     }
 }
 

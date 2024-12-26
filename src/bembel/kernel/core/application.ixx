@@ -1,8 +1,6 @@
-﻿module;
-#include <chrono>
-#include <tuple>
-export module bembel.kernel.core:Application;
+﻿export module bembel.kernel.core:Application;
 
+import std;
 import bembel.base;
 
 import :Engine;

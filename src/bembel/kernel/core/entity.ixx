@@ -1,7 +1,6 @@
-﻿module;
-#include <utility>
-export module bembel.kernel.core:Entity;
+﻿export module bembel.kernel.core:Entity;
 
+import std;
 import bembel.base;
 import :Scene;
 import :Components;
@@ -55,7 +54,7 @@ export class Entity {
 
     template <class ComponentType>
     void remove() {
-        if(m_scene && m_id != EntityID::INVALID) m_scene->removeComponent<ComponentType>(m_id); 
+        if(m_scene && m_id != EntityID::INVALID) m_scene->removeComponent<ComponentType>(m_id);
     }
 
     void deleteEntity() {
