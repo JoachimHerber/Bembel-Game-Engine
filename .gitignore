@@ -2,3 +2,10 @@
 *.dll
 Bembel.ilk
 tools/fonts/*
+assets/*.blend
+assets/*.blend1
+assets/*.obj
+assets/*.mtl
+assets/*.xcf
+examples/gm-helper/maps
+imgui.ini

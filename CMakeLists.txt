@@ -25,6 +25,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API ON)
 
 add_subdirectory(src)
+add_subdirectory(tests)
+
 
 bembel_conditional_add_sub_project(Input "examples/input" "a simple example that show how to handle input in the bembel game engine")
 bembel_conditional_add_sub_project(Rendering "examples/rendering" "rendering example application")
@@ -34,5 +36,5 @@ bembel_conditional_add_sub_project(Physics "examples/physics" "Physics example a
 bembel_conditional_add_sub_project(GMHelper "examples/gm-helper" "GM-Helper example application")
 
 bembel_conditional_add_sub_project(FontConverter "tools/font-converter" "A tool for converting fonts")
-bembel_conditional_add_sub_project(FontConverter "tools/editor" "A tool for converting fonts")
+bembel_conditional_add_sub_project(Editor        "tools/editor" "A tool for converting fonts")
 
