@@ -53,6 +53,7 @@ bool Application::init(std::span<std::string_view> args) {
         m_engine.input.mouse.getButton(0)->press_signal,
         m_frame_sync
     );
+    m_game_logic.resume();
 
     logInfo("Initalizing Camera");
     m_camera->setCameraOffset(vec3(8, 0.5f, 8));

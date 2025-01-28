@@ -13,6 +13,7 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 using namespace kernel::i18n::literals;
+using namespace base::coro;
 
 Task<Entity> selectChessPiece(
     ChessBoard* board, ChessPlayer cur_player, Camera* camera, Signal<>& button_press
@@ -48,7 +49,7 @@ void resetHighlights(ChessBoard* board) {
     }
 }
 
-GameLogicCoroutine runGameLogic(
+Task<void> runGameLogic(
     ChessBoard*  board,
     Camera*      camera,
     LabelWidget* lable,

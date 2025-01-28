@@ -12,21 +12,8 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 
-export struct GameLogicCoroutine {
-    struct promise_type {
-        GameLogicCoroutine get_return_object() {
-            return {.hndl = std::coroutine_handle<promise_type>::from_promise(*this)};
-        }
-        std::suspend_never  initial_suspend() noexcept { return {}; }
-        std::suspend_always final_suspend() noexcept { return {}; }
-        void                return_void() {}
-        void                unhandled_exception() {}
-    };
 
-    std::coroutine_handle<promise_type> hndl;
-};
-
-export GameLogicCoroutine runGameLogic(
+export coro::Task<void> runGameLogic(
     ChessBoard*  board,
     Camera*      camera,
     LabelWidget* lable,

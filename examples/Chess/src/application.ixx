@@ -32,7 +32,7 @@ export class Application
 
     std::shared_ptr<Scene>      m_scene;
     std::unique_ptr<ChessBoard> m_chess_board;
-    GameLogicCoroutine          m_game_logic;
+    coro::Task<void>            m_game_logic;
 
     std::unique_ptr<CameraControle> m_camera;
 

@@ -8,31 +8,33 @@ export namespace bembel::base::coro {
   https://en.cppreference.com/w/cpp/language/coroutines
 
   Coroutine Execution:
-   *    allocate and initialize coroutine state object
-   *    call PromiseObject constructor.
-   *    return_object := promise.get_return_object()
-   *    co_await promise.initial_suspend();
-   *    starts executing the body of the coroutine
-   *    coroutine reaches a suspension point -> return return_object
+    allocate and initialize coroutine state object
+    call PromiseObject constructor.
+    return_object := promise.get_return_object()
+    co_await promise.initial_suspend();
+      if suspend
+        return return_object
+      else
+        starts executing the body of the coroutine
+        coroutine reaches a suspension point -> return return_object
 
   co_await (expr): suspends a coroutine and returns control to the caller.
-    *   awaitable := promise.await_transform(expr) || expr
-      !   await_transform(expr) is not applied to an initial suspend point, a final suspend point,
-  or a yield expression
-    *   awaiter   := awaitable.operator co_await() || operator co_await( awaitable ) || awaitable
-    *   if not awaiter.await_ready()
-      -   suspend := awaiter.await_suspend(handle_of_awaiting_coroutine)
-      -   if suspend == false ->  resumes the current coroutine
-      -   if suspend is coroutine handle -> ret.resume()
-    *   return awaiter.await_resume()
+    awaitable := promise.await_transform(expr) || expr
+    // await_transform(expr) is not applied to an initial suspend point, a final suspend point, or a
+  yield expression awaiter   := awaitable.operator co_await() || operator co_await( awaitable ) ||
+  awaitable if not awaiter.await_ready() suspend
+  awaiter.await_suspend(handle_of_awaiting_coroutine) if suspend == false resumes the current
+  coroutine immediately if suspend is a coroutine_handle suspend.resume() return
+  awaiter.await_resume()
 
-  co_yield: eqivalent to co_await promise.yield_value(expr)
+  co_yield (expr): eqivalent to co_await promise.yield_value(expr)
 
   co_return (expr):
-    *   if expr is void -> promise.return_void()
-    *   else            -> promise.return_value(expr)
-    *   co_awaits promise.final_suspend()
-
+    if expr is void
+      promise.return_void()
+    else
+      promise.return_value(expr)
+    co_await promise.final_suspend()
  */
 
 // clang-format off
@@ -57,7 +59,7 @@ concept PromiseType = requires(T promise) {
 // clang-format on
 
 export template <typename TPromise>
-//    requires requires(TPromise p) {{ p.reference_count };}
+// requires requires(TPromise p) { { p.reference_count } -> std::same_as<std::atomic<u64>>; }
 class CoroutineHandle {
   public:
     CoroutineHandle() = default;
@@ -95,8 +97,23 @@ class CoroutineHandle {
     std::coroutine_handle<TPromise> release() {
         std::coroutine_handle<TPromise> hndl = m_hndl;
         m_hndl                               = nullptr;
-        if(hndl) hndl.promise().decrementReferenceCount();
+        if(hndl) --hndl.promise().reference_count;
         return hndl;
+    }
+
+    std::coroutine_handle<TPromise> get() { return m_hndl; }
+
+    operator bool() const { return m_hndl; }
+
+    void resume() const noexcept {
+        m_hndl.resume();
+    }
+    bool isDone() const noexcept { return m_hndl.done(); }
+
+    TPromise& getPromise() const noexcept { return m_hndl.promise(); }
+
+    static CoroutineHandle fromPromise(TPromise* promis) {
+        return {std::coroutine_handle<TPromise>::from_promise(*promis)};
     }
 
   private:
@@ -107,15 +124,20 @@ export class PromiseBase {
   public:
     friend class DefaultSuspend;
 
+    PromiseBase()          = default;
+    virtual ~PromiseBase() = default;
+
     struct FinalSuspend {
         bool await_ready() const noexcept { return false; }
         template <typename TPromise>
             requires std::is_base_of_v<PromiseBase, TPromise>
-        auto await_suspend(std::coroutine_handle<TPromise> coro) noexcept {
-            auto continuation = coro.promise().continuation.release();
-            auto ref_count    = --coro.promise().reference_count;
-            if(ref_count == 0) coro.destroy();
-            return coro.promise().continuation.release();
+        std::coroutine_handle<> await_suspend(std::coroutine_handle<TPromise> coro) noexcept {
+            std::coroutine_handle<> previous = coro.promise().continuation.release();
+            if(coro.promise().reference_count == 0) coro.destroy();
+            if(previous)
+                return previous;
+            else
+                return std::noop_coroutine();
         }
         void await_resume() noexcept {}
     };
@@ -124,47 +146,147 @@ export class PromiseBase {
     FinalSuspend        final_suspend() const noexcept { return {}; }
 
   public:
-    std::atomic<u64>             reference_count{1};
+    std::atomic<u64>             reference_count{0};
     CoroutineHandle<PromiseBase> continuation{};
 };
 
 export template <typename T>
-class Task;
-
-export template <typename T>
-class TaskPromise : public PromiseBase {
+class Promise : public PromiseBase {
   public:
-    using Handle = std::coroutine_handle<TaskPromise>;
+    using Handle = CoroutineHandle<Promise>;
+    using Result = std::conditional_t<PASS_BY_VALUE<T>::value, T const, T const&>;
 
   public:
-    TaskPromise()                              = default;
-    ~TaskPromise()                             = default;
-    TaskPromise(TaskPromise&&)                 = delete;
-    TaskPromise(TaskPromise const&)            = delete;
-    TaskPromise& operator=(TaskPromise&&)      = delete;
-    TaskPromise& operator=(TaskPromise const&) = delete;
-
-    Task<T> get_return_object();
+    Promise()  = default;
+    ~Promise() = default;
 
     void unhandled_exception() noexcept {
-        m_value.emplace<std::exception_ptr>(std::current_exception());
+        m_data.emplace<std::exception_ptr>(std::current_exception());
     }
+    void rethrowUnhandledExceptions() {
+        if(std::holds_alternative<std::exception_ptr>(m_data))
+            std::rethrow_exception(std::get<std::exception_ptr>(m_data));
+    }
+
     template <typename TValue>
         requires std::is_convertible_v<TValue&&, T>
     void return_value(TValue&& value) noexcept(std::is_nothrow_constructible_v<T, TValue&&>) {
-        m_value.emplace<T>(std::forward<TValue>(value));
+        m_data.emplace<T>(std::forward<TValue>(value));
     }
 
+    template <typename TValue>
+        requires std::is_convertible_v<TValue&&, T>
+    std::suspend_always yield_value(TValue&& value
+    ) noexcept(std::is_nothrow_constructible_v<T, TValue&&>) {
+        m_data.emplace<T>(std::forward<TValue>(value));
+        return {};
+    }
+
+    bool   hasResult() const noexcept { return std::holds_alternative<T>(m_data); }
+    Result getResult() const { return std::get<T>(m_data); }
+
   private:
-    std::variant<std::monostate, T, std::exception_ptr> m_value;
+    std::variant<std::monostate, T, std::exception_ptr> m_data;
 };
 
-export template <typename T>
-class Task {};
+export template <>
+class Promise<void> : public PromiseBase {
+  public:
+    using Handle = CoroutineHandle<Promise>;
+    using Result = void;
 
-export template <typename T>
-Task<T> TaskPromise<T>::get_return_object() {
-    return {Handle::from_promise(*this)};
-}
+  public:
+    Promise()  = default;
+    ~Promise() = default;
+
+    void unhandled_exception() noexcept { m_exception.emplace(std::current_exception()); }
+    void rethrowUnhandledExceptions() {
+        if(m_exception.has_value()) std::rethrow_exception(m_exception.value());
+    }
+
+    void return_void() noexcept {}
+
+  private:
+    std::optional<std::exception_ptr> m_exception;
+};
+
+export template <typename TPromise>
+struct TaskAwaiter {
+    using Handle = TPromise::Handle;
+    using Result = TPromise::Result;
+
+    TaskAwaiter(Handle const& hndl) : m_hndl(hndl) {}
+    bool await_ready() const { return m_hndl.isDone(); }
+    template <typename T>
+        requires std::is_base_of_v<PromiseBase, T>
+    std::coroutine_handle<> await_suspend(std::coroutine_handle<T> other_coro) {
+        m_hndl.getPromise().continuation =
+            std::coroutine_handle<PromiseBase>::from_address(other_coro.address());
+        return m_hndl.get();
+    }
+    Result await_resume() {
+        m_hndl.getPromise().rethrowUnhandledExceptions();
+        if constexpr(std::is_same_v<Result, void>)
+            return;
+        else
+            return m_hndl.getPromise().getResult();
+    }
+    Handle m_hndl;
+};
+
+export template <typename TReturn, typename TPromise = Promise<TReturn>>
+class Task {
+  public:
+    class Promise : public TPromise {
+      public:
+        Task get_return_object() { return {TPromise::Handle::fromPromise(this)}; }
+    };
+    using promise_type = Promise;
+    using Handle       = TPromise::Handle;
+    using Awaiter      = TaskAwaiter<TPromise>;
+    using Result       = TPromise::Result;
+
+    Task()                             = default;
+    Task(Task const& other)            = default;
+    Task(Task&& other)                 = default;
+    Task& operator=(Task const& other) = default;
+    Task& operator=(Task&& other)      = default;
+
+    Task(Handle&& hndl) : m_hndl{std::move(hndl)} {}
+
+    TPromise& getPromise() const { return m_hndl.getPromise(); }
+
+    void resume() const {
+        m_hndl.getPromise().rethrowUnhandledExceptions();
+        m_hndl.resume();
+        m_hndl.getPromise().rethrowUnhandledExceptions();
+    }
+    bool isDone() const { return m_hndl.isDone(); }
+
+    bool hasResult() const
+        requires !std::is_same_v<TReturn, void>
+    {
+        return m_hndl.getPromise().hasResult();
+    }
+    Result getResult() const
+        requires !std::is_same_v<TReturn, void>
+    {
+        return m_hndl.getPromise().getResult();
+    }
+
+    Result operator()() const {
+        resume();
+        return getResult();
+    }
+
+    Awaiter operator co_await() const {
+        m_hndl.getPromise().rethrowUnhandledExceptions();
+        Awaiter awaiter(m_hndl);
+        return awaiter;
+    }
+
+  protected:
+    Handle m_hndl;
+};
 
 } // namespace bembel::base::coro
