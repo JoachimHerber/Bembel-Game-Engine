@@ -11,7 +11,8 @@ export class InputDevice {
     class Button {
       public:
         Button(In<InputDevice*> device, In<std::string_view> name)
-          : m_device{device}, m_name{name} {}
+          : m_device{device}
+          , m_name{name} {}
         ~Button() = default;
 
         InputDevice*     getDevice() const { return m_device; }

@@ -48,7 +48,8 @@ bool Application::init(std::span<std::string_view> args) {
     if(auto path = findExisting(
            {"../assets/textures/tokens", "./assets/textures/tokens", "./textures/tokens", "./tokens"
            }
-       )) {
+       ))
+    {
         loadTokenTextrues(*path);
     } else {
         logError("Couldn't find token textures");
@@ -174,17 +175,17 @@ void Application::handleEvent(In<KeyReleaseEvent> event) {
     };
 
     switch(event.key_id) {
-        case Keyboard::KeyId::F1: setMonitor(0); break;
-        case Keyboard::KeyId::F2: setMonitor(1); break;
-        case Keyboard::KeyId::F3: setMonitor(2); break;
-        case Keyboard::KeyId::F4: setMonitor(3); break;
-        case Keyboard::KeyId::PAGE_UP: updateZoom(+1.f); break;
+        case Keyboard::KeyId::F1:        setMonitor(0); break;
+        case Keyboard::KeyId::F2:        setMonitor(1); break;
+        case Keyboard::KeyId::F3:        setMonitor(2); break;
+        case Keyboard::KeyId::F4:        setMonitor(3); break;
+        case Keyboard::KeyId::PAGE_UP:   updateZoom(+1.f); break;
         case Keyboard::KeyId::PAGE_DOWN: updateZoom(-1.f); break;
-        case Keyboard::KeyId::LEFT: moveSecondaryCamera(-1.f, +0.f); break;
-        case Keyboard::KeyId::RIGHT: moveSecondaryCamera(+1.f, +0.f); break;
-        case Keyboard::KeyId::DOWN: moveSecondaryCamera(+0.f, -1.f); break;
-        case Keyboard::KeyId::UP: moveSecondaryCamera(+0.f, +1.f); break;
-        default: break;
+        case Keyboard::KeyId::LEFT:      moveSecondaryCamera(-1.f, +0.f); break;
+        case Keyboard::KeyId::RIGHT:     moveSecondaryCamera(+1.f, +0.f); break;
+        case Keyboard::KeyId::DOWN:      moveSecondaryCamera(+0.f, -1.f); break;
+        case Keyboard::KeyId::UP:        moveSecondaryCamera(+0.f, +1.f); break;
+        default:                         break;
     }
 }
 
@@ -202,8 +203,8 @@ void Application::handleEvent(In<MouseButtonReleaseEvent> event) {
     if(io.WantCaptureMouse || io.WantCaptureKeyboard) return;
 
     switch(event.button_id) {
-        case 0: m_dragging_active = false; break;
-        case 1: openContextMenu(m_cursor_pos); break;
+        case 0:  m_dragging_active = false; break;
+        case 1:  openContextMenu(m_cursor_pos); break;
         default: break;
     }
 }
@@ -212,14 +213,14 @@ void Application::handleEvent(In<CursorMovedEvent> event) {
     auto& io = imgui::GetIO();
     if(io.WantCaptureMouse || io.WantCaptureKeyboard) return;
 
-    vec4 pos = {event.position.x, event.position.y, 0.f, 1};
-    pos.x /= event.window->getWindowSize().x;
-    pos.y /= event.window->getWindowSize().y;
-    pos.x = (2.f * pos.x - 1.f);
-    pos.y = -(2.f * pos.y - 1.f);
-    pos   = m_primary_camera->getInverseProjectionMatrix() * pos;
-    pos /= pos.w;
-    pos += vec4(m_primary_camera->getPosition(), 0.f);
+    vec4 pos  = {event.position.x, event.position.y, 0.f, 1};
+    pos.x    /= event.window->getWindowSize().x;
+    pos.y    /= event.window->getWindowSize().y;
+    pos.x     = (2.f * pos.x - 1.f);
+    pos.y     = -(2.f * pos.y - 1.f);
+    pos       = m_primary_camera->getInverseProjectionMatrix() * pos;
+    pos      /= pos.w;
+    pos      += vec4(m_primary_camera->getPosition(), 0.f);
 
     if(m_dragging_active) {
         if(auto selected_entity = getSelection()) {
@@ -235,8 +236,8 @@ void Application::handleEvent(In<CursorMovedEvent> event) {
 
             cam_pos.x -= cursor_movement.x;
             cam_pos.y -= cursor_movement.y;
-            cam_pos.x = std::clamp(cam_pos.x, -25.f, 25.f);
-            cam_pos.y = std::clamp(cam_pos.y, -25.f, 25.f);
+            cam_pos.x  = std::clamp(cam_pos.x, -25.f, 25.f);
+            cam_pos.y  = std::clamp(cam_pos.y, -25.f, 25.f);
 
             m_primary_camera->setPosition(cam_pos);
         }
@@ -268,7 +269,7 @@ void Application::handleEvent(In<ScrollEvent> event) {
         }
     }
     m_primary_zoom -= event.y;
-    m_primary_zoom = std::clamp(m_primary_zoom, 1.f, 25.f);
+    m_primary_zoom  = std::clamp(m_primary_zoom, 1.f, 25.f);
     float ar = float(event.window->getWindowSize().x) / float(event.window->getWindowSize().y);
     m_primary_camera->setOrtho(
         -ar * m_primary_zoom, ar * m_primary_zoom, -m_primary_zoom, m_primary_zoom, -1, 1

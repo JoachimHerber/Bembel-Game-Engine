@@ -31,9 +31,9 @@ float SdfFont::getAdvance(std::span<GlyphIndex> glyph_indices) const {
     for(unsigned glyph : glyph_indices) {
         if(glyph >= m_glypths.size()) continue;
 
-        advance += m_glypths[glyph].advance;
-        advance += getKernig(prev_glyph, glyph);
-        prev_glyph = glyph;
+        advance    += m_glypths[glyph].advance;
+        advance    += getKernig(prev_glyph, glyph);
+        prev_glyph  = glyph;
     }
     return advance;
 }
@@ -41,7 +41,9 @@ float SdfFont::getAdvance(std::span<GlyphIndex> glyph_indices) const {
 float SdfFont::getKernig(GlyphIndex left, GlyphIndex right) const {
     auto key = std::make_pair(left, right);
     auto it  = m_kernig.find(key);
-    if(it != m_kernig.end()) { return it->second; }
+    if(it != m_kernig.end()) {
+        return it->second;
+    }
 
     return 0.0f;
 }
@@ -50,7 +52,11 @@ SdfFont::Glyph const& SdfFont::getGlypData(unsigned glyph_index) const {
     if(glyph_index < m_glypths.size()) return m_glypths[glyph_index];
 
     static const Glyph unknow_glyph{
-        0.f, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f}, {}
+        0.f, {0.0f, 0.0f},
+         {0.0f, 0.0f},
+         {0.0f, 0.0f},
+         {0.0f, 0.0f},
+         {}
     };
 
     return unknow_glyph;
@@ -135,7 +141,8 @@ bool SdfFont::readGlyphs(
 
         vec4 ext, tc;
         if(xml::getAttribute(glyphProps, "extends", ext)
-           && base::xml::getAttribute(glyphProps, "texCoord", tc)) {
+           && base::xml::getAttribute(glyphProps, "texCoord", tc))
+        {
             glyph.extents_min    = {ext.x * glyph_scale, ext.y * glyph_scale};
             glyph.extents_max    = {ext.z * glyph_scale, ext.w * glyph_scale};
             glyph.tex_coords_min = {tc.x * uv_scale, tc.y * uv_scale};

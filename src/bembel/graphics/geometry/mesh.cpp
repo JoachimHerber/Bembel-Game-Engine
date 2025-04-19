@@ -28,11 +28,11 @@ void setVertexAttrib(
 
 GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::span<uint>> indices)
   : GeometryMesh{
-      VertexAttribMask::POSITION |   //
-      VertexAttribMask::NORMAL |     //
-      VertexAttribMask::TEX_COORDS | //
-      VertexAttribMask::TANGENT      //
-  } {
+        VertexAttribMask::POSITION |   //
+        VertexAttribMask::NORMAL |     //
+        VertexAttribMask::TEX_COORDS | //
+        VertexAttribMask::TANGENT      //
+    } {
     glBindVertexArray(m_vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -53,13 +53,13 @@ GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::
 
 GeometryMesh::GeometryMesh(In<std::span<RiggedVertexFormat>> vertices, In<std::span<uint>> indices)
   : GeometryMesh{
-      VertexAttribMask::POSITION |     //
-      VertexAttribMask::NORMAL |       //
-      VertexAttribMask::TEX_COORDS |   //
-      VertexAttribMask::TANGENT |      //
-      VertexAttribMask::BONE_INDICES | //
-      VertexAttribMask::BONE_WEIGHTS   //
-  } {
+        VertexAttribMask::POSITION |     //
+        VertexAttribMask::NORMAL |       //
+        VertexAttribMask::TEX_COORDS |   //
+        VertexAttribMask::TANGENT |      //
+        VertexAttribMask::BONE_INDICES | //
+        VertexAttribMask::BONE_WEIGHTS   //
+    } {
     glBindVertexArray(m_vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -144,12 +144,15 @@ std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element cons
     auto indices   = properties->FirstChildElement("Indices");
     auto sub_meshs = properties->FirstChildElement("SubMeshs");
 
-    if(!format || !vertices || !indices || !sub_meshs) { return nullptr; }
+    if(!format || !vertices || !indices || !sub_meshs) {
+        return nullptr;
+    }
 
     unsigned num_vertices;
     unsigned num_indices;
     if(!xml::getAttribute(vertices, "count", num_vertices)
-       || !xml::getAttribute(indices, "count", num_indices)) {
+       || !xml::getAttribute(indices, "count", num_indices))
+    {
         return nullptr;
     }
 
@@ -216,7 +219,9 @@ bool GeometryMesh::parseVertexData(xml::Element const* element, std::vector<floa
 
     std::stringstream string_stream;
     string_stream << element->GetText();
-    for(size_t n = 0; n < _data.size(); ++n) { string_stream >> _data[n]; }
+    for(size_t n = 0; n < _data.size(); ++n) {
+        string_stream >> _data[n];
+    }
     return true;
 }
 
@@ -225,7 +230,9 @@ bool GeometryMesh::parseIndexData(xml::Element const* element, std::vector<unsig
 
     std::stringstream string_stream;
     string_stream << element->GetText();
-    for(size_t n = 0; n < _data.size(); ++n) { string_stream >> _data[n]; }
+    for(size_t n = 0; n < _data.size(); ++n) {
+        string_stream >> _data[n];
+    }
     return true;
 }
 

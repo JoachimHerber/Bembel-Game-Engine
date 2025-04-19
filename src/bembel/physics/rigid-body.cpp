@@ -110,7 +110,8 @@ vec3 RigidBody::getAngularVelocity() {
 }
 
 RigidBodyContainer::RigidBodyContainer(ComponentTypeID type_id, Scene* scene)
-  : ComponentContainerBase{type_id}, m_scene{scene} {}
+  : ComponentContainerBase{type_id}
+  , m_scene{scene} {}
 
 bool RigidBodyContainer::assignComponent(
     EntityID                  entity_id,
@@ -161,7 +162,9 @@ bool RigidBodyContainer::deserializeComponent(EntityID entity_id, xml::Element c
 
 bool RigidBodyContainer::deleteComponent(EntityID entity_id) {
     auto it = m_rigid_bodys.find(entity_id);
-    if(it != m_rigid_bodys.end()) { m_rigid_bodys.erase(it); }
+    if(it != m_rigid_bodys.end()) {
+        m_rigid_bodys.erase(it);
+    }
 
     return true;
 }

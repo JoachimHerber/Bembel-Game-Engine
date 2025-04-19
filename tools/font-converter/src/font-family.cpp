@@ -12,7 +12,8 @@ using namespace bembel::kernel;
 using namespace bembel::gui;
 
 FontFamily::FontFamily(std::string_view name, unsigned int units_per_EM)
-  : m_name{name}, m_units_per_EM{units_per_EM} {}
+  : m_name{name}
+  , m_units_per_EM{units_per_EM} {}
 
 bool FontFamily::addFace(FT_Face const& face) {
     FT_Set_Pixel_Sizes(face, face->units_per_EM / 64, face->units_per_EM / 64);

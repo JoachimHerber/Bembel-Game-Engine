@@ -7,7 +7,7 @@ using namespace bembel::base::coro;
 class CoroTest : public testing::Test {
   protected:
     CoroTest() {
-        //* 
+        //*
         bembel::base::Logger::debug.setLogSink(nullptr);
         //*/
         ALIVE_COROUTINES.clear();
@@ -37,7 +37,7 @@ template <typename T>
 class PromiseMock : public Promise<T, true> {
   public:
     using Handle = CoroutineHandle<PromiseMock<T>>;
-    
+
     PromiseMock() : m_coro_index{CoroTest::onNewCoroutine()} {
         bembel::base::logDebug("Creating Coroutine {}", m_coro_index);
     }
@@ -45,6 +45,7 @@ class PromiseMock : public Promise<T, true> {
         bembel::base::logDebug("Deleting Coroutine {}", m_coro_index);
         CoroTest::onDeleteCoroutine(m_coro_index);
     }
+
   public:
     std::size_t const m_coro_index;
 };
@@ -74,7 +75,9 @@ TEST_F(CoroTest, createCoro) {
 }
 
 TEST_F(CoroTest, deleteCoro) {
-    { auto task = emptyCoro(); }
+    {
+        auto task = emptyCoro();
+    }
 
     EXPECT_EQ(1, ALIVE_COROUTINES.size());
     EXPECT_FALSE(ALIVE_COROUTINES[0]);
@@ -135,7 +138,7 @@ TEST_F(CoroTest, recursiveCoro) {
 }
 
 TEST_F(CoroTest, task_resume_should_rethrow_exeption) {
-    auto coro1= []() -> TaskMock<void> {
+    auto coro1 = []() -> TaskMock<void> {
         throw std::exception("Test");
         co_return;
     };
@@ -152,12 +155,11 @@ TEST_F(CoroTest, task_resume_should_rethrow_exeption) {
 
 TEST_F(CoroTest, TaskAwaiter_should_rethrow_exeption) {
     auto outerCoro = []() -> TaskMock<void> {
-
         auto innerCoro = []() -> TaskMock<void> {
             throw std::exception("Test");
             co_return;
         };
-        
+
         co_await innerCoro();
 
         co_return;

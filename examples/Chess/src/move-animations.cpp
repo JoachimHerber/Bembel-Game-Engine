@@ -50,8 +50,8 @@ coro::Task<> playMoveAnimation( //
         pos.y        = 4 * hop_height * (fract - fract * fract);
 
         chess_piece.setPosition(pos);
-        auto const event = co_await events::Awaiter<AppUpdateEvent>();
-        progress += event.ΔT.count();
+        auto const event  = co_await events::Awaiter<AppUpdateEvent>();
+        progress         += event.ΔT.count();
     }
     chess_piece.setPosition(start + dist * dir);
 

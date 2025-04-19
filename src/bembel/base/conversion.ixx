@@ -47,7 +47,9 @@ bool fromString(In<std::string_view> str, T& value) {
     try {
         char* end;
         value = std::strtof(str.data(), &end);
-    } catch(...) { logError("Can't parse string '{}'", str); }
+    } catch(...) {
+        logError("Can't parse string '{}'", str);
+    }
     // std::string tmp = {str.begin(), str.end()};
     // auto [ptr, ec] = std::from_chars(tmp.data(), tmp.data() + tmp.size(), value);
     // log().info("fromString '{}' -> {}", tmp, value);

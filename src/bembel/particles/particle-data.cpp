@@ -15,10 +15,10 @@ void ParticlePopulation::spawnParticleEffect(
 ) {
     mat3 rotate = mat3_cast(rotation);
     for(size_t n = 0; n < effect.getParticleCount(); ++n) {
-        vec3 pos   = rotate * effect.getRandomStartPosition();
-        vec3 speed = rotate * effect.getRandomStartVelocety();
-        pos *= scale;
-        pos += position;
+        vec3 pos    = rotate * effect.getRandomStartPosition();
+        vec3 speed  = rotate * effect.getRandomStartVelocety();
+        pos        *= scale;
+        pos        += position;
         m_particles.emplace_back(pos, effect.getColor(), speed, 0);
     }
 }
@@ -34,7 +34,7 @@ void ParticlePopulation::update(Seconds time_since_last_update) {
         particle.position += ΔT * particle.velocety;
         particle.velocety += ΔT * m_type->acceleration;
         particle.velocety *= std::pow(1.0f - m_type->drag, ΔT);
-        particle.age += ΔT;
+        particle.age      += ΔT;
 
         m_particles[write_offset++] = particle;
     }
@@ -42,12 +42,16 @@ void ParticlePopulation::update(Seconds time_since_last_update) {
 }
 
 ParticleData::ParticleData(Scene*, std::span<ParticleType> particle_types) {
-    for(auto& type : particle_types) { m_particles.emplace_back(&type); }
+    for(auto& type : particle_types) {
+        m_particles.emplace_back(&type);
+    }
 }
 ParticleData::~ParticleData() {}
 
 void ParticleData::update(Seconds ΔT) {
-    for(auto& particles : m_particles) { particles.update(ΔT); }
+    for(auto& particles : m_particles) {
+        particles.update(ΔT);
+    }
 }
 
 void ParticleData::spawnParticleEffect(

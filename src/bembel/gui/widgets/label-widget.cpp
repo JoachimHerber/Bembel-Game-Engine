@@ -10,7 +10,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 LabelWidget::LabelWidget(In<Widget*> parent, std::u8string_view text)
-  : Widget{parent}, m_text{text} {
+  : Widget{parent}
+  , m_text{text} {
     m_view = std::make_unique<LabelWidget::View>(this);
     updateGlyphs();
 }
@@ -57,8 +58,8 @@ uint LabelWidget::getMinHeight(In<std::optional<uint>>) const {
 
     auto min_font_size = style->getValue(Style::Values::MIN_FONT_SIZE);
     if(m_outline) {
-        float line_heigth = font->getAscender() - font->getDescender();
-        min_font_size *= 1.0 + 0.05 / line_heigth;
+        float line_heigth  = font->getAscender() - font->getDescender();
+        min_font_size     *= 1.0 + 0.05 / line_heigth;
     }
     return uint(min_font_size);
 }
@@ -82,7 +83,7 @@ void LabelWidget::updateGlyphs() {
         if(c != ' ') m_glyphs.emplace_back(index, m_text_length);
 
         m_text_length += font->getAdvance(index);
-        prev_index = index;
+        prev_index     = index;
     }
 }
 

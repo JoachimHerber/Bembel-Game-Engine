@@ -59,7 +59,10 @@ export class CollisionCompoundShape : public CollisionShape {
     void addChildShape(Move<std::unique_ptr<CollisionShape>> shape, In<vec3> pos, In<quat> rot) {
         m_child_shapes.push_back(std::move(shape));
         m_shape.addChildShape(
-            btTransform{btQuaternion{rot.x, rot.y, rot.z, rot.w}, btVector3{pos.x, pos.y, pos.z}},
+            btTransform{
+                btQuaternion{rot.x, rot.y, rot.z, rot.w},
+                btVector3{pos.x, pos.y, pos.z}
+        },
             m_child_shapes.back()->getCollisionShape()
         );
     }

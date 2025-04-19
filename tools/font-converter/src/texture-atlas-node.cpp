@@ -11,7 +11,8 @@ using bembel::kernel::Viewport;
 
 TextureAtlasNode::TextureAtlasNode(unsigned w, unsigned h) : pos(0, 0), size(w, h) {}
 TextureAtlasNode::TextureAtlasNode(unsigned x, unsigned y, unsigned w, unsigned h)
-  : pos(x, y), size(w, h) {}
+  : pos(x, y)
+  , size(w, h) {}
 
 TextureAtlasNode::~TextureAtlasNode() {}
 

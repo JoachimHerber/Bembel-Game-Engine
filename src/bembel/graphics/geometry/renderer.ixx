@@ -23,7 +23,7 @@ export class GeometryRendererBase {
   public:
     GeometryRendererBase(VertexAttribMask vertex_format)
       : m_required_vertex_attributes{vertex_format} {};
-    virtual ~GeometryRendererBase(){};
+    virtual ~GeometryRendererBase() {};
 
     VertexAttribMask getRequiredVertexAttributes() const { return m_required_vertex_attributes; }
 

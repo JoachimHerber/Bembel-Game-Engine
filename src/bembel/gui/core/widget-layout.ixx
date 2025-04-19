@@ -23,7 +23,8 @@ export class LinearWidgetLayout : public Widget::Layout {
     };
 
     LinearWidgetLayout(GroupWidget* group, In<Mode> mode = Mode::ALIGN_TOP)
-      : m_group{group}, m_mode{mode} {}
+      : m_group{group}
+      , m_mode{mode} {}
 
     ~LinearWidgetLayout() = default;
 

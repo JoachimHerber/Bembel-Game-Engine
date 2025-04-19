@@ -22,8 +22,7 @@ GraphicSystem::GraphicSystem(In<Engine*> engine) : System("Graphics"), m_engine{
     Stage::registerStageType<DeferredLightingStage>("DeferredLightingStage");
     Stage::registerStageType<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
 }
-GraphicSystem::~GraphicSystem() {
-}
+GraphicSystem::~GraphicSystem() {}
 
 RenderingPipeline* GraphicSystem::createRenderingPipline() {
     m_pipelines.push_back(std::make_unique<RenderingPipeline>(m_engine->display));

@@ -8,12 +8,12 @@ import :Engine;
 namespace bembel::kernel {
 using namespace bembel::base;
 
-    export struct FrameStartEvent{};
-     export struct AppUpdateEvent {
-        Seconds ΔT;
-    };
-     export struct AppRenderEvent{};
-    export struct FrameEndEvent{};
+export struct FrameStartEvent {};
+export struct AppUpdateEvent {
+    Seconds ΔT;
+};
+export struct AppRenderEvent {};
+export struct FrameEndEvent {};
 
 export template <typename... TSystems>
 class Application {

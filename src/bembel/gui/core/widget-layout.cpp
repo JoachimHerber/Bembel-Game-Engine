@@ -71,8 +71,8 @@ uint LinearWidgetLayout::getMinWidth(In<std::optional<uint>>) const {
     for(auto& row : m_rows) {
         uint min_row_width = row.margin_left + m_margin_left + m_margin_right;
         for(auto& element : row.elements) {
-            uint element_width = std::max(element.min_width, element.widget->getMinWidth());
-            min_row_width += element_width + element.margin_right;
+            uint element_width  = std::max(element.min_width, element.widget->getMinWidth());
+            min_row_width      += element_width + element.margin_right;
         }
         min_width = std::max(min_width, min_row_width);
     }
@@ -104,7 +104,7 @@ void LinearWidgetLayout::updateLayout(In<vec2> size) {
     for(auto& row : m_rows) {
         row.min_width = row.margin_left + m_margin_left + m_margin_right;
         for(auto& element : row.elements) {
-            element.width = std::max(element.min_width, element.widget->getMinWidth());
+            element.width  = std::max(element.min_width, element.widget->getMinWidth());
             row.min_width += element.width + element.margin_right;
 
             if(row.params.mode == Mode::SCALE_TO_FIT) {
@@ -140,8 +140,8 @@ void LinearWidgetLayout::updateLayout(In<vec2> size) {
         case Mode::ALIGN_BOTTON: y -= /***/ (size.y - min_height); break;
         case Mode::ALIGN_CENTER: y -= 0.5 * (size.y - min_height); break;
         case Mode::SPACE_EQUALLY:
-            y_spacing = (size.y - min_height) / float(m_rows.size());
-            y -= 0.5 * y_spacing;
+            y_spacing  = (size.y - min_height) / float(m_rows.size());
+            y         -= 0.5 * y_spacing;
             break;
     }
 
@@ -154,11 +154,11 @@ void LinearWidgetLayout::updateLayout(In<vec2> size) {
         float x         = row.margin_left + m_margin_left;
         float x_spacing = 0;
         switch(row.params.mode) {
-            case Mode::ALIGN_RIGHT: x += /***/ (size.x - row.min_width); break;
+            case Mode::ALIGN_RIGHT:  x += /***/ (size.x - row.min_width); break;
             case Mode::ALIGN_CENTER: x += 0.5 * (size.x - row.min_width); break;
             case Mode::SPACE_EQUALLY:
-                x_spacing = (size.y - min_height) / float(m_rows.size());
-                x += 0.5 * x_spacing;
+                x_spacing  = (size.y - min_height) / float(m_rows.size());
+                x         += 0.5 * x_spacing;
                 break;
         }
 
@@ -203,7 +203,9 @@ void LinearWidgetLayout::scaleElements(std::span<Row::Element> elements, uint wi
         }
         std::swap(unscaled_elements, tmp);
     }
-    for(auto elem : unscaled_elements) { elem->width = elem->rel_width * scale; }
+    for(auto elem : unscaled_elements) {
+        elem->width = elem->rel_width * scale;
+    }
 }
 
 LinearWidgetLayout& LinearWidgetLayout::addSpacing(In<uint> margin) {
@@ -225,7 +227,9 @@ LinearWidgetLayout& LinearWidgetLayout::addRow(In<RowParams> params) {
 LinearWidgetLayout& LinearWidgetLayout::addWidget(
     In<Widget*> widget, In<float> rel_width, In<uint> min_width
 ) {
-    if(!m_rows.empty()) { m_rows.back().elements.emplace_back(widget, rel_width, min_width); }
+    if(!m_rows.empty()) {
+        m_rows.back().elements.emplace_back(widget, rel_width, min_width);
+    }
     return *this;
 }
 

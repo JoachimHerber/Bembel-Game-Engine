@@ -36,7 +36,7 @@ export class PhysicsSystem : public System {
 
   private:
     Engine* m_engine;
-        
+
     std::vector<std::shared_ptr<Scene>> m_scenes;
 };
 

@@ -83,7 +83,8 @@ void drawMeshManagementUI() {
 
     if(imgui::BeginListBox(
            "##MeshSelection", ImVec2(-FLT_MIN, 5 * imgui::GetTextLineHeightWithSpacing())
-       )) {
+       ))
+    {
         for(uint i = 0; i < MESHES.size(); ++i) {
             const bool is_selected = (i == selected_mesh);
             if(imgui::Selectable(MESHES[i].name.c_str(), is_selected)) selected_mesh = i;

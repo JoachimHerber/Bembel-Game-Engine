@@ -105,7 +105,9 @@ void RenderBatch::drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coo
     min += m_position_offset;
     max += m_position_offset;
 
-    if(!clampToViewArea(min, max, tex_coords_min, tex_coords_max)) { return; }
+    if(!clampToViewArea(min, max, tex_coords_min, tex_coords_max)) {
+        return;
+    }
 
     addInstance(
         min,
@@ -155,7 +157,8 @@ bool RenderBatch::clampToViewArea(
     vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max
 ) {
     if(max.x <= m_draw_area_min.x || min.x >= m_draw_area_max.x || max.y <= m_draw_area_min.y
-       || min.y >= m_draw_area_max.y) {
+       || min.y >= m_draw_area_max.y)
+    {
         return false; // outside of draw area
     }
 
@@ -163,20 +166,20 @@ bool RenderBatch::clampToViewArea(
     auto scale = (tex_coords_max - tex_coords_min) / (max - min);
     if(min.x < m_draw_area_min.x) {
         tex_coords_min.x -= (min.x - m_draw_area_min.x) * scale.x;
-        min.x = m_draw_area_min.x;
+        min.x             = m_draw_area_min.x;
     }
     if(min.y < m_draw_area_min.y) {
         tex_coords_min.y -= (min.y - m_draw_area_min.y) * scale.y;
-        min.y = m_draw_area_min.y;
+        min.y             = m_draw_area_min.y;
     }
     // upper
     if(max.x > m_draw_area_max.x) {
         tex_coords_max.x -= (max.x - m_draw_area_max.x) * scale.x;
-        max.x = m_draw_area_max.x;
+        max.x             = m_draw_area_max.x;
     }
     if(max.y > m_draw_area_max.y) {
         tex_coords_max.y -= (max.y - m_draw_area_max.y) * scale.y;
-        max.y = m_draw_area_max.y;
+        max.y             = m_draw_area_max.y;
     }
     return min != max;
 }

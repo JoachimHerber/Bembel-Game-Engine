@@ -17,7 +17,8 @@ using namespace bembel::kernel;
 class MotionState : public btMotionState {
   public:
     MotionState(In<Transform*> t, In<vec3> center_of_mass_offset = {0, 0, 0})
-      : m_transform{t}, m_center_of_mass_offset{center_of_mass_offset} {}
+      : m_transform{t}
+      , m_center_of_mass_offset{center_of_mass_offset} {}
 
     virtual void getWorldTransform(btTransform& center_of_mass_world_trans) const {
         quat rot    = m_transform->rotation;

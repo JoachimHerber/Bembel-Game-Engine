@@ -39,7 +39,10 @@ bool Image::load(In<std::filesystem::path> file, In<bool> invert_y_axis) {
     return true;
 }
 
-bool Image::save(In<std::filesystem::path> file, In<bool> invert_y_axis) {
+bool Image::save( //
+    In<std::filesystem::path> file,
+    In<bool>                  invert_y_axis
+) {
     std::string const          file_path = file.string(); // file.c_str() returns a wchar*
     std::vector<unsigned char> data;
     unsigned int const&        n = m_num_channels;
@@ -60,9 +63,9 @@ bool Image::save(In<std::filesystem::path> file, In<bool> invert_y_axis) {
 
     unsigned error = 0;
     switch(n) {
-        case 1: error = lodepng::encode(file_path, data, w, h, LCT_GREY); break;
-        case 3: error = lodepng::encode(file_path, data, w, h, LCT_RGB); break;
-        case 4: error = lodepng::encode(file_path, data, w, h, LCT_RGBA); break;
+        case 1:  error = lodepng::encode(file_path, data, w, h, LCT_GREY); break;
+        case 3:  error = lodepng::encode(file_path, data, w, h, LCT_RGB); break;
+        case 4:  error = lodepng::encode(file_path, data, w, h, LCT_RGBA); break;
         default: return false;
     }
 

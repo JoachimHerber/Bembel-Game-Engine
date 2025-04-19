@@ -80,7 +80,9 @@ void Application::handleEvent(In<WindowShouldCloseEvent> event) {
 void Application::handleEvent(In<WindowResizeEvent> event) {}
 
 void Application::handleEvent(In<FileDropEvent> event) {
-    for(auto& file_path : event.files) { m_converter->loade(file_path); }
+    for(auto& file_path : event.files) {
+        m_converter->loade(file_path);
+    }
 
     auto font_family = m_converter->getFontFamily();
 
@@ -185,14 +187,17 @@ void Application::onSaveFont() {
 
     std::filesystem::path path = u8"fonts/";
     path.append(font->getName());
-    if(!m_converter->save(path)) {}
+    if(!m_converter->save(path)) {
+    }
 }
 
 void Application::onSelectFontFamily(int index) {
     m_converter->setSelectedFontFamily(index);
 
     auto font_family = m_converter->getFontFamily();
-    if(!font_family) { return; }
+    if(!font_family) {
+        return;
+    }
     for(int i = 0; i < 4; ++i) {
         if(font_family->hasFace(FontFamily::FaceType(i))) {
             m_widgets.type_face_selection[i]->enable();

@@ -165,7 +165,8 @@ void parseMaterial(aiMaterial const* ai_mat) {
         mat.asset->setEmission(vec3(color.r, color.g, color.b));
     }
     if(ai_mat->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS
-       || ai_mat->Get(AI_MATKEY_BASE_COLOR, color) == AI_SUCCESS) {
+       || ai_mat->Get(AI_MATKEY_BASE_COLOR, color) == AI_SUCCESS)
+    {
         mat.asset->setBaseColor(vec3(color.r, color.g, color.b));
     }
     if(ai_mat->Get(AI_MATKEY_ROUGHNESS_FACTOR, value) == AI_SUCCESS) { //
@@ -186,7 +187,8 @@ void drawMaterialManagementUI() {
 
     if(!imgui::BeginListBox(
            "Material", ImVec2(-FLT_MIN, 5 * imgui::GetTextLineHeightWithSpacing())
-       )) {
+       ))
+    {
         return;
     }
     for(uint i = 0; i < MATERIALS.size(); ++i) {

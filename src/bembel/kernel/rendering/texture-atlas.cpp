@@ -29,7 +29,9 @@ std::unique_ptr<TextureAtlas> TextureAtlas::loadAsset(std::filesystem::path file
         return nullptr;
     }
     auto atlas = TextureAtlas::createAsset(root);
-    if(!atlas) { logError("Failed to create TextureAtlas from file '{}'", file_path); }
+    if(!atlas) {
+        logError("Failed to create TextureAtlas from file '{}'", file_path);
+    }
     return std::move(atlas);
 }
 
@@ -38,7 +40,9 @@ std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(xml::Element const* prop
 
     std::string_view file = properties->Attribute("texture");
     auto             path = AssetLocator::getInstance().findAssetLocation<Texture>(file);
-    if(!path) { return nullptr; }
+    if(!path) {
+        return nullptr;
+    }
 
     auto atlas = std::make_unique<TextureAtlas>();
     atlas->loadTexture(path.value());
@@ -47,7 +51,8 @@ std::unique_ptr<TextureAtlas> TextureAtlas::createAsset(xml::Element const* prop
         vec2        min;
         vec2        max;
         if(xml::getAttribute(it, "name", name) && xml::getAttribute(it, "min", min)
-           && xml::getAttribute(it, "max", max)) {
+           && xml::getAttribute(it, "max", max))
+        {
             atlas->setEntry(name, min, max);
         }
     }

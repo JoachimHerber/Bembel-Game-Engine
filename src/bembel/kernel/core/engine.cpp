@@ -10,8 +10,8 @@ import bembel.base;
 import bembel.kernel.assets;
 
 extern "C" {
-__declspec(dllexport) DWORD NvOptimusEnablement                = 1;
-__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+__declspec(dllexport) DWORD NvOptimusEnablement                  = 1;
+__declspec(dllexport) int   AmdPowerXpressRequestHighPerformance = 1;
 }
 
 namespace bembel::kernel {

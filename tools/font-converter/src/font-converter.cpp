@@ -50,7 +50,8 @@ bool FontConverter::save(In<std::filesystem::path> path) {
     FontFamily* font = getFontFamily();
     if(!font) return false;
 
-    if(!m_texture_generator.saveTexture(path)) {}
+    if(!m_texture_generator.saveTexture(path)) {
+    }
 
     bembel::base::xml::Document doc;
 
@@ -82,7 +83,9 @@ void FontConverter::converSelectedFont(
 ) {
     m_characters = std::move(characters);
     m_faces.fill(false);
-    for(auto it : faces) { m_faces[std::to_underlying(it)] = true; }
+    for(auto it : faces) {
+        m_faces[std::to_underlying(it)] = true;
+    }
 
     if(m_selected_font_family) {
         uint max_dist = 2 * m_selected_font_family->getUnitsPerEM() / 10;

@@ -25,7 +25,9 @@ concept SerialLoadableAsset = true;
 
 template <typename AssetType>
 concept HasStaticLoadAssetMethode = requires(std::filesystem::path p) {
-    { AssetType::loadAsset(p) } -> std::convertible_to<std::unique_ptr<AssetType>>;
+    {
+        AssetType::loadAsset(p)
+    } -> std::convertible_to<std::unique_ptr<AssetType>>;
 };
 
 export template <SerialLoadableAsset AssetType>
@@ -131,7 +133,9 @@ class SerialAssetLoader : public AssetLoaderBase {
     void deleteUnusedAssets() override {
         std::vector<AssetHandle> unusedAssets;
         m_container->getUnusedAssets(unusedAssets);
-        for(auto hndl : unusedAssets) { m_container->removeAsset(hndl); }
+        for(auto hndl : unusedAssets) {
+            m_container->removeAsset(hndl);
+        }
     }
 
   protected:

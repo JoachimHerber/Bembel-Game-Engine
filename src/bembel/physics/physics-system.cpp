@@ -19,7 +19,6 @@ PhysicsSystem::PhysicsSystem(In<Engine*> engine) //
     CollisionShape::initFactory();
 }
 
-PhysicsSystem::~PhysicsSystem() {
-}
+PhysicsSystem::~PhysicsSystem() {}
 
 } // namespace bembel::physics

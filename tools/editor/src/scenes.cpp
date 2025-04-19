@@ -90,9 +90,9 @@ class CameraControl {
     }
     void handleEvent(In<CursorMovedEvent> event) {
         if(m_cursor_pos) {
-            vec2 cursor_movement = vec2(event.position) - *m_cursor_pos;
-            m_yaw -= 0.01f * cursor_movement.x;
-            m_pitch -= 0.01f * cursor_movement.y;
+            vec2 cursor_movement  = vec2(event.position) - *m_cursor_pos;
+            m_yaw                -= 0.01f * cursor_movement.x;
+            m_pitch              -= 0.01f * cursor_movement.y;
             if(m_pitch <= -1.5f) m_pitch = -1.5f;
             if(m_pitch >= +1.5f) m_pitch = +1.5f;
         }

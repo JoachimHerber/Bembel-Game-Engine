@@ -28,7 +28,8 @@ bool ParticleRenderingStage::configure(xml::Element const* properties) {
 
     std::string depth_texture, color_texture;
     if(!xml::getAttribute(properties, "Depth", "texture", depth_texture)
-       || !xml::getAttribute(properties, "Output", "texture", color_texture)) {
+       || !xml::getAttribute(properties, "Output", "texture", color_texture))
+    {
         return true;
     }
     setDepthOutputTexture(depth_texture);

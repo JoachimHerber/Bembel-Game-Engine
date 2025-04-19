@@ -13,11 +13,11 @@ class Awaitable {
     Awaitable()                 = default;
     Awaitable(Awaitable const&) = delete;
     Awaitable(Awaitable&&)      = delete;
-    
+
     constexpr bool await_ready() const noexcept { return false; }
     template <typename T>
         requires std::is_base_of_v<PromiseBase, T>
-    void           await_suspend(std::coroutine_handle<T> handle) {
+    void await_suspend(std::coroutine_handle<T> handle) {
         std::scoped_lock lock{m_mutex};
         m_awaiting_coroutines.emplace_back(handle);
     }
@@ -55,11 +55,10 @@ class Awaitable<void> {
     Awaitable(Awaitable const&) = delete;
     Awaitable(Awaitable&&)      = delete;
 
-
     constexpr bool await_ready() const noexcept { return false; }
     template <typename T>
         requires std::is_base_of_v<PromiseBase, T>
-    void           await_suspend(std::coroutine_handle<T> handle) {
+    void await_suspend(std::coroutine_handle<T> handle) {
         std::scoped_lock lock{m_mutex};
         m_awaiting_coroutines.emplace_back(handle);
     }
@@ -88,4 +87,4 @@ class Awaitable<void> {
     std::vector<CoroHndl> m_coroutines_to_notify;
 };
 
-} // end of namespace bembel::base
+} // namespace bembel::base::coro

@@ -58,8 +58,8 @@ void PhysicsExample::cleanup() {
 }
 
 void PhysicsExample::handleEvent(In<AppUpdateEvent> event) {
-    m_rotation += event.ΔT.count();
-    Transform* transform = m_scene->getComponent<Transform>(m_stirring_stick);
+    m_rotation           += event.ΔT.count();
+    Transform* transform  = m_scene->getComponent<Transform>(m_stirring_stick);
     if(transform) transform->rotation = quat(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }
 

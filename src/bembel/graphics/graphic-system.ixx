@@ -55,7 +55,7 @@ export class GraphicSystem : public kernel::System {
     void configurePipelines(xml::Element const*);
 
   private:
-    Engine*                        m_engine;
+    Engine*                           m_engine;
     EventHandlerGuard<AppRenderEvent> m_guard = {this};
 
     std::vector<RendererPtr>          m_renderer;

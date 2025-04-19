@@ -10,7 +10,9 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 ViewportWidget::ViewportWidget(In<Widget*> parent, Viewport* viewport, Camera* camera)
-  : Widget{parent}, m_viewport{viewport}, m_camera{camera} {
+  : Widget{parent}
+  , m_viewport{viewport}
+  , m_camera{camera} {
     m_interaction_handles.push_back(&m_handle);
 
     this->size.change_signal.bind(this, &ViewportWidget::onSizeOrPositionChanged);
@@ -44,7 +46,8 @@ bool ViewportWidget::configure(xml::Element const* properties) {
     Widget::configure(properties);
     uint windowId, viewportId;
     if(xml::getAttribute(properties, "window", windowId)
-       && xml::getAttribute(properties, "viewport", viewportId)) {
+       && xml::getAttribute(properties, "viewport", viewportId))
+    {
         auto window = getGUI()->engine->display.getWindow(windowId);
 
         if(window && window->getViewports().size() > viewportId) {
@@ -86,7 +89,7 @@ void ViewportWidget::onSizeOrPositionChanged(In<ivec2>, In<ivec2>) {
 void ViewportWidget::onHandleMoved(In<ivec2> cursor, InOut<ivec2> movement) {
     if(!m_camera) return;
 
-    m_camera_yaw -= 0.004f * movement.x;
+    m_camera_yaw   -= 0.004f * movement.x;
     m_camera_pitch += 0.002f * movement.y;
     if(m_camera_pitch <= -1.5f) m_camera_pitch = -1.5f;
     if(m_camera_pitch >= +1.5f) m_camera_pitch = +1.5f;

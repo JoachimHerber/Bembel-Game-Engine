@@ -17,8 +17,8 @@ export class Widget {
   public:
     class View {
       public:
-        View(){};
-        virtual ~View(){};
+        View() {};
+        virtual ~View() {};
 
         virtual void draw(InOut<RenderBatchInterface> batch) = 0;
     };

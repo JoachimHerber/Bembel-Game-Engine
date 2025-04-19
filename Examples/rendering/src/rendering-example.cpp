@@ -12,11 +12,9 @@ using namespace bembel::kernel::i18n::literals;
 using namespace bembel::gui;
 using namespace ::gl;
 
-RenderingExample::RenderingExample() {
-}
+RenderingExample::RenderingExample() {}
 
-RenderingExample::~RenderingExample() {
-}
+RenderingExample::~RenderingExample() {}
 
 bool RenderingExample::init(std::span<std::string_view> args) {
     if(!m_engine.loadSetting("rendering/config.xml")) return false;
@@ -72,12 +70,13 @@ void RenderingExample::cleanup() {
 }
 
 void RenderingExample::handleEvent(In<AppUpdateEvent>) {
-    //m_camera->update(time);
+    // m_camera->update(time);
 
     static constexpr float RAD_TO_DEG = 180 / 3.14159265359;
 
     static bembel::kernel::i18n::String<float, float, float, float, float> text = {
-        "examples.rendering.camara_transform_label"_i18n};
+        "examples.rendering.camara_transform_label"_i18n
+    };
 
     m_label->setText(text(
         m_camera->getPosition().x,
@@ -110,7 +109,9 @@ void RenderingExample::updateLightDir(In<i64>) {
 }
 
 RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolution, uint layer)
-  : m_texture{texture}, m_resolution{resolution}, m_layer{layer} {
+  : m_texture{texture}
+  , m_resolution{resolution}
+  , m_layer{layer} {
     Asset<Shader> vert;
     if(!vert.request("shadow-debug-view.vert")) return;
 
@@ -120,7 +121,9 @@ RenderingExample::ShadowDebugView::ShadowDebugView(Texture* texture, u64 resolut
     m_shader = std::make_unique<ShaderProgram>();
     m_shader->attachShader(std::move(vert));
     m_shader->attachShader(std::move(frag));
-    if(!m_shader->link()) { m_shader.reset(); }
+    if(!m_shader->link()) {
+        m_shader.reset();
+    }
 }
 
 void RenderingExample::ShadowDebugView::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {

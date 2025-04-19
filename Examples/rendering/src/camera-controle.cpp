@@ -37,7 +37,7 @@ void CameraControle::handleEvent(const CursorMovedEvent& event) {
     m_cursor_pos         = event.position;
 
     if(m_move) {
-        m_yaw += 0.01f * cursor_movement.x;
+        m_yaw   += 0.01f * cursor_movement.x;
         m_pitch += 0.01f * cursor_movement.y;
         if(m_pitch <= -1.5f) m_pitch = -1.5f;
         if(m_pitch >= +1.5f) m_pitch = +1.5f;

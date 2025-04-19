@@ -80,13 +80,13 @@ void PhysicsDebugRenderStage::execute(In<std::span<const RendererPtr>>) {
 
 void PhysicsDebugRenderStage::handleEvent(In<ConfigurePhysicsDebugRenderStageEvent> event) {
     switch(event.enable) {
-        case ConfigurePhysicsDebugRenderStageEvent::FALSE: m_enabled = false; break;
-        case ConfigurePhysicsDebugRenderStageEvent::TRUE: m_enabled = true; break;
+        case ConfigurePhysicsDebugRenderStageEvent::FALSE:  m_enabled = false; break;
+        case ConfigurePhysicsDebugRenderStageEvent::TRUE:   m_enabled = true; break;
         case ConfigurePhysicsDebugRenderStageEvent::TOGGLE: m_enabled = !m_enabled; break;
     }
     switch(event.depth_test) {
-        case ConfigurePhysicsDebugRenderStageEvent::FALSE: m_depth_test = false; break;
-        case ConfigurePhysicsDebugRenderStageEvent::TRUE: m_depth_test = true; break;
+        case ConfigurePhysicsDebugRenderStageEvent::FALSE:  m_depth_test = false; break;
+        case ConfigurePhysicsDebugRenderStageEvent::TRUE:   m_depth_test = true; break;
         case ConfigurePhysicsDebugRenderStageEvent::TOGGLE: m_depth_test = !m_depth_test; break;
     }
 }

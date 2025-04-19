@@ -24,7 +24,8 @@ bool WindowDisplayMode::configure(xml::Element const* properties) {
     if(getAttribute(properties, "SizeLimit", "min_width", m_min_size.x)
        && getAttribute(properties, "SizeLimit", "min_height", m_min_size.y)
        && getAttribute(properties, "SizeLimit", "max_width", m_min_size.x)
-       && getAttribute(properties, "SizeLimit", "max_height", m_min_size.y)) {
+       && getAttribute(properties, "SizeLimit", "max_height", m_min_size.y))
+    {
         m_limit_size = true;
     }
     getAttribute(properties, "AspectRatio", "numerator", m_aspect_ratio_numer);

@@ -10,7 +10,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 ButtonWidget::ButtonWidget(In<Widget*> parent, std::u8string_view text)
-  : Widget{parent}, m_label{this, text} {
+  : Widget{parent}
+  , m_label{this, text} {
     m_interaction_handles.push_back(&m_handle);
     m_child_widgets.push_back(&m_label);
 
@@ -31,7 +32,9 @@ ButtonWidget::~ButtonWidget() {}
 bool ButtonWidget::configure(base::xml::Element const* properties) {
     Widget::configure(properties);
     std::u8string label;
-    if(xml::getAttribute(properties, "label", label)) { m_label.setText(label); }
+    if(xml::getAttribute(properties, "label", label)) {
+        m_label.setText(label);
+    }
     // @ToDo configure View
     return true;
 }
@@ -102,7 +105,9 @@ void SimpleButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
     // assert(font && "Font is undefined");
 
     auto tc = style->getTextureCoords("button");
-    if(!tc) { return; }
+    if(!tc) {
+        return;
+    }
 
     float const u0 = tc->min.x;
     float const u1 = (tc->min.x + tc->max.x) * 0.5f;

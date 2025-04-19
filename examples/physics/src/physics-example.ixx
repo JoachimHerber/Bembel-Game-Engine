@@ -25,11 +25,7 @@ export class PhysicsExample : public kernel::Application<GraphicSystem, PhysicsS
     void handleEvent(In<KeyPressEvent>);
 
   private:
-    EventHandlerGuard<
-        AppUpdateEvent,
-        WindowShouldCloseEvent,
-        FrameBufferResizeEvent,
-        KeyPressEvent>
+    EventHandlerGuard<AppUpdateEvent, WindowShouldCloseEvent, FrameBufferResizeEvent, KeyPressEvent>
         m_guard = {this};
 
     GraphicalUserInterface* m_gui;

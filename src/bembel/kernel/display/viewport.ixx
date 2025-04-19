@@ -15,7 +15,7 @@ export class Viewport final {
             if(m_viewport) m_viewport->removeView(this);
         }
 
-        virtual void onCurserMove(In<vec2> pos){};
+        virtual void onCurserMove(In<vec2> pos) {};
         virtual void onResize(In<uvec2>){};
 
         virtual void draw(In<ivec2> viewport_position, In<uvec2> viewport_size) = 0;
@@ -82,7 +82,9 @@ export class Viewport final {
         if(m_relativ_size) {
             m_size =
                 ivec2(frame_buffer_size * *m_relativ_size + m_size_offset.value_or(vec2{0, 0}));
-            for(auto view : m_views) { view->onResize(m_size); }
+            for(auto view : m_views) {
+                view->onResize(m_size);
+            }
         }
     }
 

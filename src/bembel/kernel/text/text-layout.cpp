@@ -22,7 +22,7 @@ uint TextLayout::calculateMinWidth(
                 if(word_length != 0) word_length += font_size * font->getKernig(prev, glyphIndex);
 
                 word_length += font_size * font->getAdvance(glyphIndex);
-                prev = glyphIndex;
+                prev         = glyphIndex;
             }
             max_word_length = std::max(max_word_length, word_length);
         }
@@ -43,8 +43,8 @@ uint TextLayout::calculateMinHeight(
         if(std::holds_alternative<Text::Formating>(text_element)) {
             auto formating = std::get<Text::Formating>(text_element);
             if(formating.option == Text::Formating::NEW_LINE) {
-                min_height += font_size;
-                line_length = 0;
+                min_height  += font_size;
+                line_length  = 0;
             }
         } else {
             auto glyphs = std::get<std::span<GlyphIndex>>(text_element);
@@ -55,11 +55,11 @@ uint TextLayout::calculateMinHeight(
                 if(word_length != 0) word_length += font_size * font->getKernig(prev, glyphIndex);
 
                 word_length += font_size * font->getAdvance(glyphIndex);
-                prev = glyphIndex;
+                prev         = glyphIndex;
             }
             if(width && line_length + space + word_length > *width) {
-                min_height += font_size;
-                line_length = word_length;
+                min_height  += font_size;
+                line_length  = word_length;
             } else {
                 line_length += (line_length == 0 ? space : 0) + word_length;
             }
@@ -98,7 +98,7 @@ bool TextLayout::calculateSimpleLayout(
         float word_spacing = space;
         float x            = origin.x;
         switch(align) {
-            case Text::Alignment::RIGHT: x = max_line_length - line_length; break;
+            case Text::Alignment::RIGHT:  x = max_line_length - line_length; break;
             case Text::Alignment::CENTER: x = (max_line_length - line_length) / 2; break;
             case Text::Alignment::BLOCK:
                 if(words.size() > 1)
@@ -108,13 +108,13 @@ bool TextLayout::calculateSimpleLayout(
         for(auto& word : words) {
             for(auto& glyph : word.glyphs) {
                 glyph.pos.x += x;
-                glyph.pos.y = y;
+                glyph.pos.y  = y;
             }
             x += word.advance + word_spacing;
         }
         words.clear();
-        y -= font_size;
-        line_length = 0;
+        y           -= font_size;
+        line_length  = 0;
     };
 
     for(auto& text_element : text.getText()) {
@@ -137,7 +137,7 @@ bool TextLayout::calculateSimpleLayout(
 
                 m_glyphs.emplace_back(glyphIndex, w.advance, 0.0f);
                 w.advance += font_size * font->getAdvance(glyphIndex);
-                prev = glyphIndex;
+                prev       = glyphIndex;
             }
             w.glyphs = std::span<Glyph>{&m_glyphs[word_begin], m_glyphs.size() - word_begin};
 

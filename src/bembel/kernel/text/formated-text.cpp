@@ -27,7 +27,9 @@ bool Text::parse(In<std::u8string_view> text) {
             GlyphIndex i = m_font->getGlyphIndex(c, bold, oblique);
             if(i != SdfFont::INVALIDE_GLYPH_INDEX) {
                 m_glyphs.emplace_back(i);
-                if(wordBegin > m_glyphs.size() - 1) { wordBegin = m_glyphs.size() - 1; }
+                if(wordBegin > m_glyphs.size() - 1) {
+                    wordBegin = m_glyphs.size() - 1;
+                }
             }
             continue;
         }

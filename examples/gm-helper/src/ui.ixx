@@ -46,8 +46,8 @@ namespace imgui {
     }
 
     void DragDistance(const char* lable, float* value, float min, float max) {
-        float scale = UNIT_SCALE[uint(g_unit)];
-        *value *= scale;
+        float scale  = UNIT_SCALE[uint(g_unit)];
+        *value      *= scale;
         imgui::DragFloat(
             lable, value, scale, scale * min, scale * max, g_unit == Unit::METER ? "%.1f" : "%.0f"
         );
@@ -127,7 +127,9 @@ namespace imgui {
 
         imgui::Separator();
 
-        if(imgui::Button("Close", ImVec2(100, 0))) { imgui::CloseCurrentPopup(); }
+        if(imgui::Button("Close", ImVec2(100, 0))) {
+            imgui::CloseCurrentPopup();
+        }
 
         imgui::SameLine();
 
@@ -156,7 +158,9 @@ namespace imgui {
         imgui::SameLine();
         imgui::Checkbox("Block Light", &(area_marker->block_light));
 
-        if(imgui::Button("Close", ImVec2(100, 0))) { imgui::CloseCurrentPopup(); }
+        if(imgui::Button("Close", ImVec2(100, 0))) {
+            imgui::CloseCurrentPopup();
+        }
 
         imgui::SameLine();
 
@@ -189,7 +193,8 @@ namespace imgui {
                        imgui::ImVec2(image_width, image_width),
                        imgui::ImVec2(0.0f, 1.0f),
                        imgui::ImVec2(1.0f, 0.0f)
-                   )) {
+                   ))
+                {
                     texture = n;
                 }
 
@@ -206,7 +211,9 @@ namespace imgui {
         static uint size = Token::Size::Medium;
         if(imgui::BeginCombo("Size", TOKEN_SIZE_NAMES[size], 0)) {
             for(int n = 0; n < TOKEN_SIZE_NAMES.size(); n++) {
-                if(imgui::Selectable(TOKEN_SIZE_NAMES[n], size == n)) { size = n; }
+                if(imgui::Selectable(TOKEN_SIZE_NAMES[n], size == n)) {
+                    size = n;
+                }
             }
             imgui::EndCombo();
         }
@@ -217,7 +224,9 @@ namespace imgui {
         static uint shape = AreaMarker::Shape::SPHERE;
         if(imgui::BeginCombo("Shape", AREA_SHAPE_NAMES[shape], 0)) {
             for(int n = 0; n < AREA_SHAPE_NAMES.size(); n++) {
-                if(imgui::Selectable(AREA_SHAPE_NAMES[n], shape == n)) { shape = n; }
+                if(imgui::Selectable(AREA_SHAPE_NAMES[n], shape == n)) {
+                    shape = n;
+                }
             }
             imgui::EndCombo();
         }

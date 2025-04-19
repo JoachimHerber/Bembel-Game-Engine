@@ -28,9 +28,15 @@ bool GuiExample::init(std::span<std::string_view>) {
     auto button_2 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_2");
     auto button_3 = gui->getWidget<ButtonWidget>("MainWindow/Body/Button_3");
 
-    if(button_1) { button_1->click_signal.bind(this, &GuiExample::onButton1Click); }
-    if(button_2) { button_2->click_signal.bind(this, &GuiExample::onButton2Click); }
-    if(button_3) { button_3->click_signal.bind(this, &GuiExample::onButton3Click); }
+    if(button_1) {
+        button_1->click_signal.bind(this, &GuiExample::onButton1Click);
+    }
+    if(button_2) {
+        button_2->click_signal.bind(this, &GuiExample::onButton2Click);
+    }
+    if(button_3) {
+        button_3->click_signal.bind(this, &GuiExample::onButton3Click);
+    }
 
     return true;
 }

@@ -62,7 +62,9 @@ std::optional<T> getAttribute(In<not_null_ptr<const Element>> node, In<std::stri
         return std::u8string_view((char8_t*)attrib);
     }
     T value;
-    if(conversion::fromString(attrib, value)) { return value; }
+    if(conversion::fromString(attrib, value)) {
+        return value;
+    }
     return {};
 }
 
@@ -104,7 +106,8 @@ template <typename T = Element>
 class ElementIterator {
   public:
     ElementIterator(In<not_null_ptr<T>> element, In<std::string_view> name)
-      : m_element(element), m_name(name) {}
+      : m_element(element)
+      , m_name(name) {}
 
     ElementIterator begin() {
         if(m_name.empty()) {

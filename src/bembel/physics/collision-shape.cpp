@@ -74,7 +74,8 @@ void CollisionShape::initFactory() {
                 float yaw   = 0;
                 if(xml::getAttribute(child, "roll", roll)
                    || xml::getAttribute(child, "pitch", pitch)
-                   || xml::getAttribute(child, "yaw", yaw)) {
+                   || xml::getAttribute(child, "yaw", yaw))
+                {
                     rot = quat(vec3(glm::radians(roll), glm::radians(yaw), glm::radians(pitch)));
                 }
             }

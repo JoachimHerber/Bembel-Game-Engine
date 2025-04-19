@@ -28,7 +28,7 @@ export class ParticleSystem : public kernel::System {
     void handleEvent(AppUpdateEvent event);
 
   private:
-    Engine*                        m_engine;
+    Engine*                           m_engine;
     EventHandlerGuard<AppUpdateEvent> m_guard = {this};
 
     std::vector<ParticleType>         m_particle_types;

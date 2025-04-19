@@ -57,11 +57,15 @@ bool Scene::loadScene(std::filesystem::path file) {
     xml::Element const* assets = root->FirstChildElement("Assets");
     for(auto it : xml::IterateChildElements(assets)) {
         Asset<std::any> asset;
-        if(asset.request(it)) { m_assets.push_back(std::move(asset)); }
+        if(asset.request(it)) {
+            m_assets.push_back(std::move(asset));
+        }
     }
 
     xml::Element const* entities = root->FirstChildElement("Entities");
-    for(auto entity : xml::IterateChildElements(entities, "Entity")) { createEntity(entity); }
+    for(auto entity : xml::IterateChildElements(entities, "Entity")) {
+        createEntity(entity);
+    }
     return true;
 }
 
@@ -121,7 +125,9 @@ bool Scene::loadAssets(std::filesystem::path file) {
     }
     for(auto it : xml::IterateChildElements(root)) {
         Asset<std::any> asset;
-        if(asset.request(it)) { m_assets.push_back(std::move(asset)); }
+        if(asset.request(it)) {
+            m_assets.push_back(std::move(asset));
+        }
     }
     return true;
 }

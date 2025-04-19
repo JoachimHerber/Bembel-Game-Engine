@@ -144,7 +144,8 @@ namespace event_callbacks {
 } // namespace event_callbacks
 
 Window::Window(WindowId id)
-  : m_display_mode{std::make_shared<WindowDisplayMode>()}, m_window_id{id} {}
+  : m_display_mode{std::make_shared<WindowDisplayMode>()}
+  , m_window_id{id} {}
 
 Window::~Window() {
     close();

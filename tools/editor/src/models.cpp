@@ -24,7 +24,8 @@ void drawModelManagementUI() {
     static uint selected_model = 0;
     if(imgui::BeginListBox(
            "##ModelSelection", ImVec2(-FLT_MIN, 5 * imgui::GetTextLineHeightWithSpacing())
-       )) {
+       ))
+    {
         for(uint i = 0; i < MODELS.size(); ++i) {
             const bool is_selected = (i == selected_model);
             if(imgui::Selectable((char const*)MODELS[i].name.c_str(), is_selected)) {

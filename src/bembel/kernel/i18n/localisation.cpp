@@ -13,7 +13,9 @@ std::shared_ptr<Localisation> Localisation::DEFAULT = std::make_shared<Localisat
 
 std::u8string_view Localisation::translate(TranslationKeyIndex key) const {
     auto index = std::to_underlying(key);
-    if(index < m_translations.size() && m_translations[index]) { return *m_translations[index]; }
+    if(index < m_translations.size() && m_translations[index]) {
+        return *m_translations[index];
+    }
 
     if(index < getTranslationKeys().size()) {
         logWarning("Localisation doesn't provide translation for: {}", getTranslationKeys()[index]);
@@ -25,7 +27,9 @@ std::u8string_view Localisation::translate(TranslationKeyIndex key) const {
 
 std::shared_ptr<const std::u8string> Localisation::getTranslation(TranslationKeyIndex key) const {
     auto index = std::to_underlying(key);
-    if(index < m_translations.size()) { return m_translations[index]; }
+    if(index < m_translations.size()) {
+        return m_translations[index];
+    }
 
     logWarning("Localisation doesn't provide translation for: {}", index);
     return nullptr;
@@ -64,7 +68,9 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
 
     auto&                                        keys = getTranslationKeys();
     std::unordered_map<std::string, std::size_t> key_to_index;
-    for(std::size_t i = 0; i < keys.size(); ++i) { key_to_index.emplace(keys[i], i); }
+    for(std::size_t i = 0; i < keys.size(); ++i) {
+        key_to_index.emplace(keys[i], i);
+    }
 
     try {
         nlohmann::json root;
@@ -125,7 +131,8 @@ TranslationKeyIndex Localisation::getTranslationKeyIndex(std::string_view key) {
 
 void Localisation::init(std::span<std::string_view> args, std::filesystem::path base_dir) {
     if(auto it = std::find(args.begin(), args.end(), "-local");
-       it != args.end() && ++it != args.end()) {
+       it != args.end() && ++it != args.end())
+    {
         DEFAULT->load(base_dir / std::format("{}.json", *it));
     } else {
         DEFAULT->load(base_dir / "en.json");

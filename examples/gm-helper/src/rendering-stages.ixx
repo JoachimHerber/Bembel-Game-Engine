@@ -102,7 +102,7 @@ export class ApplyLightingOverlayStage : public RenderingPipeline::Stage {
     virtual void init() override;
     virtual void cleanup() override;
 
-    virtual void setScene(Scene*) override{};
+    virtual void setScene(Scene*) override {};
     virtual void execute(In<std::span<const RendererPtr>> renderer) override;
 
   private:

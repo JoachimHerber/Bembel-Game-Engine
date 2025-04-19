@@ -101,7 +101,7 @@ void SliderWidgetView::draw(InOut<RenderBatchInterface> batch) {
     float slider_length = max.x - min.x - handle_width;
 
     min.x += slider_length * m_slider->getSliderPosition();
-    max.x = min.x + handle_width;
+    max.x  = min.x + handle_width;
 
     if(m_slider->isDisabled()) {
         batch.setColor(style->getColor(Style::Colors::SLIDER_DISABLED));
@@ -250,7 +250,9 @@ void FloatSliderWidget::constrainSliderPos(InOut<double> pos) {
         new_value = std::pow(1, exp) * m_min;
     } else {
         float i = pos * (m_max - m_min);
-        if(m_step.has_value()) { i = std::round(i / (*m_step)) * (*m_step); }
+        if(m_step.has_value()) {
+            i = std::round(i / (*m_step)) * (*m_step);
+        }
         pos = i / double(m_max - m_min);
 
         new_value = m_min + i;

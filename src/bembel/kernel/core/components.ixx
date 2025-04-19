@@ -13,16 +13,22 @@ export template <typename TComponent>
 bool serializeComponent(TComponent const& component, xml::Element* properties) {
     if constexpr( //
         requires(TComponent const& c, xml::Element* p) {
-            { ComponentMetaData<TComponent>::serialize(c, p) } -> std::convertible_to<bool>;
+            {
+                ComponentMetaData<TComponent>::serialize(c, p)
+            } -> std::convertible_to<bool>;
         } //
-    ) {
+    )
+    {
         return ComponentMetaData<TComponent>::serialize(component, properties);
     }
     if constexpr( //
         requires(TComponent const& c, xml::Element* p) {
-            { TComponent::serialize(c, p) } -> std::convertible_to<bool>;
+            {
+                TComponent::serialize(c, p)
+            } -> std::convertible_to<bool>;
         } //
-    ) {
+    )
+    {
         return TComponent::serialize(component, properties);
     }
     return false;
@@ -34,16 +40,22 @@ bool deserializeComponent(
 ) {
     if constexpr( //
         requires(TContainer* c, EntityID id, xml::Element const* p) {
-            { ComponentMetaData<TComponent>::deserialize(c, id, p) } -> std::convertible_to<bool>;
+            {
+                ComponentMetaData<TComponent>::deserialize(c, id, p)
+            } -> std::convertible_to<bool>;
         } //
-    ) {
+    )
+    {
         return ComponentMetaData<TComponent>::deserialize(container, entity_id, properties);
     }
     if constexpr( //
         requires(TContainer* c, EntityID id, xml::Element const* p) {
-            { TComponent::deserialize(c, id, p) } -> std::convertible_to<bool>;
+            {
+                TComponent::deserialize(c, id, p)
+            } -> std::convertible_to<bool>;
         } //
-    ) {
+    )
+    {
         return TComponent::deserialize(container, entity_id, properties);
     }
     return false;
@@ -53,7 +65,8 @@ export template <typename T>
 class ComponentVector : public ComponentContainerBase {
   public:
     ComponentVector(ComponentTypeID type_id, Scene* scene)
-      : ComponentContainerBase{type_id}, m_scene{scene} {}
+      : ComponentContainerBase{type_id}
+      , m_scene{scene} {}
     ~ComponentVector() = default;
 
     template <typename... TArgs>
@@ -97,7 +110,8 @@ export template <typename T>
 class ComponentMap : public ComponentContainerBase {
   public:
     ComponentMap(ComponentTypeID type_id, Scene* scene)
-      : ComponentContainerBase{type_id}, m_scene{scene} {}
+      : ComponentContainerBase{type_id}
+      , m_scene{scene} {}
     ~ComponentMap() = default;
 
     template <typename... TArgs>
@@ -170,13 +184,18 @@ class FixedAddressComponentVector : public ComponentContainerBase {
 
   public:
     FixedAddressComponentVector(ComponentTypeID type_id, Scene* scene)
-      : ComponentContainerBase{type_id}, m_scene{scene} {}
+      : ComponentContainerBase{type_id}
+      , m_scene{scene} {}
     ~FixedAddressComponentVector() {
-        for(Chunk it : m_components) { memory::free(it); }
+        for(Chunk it : m_components) {
+            memory::free(it);
+        }
     }
     T& operator[](EntityID entity_id) {
         auto [chunk, index] = getLocation(entity_id);
-        while(chunk >= m_components.size()) { m_components.push_back(memory::alloc<T>()); }
+        while(chunk >= m_components.size()) {
+            m_components.push_back(memory::alloc<T>());
+        }
         return m_components[chunk][index];
     }
 

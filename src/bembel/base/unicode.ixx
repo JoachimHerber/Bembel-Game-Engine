@@ -37,7 +37,8 @@ export namespace utf8 {
     class Iterator {
       public:
         Iterator(In<std::u8string_view> str, In<size_t> pos = 0) noexcept
-          : m_str{str}, m_pos{pos} {}
+          : m_str{str}
+          , m_pos{pos} {}
 
         utf8::CodePoint operator*();
         Iterator&       operator++();

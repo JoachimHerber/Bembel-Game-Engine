@@ -12,7 +12,9 @@ using namespace bembel::base;
 
 export template <typename T>
 concept AssetType = std::same_as<T, std::any> || requires(T a) {
-    { T::ASSET_TYPE_NAME } -> std::convertible_to<std::string_view>;
+    {
+        T::ASSET_TYPE_NAME
+    } -> std::convertible_to<std::string_view>;
 };
 
 export template <AssetType T>
@@ -39,11 +41,15 @@ class Asset final {
         }
     }
     Asset(Asset<T> const& other) : m_handel(other.m_handel) {
-        if(g_container) { g_container->incrementAssetRefCount(m_handel); }
+        if(g_container) {
+            g_container->incrementAssetRefCount(m_handel);
+        }
     }
     Asset(Asset<T>&& other) noexcept : m_handel(other.m_handel) { other.m_handel = AssetHandle(); }
     ~Asset() {
-        if(g_loader) { g_loader->releaseAsset(m_handel); }
+        if(g_loader) {
+            g_loader->releaseAsset(m_handel);
+        }
     }
 
     Asset<T>& operator=(Asset<T> const& other) {
@@ -61,7 +67,9 @@ class Asset final {
     T* operator->() const { return get(); }
 
     void release() {
-        if(g_loader) { g_loader->releaseAsset(m_handel); }
+        if(g_loader) {
+            g_loader->releaseAsset(m_handel);
+        }
         m_handel = AssetHandle();
     }
 
@@ -113,7 +121,9 @@ class Asset final {
 
         m_handel = handel;
 
-        if(incrementRefCount) { g_container->incrementAssetRefCount(m_handel); }
+        if(incrementRefCount) {
+            g_container->incrementAssetRefCount(m_handel);
+        }
 
         return true;
     }
@@ -181,7 +191,9 @@ namespace assets {
     }
 
     export void deleteUnusedAssets() {
-        for(auto it : getAssetTypeMap()) { it.second.second->deleteUnusedAssets(); }
+        for(auto it : getAssetTypeMap()) {
+            it.second.second->deleteUnusedAssets();
+        }
     }
 
 } // namespace assets
@@ -237,7 +249,9 @@ class Asset<std::any> final {
     bool request(xml::Element const* properties) {
         auto& asset_type_map = assets::getAssetTypeMap();
         auto  it             = asset_type_map.find(properties->Value());
-        if(it == asset_type_map.end()) { return false; }
+        if(it == asset_type_map.end()) {
+            return false;
+        }
         AssetHandle handl = it->second.second->requestAsset(properties);
         return this->set(handl, false);
     }
@@ -245,7 +259,9 @@ class Asset<std::any> final {
   private:
     bool set(AssetHandle handel, bool incrementRefCount) {
         auto& asset_type_list = assets::getAssetTypeList();
-        if(handel.type_id >= asset_type_list.size()) { return false; }
+        if(handel.type_id >= asset_type_list.size()) {
+            return false;
+        }
 
         if(m_handel.type_id < asset_type_list.size()) {
             asset_type_list[m_handel.type_id].second->releaseAsset(m_handel);

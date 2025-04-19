@@ -58,7 +58,8 @@ bool EnvironmentMapReflectionStage::initEnvironmentMap(
        || !loadCubeMapSide(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, bottom)
        || !loadCubeMapSide(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, top)
        || !loadCubeMapSide(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front)
-       || !loadCubeMapSide(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back)) {
+       || !loadCubeMapSide(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back))
+    {
         m_environment_map.reset();
         return false;
     }

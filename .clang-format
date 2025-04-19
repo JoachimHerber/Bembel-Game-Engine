@@ -1,25 +1,42 @@
 ---
+BasedOnStyle: Google
 AccessModifierOffset: -2
 AlignAfterOpenBracket: BlockIndent
-AlignConsecutiveAssignments: Consecutive
-AlignConsecutiveBitFields: Consecutive
-AlignConsecutiveDeclarations: Consecutive
-AlignConsecutiveMacros: Consecutive
+AlignArrayOfStructures: Right
+AlignConsecutiveAssignments:
+  Enabled: true
+  AlignCompound: true
+  AlignFunctionPointers: true
+AlignConsecutiveBitFields:
+  Enabled: true
+  AcrossEmptyLines: true
+  AlignCompound: true
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AlignFunctionPointers: true
+  AlignCompound: true
+  PadOperators: true
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AlignCompound: true
+  PadOperators: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
 AlignEscapedNewlines: Right
 AlignOperands: AlignAfterOperator
-AlignTrailingComments: true
-AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: WithoutElse
-BasedOnStyle: Google
 BinPackArguments: false
 BinPackParameters: false
-BraceWrapping: 
+BraceWrapping:
   AfterCaseLabel: false
   AfterClass: false
-  AfterControlStatement: false
+  AfterControlStatement: MultiLine
   AfterEnum: false
   AfterFunction: false
   AfterNamespace: false
@@ -29,35 +46,25 @@ BraceWrapping:
   AfterExternBlock: false
   BeforeCatch: false
   BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
   IndentBraces: false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
-  BeforeLambdaBody: false
-  BeforeWhile: false
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
-BreakInheritanceList: BeforeComma
-BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
 ColumnLimit: 100
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ConstructorInitializerIndentWidth : 2
-ContinuationIndentWidth: 4
-Cpp11BracedListStyle: true
+ConstructorInitializerIndentWidth: 2
 DerivePointerAlignment: false
-EmptyLineBeforeAccessModifier: LogicalBlock
-FixNamespaceComments: true
-IndentCaseLabels: true
 IndentWidth: 4
-Language: Cpp
-MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
-PointerAlignment: Left
+PackConstructorInitializers: CurrentLine
 SortIncludes: true
-SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: Never
-SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
-UseTab: Never
-...
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Language: Cpp
+SpaceInEmptyParentheses: false

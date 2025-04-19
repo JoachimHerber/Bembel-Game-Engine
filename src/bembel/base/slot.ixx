@@ -82,10 +82,10 @@ class Delegate {
     bool operator!=(Delegate<TArgs...> const& other) { return !operator==(other); }
 
   private:
-    using InvokeFunctionType  = void  (*)(void*, TArgs...);
-    using DeleteFunctionType  = void  (*)(void*);
+    using InvokeFunctionType  = void (*)(void*, TArgs...);
+    using DeleteFunctionType  = void (*)(void*);
     using CompareFunctionType = bool (*)(void*, void*);
-    using CloneFunctionType   = void*  (*)(void*);
+    using CloneFunctionType   = void* (*)(void*);
 
     void*               m_target;
     InvokeFunctionType  m_invoke_func;

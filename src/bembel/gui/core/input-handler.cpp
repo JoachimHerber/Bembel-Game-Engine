@@ -12,7 +12,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 InputHandler::InputHandler(Widget& root_widget, Viewport::View& gui_view)
-  : m_root_widget{root_widget}, m_gui_view{gui_view} {}
+  : m_root_widget{root_widget}
+  , m_gui_view{gui_view} {}
 
 InputHandler::~InputHandler() {
     setButton(Action::INTERACT, nullptr);
@@ -153,12 +154,16 @@ void InputHandler::onNavigateDown() {
 }
 
 void InputHandler::handleEvent(In<TextInputEvent> event) {
-    if(m_selection) { m_selection.handle->text_input_signal.emit(event.character); }
+    if(m_selection) {
+        m_selection.handle->text_input_signal.emit(event.character);
+    }
 }
 
 void InputHandler::updateFocus() {
     auto focus = findFocusedHndl();
-    if(focus != m_focus) { setFocus(focus); }
+    if(focus != m_focus) {
+        setFocus(focus);
+    }
 }
 
 InputHandler::Handle InputHandler::findFocusedHndl() {
@@ -185,7 +190,8 @@ InputHandler::Handle InputHandler::findFocusedHndl(Widget& widget, ivec2 const& 
         const ivec2 hndl_max = hndl_min + it->size;
 
         if(hndl_min.x <= m_cursor_pos.x && m_cursor_pos.x <= hndl_max.x
-           && hndl_min.y <= m_cursor_pos.y && m_cursor_pos.y <= hndl_max.y) {
+           && hndl_min.y <= m_cursor_pos.y && m_cursor_pos.y <= hndl_max.y)
+        {
             return {&widget, it};
         }
     }
@@ -227,7 +233,7 @@ ivec2 InputHandler::getRelativeCursorPos(Handle& hndl) {
     Widget* widget = hndl.widget;
     while(widget) {
         rel_pos -= widget->position.get();
-        widget = widget->getParentWidget();
+        widget   = widget->getParentWidget();
     }
     return rel_pos;
 }

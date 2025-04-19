@@ -31,7 +31,9 @@ void drawTextureManagementUI() {
         if(n + 1 < TEXTURES.size() && next_button_x2 < window_visible_x2) imgui::SameLine();
     }
 
-    if(imgui::InputText("##TexturePathInput", buffer.data(), buffer.size())) { error = ""; }
+    if(imgui::InputText("##TexturePathInput", buffer.data(), buffer.size())) {
+        error = "";
+    }
     imgui::SameLine();
     if(imgui::Button("Load##LoadTextureButton")) {
         std::string_view path = buffer.data();

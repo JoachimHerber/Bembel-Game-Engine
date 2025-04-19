@@ -9,7 +9,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 ParticleEffect::ParticleEffect(uint type, uint count, xml::Element const* properties)
-  : m_particle_type{type}, m_particle_count{count} {
+  : m_particle_type{type}
+  , m_particle_count{count} {
     xml::getAttribute(properties, "position", m_position.center);
     xml::getAttribute(properties, "position_diviation", m_position.diviation);
     xml::getAttribute(properties, "velocety", m_velocety.center);
@@ -32,12 +33,12 @@ vec3 ParticleEffect::RandomDistribution::get() const {
             break;
         }
         case SPHERE: {
-            float y = generateRandomFloat();
-            float φ = generateRandomFloat() * 3.14159265359f;
-            float r = std::sqrt(1.0f - y * y);
-            v.x += diviation.x * r * std::sin(φ);
-            v.y += diviation.y * y;
-            v.z += diviation.z * r * std::cos(φ);
+            float y  = generateRandomFloat();
+            float φ  = generateRandomFloat() * 3.14159265359f;
+            float r  = std::sqrt(1.0f - y * y);
+            v.x     += diviation.x * r * std::sin(φ);
+            v.y     += diviation.y * y;
+            v.z     += diviation.z * r * std::cos(φ);
             break;
         }
     }

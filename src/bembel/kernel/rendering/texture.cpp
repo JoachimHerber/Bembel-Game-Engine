@@ -109,7 +109,8 @@ void Texture::init(
     gl::setTexParam(m_target, GL_TEXTURE_WRAP_T, warp_t);
 
     if(m_format == Format::DEPTH_COMPONENT || m_format == Format::DEPTH_COMPONENT16
-       || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32) {
+       || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32)
+    {
         gl::setTexImage2D(
             m_target, 0, m_format, size.x, size.y, Format::DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr
         );
@@ -134,7 +135,8 @@ void Texture::init(
     gl::setTexParam(m_target, GL_TEXTURE_WRAP_T, warp_t);
 
     if(m_format == Format::DEPTH_COMPONENT || m_format == Format::DEPTH_COMPONENT16
-       || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32) {
+       || m_format == Format::DEPTH_COMPONENT24 || m_format == Format::DEPTH_COMPONENT32)
+    {
         gl::setTexImage3D(m_target, m_format, size.x, size.y, size.z, Format::DEPTH_COMPONENT);
     } else {
         gl::setTexImage3D(m_target, m_format, size.x, size.y, size.z);
@@ -248,21 +250,21 @@ std::optional<Texture::Format> Texture::stringToTextureFormat(std::string_view f
         {"GL_DEPTH_COMPONENT32", Format::DEPTH_COMPONENT32},
         {"GL_DEPTH_COMPONENT24", Format::DEPTH_COMPONENT24},
         {"GL_DEPTH_COMPONENT16", Format::DEPTH_COMPONENT16},
-        {"GL_DEPTH_COMPONENT", Format::DEPTH_COMPONENT},
-        {"GL_R8", Format::R8},
-        {"GL_RGB", Format::RGB},
-        {"GL_RGB8", Format::RGB8},
-        {"GL_RGB16", Format::RGB16},
-        {"GL_RGB16F", Format::RGB16F},
-        {"GL_RGB32F", Format::RGB32F},
-        {"GL_RGBA", Format::RGBA},
-        {"GL_RGBA8", Format::RGBA8},
-        {"GL_RGBA16", Format::RGBA16},
-        {"GL_RGBA16F", Format::RGBA16F},
-        {"GL_RGBA32F", Format::RGBA32F},
+        {  "GL_DEPTH_COMPONENT",   Format::DEPTH_COMPONENT},
+        {               "GL_R8",                Format::R8},
+        {              "GL_RGB",               Format::RGB},
+        {             "GL_RGB8",              Format::RGB8},
+        {            "GL_RGB16",             Format::RGB16},
+        {           "GL_RGB16F",            Format::RGB16F},
+        {           "GL_RGB32F",            Format::RGB32F},
+        {             "GL_RGBA",              Format::RGBA},
+        {            "GL_RGBA8",             Format::RGBA8},
+        {           "GL_RGBA16",            Format::RGBA16},
+        {          "GL_RGBA16F",           Format::RGBA16F},
+        {          "GL_RGBA32F",           Format::RGBA32F},
 
-        {"GL_SRGB8", Format::SRGB8},
-        {"GL_SRGB8_ALPHA8", Format::SRGB8_ALPHA8},
+        {            "GL_SRGB8",             Format::SRGB8},
+        {     "GL_SRGB8_ALPHA8",      Format::SRGB8_ALPHA8},
     };
     auto it = mapping.find(format);
     if(it != mapping.end()) return it->second;

@@ -43,7 +43,9 @@ void AssetLocator::addGenericAssetDirectory(In<std::filesystem::path> directory)
 std::optional<std::filesystem::path> AssetLocator::findAssetLocation(
     In<std::string_view> asset_type_name, In<std::filesystem::path> file_name
 ) {
-    if(std::filesystem::exists(file_name)) { return file_name; }
+    if(std::filesystem::exists(file_name)) {
+        return file_name;
+    }
 
     auto it = m_type_specivic_asset_directories.find(asset_type_name);
     if(it != m_type_specivic_asset_directories.end()) {
@@ -57,7 +59,9 @@ std::optional<std::filesystem::path> AssetLocator::locateFile(
 ) {
     for(std::filesystem::path path : directories) {
         path /= file_name;
-        if(std::filesystem::exists(path)) { return path; }
+        if(std::filesystem::exists(path)) {
+            return path;
+        }
     }
     return {};
 }

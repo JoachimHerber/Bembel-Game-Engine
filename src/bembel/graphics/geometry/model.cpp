@@ -63,7 +63,8 @@ std::unique_ptr<GeometryModel> GeometryModel::createGeometryModel(xml::Element c
         std::string     material;
         if(xml::getAttribute(it, "material", material)
            && xml::getAttribute(it, "submesh", mapping.sub_mesh)
-           && mapping.material.request(material)) {
+           && mapping.material.request(material))
+        {
             model->m_material_mapping.push_back(std::move(mapping));
         }
     }

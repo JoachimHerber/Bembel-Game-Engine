@@ -24,11 +24,13 @@ class String {
   public:
     String() = default;
     String(TranslationKeyIndex key, std::shared_ptr<Localisation> local = Localisation::DEFAULT)
-      : m_local(local), m_fmt_str(local ? local->getTranslation(key) : nullptr) {
+      : m_local(local)
+      , m_fmt_str(local ? local->getTranslation(key) : nullptr) {
         parseFormatString();
     }
     String(std::u8string_view str, std::shared_ptr<Localisation> local = Localisation::DEFAULT)
-      : m_local(local), m_fmt_str(std::make_shared<std::u8string>(str)) {
+      : m_local(local)
+      , m_fmt_str(std::make_shared<std::u8string>(str)) {
         parseFormatString();
     }
     String(String const& other)            = default;
@@ -41,7 +43,9 @@ class String {
         Params        params{args...};
         std::u8string str;
         str.reserve(m_fmt_str->size());
-        for(auto& fmt : m_formater) { fmt->format(params, str); }
+        for(auto& fmt : m_formater) {
+            fmt->format(params, str);
+        }
         return str;
     }
 
@@ -76,7 +80,8 @@ class String {
     class PluralFormFormater : public Formater {
       public:
         PluralFormFormater(In<std::u8string_view> singular, In<std::u8string_view> plural)
-          : m_singular(singular), m_plural(plural) {}
+          : m_singular(singular)
+          , m_plural(plural) {}
 
         virtual void format(In<Params> parms, InOut<std::u8string> str) override {
             str += (std::get<N>(parms) != 1 ? m_plural : m_singular);
@@ -114,8 +119,8 @@ class String {
                 return;
             }
 
-            if(auto closing_bracket = str.find(u8"}");
-               closing_bracket != std::u8string_view::npos) {
+            if(auto closing_bracket = str.find(u8"}"); closing_bracket != std::u8string_view::npos)
+            {
                 m_formater.push_back(createFormater(str.substr(0, closing_bracket)));
                 str = str.substr(closing_bracket + 1);
             } else {
@@ -131,20 +136,20 @@ class String {
     std::shared_ptr<Formater> createFormater(std::u8string_view placeholder) {
         std::size_t index = 0;
         while(!placeholder.empty() && '0' <= placeholder[0] && placeholder[0] <= '9') {
-            index *= 10;
-            index += placeholder[0] - '0';
-            placeholder = placeholder.substr(1);
+            index       *= 10;
+            index       += placeholder[0] - '0';
+            placeholder  = placeholder.substr(1);
         }
         switch(index) {
-            case 1: return createFormaterForParam<0>(placeholder);
-            case 2: return createFormaterForParam<1>(placeholder);
-            case 3: return createFormaterForParam<2>(placeholder);
-            case 4: return createFormaterForParam<3>(placeholder);
-            case 5: return createFormaterForParam<4>(placeholder);
-            case 6: return createFormaterForParam<5>(placeholder);
-            case 7: return createFormaterForParam<6>(placeholder);
-            case 8: return createFormaterForParam<7>(placeholder);
-            case 9: return createFormaterForParam<8>(placeholder);
+            case 1:  return createFormaterForParam<0>(placeholder);
+            case 2:  return createFormaterForParam<1>(placeholder);
+            case 3:  return createFormaterForParam<2>(placeholder);
+            case 4:  return createFormaterForParam<3>(placeholder);
+            case 5:  return createFormaterForParam<4>(placeholder);
+            case 6:  return createFormaterForParam<5>(placeholder);
+            case 7:  return createFormaterForParam<6>(placeholder);
+            case 8:  return createFormaterForParam<7>(placeholder);
+            case 9:  return createFormaterForParam<8>(placeholder);
             case 10: return createFormaterForParam<9>(placeholder);
             case 11: return createFormaterForParam<10>(placeholder);
             case 12: return createFormaterForParam<11>(placeholder);

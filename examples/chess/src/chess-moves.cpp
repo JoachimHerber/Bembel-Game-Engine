@@ -28,7 +28,9 @@ void getPossiblePawnMoves(ChessBoard* board, ChessPiece pice, std::vector<Move>&
     int   dir = (pice.getOwner() == ChessPlayer::WHITE) ? 1 : -1;
 
     if(addMove(board, pice, moves, pos + ivec2(dir, 0), false)) {
-        if(!pice.hasMoved()) { addMove(board, pice, moves, pos + ivec2(2 * dir, 0), false); }
+        if(!pice.hasMoved()) {
+            addMove(board, pice, moves, pos + ivec2(2 * dir, 0), false);
+        }
     }
     if(auto other = board->getChessPieceAt(pos + ivec2(dir, -1))) {
         if(other.getOwner() != pice.getOwner())
@@ -62,19 +64,27 @@ void getPossibleKnightMoves(ChessBoard* board, ChessPiece pice, std::vector<Move
 void getPossibleRookMoves(ChessBoard* board, ChessPiece pice, std::vector<Move>& moves) {
     ivec2 pos = pice.getBoardPosition();
 
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(+i, 0), true); ++i) {}
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(-i, 0), true); ++i) {}
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(0, +i), true); ++i) {}
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(0, -i), true); ++i) {}
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(+i, 0), true); ++i) {
+    }
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(-i, 0), true); ++i) {
+    }
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(0, +i), true); ++i) {
+    }
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(0, -i), true); ++i) {
+    }
 }
 
 void getPossibleBishopMoves(ChessBoard* board, ChessPiece pice, std::vector<Move>& moves) {
     ivec2 pos = pice.getBoardPosition();
 
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(-i, -i), true); ++i) {}
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(-i, +i), true); ++i) {}
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(+i, -i), true); ++i) {}
-    for(int i = 1; addMove(board, pice, moves, pos + ivec2(+i, +i), true); ++i) {}
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(-i, -i), true); ++i) {
+    }
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(-i, +i), true); ++i) {
+    }
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(+i, -i), true); ++i) {
+    }
+    for(int i = 1; addMove(board, pice, moves, pos + ivec2(+i, +i), true); ++i) {
+    }
 }
 
 void getPossibleKingMoves(ChessBoard* board, ChessPiece pice, std::vector<Move>& moves) {
@@ -96,11 +106,11 @@ std::vector<Move> getPossibleMoves(ChessBoard* board, ChessPiece pice) {
     if(!pice) return moves;
 
     switch(pice.getType()) {
-        case ChessPieceType::PAWN: getPossiblePawnMoves(board, pice, moves); break;
-        case ChessPieceType::ROOK: getPossibleRookMoves(board, pice, moves); break;
+        case ChessPieceType::PAWN:   getPossiblePawnMoves(board, pice, moves); break;
+        case ChessPieceType::ROOK:   getPossibleRookMoves(board, pice, moves); break;
         case ChessPieceType::KNIGHT: getPossibleKnightMoves(board, pice, moves); break;
         case ChessPieceType::BISHOP: getPossibleBishopMoves(board, pice, moves); break;
-        case ChessPieceType::QUEEN: {
+        case ChessPieceType::QUEEN:  {
             getPossibleRookMoves(board, pice, moves);
             getPossibleBishopMoves(board, pice, moves);
             break;

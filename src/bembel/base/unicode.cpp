@@ -60,8 +60,8 @@ utf8::CodePoint utf8::Iterator::operator*() {
 
 utf8::Iterator& utf8::Iterator::operator++() {
     if(m_pos < m_str.size()) {
-        auto num_bytes = std::to_underlying(utf8::getEncoding(m_str[m_pos]));
-        m_pos += std::max(num_bytes, 1);
+        auto num_bytes  = std::to_underlying(utf8::getEncoding(m_str[m_pos]));
+        m_pos          += std::max(num_bytes, 1);
     }
     return *this;
 }
@@ -101,7 +101,9 @@ usize utf8::getNumCodePoints(In<std::u8string_view> str) {
 bool utf8::eraseCodePoint(InOut<std::u8string> str, size_t position) {
     size_t   n = 0;
     Iterator it{str};
-    while(it && n < position) { ++it, ++n; }
+    while(it && n < position) {
+        ++it, ++n;
+    }
     if(!it) return false;
 
     auto num_bytes = std::max(1, std::to_underlying(getEncoding(str[it.getPosition()])));
@@ -112,8 +114,12 @@ bool utf8::eraseCodePoint(InOut<std::u8string> str, size_t position) {
 bool utf8::insertCodePoint(InOut<std::u8string> str, size_t position, utf8::CodePoint c) {
     size_t   n = 0;
     Iterator it{str};
-    while(it && n < position) { ++it, ++n; }
-    if(n != position) { return false; }
+    while(it && n < position) {
+        ++it, ++n;
+    }
+    if(n != position) {
+        return false;
+    }
     if(it) {
         str.insert(it.getPosition(), encode(c));
     } else {

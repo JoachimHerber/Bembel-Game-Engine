@@ -17,10 +17,10 @@ Shader::~Shader() {
 
 char const* GetShaderTypeName(Shader::Type type) {
     switch(type) {
-        case Shader::Type::VERTEX: return "VertexShader";
+        case Shader::Type::VERTEX:   return "VertexShader";
         case Shader::Type::FRAGMENT: return "FragmentShader";
         case Shader::Type::GEOMETRY: return "GeometryShader";
-        default: return "Shader";
+        default:                     return "Shader";
     }
 }
 
@@ -87,7 +87,7 @@ std::unique_ptr<Shader> Shader::createAsset(xml::Element const* properties) {
     }
 
     static Dictionary<Type> const shader_type_map{
-        {"GL_VERTEX_SHADER", Type::VERTEX},
+        {  "GL_VERTEX_SHADER",   Type::VERTEX},
         {"GL_FRAGMENT_SHADER", Type::FRAGMENT},
         {"GL_GEOMETRY_SHADER", Type::GEOMETRY},
     };
@@ -251,7 +251,9 @@ std::unique_ptr<ShaderProgram> ShaderProgram::loadAsset(std::filesystem::path fi
         return nullptr;
     }
     auto pragram = createAsset(root);
-    if(!pragram) { logError("Failed to create shader program from file '{}'", file_path); }
+    if(!pragram) {
+        logError("Failed to create shader program from file '{}'", file_path);
+    }
     return std::move(pragram);
 }
 
@@ -265,7 +267,9 @@ std::unique_ptr<ShaderProgram> ShaderProgram::createAsset(xml::Element const* pr
         if(!programm->attachShader(std::move(shader))) return nullptr;
     }
 
-    if(!programm->link()) { return nullptr; }
+    if(!programm->link()) {
+        return nullptr;
+    }
 
     return std::move(programm);
 }

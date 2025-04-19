@@ -183,7 +183,9 @@ class AssetContainer : public AssetContainerBase {
      * Increments the reference count of the asset specified by the handle.
      */
     void incrementAssetRefCount(AssetHandle handle) override {
-        if(isHandelValid(handle)) { ++(m_assets[handle.index].reference_count); }
+        if(isHandelValid(handle)) {
+            ++(m_assets[handle.index].reference_count);
+        }
     }
 
     /**

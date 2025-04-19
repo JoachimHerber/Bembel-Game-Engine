@@ -49,12 +49,7 @@ void resetHighlights(ChessBoard* board) {
     }
 }
 
-Task<> runGameLogic(
-    ChessBoard*      board,
-    Camera*          camera,
-    LabelWidget*     lable,
-    Signal<>&        button_press
-) {
+Task<> runGameLogic(ChessBoard* board, Camera* camera, LabelWidget* lable, Signal<>& button_press) {
     ChessPlayer cur_player   = ChessPlayer::WHITE;
     auto        isWhitesTurn = [&]() { return cur_player == ChessPlayer::WHITE; };
     while(true) {
@@ -83,7 +78,9 @@ Task<> runGameLogic(
             captured_chess_piece =
                 board->getChessPieceAt(ivec2(chess_piece.getBoardPosition().x, move.to.y));
         }
-        if(captured_chess_piece) { captured_chess_piece.makeRigidBodyDynamic(); }
+        if(captured_chess_piece) {
+            captured_chess_piece.makeRigidBodyDynamic();
+        }
 
         lable->setText(u8"");
 

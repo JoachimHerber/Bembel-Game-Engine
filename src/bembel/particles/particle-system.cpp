@@ -14,7 +14,8 @@ class ParticleEffectLoader final : public AssetLoaderBase {
     using ContainerType = AssetContainer<ParticleEffect>;
 
     ParticleEffectLoader(ContainerType* container, ParticleSystem* system)
-      : m_system(system), m_container(container) {}
+      : m_system(system)
+      , m_container(container) {}
     virtual ~ParticleEffectLoader() = default;
 
     AssetHandle requestAsset(In<std::filesystem::path> file_name) override {
@@ -74,7 +75,9 @@ class ParticleEffectLoader final : public AssetLoaderBase {
     void deleteUnusedAssets() override {
         std::vector<AssetHandle> unusedAssets;
         m_container->getUnusedAssets(unusedAssets);
-        for(auto hndl : unusedAssets) { m_container->removeAsset(hndl); }
+        for(auto hndl : unusedAssets) {
+            m_container->removeAsset(hndl);
+        }
     }
 
   private:
@@ -89,11 +92,9 @@ ParticleSystem::ParticleSystem(In<Engine*> engine) //
     assets::registerAssetType<ParticleEffect, ParticleEffectLoader>(this);
 
     RenderingPipeline::Stage::registerStageType<ParticleRenderingStage>("ParticleRenderingStage");
-
 }
 
-ParticleSystem::~ParticleSystem() {
-}
+ParticleSystem::~ParticleSystem() {}
 
 void ParticleSystem::addScene(std::weak_ptr<Scene> scene) {
     if(auto s = scene.lock()) {

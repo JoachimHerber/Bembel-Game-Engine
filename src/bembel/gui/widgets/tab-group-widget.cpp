@@ -10,7 +10,10 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 TabGroupWidget::Tab::Tab(TabGroupWidget* group, usize index, std::u8string_view label)
-  : m_group{group}, m_index{index}, m_label{group, label}, m_content{group} {
+  : m_group{group}
+  , m_index{index}
+  , m_label{group, label}
+  , m_content{group} {
     m_handle.action_signal.bind(this, &Tab::onAction);
     m_handle.cursor = Asset<CursorIcon>("Hand");
 
@@ -80,7 +83,9 @@ TabGroupWidget::Tab* TabGroupWidget::addTab(std::u8string_view lable) {
 
     auto tab = m_tabs.back().get();
 
-    if(m_child_widgets.empty()) { m_child_widgets.push_back(&tab->m_content); }
+    if(m_child_widgets.empty()) {
+        m_child_widgets.push_back(&tab->m_content);
+    }
     m_interaction_handles.push_back(&tab->m_handle);
     m_child_widgets.push_back(&tab->m_label);
 
@@ -113,8 +118,8 @@ void TabGroupWidget::updateLayout() {
     int text_margin  = int(style->getValue(Style::Values::BUTTON_TEXT_MARGIN));
     int tab_margin   = int(style->getValue(Style::Values::TAB_MARGIN));
 
-    ivec2 content_size = this->size.get();
-    content_size.y -= bar_height;
+    ivec2 content_size  = this->size.get();
+    content_size.y     -= bar_height;
 
     int tab_label_width = 64;
     for(auto& tab : m_tabs) {
@@ -132,11 +137,11 @@ void TabGroupWidget::updateLayout() {
     for(auto& tab : m_tabs) {
         tab->m_label.position = ivec2(x, content_size.y)
                               + ivec2(text_margin, tab->m_handle.isSelected() ? 0 : text_margin);
-        tab->m_handle.position = ivec2(x, content_size.y);
-        tab->m_label.size      = ivec2(tab_label_width, bar_height) - ivec2(2 * text_margin);
-        tab->m_handle.size     = ivec2(tab_label_width, bar_height);
-        tab->m_content.size    = content_size;
-        x += tab_label_width + tab_margin;
+        tab->m_handle.position  = ivec2(x, content_size.y);
+        tab->m_label.size       = ivec2(tab_label_width, bar_height) - ivec2(2 * text_margin);
+        tab->m_handle.size      = ivec2(tab_label_width, bar_height);
+        tab->m_content.size     = content_size;
+        x                      += tab_label_width + tab_margin;
     }
 }
 

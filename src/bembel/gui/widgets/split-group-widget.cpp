@@ -10,7 +10,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 SplitGroupWidget::SplitGroupWidget(In<Widget*> parent, bool horizontal)
-  : Widget{parent}, m_horizontal{horizontal} {
+  : Widget{parent}
+  , m_horizontal{horizontal} {
     m_child_widgets.push_back(&m_first_group);
     m_child_widgets.push_back(&m_second_group);
 

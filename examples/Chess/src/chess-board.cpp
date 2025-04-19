@@ -147,7 +147,9 @@ void ChessBoard::movePiece(ivec2 from_pos, ivec2 to_pos) {
     if(to) {
         auto* chess_piece = to.get<ChessPieceComponent>();
         if(chess_piece->type == ChessPieceType::PAWN) {
-            if(canCaptureEnPassant(to_pos)) { m_board[from_pos.x][to_pos.y].deleteEntity(); }
+            if(canCaptureEnPassant(to_pos)) {
+                m_board[from_pos.x][to_pos.y].deleteEntity();
+            }
 
             if(!chess_piece->has_moved && std::abs(from_pos.x - to_pos.x) == 2) {
                 m_en_passant = ivec2((from_pos.x + to_pos.x) / 2, to_pos.y);

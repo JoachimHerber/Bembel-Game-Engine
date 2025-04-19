@@ -15,7 +15,8 @@ namespace bembel::kernel {
 export class CursorIcon {
   public:
     CursorIcon(GLFWcursor* cursor_imp, std::string_view name)
-      : m_cursor_imp{cursor_imp}, m_name{name} {}
+      : m_cursor_imp{cursor_imp}
+      , m_name{name} {}
     ~CursorIcon() = default;
 
     GLFWcursor*      getCursor() { return m_cursor_imp; }

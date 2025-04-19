@@ -96,7 +96,9 @@ void Keyboard::initDefaultKeys() {
         RIGHT_SHIFT, RIGHT_CONTROL, RIGHT_ALT, RIGHT_SUPER,
         /*WORLD_1, WORLD_2,*/ MENU};
     // clang-format on
-    for(KeyId key_id : GLFW_KEYS) { createButton(key_id, 0); }
+    for(KeyId key_id : GLFW_KEYS) {
+        createButton(key_id, 0);
+    }
 }
 
 Keyboard::Key* Keyboard::getKey(In<KeyId> key_id, In<Scancode> scancode) {

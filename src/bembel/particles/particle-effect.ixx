@@ -38,8 +38,14 @@ export class ParticleEffect {
     uint               m_particle_type  = 0;
     uint               m_particle_count = 1;
     ColorRGBA          m_color          = {0xFF, 0xFF, 0xFF, 0xFF};
-    RandomDistribution m_position       = {RandomDistribution::BOX, vec3{0, 0, 0}, vec3{0, 0, 0}};
-    RandomDistribution m_velocety = {RandomDistribution::SPHERE, vec3{0, 0, 0}, vec3{1, 1, 1}};
+    RandomDistribution m_position       = {
+        RandomDistribution::BOX, vec3{0, 0, 0},
+         vec3{0, 0, 0}
+    };
+    RandomDistribution m_velocety = {
+        RandomDistribution::SPHERE, vec3{0, 0, 0},
+         vec3{1, 1, 1}
+    };
 };
 
 } // namespace bembel::particles

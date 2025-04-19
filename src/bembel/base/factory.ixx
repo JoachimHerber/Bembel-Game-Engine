@@ -40,7 +40,9 @@ class Factory {
 
     template <typename T>
         requires requires() {
-            { T::getTypeName() } -> std::convertible_to<std::string_view>;
+            {
+                T::getTypeName()
+            } -> std::convertible_to<std::string_view>;
         }
     bool registerObjectGenerator() {
         return registerObjectGenerator<T>(T::getTypeName());

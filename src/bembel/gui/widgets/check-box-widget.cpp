@@ -10,7 +10,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 CheckBoxWidget::CheckBoxWidget(In<Widget*> parent, std::u8string_view label)
-  : Widget{parent}, m_label{this, label} {
+  : Widget{parent}
+  , m_label{this, label} {
     m_interaction_handles.push_back(&m_handle);
     m_child_widgets.push_back(&m_label);
 
@@ -79,14 +80,16 @@ void SimpleCheckBoxWidgetView::draw(InOut<RenderBatchInterface> batch) {
 
     auto tc = style->getTextureCoords([&]() {
         switch(m_widget->state.get()) {
-            case CheckBoxWidget::State::UNSELECTED: return "check_box";
-            case CheckBoxWidget::State::SELECTED: return "check_box_selected";
+            case CheckBoxWidget::State::UNSELECTED:    return "check_box";
+            case CheckBoxWidget::State::SELECTED:      return "check_box_selected";
             case CheckBoxWidget::State::INDETERMINATE: return "check_box_indeterminate";
         }
         return "";
     }());
 
-    if(!tc) { return; }
+    if(!tc) {
+        return;
+    }
 
     if(m_widget->isDisabled()) {
         batch.setPrimaryColor(style->getColor(Style::Colors::CHECKBOX_DISABLED));

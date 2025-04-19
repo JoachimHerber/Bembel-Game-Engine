@@ -1,4 +1,4 @@
-﻿export module bembel.examples.rendering : CameraControle;
+﻿export module bembel.examples.rendering:CameraControle;
 
 import std;
 import bembel;

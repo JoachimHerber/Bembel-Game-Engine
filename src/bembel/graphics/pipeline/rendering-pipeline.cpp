@@ -205,7 +205,9 @@ RenderingPipeline::View* RenderingPipeline::createView(std::string_view texture_
 
 void RenderingPipeline::update(In<std::span<const RendererPtr>> renderer) {
     gl::glViewport(0, 0, m_resolution.x, m_resolution.y);
-    for(auto& stage : m_render_stages) { stage->execute(renderer); }
+    for(auto& stage : m_render_stages) {
+        stage->execute(renderer);
+    }
 }
 
 void RenderingPipeline::configureTextures(xml::Element const* properties) {
@@ -244,7 +246,8 @@ void RenderingPipeline::configureViews(xml::Element const* properties) {
 
         unsigned windowId, viewportId;
         if(xml::getAttribute(viewProperties, "window", windowId)
-           && xml::getAttribute(viewProperties, "viewport", viewportId)) {
+           && xml::getAttribute(viewProperties, "viewport", viewportId))
+        {
             auto window = m_display_mgr.getWindow(windowId);
 
             if(window && window->getViewports().size() > viewportId) {

@@ -12,7 +12,8 @@ using namespace bembel::gui;
 using namespace ::gl;
 
 FontView::FontView(GlyphTextureAtlas& texture_atlas, FontTextureGenerator& texture_gen)
-  : m_texture_atlas{texture_atlas}, m_texture_gen{texture_gen} {}
+  : m_texture_atlas{texture_atlas}
+  , m_texture_gen{texture_gen} {}
 
 FontView::~FontView() {}
 
@@ -62,11 +63,11 @@ void FontView::draw(In<ivec2> viewport_position, In<uvec2> viewport_size) {
         glVertex3f(min.x, max.y, 0.f);
         glVertex3f(max.x, max.y, 0.f);
 
-        vec2 origin = -glyph.getExtendsMin();
-        origin /= glyph.getSize();
-        origin = glm::clamp(origin, vec2(0), vec2(1));
-        origin *= max - min;
-        origin += min;
+        vec2 origin  = -glyph.getExtendsMin();
+        origin      /= glyph.getSize();
+        origin       = glm::clamp(origin, vec2(0), vec2(1));
+        origin      *= max - min;
+        origin      += min;
 
         glColor3f(0, 1, 1);
         glVertex3f(min.x, origin.y, 0.f);

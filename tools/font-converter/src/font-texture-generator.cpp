@@ -195,9 +195,9 @@ void FontTextureGenerator::getIntersections(
     auto glyph = node->getGlyph();
     if(!glyph) return;
 
-    double y = row + 0.5 - node->getPos().y;
-    y        = y * glyph->getSize().y / node->getSize().y;
-    y += glyph->getExtendsMin().y;
+    double y  = row + 0.5 - node->getPos().y;
+    y         = y * glyph->getSize().y / node->getSize().y;
+    y        += glyph->getExtendsMin().y;
 
     auto mapX = [&](double x) {
         x -= glyph->getExtendsMin().x;
@@ -221,8 +221,8 @@ void FontTextureGenerator::getIntersections(
             } else if((start.y < y && y < end.y) || (end.y < y && y < start.y)) {
                 vec2 dir = end - start;
 
-                double dist = glm::length(dir);
-                dir /= dist;
+                double dist  = glm::length(dir);
+                dir         /= dist;
 
                 double f = (y - start.y) / dir.y;
                 double x = f * dir.x + start.x;

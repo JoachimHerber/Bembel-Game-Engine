@@ -39,7 +39,9 @@ export class Selector {
 export class ChessPieceSelector : Selector {
   public:
     ChessPieceSelector(ChessBoard* board, ChessPlayer player, Camera* camera)
-      : Selector{board->getScene(), camera}, m_board{board}, m_player{player} {}
+      : Selector{board->getScene(), camera}
+      , m_board{board}
+      , m_player{player} {}
     ~ChessPieceSelector() {}
 
     Entity getSelectedChessPiece() const { return m_selection; }

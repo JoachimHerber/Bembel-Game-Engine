@@ -39,11 +39,9 @@ export class RenderingExample : public kernel::Application<GraphicSystem, GuiSys
         u64                            m_resolution;
         uint                           m_layer;
     };
-    EventHandlerGuard<
-        AppUpdateEvent,
-        WindowShouldCloseEvent,
-        WindowShouldCloseEvent>
-        m_guard = {this};
+    EventHandlerGuard<AppUpdateEvent, WindowShouldCloseEvent, WindowShouldCloseEvent> m_guard = {
+        this
+    };
 
     LabelWidget*     m_label;
     IntSliderWidget* m_light_slider_pitch;

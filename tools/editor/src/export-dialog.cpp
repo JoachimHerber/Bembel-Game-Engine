@@ -47,7 +47,8 @@ std::filesystem::path drawPathSelection() {
                "##RootDirSelect",
                (char const*)root.u8string().c_str(),
                ImGuiComboFlags_WidthFitPreview
-           )) {
+           ))
+        {
             for(std::filesystem::path drive : getListOfDrives()) {
                 std::error_code ec;
                 if(!std::filesystem::exists(drive, ec) || ec) continue;
@@ -64,7 +65,9 @@ std::filesystem::path drawPathSelection() {
             imgui::SameLine();
             imgui::Text("/");
             imgui::SameLine();
-            if(imgui::Button((char const*)it->stem().u8string().c_str())) { current_folder = *it; }
+            if(imgui::Button((char const*)it->stem().u8string().c_str())) {
+                current_folder = *it;
+            }
         }
         imgui::PopStyleVar(1);
     }
@@ -110,10 +113,14 @@ void drawExortDialog() {
     imgui::SeparatorText("Settings");
     auto settings = drawSettingsUI();
 
-    if(imgui::Button("Export", ImVec2(200, 0))) { imgui::CloseCurrentPopup(); }
+    if(imgui::Button("Export", ImVec2(200, 0))) {
+        imgui::CloseCurrentPopup();
+    }
     imgui::SetItemDefaultFocus();
     imgui::SameLine();
-    if(imgui::Button("Cancel", ImVec2(200, 0))) { imgui::CloseCurrentPopup(); }
+    if(imgui::Button("Cancel", ImVec2(200, 0))) {
+        imgui::CloseCurrentPopup();
+    }
     imgui::EndPopup();
 }
 

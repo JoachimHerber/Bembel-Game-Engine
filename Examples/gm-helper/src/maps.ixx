@@ -40,7 +40,9 @@ export bool loadMaps(In<std::filesystem::path> dir) {
             Token,
             Light,
             Initiative>();
-        if(scene->loadScene(path)) { g_maps.emplace_back(path, std::move(scene)); }
+        if(scene->loadScene(path)) {
+            g_maps.emplace_back(path, std::move(scene));
+        }
     }
     return g_maps.size() > 0;
 }

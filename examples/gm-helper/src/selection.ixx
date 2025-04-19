@@ -18,7 +18,9 @@ export std::optional<Entity> getSelection() {
 export void updateSelection(In<std::optional<Entity>> entity) {
     if(g_selected_entity == entity) return;
 
-    if(g_selected_entity) { g_selected_entity->get<Selectable>()->selected = false; }
+    if(g_selected_entity) {
+        g_selected_entity->get<Selectable>()->selected = false;
+    }
     g_selected_entity = entity;
     if(g_selected_entity) { //
         g_selected_entity->get<Selectable>()->selected = true;

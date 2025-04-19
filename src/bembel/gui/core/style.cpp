@@ -72,7 +72,8 @@ std::unique_ptr<Style> Style::createStyle(xml::Element const* properties) {
     style->setTextureAtlas(std::move(texture_array));
     style->setFont(std::move(font));
 
-    for(auto widget : xml::IterateChildElements(properties, "WidgetPrototype")) {}
+    for(auto widget : xml::IterateChildElements(properties, "WidgetPrototype")) {
+    }
 
     return style;
 }

@@ -117,9 +117,9 @@ void WindowWidget::onLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_offset
     ivec2 position = this->position;
     ivec2 size     = this->size;
 
-    int max_x = position.x + size.x;
-    max_x -= m_window_area.getMinWidth();
-    max_x -= 2 * style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
+    int max_x  = position.x + size.x;
+    max_x     -= m_window_area.getMinWidth();
+    max_x     -= 2 * style->getValue(Style::Values::WINDOW_BORDER_WIDTH);
 
     int start_x   = position.x + cursor_offset.x;
     int clamped_x = glm::clamp(start_x, 0, max_x);
@@ -139,12 +139,12 @@ void WindowWidget::onBottomLeftResizeHandleMoved(In<ivec2>, InOut<ivec2> cursor_
     ivec2 pos  = this->position;
     ivec2 size = this->size;
 
-    ivec2 max = pos + size;
-    max.x -= m_window_area.getMinWidth();
-    max.x -= 2 * border_width;
-    max.y -= title_bar_height;
-    max.y -= m_window_area.getMinHeight();
-    max.y -= border_width;
+    ivec2 max  = pos + size;
+    max.x     -= m_window_area.getMinWidth();
+    max.x     -= 2 * border_width;
+    max.y     -= title_bar_height;
+    max.y     -= m_window_area.getMinHeight();
+    max.y     -= border_width;
 
     ivec2 start   = pos + cursor_offset;
     ivec2 clamped = glm::clamp(start, ivec2{0}, max);

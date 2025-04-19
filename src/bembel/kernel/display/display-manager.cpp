@@ -25,7 +25,9 @@ bool DisplayManager::createWindows(const base::xml::Element* properties) {
         window->init(window_properties, m_windows.empty() ? nullptr : m_windows[0].get());
         m_windows.push_back(std::move(window));
     }
-    if(m_windows.size() > 1) { m_windows[0]->makeContextCurent(); }
+    if(m_windows.size() > 1) {
+        m_windows[0]->makeContextCurent();
+    }
     return true;
 }
 
@@ -54,7 +56,9 @@ void DisplayManager::updateWindows() {
 
         window->swapBuffers();
     }
-    if(m_windows.size() > 1) { m_windows[0]->makeContextCurent(); }
+    if(m_windows.size() > 1) {
+        m_windows[0]->makeContextCurent();
+    }
 }
 
 } // namespace bembel::kernel

@@ -24,7 +24,8 @@ bool GeometryRenderingStage::configure(xml::Element const* properties) {
     for(auto colorOutput : xml::IterateChildElements(properties, "ColorOutput")) {
         unsigned attachment;
         if(xml::getAttribute(colorOutput, "texture", texture_name)
-           && xml::getAttribute(colorOutput, "attachment", attachment)) {
+           && xml::getAttribute(colorOutput, "attachment", attachment))
+        {
             setColorOutputTexture(attachment, texture_name);
         }
     }

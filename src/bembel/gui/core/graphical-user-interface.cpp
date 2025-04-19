@@ -12,7 +12,11 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 GraphicalUserInterface::GraphicalUserInterface(In<Engine*> engine)
-  : engine{engine}, view{this}, input{root_widget, view}, renderer{root_widget}, root_widget{this} {
+  : engine{engine}
+  , view{this}
+  , input{root_widget, view}
+  , renderer{root_widget}
+  , root_widget{this} {
     this->root_widget.setName("Root");
 }
 
@@ -37,7 +41,8 @@ bool GraphicalUserInterface::init(xml::Element const* properties, bool load_file
 
     unsigned windowId, viewportId;
     if(xml::getAttribute(properties, "window", windowId)
-       && xml::getAttribute(properties, "viewport", viewportId)) {
+       && xml::getAttribute(properties, "viewport", viewportId))
+    {
         auto window = engine->display.getWindow(windowId);
 
         if(window && window->getViewports().size() > viewportId) {

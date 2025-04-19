@@ -79,9 +79,8 @@ class CoroutineHandle {
     }
     template <typename T>
         requires std::is_base_of_v<TPromise, T>
-    CoroutineHandle(std::coroutine_handle<T> hndl) 
-        : CoroutineHandle{std::coroutine_handle<TPromise>::from_address(hndl.address())}
-    {}
+    CoroutineHandle(std::coroutine_handle<T> hndl)
+      : CoroutineHandle{std::coroutine_handle<TPromise>::from_address(hndl.address())} {}
     CoroutineHandle(CoroutineHandle&& other) { swap(*this, other); }
     CoroutineHandle(CoroutineHandle const& other) : CoroutineHandle{other.m_hndl} {}
 
@@ -250,9 +249,7 @@ struct TaskAwaiter {
     Handle m_hndl;
 };
 
-export template <
-    typename TReturn = void,
-    typename TPromise = Promise<TReturn, false>>
+export template <typename TReturn = void, typename TPromise = Promise<TReturn, false>>
 class Task {
   public:
     class Promise : public TPromise {
@@ -309,6 +306,5 @@ class Task {
 
 export template <typename TReturn = void>
 using InitialSuspendTask = Task<TReturn, Promise<TReturn, true>>;
-
 
 } // namespace bembel::base::coro

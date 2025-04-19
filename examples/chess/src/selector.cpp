@@ -27,15 +27,15 @@ void Selector::handleEvent(CursorMovedEvent const& event) {
 
     // convert courser position form to window coordinates
     // to viewport coordinates.
-    cursor_pos /= vec2(windowSize);
-    cursor_pos.y = 1.0 - cursor_pos.y;
-    cursor_pos *= fbSize;
+    cursor_pos   /= vec2(windowSize);
+    cursor_pos.y  = 1.0 - cursor_pos.y;
+    cursor_pos   *= fbSize;
 
     for(auto const& vp : event.window->getViewports()) {
         if(!vp) continue;
 
-        vec2 vp_pos = cursor_pos - vec2(vp->getPosition());
-        vp_pos /= vec2(vp->getSize());
+        vec2 vp_pos  = cursor_pos - vec2(vp->getPosition());
+        vp_pos      /= vec2(vp->getSize());
 
         // test if the cursor is within the view port
         if(!(0.0f <= vp_pos.x && vp_pos.x <= 1.0f && 0.0f <= vp_pos.y && vp_pos.y <= 1.0f))
@@ -47,9 +47,9 @@ void Selector::handleEvent(CursorMovedEvent const& event) {
 
 Selector::Ray Selector::calculateRay(In<vec2> cursor_pos) const {
     vec4 rel_pos(2 * cursor_pos.x - 1, 2 * cursor_pos.y - 1, 0, 1);
-    rel_pos = m_camera->getInverseProjectionMatrix() * rel_pos;
+    rel_pos  = m_camera->getInverseProjectionMatrix() * rel_pos;
     rel_pos /= rel_pos.w;
-    rel_pos = m_camera->getInverseViewMatrix() * rel_pos;
+    rel_pos  = m_camera->getInverseViewMatrix() * rel_pos;
 
     Ray ray;
     ray.origin    = m_camera->getPosition();

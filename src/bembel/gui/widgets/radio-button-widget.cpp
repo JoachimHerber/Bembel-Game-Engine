@@ -10,7 +10,8 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 
 RadioButtonWidget::RadioButtonWidget(In<Widget*> parent, int index)
-  : Widget{parent}, m_index{index} {
+  : Widget{parent}
+  , m_index{index} {
     m_interaction_handles.push_back(&m_handle);
     m_child_widgets.push_back(&m_label);
 
@@ -62,7 +63,9 @@ void RadioButtonWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
 }
 
 void RadioButtonWidget::onAction(InteractionHandle::Action action, ivec2) {
-    if(action == InteractionHandle::Action::INTERACT) { select(); }
+    if(action == InteractionHandle::Action::INTERACT) {
+        select();
+    }
 }
 
 void SimpleRadioButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
@@ -78,7 +81,9 @@ void SimpleRadioButtonWidgetView::draw(InOut<RenderBatchInterface> batch) {
     auto tc =
         style->getTextureCoords(m_widget->isSelected() ? "radio_button_selected" : "radio_button");
 
-    if(!tc) { return; }
+    if(!tc) {
+        return;
+    }
 
     batch.setPrimaryColor(style->getColor(Style::Colors::INPUT));
     batch.setSecondaryColor(style->getColor(Style::Colors::BORDER));
@@ -180,12 +185,12 @@ void RadioButtonGroupWidget::onSizeChanged(In<ivec2>, In<ivec2> new_size) {
 
     for(uint n = 0; n < m_buttons.size(); ++n) {
         if(n % num_collums == 0) {
-            x = 0;
+            x  = 0;
             y -= button_size.y;
         }
-        m_buttons[n]->size     = button_size;
-        m_buttons[n]->position = ivec2{x, y};
-        x += button_size.x;
+        m_buttons[n]->size      = button_size;
+        m_buttons[n]->position  = ivec2{x, y};
+        x                      += button_size.x;
     }
 }
 
