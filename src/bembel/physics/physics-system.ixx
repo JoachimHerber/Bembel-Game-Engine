@@ -17,18 +17,10 @@ using namespace bembel::graphics;
 
 export class PhysicsSystem : public System {
   public:
-    PhysicsSystem(In<Engine*> engine) : System{"Physics"}, m_engine{engine} {
-        RenderingPipeline::Stage::registerStageType<PhysicsDebugRenderStage>(
-            "PhysicsDebugRenderStage"
-        );
-
-        assets::registerAssetType<CollisionShape>();
-
-        CollisionShape::initFactory();
-    }
+    PhysicsSystem(In<Engine*> engine);
     PhysicsSystem(PhysicsSystem const&)            = delete;
     PhysicsSystem& operator=(PhysicsSystem const&) = delete;
-    ~PhysicsSystem()                               = default;
+    ~PhysicsSystem();
 
     void addScene(std::shared_ptr<Scene> scene) {
         scene->registerComponentType<Transform>();
@@ -41,11 +33,10 @@ export class PhysicsSystem : public System {
 
     virtual bool init() override { return true; }
     virtual void shutdown() override { m_scenes.clear(); }
-    virtual void update(double time_since_last_update) override;
 
   private:
     Engine* m_engine;
-
+        
     std::vector<std::shared_ptr<Scene>> m_scenes;
 };
 

@@ -21,8 +21,6 @@ export class Application
     virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
-    virtual void update(double time) override;
-
     void handleEvent(In<WindowShouldCloseEvent>);
     void handleEvent(In<FrameBufferResizeEvent>);
     void handleEvent(In<KeyPressEvent>);
@@ -32,10 +30,8 @@ export class Application
 
     std::shared_ptr<Scene>      m_scene;
     std::unique_ptr<ChessBoard> m_chess_board;
-    coro::Task<void>            m_game_logic;
+    coro::Task<>                m_game_logic;
 
     std::unique_ptr<CameraControle> m_camera;
-
-    Signal<> m_frame_sync;
 };
 } // namespace bembel::examples::chess

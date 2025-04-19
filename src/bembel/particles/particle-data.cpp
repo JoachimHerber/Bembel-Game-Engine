@@ -23,17 +23,17 @@ void ParticlePopulation::spawnParticleEffect(
     }
 }
 
-void ParticlePopulation::update(float ΔT) {
+void ParticlePopulation::update(Seconds time_since_last_update) {
     if(!m_type) return;
-    u32 milliseconds = u32(1000 * ΔT);
 
+    float const ΔT           = float(time_since_last_update.count());
     std::size_t write_offset = 0;
     for(auto& particle : m_particles) {
         if(particle.age > m_type->max_age) continue;
 
         particle.position += ΔT * particle.velocety;
         particle.velocety += ΔT * m_type->acceleration;
-        particle.velocety *= std::pow(1.0f - m_type->drag, float(ΔT));
+        particle.velocety *= std::pow(1.0f - m_type->drag, ΔT);
         particle.age += ΔT;
 
         m_particles[write_offset++] = particle;
@@ -46,7 +46,7 @@ ParticleData::ParticleData(Scene*, std::span<ParticleType> particle_types) {
 }
 ParticleData::~ParticleData() {}
 
-void ParticleData::update(float ΔT) {
+void ParticleData::update(Seconds ΔT) {
     for(auto& particles : m_particles) { particles.update(ΔT); }
 }
 

@@ -11,9 +11,9 @@ template <typename... TArgs>
 struct SignalAwaitable {};
 
 template <>
-struct SignalAwaitable<> : public Awaitable<void> {};
+struct SignalAwaitable<> : public coro::Awaitable<void> {};
 template <typename T>
-struct SignalAwaitable<T> : public Awaitable<std::remove_cvref_t<T>> {};
+struct SignalAwaitable<T> : public coro::Awaitable<std::remove_cvref_t<T>> {};
 
 template <typename... TArgs>
 class Signal {

@@ -34,7 +34,7 @@ std::vector<bool> CoroTest::ALIVE_COROUTINES;
 std::mutex        CoroTest::ALIVE_COROUTINES_MUTEX;
 
 template <typename T>
-class PromiseMock : public Promise<T> {
+class PromiseMock : public Promise<T, true> {
   public:
     using Handle = CoroutineHandle<PromiseMock<T>>;
     

@@ -47,14 +47,16 @@ export class GraphicSystem : public kernel::System {
 
     virtual bool init() override;
     virtual void shutdown() override;
-    virtual void update(double time_since_last_update) override;
+
+    void handleEvent(AppRenderEvent event);
 
   private:
     void configureRenderer(xml::Element const*);
     void configurePipelines(xml::Element const*);
 
   private:
-    Engine* m_engine;
+    Engine*                        m_engine;
+    EventHandlerGuard<AppRenderEvent> m_guard = {this};
 
     std::vector<RendererPtr>          m_renderer;
     std::vector<RenderingPipelinePtr> m_pipelines;

@@ -116,8 +116,6 @@ void Application::cleanup() {
     m_engine.display.closeOpenWindows();
 }
 
-void Application::update(double time) {}
-
 void Application::handleEvent(In<WindowShouldCloseEvent> event) {
     quit();
 }

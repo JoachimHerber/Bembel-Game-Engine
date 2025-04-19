@@ -17,8 +17,6 @@ export class Application
     virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
-    virtual void update(double time) override;
-
     void handleEvent(In<WindowShouldCloseEvent>);
     void handleEvent(In<KeyReleaseEvent>);
     void handleEvent(In<MouseButtonPressEvent>);

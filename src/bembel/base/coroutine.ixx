@@ -77,10 +77,22 @@ class CoroutineHandle {
     CoroutineHandle(std::coroutine_handle<TPromise> hndl) : m_hndl{hndl} {
         if(m_hndl) ++m_hndl.promise().reference_count;
     }
+    template <typename T>
+        requires std::is_base_of_v<TPromise, T>
+    CoroutineHandle(std::coroutine_handle<T> hndl) 
+        : CoroutineHandle{std::coroutine_handle<TPromise>::from_address(hndl.address())}
+    {}
     CoroutineHandle(CoroutineHandle&& other) { swap(*this, other); }
     CoroutineHandle(CoroutineHandle const& other) : CoroutineHandle{other.m_hndl} {}
 
     CoroutineHandle& operator=(std::coroutine_handle<TPromise> hndl) {
+        CoroutineHandle tmp{hndl};
+        swap(*this, tmp);
+        return *this;
+    }
+    template <typename T>
+        requires std::is_base_of_v<TPromise, T>
+    CoroutineHandle& operator=(std::coroutine_handle<T> hndl) {
         CoroutineHandle tmp{hndl};
         swap(*this, tmp);
         return *this;
@@ -103,11 +115,9 @@ class CoroutineHandle {
 
     std::coroutine_handle<TPromise> get() { return m_hndl; }
 
-    operator bool() const { return m_hndl; }
+    operator bool() const { return m_hndl.operator bool(); }
 
-    void resume() const noexcept {
-        m_hndl.resume();
-    }
+    void resume() const noexcept { m_hndl.resume(); }
     bool isDone() const noexcept { return m_hndl.done(); }
 
     TPromise& getPromise() const noexcept { return m_hndl.promise(); }
@@ -142,23 +152,26 @@ export class PromiseBase {
         void await_resume() noexcept {}
     };
 
-    std::suspend_always initial_suspend() const noexcept { return {}; }
-    FinalSuspend        final_suspend() const noexcept { return {}; }
+    FinalSuspend final_suspend() const noexcept { return {}; }
 
   public:
     std::atomic<u64>             reference_count{0};
     CoroutineHandle<PromiseBase> continuation{};
 };
 
-export template <typename T>
+export template <typename T, bool INITIAL_SUSPEND>
 class Promise : public PromiseBase {
   public:
     using Handle = CoroutineHandle<Promise>;
     using Result = std::conditional_t<PASS_BY_VALUE<T>::value, T const, T const&>;
+    using InitialSuspend =
+        std::conditional_t<INITIAL_SUSPEND, std::suspend_always, std::suspend_never>;
 
   public:
     Promise()  = default;
     ~Promise() = default;
+
+    InitialSuspend initial_suspend() const noexcept { return {}; }
 
     void unhandled_exception() noexcept {
         m_data.emplace<std::exception_ptr>(std::current_exception());
@@ -189,15 +202,19 @@ class Promise : public PromiseBase {
     std::variant<std::monostate, T, std::exception_ptr> m_data;
 };
 
-export template <>
-class Promise<void> : public PromiseBase {
+export template <bool INITIAL_SUSPEND>
+class Promise<void, INITIAL_SUSPEND> : public PromiseBase {
   public:
     using Handle = CoroutineHandle<Promise>;
     using Result = void;
+    using InitialSuspend =
+        std::conditional_t<INITIAL_SUSPEND, std::suspend_always, std::suspend_never>;
 
   public:
     Promise()  = default;
     ~Promise() = default;
+
+    InitialSuspend initial_suspend() const noexcept { return {}; }
 
     void unhandled_exception() noexcept { m_exception.emplace(std::current_exception()); }
     void rethrowUnhandledExceptions() {
@@ -220,8 +237,7 @@ struct TaskAwaiter {
     template <typename T>
         requires std::is_base_of_v<PromiseBase, T>
     std::coroutine_handle<> await_suspend(std::coroutine_handle<T> other_coro) {
-        m_hndl.getPromise().continuation =
-            std::coroutine_handle<PromiseBase>::from_address(other_coro.address());
+        m_hndl.getPromise().continuation = other_coro;
         return m_hndl.get();
     }
     Result await_resume() {
@@ -234,7 +250,9 @@ struct TaskAwaiter {
     Handle m_hndl;
 };
 
-export template <typename TReturn, typename TPromise = Promise<TReturn>>
+export template <
+    typename TReturn = void,
+    typename TPromise = Promise<TReturn, false>>
 class Task {
   public:
     class Promise : public TPromise {
@@ -288,5 +306,9 @@ class Task {
   protected:
     Handle m_hndl;
 };
+
+export template <typename TReturn = void>
+using InitialSuspendTask = Task<TReturn, Promise<TReturn, true>>;
+
 
 } // namespace bembel::base::coro

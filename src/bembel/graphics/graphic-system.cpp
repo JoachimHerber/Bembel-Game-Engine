@@ -23,8 +23,6 @@ GraphicSystem::GraphicSystem(In<Engine*> engine) : System("Graphics"), m_engine{
     Stage::registerStageType<EnvironmentMapReflectionStage>("EnvironmentMapReflectionStage");
 }
 GraphicSystem::~GraphicSystem() {
-    events::removeHandler<WindowUpdateEvent>(this);
-    events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
 RenderingPipeline* GraphicSystem::createRenderingPipline() {
@@ -72,8 +70,10 @@ void GraphicSystem::shutdown() {
     events::broadcast<CleanuptGraphicResourcesEvent>();
 }
 
-void GraphicSystem::update(double) {
-    for(auto& pipline : m_pipelines) pipline->update(m_renderer);
+void GraphicSystem::handleEvent(AppRenderEvent) {
+    for(auto& pipline : m_pipelines) { //
+        pipline->update(m_renderer);
+    }
 }
 
 void GraphicSystem::configureRenderer(xml::Element const* properties) {

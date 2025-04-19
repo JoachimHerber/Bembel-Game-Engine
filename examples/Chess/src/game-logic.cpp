@@ -49,12 +49,11 @@ void resetHighlights(ChessBoard* board) {
     }
 }
 
-Task<void> runGameLogic(
-    ChessBoard*  board,
-    Camera*      camera,
-    LabelWidget* lable,
-    Signal<>&    button_press,
-    Signal<>&    frame_sync
+Task<> runGameLogic(
+    ChessBoard*      board,
+    Camera*          camera,
+    LabelWidget*     lable,
+    Signal<>&        button_press
 ) {
     ChessPlayer cur_player   = ChessPlayer::WHITE;
     auto        isWhitesTurn = [&]() { return cur_player == ChessPlayer::WHITE; };
@@ -88,14 +87,14 @@ Task<void> runGameLogic(
 
         lable->setText(u8"");
 
-        co_await playMoveAnimation(chess_piece, move.to, frame_sync);
+        co_await playMoveAnimation(chess_piece, move.to);
 
         if(captured_chess_piece) {
             // let the captured piece 'ragdoll' for a bit
             using namespace std::chrono_literals;
             auto start_time = std::chrono::steady_clock::now();
             while(std::chrono::steady_clock::now() - start_time < 2s) {
-                co_await frame_sync;
+                co_await events::Awaiter<AppUpdateEvent>();
                 vec3 v = captured_chess_piece.getRigidBodyLinearVelocity();
                 if(glm::dot(v, v) < 0.01f) break; // the captured piece has stoped moving
 

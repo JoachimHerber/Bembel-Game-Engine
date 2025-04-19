@@ -40,8 +40,6 @@ void GuiExample::cleanup() {
     m_engine.display.closeOpenWindows();
 }
 
-void GuiExample::update(double time) {}
-
 void GuiExample::handleEvent(const WindowShouldCloseEvent& event) {
     quit();
 }

@@ -26,7 +26,6 @@ export class Engine final {
     bool loadSetting(std::filesystem::path config_file);
 
     bool initSystems();
-    void updateSystems(double time_since_last_update);
     void shutdownSystems();
 
     void pollEvents();

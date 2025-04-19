@@ -8,6 +8,13 @@ import :Engine;
 namespace bembel::kernel {
 using namespace bembel::base;
 
+    export struct FrameStartEvent{};
+     export struct AppUpdateEvent {
+        Seconds ΔT;
+    };
+     export struct AppRenderEvent{};
+    export struct FrameEndEvent{};
+
 export template <typename... TSystems>
 class Application {
   public:
@@ -47,16 +54,8 @@ class Application {
 
         m_should_exit_main_loop = false;
         while(!m_should_exit_main_loop) {
-            auto         now = high_resolution_clock::now();
-            milliseconds ms  = duration_cast<milliseconds>(now - time);
-
-            double timeSinceLastUpdate = 0.001 * (ms.count());
-
-            m_engine.pollEvents();
-            update(timeSinceLastUpdate);
-            m_engine.updateSystems(timeSinceLastUpdate);
-            m_engine.display.updateWindows();
-
+            auto const now = high_resolution_clock::now();
+            update(duration_cast<Seconds>(now - time));
             time = now;
         }
     }
@@ -64,7 +63,14 @@ class Application {
     virtual bool init(std::span<std::string_view> args) = 0;
     virtual void cleanup()                              = 0;
 
-    virtual void update(double timeDelta) = 0;
+    virtual void update(Seconds const ΔT) {
+        events::broadcast<FrameStartEvent>();
+        m_engine.pollEvents();
+        events::broadcast<AppUpdateEvent>(ΔT);
+        events::broadcast<AppRenderEvent>();
+        m_engine.display.updateWindows();
+        events::broadcast<FrameEndEvent>();
+    }
 
   protected:
     Engine m_engine;

@@ -20,7 +20,6 @@ export class GuiSystem : public System {
 
     virtual bool init() override;
     virtual void shutdown() override;
-    virtual void update(double time_since_last_update) override;
 
     GraphicalUserInterface* createGUI(std::string_view name);
 

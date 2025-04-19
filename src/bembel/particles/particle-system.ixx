@@ -24,10 +24,12 @@ export class ParticleSystem : public kernel::System {
 
     virtual bool init() override;
     virtual void shutdown() override;
-    virtual void update(double time_since_last_update) override;
+
+    void handleEvent(AppUpdateEvent event);
 
   private:
-    Engine* m_engine;
+    Engine*                        m_engine;
+    EventHandlerGuard<AppUpdateEvent> m_guard = {this};
 
     std::vector<ParticleType>         m_particle_types;
     std::vector<std::weak_ptr<Scene>> m_scenes;

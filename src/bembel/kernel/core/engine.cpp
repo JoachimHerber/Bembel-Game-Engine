@@ -68,10 +68,6 @@ bool Engine::initSystems() {
     return true;
 }
 
-void Engine::updateSystems(double time_since_last_update) {
-    for(auto& system : m_systems) system->update(time_since_last_update);
-}
-
 void Engine::shutdownSystems() {
     for(auto& system : m_systems) system->shutdown();
 }

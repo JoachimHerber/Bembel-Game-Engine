@@ -27,7 +27,7 @@ export class CameraControle {
 
     void setCameraOffset(vec3 const& pos) { m_offset = pos; }
 
-    void update(double dTime);
+    void update(Seconds dTime);
 
     void handleEvent(MouseButtonPressEvent const&);
     void handleEvent(MouseButtonReleaseEvent const&);

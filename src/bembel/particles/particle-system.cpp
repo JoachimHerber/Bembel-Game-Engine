@@ -82,13 +82,18 @@ class ParticleEffectLoader final : public AssetLoaderBase {
     ContainerType*  m_container;
 };
 
-ParticleSystem::ParticleSystem(In<Engine*> engine) : System("Particles"), m_engine{engine} {
+ParticleSystem::ParticleSystem(In<Engine*> engine) //
+  : System("Particles")                            //
+  , m_engine{engine}                               //
+{
     assets::registerAssetType<ParticleEffect, ParticleEffectLoader>(this);
 
     RenderingPipeline::Stage::registerStageType<ParticleRenderingStage>("ParticleRenderingStage");
+
 }
 
-ParticleSystem::~ParticleSystem() {}
+ParticleSystem::~ParticleSystem() {
+}
 
 void ParticleSystem::addScene(std::weak_ptr<Scene> scene) {
     if(auto s = scene.lock()) {
@@ -150,12 +155,14 @@ bool ParticleSystem::init() {
 
 void ParticleSystem::shutdown() {}
 
-void ParticleSystem::update(double time_since_last_update) {
+void ParticleSystem::handleEvent(AppUpdateEvent event) {
+    float const ΔT = float(event.ΔT.count());
     for(auto& it : m_scenes) {
         auto scene = it.lock();
         if(!scene) continue;
+
         auto particles = scene->getDataContainer<ParticleData>();
-        particles->update(time_since_last_update);
+        particles->update(event.ΔT);
 
         auto* transform_container = scene->getComponentContainer<Transform>();
         auto* emitter_container   = scene->getComponentContainer<ParticleEmitter>();
@@ -181,7 +188,7 @@ void ParticleSystem::update(double time_since_last_update) {
                 auto effect = it.effect.get();
                 if(!effect) continue;
 
-                it.cooldown -= time_since_last_update;
+                it.cooldown -= ΔT;
                 if(it.cooldown <= 0) {
                     it.cooldown += it.min_cooldown;
                     particles->spawnParticleEffect(*effect, position, rotation, scale);

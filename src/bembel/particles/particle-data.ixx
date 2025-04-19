@@ -40,7 +40,7 @@ export class ParticlePopulation {
   public:
     ParticlePopulation(ParticleType* type) : m_type{type} {}
 
-    void update(float time_since_last_update);
+    void update(Seconds time_since_last_update);
 
     std::span<const Particel> getParticles() /**/ const { return m_particles; }
     ParticleType*             getType() const { return m_type; }
@@ -59,7 +59,7 @@ export class ParticleData : public SceneDataContainerBase {
     ParticleData(Scene*, std::span<ParticleType> particle_types);
     ~ParticleData();
 
-    void update(float time_since_last_update);
+    void update(Seconds time_since_last_update);
 
     void spawnParticleEffect(
         In<ParticleEffect> effect, In<vec3> position, In<quat> rotation, In<float> scale

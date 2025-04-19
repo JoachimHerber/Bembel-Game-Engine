@@ -11,17 +11,9 @@ using namespace bembel::physics;
 using namespace bembel::physics::units::literals;
 using namespace bembel::gui;
 
-PhysicsExample::PhysicsExample() : Application() {
-    events::addHandler<WindowShouldCloseEvent>(this);
-    events::addHandler<FrameBufferResizeEvent>(this);
-    events::addHandler<KeyPressEvent>(this);
-}
+PhysicsExample::PhysicsExample() : Application() {}
 
-PhysicsExample::~PhysicsExample() {
-    events::removeHandler<WindowShouldCloseEvent>(this);
-    events::removeHandler<FrameBufferResizeEvent>(this);
-    events::removeHandler<KeyPressEvent>(this);
-}
+PhysicsExample::~PhysicsExample() {}
 
 bool PhysicsExample::init(std::span<std::string_view>) {
     if(!m_engine.loadSetting("physics/config.xml")) return false;
@@ -65,9 +57,8 @@ void PhysicsExample::cleanup() {
     m_engine.display.closeOpenWindows();
 }
 
-void PhysicsExample::update(double time) {
-    m_rotation += time;
-
+void PhysicsExample::handleEvent(In<AppUpdateEvent> event) {
+    m_rotation += event.ΔT.count();
     Transform* transform = m_scene->getComponent<Transform>(m_stirring_stick);
     if(transform) transform->rotation = quat(glm::angleAxis(float(m_rotation), vec3(0, 1, 0)));
 }

@@ -19,13 +19,19 @@ export class PhysicsExample : public kernel::Application<GraphicSystem, PhysicsS
     virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
-    virtual void update(double time) override;
-
+    void handleEvent(In<AppUpdateEvent>);
     void handleEvent(In<WindowShouldCloseEvent>);
     void handleEvent(In<FrameBufferResizeEvent>);
     void handleEvent(In<KeyPressEvent>);
 
   private:
+    EventHandlerGuard<
+        AppUpdateEvent,
+        WindowShouldCloseEvent,
+        FrameBufferResizeEvent,
+        KeyPressEvent>
+        m_guard = {this};
+
     GraphicalUserInterface* m_gui;
     std::shared_ptr<Scene>  m_scene;
 

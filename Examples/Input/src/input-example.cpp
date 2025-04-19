@@ -35,8 +35,6 @@ void InputExample::cleanup() {
     m_engine.display.closeOpenWindows();
 }
 
-void InputExample::update(double time) {}
-
 void InputExample::handleEvent(In<WindowShouldCloseEvent> event) {
     quit();
 }

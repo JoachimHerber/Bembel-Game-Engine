@@ -50,15 +50,13 @@ bool Application::init(std::span<std::string_view> args) {
         m_chess_board.get(),
         pipline->getCamera().get(),
         getSystem<GuiSystem>()->getGUI("main")->getWidget<LabelWidget>("Label"),
-        m_engine.input.mouse.getButton(0)->press_signal,
-        m_frame_sync
+        m_engine.input.mouse.getButton(0)->press_signal
     );
-    m_game_logic.resume();
 
     logInfo("Initalizing Camera");
     m_camera->setCameraOffset(vec3(8, 0.5f, 8));
     m_camera->enableManualControle(true);
-
+    
     logInfo("Initalizing Systems");
     m_engine.initSystems();
     return true;
@@ -73,17 +71,14 @@ void Application::cleanup() {
     m_engine.display.closeOpenWindows();
 }
 
-void Application::update(double time) {
-    m_camera->update(time);
-    m_frame_sync();
-}
-
 void Application::handleEvent(In<WindowShouldCloseEvent> event) {
     quit();
 }
 
 void Application::handleEvent(In<FrameBufferResizeEvent> event) {
     auto pipline = getSystem<GraphicSystem>()->getRenderingPipelines()[0].get();
+    if(event.size.y <= 0 || event.size.x <= 0)
+        return;
 
     pipline->setResulution(event.size);
     pipline->getCamera()->setUpProjection(

@@ -19,6 +19,8 @@ using i64 = int64_t;
 
 using byte = std::byte;
 
+using Seconds = std::chrono::duration<double>;
+
 using nlohmann::json;
 
 enum class WindowId : u32 { MAIN };

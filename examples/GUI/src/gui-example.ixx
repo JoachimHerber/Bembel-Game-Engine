@@ -13,8 +13,6 @@ export class GuiExample : public kernel::Application<gui::GuiSystem> {
     virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
-    virtual void update(double time) override;
-
     void handleEvent(const kernel::WindowShouldCloseEvent&);
 
     void onButton1Click();

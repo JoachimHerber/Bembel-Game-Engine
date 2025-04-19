@@ -60,7 +60,7 @@ class EventChannel : public EventChannelBase {
         m_awaitable.notify(event);
     }
 
-    Awaitable<EventType>& operator co_await() { return m_awaitable; }
+    coro::Awaitable<EventType>& operator co_await() { return m_awaitable; }
 
   private:
     template <typename EventHandlerType>
@@ -78,7 +78,7 @@ class EventChannel : public EventChannelBase {
 
     std::mutex m_mutex;
 
-    Awaitable<EventType> m_awaitable;
+    coro::Awaitable<EventType> m_awaitable;
 };
 
 export class EventManager final {
@@ -159,7 +159,7 @@ export namespace events {
     export template <typename EventType>
     class Awaiter {
       public:
-        Awaitable<EventType>& operator co_await() {
+        coro::Awaitable<EventType>& operator co_await() {
             return getEventChannel<EventType>().operator co_await();
         }
     };

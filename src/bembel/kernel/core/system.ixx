@@ -17,8 +17,6 @@ export class System {
     virtual bool init() { return true; }
     virtual void shutdown() {}
 
-    virtual void update(double time_since_last_update) = 0;
-
   public:
     const std::string name;
 };

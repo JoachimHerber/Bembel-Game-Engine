@@ -21,8 +21,8 @@ World::World(Scene* scene) : m_scene{scene} {
     );
 }
 
-void World::update(double time_since_last_update) {
-    m_world->stepSimulation(1.f / 60.f, 10);
+void World::update(Seconds time_since_last_update) {
+    m_world->stepSimulation(time_since_last_update.count(), 10, 1.f / 60.f);
 }
 
 EntityID World::rayTestFirst(In<vec3> ray_start, In<vec3> ray_end) {

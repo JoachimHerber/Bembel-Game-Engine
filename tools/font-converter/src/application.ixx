@@ -33,8 +33,6 @@ export class Application : public kernel::Application<GuiSystem> {
     virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
-    virtual void update(double time) override;
-
     void handleEvent(In<WindowShouldCloseEvent>);
     void handleEvent(In<WindowResizeEvent>);
     void handleEvent(In<FileDropEvent>);

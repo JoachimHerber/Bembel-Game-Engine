@@ -1,4 +1,4 @@
-module;
+﻿module;
 #include <btBulletDynamicsCommon.h>
 export module bembel.physics:World;
 
@@ -13,9 +13,9 @@ using namespace bembel::kernel;
 export class World : public SceneDataContainerBase {
   public:
     World(Scene* scene);
-    ~World() {}
+    ~World() = default;
 
-    void update(double time_since_last_update);
+    void update(Seconds ΔT);
 
     Scene*                   getScene() { return m_scene; }
     btDiscreteDynamicsWorld* getWorld() { return m_world.get(); }

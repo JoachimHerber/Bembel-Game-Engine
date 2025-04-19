@@ -10,7 +10,7 @@ CameraControle::CameraControle(std::shared_ptr<graphics::Camera> camera) : m_cam
 
 CameraControle::~CameraControle() {}
 
-void CameraControle::update(double dTime) {
+void CameraControle::update(Seconds time) {
     vec2 cursor_movement = m_cursor_pos - m_prev_pos;
     m_prev_pos           = m_cursor_pos;
 

@@ -13,13 +13,9 @@ using namespace bembel::gui;
 using namespace ::gl;
 
 RenderingExample::RenderingExample() {
-    events::addHandler<WindowShouldCloseEvent>(this);
-    events::addHandler<FrameBufferResizeEvent>(this);
 }
 
 RenderingExample::~RenderingExample() {
-    events::removeHandler<WindowShouldCloseEvent>(this);
-    events::removeHandler<FrameBufferResizeEvent>(this);
 }
 
 bool RenderingExample::init(std::span<std::string_view> args) {
@@ -75,8 +71,8 @@ void RenderingExample::cleanup() {
     m_engine.display.closeOpenWindows();
 }
 
-void RenderingExample::update(double time) {
-    // m_camera->update(time);
+void RenderingExample::handleEvent(In<AppUpdateEvent>) {
+    //m_camera->update(time);
 
     static constexpr float RAD_TO_DEG = 180 / 3.14159265359;
 

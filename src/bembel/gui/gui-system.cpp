@@ -65,8 +65,6 @@ void GuiSystem::shutdown() {
     ImGui::DestroyContext();
 }
 
-void GuiSystem::update(double) {}
-
 GraphicalUserInterface* GuiSystem::createGUI(std::string_view name) {
     if(!name.empty() && m_named_guis.find(name) != m_named_guis.end()) {
         logError("Can't create GUI with name '{}'. A GUI with the same name already exists.", name);

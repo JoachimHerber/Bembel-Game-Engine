@@ -18,10 +18,9 @@ export class RenderingExample : public kernel::Application<GraphicSystem, GuiSys
     virtual bool init(std::span<std::string_view> args) override;
     virtual void cleanup() override;
 
-    virtual void update(double time) override;
-
-    void handleEvent(In<kernel::WindowShouldCloseEvent>);
-    void handleEvent(In<kernel::FrameBufferResizeEvent>);
+    void handleEvent(In<AppUpdateEvent>);
+    void handleEvent(In<WindowShouldCloseEvent>);
+    void handleEvent(In<FrameBufferResizeEvent>);
 
   private:
     void updateLightDir(In<i64>);
@@ -40,6 +39,12 @@ export class RenderingExample : public kernel::Application<GraphicSystem, GuiSys
         u64                            m_resolution;
         uint                           m_layer;
     };
+    EventHandlerGuard<
+        AppUpdateEvent,
+        WindowShouldCloseEvent,
+        WindowShouldCloseEvent>
+        m_guard = {this};
+
     LabelWidget*     m_label;
     IntSliderWidget* m_light_slider_pitch;
     IntSliderWidget* m_light_slider_yaw;

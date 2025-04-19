@@ -12,13 +12,11 @@ using namespace kernel;
 using namespace graphics;
 using namespace gui;
 
-
-export coro::Task<void> runGameLogic(
-    ChessBoard*  board,
-    Camera*      camera,
-    LabelWidget* lable,
-    Signal<>&    button_press,
-    Signal<>&    frame_sync
+export coro::Task<> runGameLogic(
+    ChessBoard*      board,
+    Camera*          camera,
+    LabelWidget*     lable,
+    Signal<>&        button_press
 );
 
 } // namespace bembel::examples::chess

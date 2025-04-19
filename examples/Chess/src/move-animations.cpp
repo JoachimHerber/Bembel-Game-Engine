@@ -10,7 +10,10 @@ namespace bembel::examples::chess {
 using namespace bembel::base;
 using namespace bembel::kernel;
 
-MoveAnimation playMoveAnimation(ChessPiece chess_piece, ivec2 to, Signal<>& frame_sync) {
+coro::Task<> playMoveAnimation( //
+    ChessPiece chess_piece,
+    ivec2      to
+) {
     ivec2 from = chess_piece.getBoardPosition();
     ivec2 posΔ = to - from;
 
@@ -40,8 +43,6 @@ MoveAnimation playMoveAnimation(ChessPiece chess_piece, ivec2 to, Signal<>& fram
     }
     float progress = 0;
 
-    using namespace std::chrono;
-    auto start_time = steady_clock::now();
     while(progress < dist) {
         vec3 pos = start + progress * dir;
 
@@ -49,9 +50,8 @@ MoveAnimation playMoveAnimation(ChessPiece chess_piece, ivec2 to, Signal<>& fram
         pos.y        = 4 * hop_height * (fract - fract * fract);
 
         chess_piece.setPosition(pos);
-
-        co_await frame_sync;
-        progress = duration_cast<duration<float>>(steady_clock::now() - start_time).count();
+        auto const event = co_await events::Awaiter<AppUpdateEvent>();
+        progress += event.ΔT.count();
     }
     chess_piece.setPosition(start + dist * dir);
 
