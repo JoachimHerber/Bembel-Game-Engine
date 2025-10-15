@@ -1,8 +1,7 @@
-﻿module;
-#include <glbinding/gl/gl.h>
-module bembel.graphics.pipeline;
+﻿module bembel.graphics.pipeline;
 
 import std;
+import glbinding;
 import bembel.base;
 import bembel.kernel;
 

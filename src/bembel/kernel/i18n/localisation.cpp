@@ -1,8 +1,7 @@
-module;
-#include <nlohmann/json.hpp>
 module bembel.kernel.i18n;
 
 import std;
+import nlohmann.json;
 import bembel.base;
 import bembel.kernel.assets;
 
@@ -73,7 +72,7 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
     }
 
     try {
-        nlohmann::json root;
+        json root;
         file >> root;
 
         if(!root.is_object()) return Error::FileNotFound;
@@ -87,13 +86,13 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
 
         m_translations.clear();
         m_translations.resize(keys.size());
-        [&](this const auto self, std::string path, nlohmann::json const& j) -> void {
+        [&](this const auto self, std::string path, json const& j) -> void {
             if(j.is_object()) {
-                for(auto& [key, value] : j.items()) {
+                for(auto& it : j.items()) {
                     if(path.empty())
-                        self(key, value);
+                        self(it.key(), it.value());
                     else
-                        self(path + "." + key, value);
+                        self(path + "." + it.key(), it.value());
                 }
             } else {
                 auto it   = key_to_index.find(path);
@@ -108,7 +107,7 @@ Localisation::Error Localisation::load(std::filesystem::path file_path) {
                 }
             }
         }("", translations);
-    } catch(nlohmann::json::exception e) {
+    } catch(json::exception e) {
         logError("Error while parsing {}: {}", file_path.string(), e.what());
         return Error::FileNotFound;
     }

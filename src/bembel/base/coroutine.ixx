@@ -70,7 +70,7 @@ class CoroutineHandle {
         }
     }
 
-    friend static void swap(CoroutineHandle& lhs, CoroutineHandle& rhs) {
+    static void swap(CoroutineHandle& lhs, CoroutineHandle& rhs) {
         std::swap(lhs.m_hndl, rhs.m_hndl);
     }
 

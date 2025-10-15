@@ -1,6 +1,7 @@
 export module bembel.kernel.i18n:NumberFormat;
 
 import std;
+import nlohmann.json;
 import bembel.base;
 
 namespace bembel::kernel::i18n {
@@ -19,7 +20,7 @@ export class NumberFormat {
     void format(In<u64> value, InOut<std::u8string> str);
     void format(In<double> value, InOut<std::u8string> str);
 
-    NumberFormat& operator=(In<json> j);
+    NumberFormat& operator=(In<nlohmann::json> j);
 
   private:
     std::u8string  m_decimal_separator         = u8".";

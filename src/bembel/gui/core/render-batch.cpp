@@ -1,8 +1,7 @@
-﻿module;
-#include <glbinding/gl/gl.h>
-module bembel.gui.core;
+﻿module bembel.gui.core;
 
 import std;
+import glbinding;
 import bembel.base;
 import bembel.kernel;
 
@@ -15,9 +14,7 @@ void setupVertexAttribute(
     GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset
 ) {
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(
-        index, size, type, normalized, sizeof(InstanceData), (void*)(uintptr_t)offset
-    );
+    glVertexAttribPointer(index, size, type, normalized, sizeof(InstanceData), (void*)offset);
     glVertexAttribDivisor(index, 1);
 }
 
@@ -38,11 +35,11 @@ void RenderBatch::init() {
     setupVertexAttribute(3, 4, GL_UNSIGNED_BYTE, GL_FALSE, 16 + 8 + 4);
 }
 
-void RenderBatch::setPositionOffset(vec2 const& position_offset) {
+void RenderBatch::setPositionOffset(In<vec2> position_offset) {
     m_position_offset = position_offset;
 }
 
-void RenderBatch::setDrawArea(vec2 const& min, vec2 const& max) {
+void RenderBatch::setDrawArea(In<vec2> min, In<vec2> max) {
     m_draw_area_min = min;
     m_draw_area_max = max;
 }
@@ -121,7 +118,7 @@ void RenderBatch::drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coo
     );
 }
 
-void RenderBatch::drawGlyph(GlyphIndex glyph_index, vec2 const& pos, float scale, bool outline) {
+void RenderBatch::drawGlyph(GlyphIndex glyph_index, In<vec2> pos, float scale, bool outline) {
     if(!m_font) return;
 
     u8 threshold_min = outline ? 0x0c : 0x70;

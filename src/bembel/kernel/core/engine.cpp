@@ -1,33 +1,28 @@
-﻿module;
-#include <glbinding/gl/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <Windows.h>
-module bembel.kernel.core;
+﻿module bembel.kernel.core;
 
 import std;
+import glfw;
 import bembel.base;
 import bembel.kernel.assets;
 
 extern "C" {
-__declspec(dllexport) DWORD NvOptimusEnablement                  = 1;
-__declspec(dllexport) int   AmdPowerXpressRequestHighPerformance = 1;
+__declspec(dllexport) std::uint32_t NvOptimusEnablement                  = 1;
+__declspec(dllexport) int           AmdPowerXpressRequestHighPerformance = 1;
 }
 
 namespace bembel::kernel {
 using namespace bembel::base;
-using namespace ::gl;
 
 void glfw_error_callback(int error, char const* description) {
     logError("GLFW-Error({}): {}", error, description);
 }
 
 Engine::Engine() {
-    if(!glfwInit()) {
+    if(!glfw::init()) {
         logError("Failed to initialize GLFW");
         throw std::exception();
     }
-    glfwSetErrorCallback(glfw_error_callback);
+    glfw::setErrorCallback(glfw_error_callback);
 
     this->input.keyboard.initDefaultKeys();
 
@@ -38,7 +33,7 @@ Engine::~Engine() {
     // delete system in revers order of their creation
     for(size_t n = m_systems.size(); n-- > 0;) m_systems[n].reset();
 
-    glfwTerminate();
+    glfw::terminate();
 }
 
 bool Engine::removeSystem(std::string_view name) {
@@ -107,7 +102,7 @@ bool Engine::loadSetting(std::filesystem::path file) {
 }
 
 void Engine::pollEvents() {
-    glfwPollEvents();
+    glfw::pollEvents();
 }
 
 } // namespace bembel::kernel

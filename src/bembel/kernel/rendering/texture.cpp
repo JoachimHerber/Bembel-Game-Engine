@@ -1,8 +1,9 @@
 ﻿module;
-#include <glbinding/gl/gl.h>
+//#include <glbinding/gl/gl.h>
 module bembel.kernel.rendering;
 
 import std;
+import glbinding;
 import bembel.base;
 import bembel.kernel.assets;
 

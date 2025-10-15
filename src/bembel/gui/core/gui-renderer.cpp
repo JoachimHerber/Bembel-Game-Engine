@@ -1,8 +1,7 @@
-﻿module;
-#include <glbinding/gl/gl.h>
-module bembel.gui.core;
+﻿module bembel.gui.core;
 
 import std;
+import glbinding;
 import bembel.base;
 import bembel.kernel;
 

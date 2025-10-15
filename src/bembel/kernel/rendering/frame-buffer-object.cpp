@@ -1,8 +1,8 @@
 ﻿module;
-#include <glbinding/gl/gl.h>
 module bembel.kernel.rendering;
 
 import std;
+import glbinding;
 import bembel.base;
 
 import :FBO;
@@ -52,7 +52,7 @@ void FrameBufferObject::init() {
         m_depth_attechment.level,
         m_depth_attechment.layer
     );
-    for(unsigned n = 0; n < m_color_attechments.size(); ++n) {
+    for(uint n = 0; n < m_color_attechments.size(); ++n) {
         gl::setFramebufferTexture2D(
             GL_COLOR_ATTACHMENT0 + n,
             m_color_attechments[n].texture,
@@ -133,7 +133,7 @@ void FrameBufferObject::endRenderToTexture() {
 void FrameBufferObject::blitToBackBuffer(
     ivec2 source_min, ivec2 source_max, ivec2 target_min, ivec2 target_max
 ) {
-    glBindFramebufferEXT(GL_READ_FRAMEBUFFER, m_handle);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_handle);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
     glBlitFramebuffer(

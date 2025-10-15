@@ -1,8 +1,7 @@
-﻿module;
-#include <glbinding/gl/gl.h>
-module bembel.particles;
+﻿module bembel.particles;
 
 import std;
+import glbinding;
 import bembel.base;
 import bembel.kernel;
 import :Data;

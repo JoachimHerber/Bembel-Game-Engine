@@ -1,9 +1,7 @@
-﻿module;
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-export module bembel.kernel.display:DisplayMode;
+﻿export module bembel.kernel.display:DisplayMode;
 
 import std;
+import glfw;
 import bembel.base;
 
 namespace bembel::kernel {
@@ -16,7 +14,7 @@ export class DisplayModeBase {
 
     virtual bool configure(xml::Element const*) = 0;
 
-    virtual GLFWwindow* creatWindow(std::string_view, GLFWwindow*) = 0;
+    virtual glfw::Window* creatWindow(std::string_view, glfw::Window*) = 0;
 
     static Factory<DisplayModeBase>& getFactory();
 };
@@ -47,7 +45,7 @@ export class WindowDisplayMode : public DisplayModeBase {
 
     virtual bool configure(xml::Element const*) override;
 
-    GLFWwindow* creatWindow(std::string_view, GLFWwindow*) override;
+    glfw::Window* creatWindow(std::string_view, glfw::Window*) override;
 
     static constexpr std::string_view TYPE_NAME = "WindowDisplayMode";
 
@@ -81,7 +79,7 @@ export class FullscreenDisplayMode : public DisplayModeBase {
 
     virtual bool configure(xml::Element const*) override;
 
-    GLFWwindow* creatWindow(std::string_view, GLFWwindow*) override;
+    glfw::Window* creatWindow(std::string_view, glfw::Window*) override;
 
     static constexpr std::string_view TYPE_NAME = "FullscreenDisplayMode";
 

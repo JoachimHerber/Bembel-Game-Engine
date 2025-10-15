@@ -11,7 +11,6 @@ export import :Awaitable;
 export import :Signal;
 export import :Slot;
 export import :Types;
-export import :Glm;
 export import :Events;
 export import :ObservableValue;
 export import :Conversion;

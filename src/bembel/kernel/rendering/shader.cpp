@@ -1,18 +1,19 @@
 ﻿module;
-#include <glbinding/gl/gl.h>
+//#include <glbinding/gl/gl.h>
 module bembel.kernel.rendering;
 
 import std;
+import glbinding;
 import bembel.base;
 
 namespace bembel::kernel {
 using namespace bembel::base;
-using namespace gl;
+using namespace ::gl;
 
 Shader::Shader(Type type, uint handle) : m_type{type}, m_handle(handle) {}
 
 Shader::~Shader() {
-    ::gl::glDeleteShader(m_handle);
+    glDeleteShader(m_handle);
 }
 
 char const* GetShaderTypeName(Shader::Type type) {

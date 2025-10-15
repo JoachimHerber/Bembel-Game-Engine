@@ -52,3 +52,19 @@ source_group(dependencies/imgui PREFIX "bembel" FILES
         ../dependencies/imgui/backends/imgui_impl_glfw.h
         ../dependencies/imgui/backends/imgui_impl_glfw.cpp
 )
+target_sources(Bembel
+    PRIVATE
+		bembel/module-wrapper/glbinding.ixx
+		bembel/module-wrapper/glm.ixx
+		bembel/module-wrapper/glfw3.ixx
+		bembel/module-wrapper/json.ixx
+)
+
+source_group(dependencies/module-wrapper PREFIX "bembel" FILES 
+    bembel/module-wrapper/glbinding.ixx
+    bembel/module-wrapper/glm.ixx
+    bembel/module-wrapper/glfw3.ixx
+    bembel/module-wrapper/json.ixx
+)
+
+

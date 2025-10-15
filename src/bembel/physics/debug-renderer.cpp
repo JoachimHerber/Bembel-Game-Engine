@@ -1,9 +1,9 @@
 module;
 #include <btBulletDynamicsCommon.h>
-#include <glbinding/gl/gl.h>
 module bembel.physics:DebugRenderer;
 
 import std;
+import glbinding;
 import bembel.base;
 import bembel.kernel;
 import bembel.graphics;

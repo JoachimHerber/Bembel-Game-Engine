@@ -4,7 +4,6 @@ target_sources(Bembel
 		
 	PRIVATE
         base.ixx
-        glm.ixx
         types.ixx
         types.cpp
         unicode.ixx

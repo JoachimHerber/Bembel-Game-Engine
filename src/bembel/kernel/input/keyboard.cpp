@@ -1,9 +1,7 @@
-﻿module;
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-module bembel.kernel.input;
+﻿module bembel.kernel.input;
 
 import std;
+import glfw;
 import bembel.base;
 
 namespace bembel::kernel {
@@ -102,7 +100,7 @@ void Keyboard::initDefaultKeys() {
 }
 
 Keyboard::Key* Keyboard::getKey(In<KeyId> key_id, In<Scancode> scancode) {
-    if(key_id != GLFW_KEY_UNKNOWN) {
+    if(key_id != glfw::KEY_UNKNOWN) {
         auto it = m_known_keys.find(key_id);
         if(it != m_known_keys.end()) return it->second;
     } else {
@@ -138,7 +136,7 @@ Keyboard::Key* Keyboard::createButton(In<KeyId> key_id, In<Scancode> scancode) {
         return nullptr;
     }
 
-    char const* keyName = glfwGetKeyName(int(key_id), scancode);
+    char const* keyName = glfw::getKeyName(int(key_id), scancode);
 
     m_keys = std::span((Key*)m_Buttons, m_keys.size() + 1);
 
@@ -156,7 +154,7 @@ Keyboard::Key* Keyboard::createButton(In<KeyId> key_id, In<Scancode> scancode) {
         }
     }
 
-    if(key_id != GLFW_KEY_UNKNOWN) {
+    if(key_id != glfw::KEY_UNKNOWN) {
         this->m_known_keys.emplace(key_id, key);
     } else {
         this->m_unknown_keys.emplace(scancode, key);

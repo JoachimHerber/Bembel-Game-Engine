@@ -1,9 +1,7 @@
-﻿module;
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-module bembel.kernel.assets;
+﻿module bembel.kernel.assets;
 
 import std;
+import glfw;
 import bembel.base;
 
 import :CursorIcon;
@@ -15,7 +13,7 @@ void CursorIcon::createStandardCursors() {
     assets::registerAssetType<CursorIcon>();
 
     auto createStandardCursor = [&](int shape, std::string_view name) {
-        auto cursor = glfwCreateStandardCursor(shape);
+        auto cursor = glfw::createStandardCursor(shape);
         if(cursor) {
             Asset<CursorIcon>::getContainer()->addAsset(
                 std::make_unique<CursorIcon>(cursor, name), name
@@ -25,12 +23,12 @@ void CursorIcon::createStandardCursors() {
         }
     };
 
-    createStandardCursor(GLFW_ARROW_CURSOR, "Arrow");
-    createStandardCursor(GLFW_IBEAM_CURSOR, "IBeam");
-    createStandardCursor(GLFW_CROSSHAIR_CURSOR, "Crosshair");
-    createStandardCursor(GLFW_HAND_CURSOR, "Hand");
-    createStandardCursor(GLFW_HRESIZE_CURSOR, "HResize");
-    createStandardCursor(GLFW_VRESIZE_CURSOR, "VResize");
+    createStandardCursor(glfw::ARROW_CURSOR, "Arrow");
+    createStandardCursor(glfw::IBEAM_CURSOR, "IBeam");
+    createStandardCursor(glfw::CROSSHAIR_CURSOR, "Crosshair");
+    createStandardCursor(glfw::HAND_CURSOR, "Hand");
+    createStandardCursor(glfw::HRESIZE_CURSOR, "HResize");
+    createStandardCursor(glfw::VRESIZE_CURSOR, "VResize");
     // @ToDo glfw 3.4 Cursors
     // createStandardCursor(GLFW_RESIZE_EW_CURSOR, "RESIZE_EW");
     // createStandardCursor(GLFW_RESIZE_NS_CURSOR, "RESIZE_NS");

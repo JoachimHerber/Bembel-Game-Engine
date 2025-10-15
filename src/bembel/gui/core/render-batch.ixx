@@ -19,11 +19,11 @@ export class RenderBatchInterface {
     virtual void setSecondaryColor(In<ColorRGB> color) = 0;
     virtual void setAlpha(In<u8> alpha)                = 0;
 
-    virtual void drawRectangle(vec2 min, vec2 max)                                      = 0;
-    virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) = 0;
-    virtual void drawGlyph(
-        GlyphIndex glyph, vec2 const& pos, float scale, bool outline = false
-    ) = 0;
+    virtual void drawRectangle(In<vec2> min, In<vec2> max) = 0;
+    virtual void drawIcon(
+        In<vec2> min, In<vec2> max, In<vec2> tex_coords_min, In<vec2> tex_coords_max
+    )                                                                                         = 0;
+    virtual void drawGlyph(GlyphIndex glyph, In<vec2> pos, float scale, bool outline = false) = 0;
 };
 
 export struct InstanceData {
@@ -59,17 +59,19 @@ export class RenderBatch : public RenderBatchInterface {
 
     void setFont(SdfFont* font) { m_font = font; }
 
-    void setPositionOffset(vec2 const& position_offset);
-    void setDrawArea(vec2 const& min, vec2 const& max);
+    void setPositionOffset(In<vec2> position_offset);
+    void setDrawArea(In<vec2> min, In<vec2> max);
 
     virtual void setColor(In<ColorRGBA> color) override;
     virtual void setPrimaryColor(In<ColorRGB> color) override;
     virtual void setSecondaryColor(In<ColorRGB> color) override;
     virtual void setAlpha(In<u8> alpha) override;
 
-    virtual void drawRectangle(vec2 min, vec2 max) override;
-    virtual void drawIcon(vec2 min, vec2 max, vec2 tex_coords_min, vec2 tex_coords_max) override;
-    virtual void drawGlyph(GlyphIndex glyph, vec2 const& pos, float scale, bool outline) override;
+    virtual void drawRectangle(In<vec2> min, In<vec2> max) override;
+    virtual void drawIcon(
+        In<vec2> min, In<vec2> max, In<vec2> tex_coords_min, In<vec2> tex_coords_max
+    ) override;
+    virtual void drawGlyph(GlyphIndex glyph, In<vec2> pos, float scale, bool outline) override;
 
     void draw();
 
@@ -77,14 +79,14 @@ export class RenderBatch : public RenderBatchInterface {
     bool clampToViewArea(vec2& min, vec2& max, vec2& tex_coords_min, vec2& tex_coords_max);
 
     void addInstance(
-        vec2 pos_min,
-        vec2 pos_max,
-        vec2 tc_min,
-        vec2 tc_max,
-        u8   type,
-        u8   data1 = 0u,
-        u8   data2 = 0u,
-        u8   data3 = 0u
+        In<vec2> pos_min,
+        In<vec2> pos_max,
+        In<vec2> tc_min,
+        In<vec2> tc_max,
+        u8       type,
+        u8       data1 = 0u,
+        u8 data2       = 0u,
+        u8 data3       = 0u
     ) {
         m_instances.emplace_back(
             pos_min.x,

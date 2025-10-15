@@ -1,6 +1,4 @@
-﻿module;
-#include <nlohmann/json.hpp>
-module bembel.kernel.i18n;
+﻿module bembel.kernel.i18n;
 
 import std;
 import bembel.base;

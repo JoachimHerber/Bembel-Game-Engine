@@ -1,27 +1,32 @@
-module;
-#include <nlohmann/json.hpp>
 export module bembel.base:Types;
 
 import std;
+export import glm;
+export import nlohmann.json;
 
 export namespace bembel::base {
-using u8    = uint8_t;
-using u16   = uint16_t;
-using u32   = uint32_t;
-using u64   = uint64_t;
+using u8    = std::uint8_t;
+using u16   = std::uint16_t;
+using u32   = std::uint32_t;
+using u64   = std::uint64_t;
 using uint  = unsigned int;
-using usize = size_t;
+using usize = std::size_t;
 
-using i8  = int8_t;
-using i16 = int16_t;
-using i32 = int32_t;
-using i64 = int64_t;
+using i8  = std::int8_t;
+using i16 = std::int16_t;
+using i32 = std::int32_t;
+using i64 = std::int64_t;
 
 using byte = std::byte;
 
 using Seconds = std::chrono::duration<double>;
 
-using nlohmann::json;
+using namespace ::glm;
+using namespace ::nlohmann;
+
+using ColorRGB  = ::glm::tvec3<u8>;
+using ColorRGBA = ::glm::tvec4<u8>;
+
 
 enum class WindowId : u32 { MAIN };
 
@@ -55,9 +60,6 @@ struct PASS_BY_VALUE : std::bool_constant<std::is_trivially_copyable_v<T> && siz
 template <>           struct PASS_BY_VALUE<std::string_view>      : std::true_type{};
 template <>           struct PASS_BY_VALUE<std::u8string_view>    : std::true_type{};
 template <typename T> struct PASS_BY_VALUE<std::span<T>>          : std::true_type{};
-template <>           struct PASS_BY_VALUE<std::source_location>  : std::true_type{};
-template <>           struct PASS_BY_VALUE<std::filesystem::path> : std::false_type{};
-template <>           struct PASS_BY_VALUE<nlohmann::json>        : std::false_type{};
 
 template <typename T> using In    = std::conditional_t<PASS_BY_VALUE<T>::value, T const, T const &>;
 template <typename T> using InOut = T&;
@@ -81,15 +83,9 @@ template <typename T, typename... TArgs>
 concept AllowedTypes = (std::same_as<T, TArgs> || ...);
 } // namespace bembel::base
 
-// partial specializations for nlohmann::json
 export template <>
-struct nlohmann::adl_serializer<std::u8string> {
-    static void to_json(json& j, std::u8string const& str) {
-        j = std::string_view((char const*)str.data(), str.size());
-    }
-
-    static void from_json(json const& j, std::u8string& str) {
-        std::string tmp = j.get<std::string>();
-        str             = std::u8string_view((char8_t const*)tmp.data(), tmp.size());
+struct std::formatter<bembel::base::WindowId> : std::formatter<std::string> {
+    auto format(bembel::base::WindowId v, format_context& ctx) {
+        return formatter<string>::format(std::format("{}", uint32_t(v)), ctx);
     }
 };

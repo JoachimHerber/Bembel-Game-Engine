@@ -2,7 +2,6 @@
 
 import std;
 import :Types;
-import :Glm;
 import :Logger;
 
 export namespace bembel::base::conversion {
