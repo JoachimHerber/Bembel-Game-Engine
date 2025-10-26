@@ -73,6 +73,7 @@ export namespace glfw {
     constexpr auto BLUE_BITS    = GLFW_BLUE_BITS;
     constexpr auto ALPHA_BITS   = GLFW_ALPHA_BITS;
     constexpr auto REFRESH_RATE = GLFW_REFRESH_RATE;
+    constexpr auto TRANSPARENT_FRAMEBUFFER = GLFW_TRANSPARENT_FRAMEBUFFER;
 
     constexpr auto PRESS       = GLFW_PRESS;
     constexpr auto REPEAT      = GLFW_REPEAT;

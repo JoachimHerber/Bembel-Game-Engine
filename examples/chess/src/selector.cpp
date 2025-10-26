@@ -64,8 +64,6 @@ void Selector::updateSelection(In<Ray> ray) {
     ));
 }
 
-ChessPieceSelector::~ChessPieceSelector() {}
-
 void ChessPieceSelector::onSelect(EntityID entity) {
     if(m_selection.getId() == entity) return;
 

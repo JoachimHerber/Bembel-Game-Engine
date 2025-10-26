@@ -10,6 +10,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 ShadowMap::ShadowMap(Texture::Target target)
   : m_texture{target, Texture::Format::DEPTH_COMPONENT32} {}
@@ -43,7 +44,7 @@ void ShadowMap::updateLayer(
     m_transforms[layer] = view_proj;
 
     m_fbos[layer].beginRenderToTexture();
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(ClearBufferMask::GL_DEPTH_BUFFER_BIT);
 
     glViewport(0, 0, m_resolution, m_resolution);
     for(auto& it : renderer) {

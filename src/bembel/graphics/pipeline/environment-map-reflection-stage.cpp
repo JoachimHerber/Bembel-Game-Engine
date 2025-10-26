@@ -10,8 +10,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
-
-using GLenum = gl::GLenum;
+using enum gl::GLenum;
 
 EnvironmentMapReflectionStage::EnvironmentMapReflectionStage(RenderingPipeline& pipline)
   : RenderingPipeline::Stage(pipline) {}
@@ -110,10 +109,10 @@ void EnvironmentMapReflectionStage::execute(In<std::span<const RendererPtr>>) {
     mat4 invView = glm::inverse(view);
 
     glUniformMatrix4fv(
-        program->getUniformLocation("uInverseProjectionMatrix"), 1, GL_FALSE, &invProj[0][0]
+        program->getUniformLocation("uInverseProjectionMatrix"), 1, false, &invProj[0][0]
     );
     glUniformMatrix4fv(
-        program->getUniformLocation("uInverseViewMatrix"), 1, GL_FALSE, &invView[0][0]
+        program->getUniformLocation("uInverseViewMatrix"), 1, false, &invView[0][0]
     );
 
     bindInputTextures();

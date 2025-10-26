@@ -28,13 +28,13 @@ add_subdirectory(src)
 add_subdirectory(tests)
 
 
-bembel_conditional_add_sub_project(Input "examples/input" "a simple example that show how to handle input in the bembel game engine")
+bembel_conditional_add_sub_project(Input     "examples/input"     "a simple example that show how to handle input in the bembel game engine")
 bembel_conditional_add_sub_project(Rendering "examples/rendering" "rendering example application")
-bembel_conditional_add_sub_project(Chess "examples/chess" "chess example application")
-bembel_conditional_add_sub_project(GUI "examples/GUI" "GUI example application")
-bembel_conditional_add_sub_project(Physics "examples/physics" "Physics example application")
-bembel_conditional_add_sub_project(GMHelper "examples/gm-helper" "GM-Helper example application")
+bembel_conditional_add_sub_project(Chess     "examples/chess"     "chess example application")
+bembel_conditional_add_sub_project(GUI       "examples/GUI"       "GUI example application")
+bembel_conditional_add_sub_project(Physics   "examples/physics"   "Physics example application")
+bembel_conditional_add_sub_project(GMHelper  "examples/gm-helper" "GM-Helper example application")
 
 bembel_conditional_add_sub_project(FontConverter "tools/font-converter" "A tool for converting fonts")
-bembel_conditional_add_sub_project(Editor        "tools/editor" "A tool for converting fonts")
+bembel_conditional_add_sub_project(Editor        "tools/editor"         "A tool for converting fonts")
 

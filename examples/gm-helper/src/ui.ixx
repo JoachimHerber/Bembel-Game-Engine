@@ -189,7 +189,8 @@ namespace imgui {
         if(imgui::BeginChild("Path", ImVec2(640.0f, 450.0f))) {
             for(uint n = 0; n < textures.size(); n++) {
                 if(imgui::ImageButton(
-                       (void*)(std::intptr_t)textures[n]->getTextureHandle(),
+                       "",
+                       u64(textures[n]->getTextureHandle()),
                        imgui::ImVec2(image_width, image_width),
                        imgui::ImVec2(0.0f, 1.0f),
                        imgui::ImVec2(1.0f, 0.0f)

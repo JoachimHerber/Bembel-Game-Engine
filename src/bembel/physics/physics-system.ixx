@@ -29,12 +29,16 @@ export class PhysicsSystem : public System {
         m_scenes.push_back(std::move(scene));
     }
 
+    void handleEvent(In<AppUpdateEvent>);
+
     virtual bool configure(xml::Element const*) override { return true; }
 
     virtual bool init() override { return true; }
     virtual void shutdown() override { m_scenes.clear(); }
 
   private:
+    EventHandlerGuard<AppUpdateEvent> m_guard = {this};
+
     Engine* m_engine;
 
     std::vector<std::shared_ptr<Scene>> m_scenes;

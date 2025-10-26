@@ -10,6 +10,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 std::vector<std::array<vec4, 8>> getFrustumCornersWorldSpace(
     In<Camera> camera, std::vector<float> cascade_distances

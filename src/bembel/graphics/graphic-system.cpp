@@ -78,7 +78,7 @@ void GraphicSystem::handleEvent(AppRenderEvent) {
 void GraphicSystem::configureRenderer(xml::Element const* properties) {
     if(!properties) return;
 
-    m_renderer.resize(3);
+    m_renderer.resize(0);
     for(auto renderer_properties : xml::IterateChildElements(properties)) {
         auto renderer = DefaultGeometryRenderer::createRenderer(renderer_properties);
         if(!renderer) return;

@@ -10,6 +10,7 @@ import bembel.kernel.assets;
 namespace bembel::kernel {
 using namespace bembel::base;
 using namespace ::gl;
+using enum gl::GLenum;
 
 namespace gl {
 

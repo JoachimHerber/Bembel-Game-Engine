@@ -21,4 +21,10 @@ PhysicsSystem::PhysicsSystem(In<Engine*> engine) //
 
 PhysicsSystem::~PhysicsSystem() {}
 
+void PhysicsSystem::handleEvent(In<AppUpdateEvent> event) {
+    for(auto& scene : m_scenes){
+        scene->getDataContainer<World>()->update(event.ΔT);
+    }
+}
+
 } // namespace bembel::physics

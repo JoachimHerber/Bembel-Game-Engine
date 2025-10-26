@@ -9,6 +9,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 void DefaultGeometryRenderer::renderGeometry(
     In<mat4> proj, In<mat4> view, In<std::vector<GeometryRenderData>> data
@@ -92,7 +93,7 @@ void DefaultGeometryRenderer::renderShadows(
         glUniformMatrix4fv(
             m_depth_pass_shader->getUniformLocation("uModleViewMatrix"),
             1,
-            GL_FALSE,
+            false,
             &(it.transform[0][0])
         );
         glDrawElements(

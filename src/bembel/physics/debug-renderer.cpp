@@ -16,6 +16,7 @@ using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace bembel::graphics;
 using namespace ::gl;
+using enum gl::GLenum;
 
 PhysicsDebugRenderStage::PhysicsDebugRenderStage(RenderingPipeline& pipline)
   : RenderingPipeline::Stage{pipline} {}

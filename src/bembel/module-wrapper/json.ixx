@@ -24,3 +24,16 @@ export using NLOHMANN_JSON_NAMESPACE::to_string;
 
 } // namespace NLOHMANN_JSON_NAMESPACE_CONCAT(NLOHMANN_JSON_ABI_TAGS,NLOHMANN_JSON_NAMESPACE_VERSION)
 }  // namespace nlohmann
+
+
+export template <>
+struct nlohmann::adl_serializer<std::u8string> {
+    static void to_json(json& j, std::u8string const& str) {
+        j = std::string_view((char const*)str.data(), str.size());
+    }
+
+    static void from_json(json const& j, std::u8string& str) {
+        std::string tmp = j.get<std::string>();
+        str             = std::u8string_view((char8_t const*)tmp.data(), tmp.size());
+    }
+};

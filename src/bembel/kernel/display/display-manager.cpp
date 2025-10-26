@@ -11,6 +11,7 @@ import :Events;
 namespace bembel::kernel {
 using namespace bembel::base;
 using namespace ::gl;
+    using enum gl::GLenum;
 
 DisplayManager::DisplayManager() {
     // glfwSetMonitorCallback(glfw_callbacks::MonitorCallback);
@@ -45,6 +46,7 @@ void DisplayManager::updateWindows() {
         glDisable(GL_SCISSOR_TEST);
         vec3 const bg = window->background_color;
         glClearColor(bg.r, bg.g, bg.b, 1.f);
+        using enum gl::ClearBufferMask;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for(const auto& viewport : window->getViewports()) { //

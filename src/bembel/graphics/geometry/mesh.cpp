@@ -9,6 +9,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 GeometryMesh::GeometryMesh(VertexAttribMask format) : m_vertex_format{format} {
     glGenVertexArrays(1, &m_vao);
@@ -41,10 +42,10 @@ GeometryMesh::GeometryMesh(In<std::span<DefaultVertexFormat>> vertices, In<std::
 
     uint stride = sizeof(DefaultVertexFormat);
     // clang-format off
-    setVertexAttrib(VertexAttrib::POSITION,   3, GL_FLOAT, GL_FALSE, stride,  0);  
-    setVertexAttrib(VertexAttrib::NORMAL,     3, GL_SHORT, GL_TRUE,  stride, 12); 
-    setVertexAttrib(VertexAttrib::TANGENT,    3, GL_SHORT, GL_TRUE,  stride, 18); 
-    setVertexAttrib(VertexAttrib::TEX_COORDS, 2, GL_FLOAT, GL_FALSE, stride, 24);
+    setVertexAttrib(VertexAttrib::POSITION,   3, GL_FLOAT, false, stride,  0);  
+    setVertexAttrib(VertexAttrib::NORMAL,     3, GL_SHORT, true,  stride, 12); 
+    setVertexAttrib(VertexAttrib::TANGENT,    3, GL_SHORT, true,  stride, 18); 
+    setVertexAttrib(VertexAttrib::TEX_COORDS, 2, GL_FLOAT, false, stride, 24);
     // clang-format on
 
     glBindVertexArray(0);
@@ -68,12 +69,12 @@ GeometryMesh::GeometryMesh(In<std::span<RiggedVertexFormat>> vertices, In<std::s
 
     uint stride = sizeof(RiggedVertexFormat);
     // clang-format off
-    setVertexAttrib(VertexAttrib::POSITION,     3, GL_FLOAT, GL_FALSE, stride,  0);  
-    setVertexAttrib(VertexAttrib::NORMAL,       3, GL_SHORT, GL_TRUE,  stride, 12); 
-    setVertexAttrib(VertexAttrib::TANGENT,      3, GL_SHORT, GL_TRUE,  stride, 18); 
-    setVertexAttrib(VertexAttrib::TEX_COORDS,   2, GL_FLOAT, GL_FALSE, stride, 24); 
-    setVertexAttrib(VertexAttrib::BONE_INDICES, 4, GL_FLOAT, GL_FALSE, stride, 32); 
-    setVertexAttrib(VertexAttrib::BONE_WEIGHTS, 4, GL_FLOAT, GL_FALSE, stride, 48);
+    setVertexAttrib(VertexAttrib::POSITION,     3, GL_FLOAT, false, stride,  0);  
+    setVertexAttrib(VertexAttrib::NORMAL,       3, GL_SHORT, true,  stride, 12); 
+    setVertexAttrib(VertexAttrib::TANGENT,      3, GL_SHORT, true,  stride, 18); 
+    setVertexAttrib(VertexAttrib::TEX_COORDS,   2, GL_FLOAT, false, stride, 24); 
+    setVertexAttrib(VertexAttrib::BONE_INDICES, 4, GL_FLOAT, false, stride, 32); 
+    setVertexAttrib(VertexAttrib::BONE_WEIGHTS, 4, GL_FLOAT, false, stride, 48);
     // clang-format on
 
     glBindVertexArray(0);
@@ -195,7 +196,7 @@ std::unique_ptr<GeometryMesh> GeometryMesh::createGeometryMesh(xml::Element cons
             index,
             components,
             GL_FLOAT,
-            GL_FALSE,
+            false,
             stride * sizeof(float),
             (void*)(offset * sizeof(float))
         );

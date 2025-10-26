@@ -9,6 +9,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 Factory<RenderingPipeline::Stage, RenderingPipeline&>& RenderingPipeline::Stage::getFactory() {
     static Factory<Stage, RenderingPipeline&> factory;

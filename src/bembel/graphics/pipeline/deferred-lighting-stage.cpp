@@ -10,6 +10,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 DeferredLightingStage::DeferredLightingStage(RenderingPipeline& pipline)
   : RenderingPipeline::Stage(pipline) {}
@@ -83,7 +84,7 @@ void DeferredLightingStage::setScene(Scene* scene) {
 
 inline void setVertexAttribPointer(uint index, int size, uint offset) {
     glVertexAttribPointer(
-        index, size, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(offset * sizeof(float))
+        index, size, GL_FLOAT, false, 8 * sizeof(float), (void*)(offset * sizeof(float))
     );
 }
 

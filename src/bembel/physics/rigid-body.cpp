@@ -145,7 +145,10 @@ bool RigidBodyContainer::assignComponent(
     return true;
 }
 
-bool RigidBodyContainer::deserializeComponent(EntityID entity_id, xml::Element const* properties) {
+bool RigidBodyContainer::deserializeComponent(EntityID entity_id, xml::Element const* entity) {
+    auto* properties = entity->FirstChildElement("RigidBody");
+    if(!properties) return false;
+
     std::string     shape_name;
     units::Kilogram mass;
     vec3            center_of_mass_offset = {0, 0, 0};

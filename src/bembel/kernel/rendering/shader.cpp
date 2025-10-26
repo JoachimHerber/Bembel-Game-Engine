@@ -9,6 +9,7 @@ import bembel.base;
 namespace bembel::kernel {
 using namespace bembel::base;
 using namespace ::gl;
+using enum gl::GLenum;
 
 Shader::Shader(Type type, uint handle) : m_type{type}, m_handle(handle) {}
 
@@ -33,7 +34,7 @@ bool Shader::init(std::string_view source) {
 
     int status;
     glGetShaderiv(m_handle, GL_COMPILE_STATUS, &status);
-    if(status != int(GL_TRUE)) {
+    if(status == false) {
         char    error_message[4096];
         GLsizei size;
         glGetShaderInfoLog(m_handle, 4096, &size, error_message);
@@ -185,7 +186,7 @@ bool ShaderProgram::setUniform(std::string_view name, mat4 const& value) {
     GLint location = getUniformLocation(name);
     if(location == -1) return false;
 
-    glUniformMatrix4fv(location, 1, gl::GL_FALSE, &(value[0][0]));
+    glUniformMatrix4fv(location, 1, false, &(value[0][0]));
     return true;
 }
 
@@ -193,7 +194,7 @@ bool ShaderProgram::setUniform(std::string_view name, In<std::span<const mat4>> 
     GLint location = getUniformLocation(name);
     if(location == -1) return false;
 
-    glUniformMatrix4fv(location, value.size(), gl::GL_FALSE, (const GLfloat*)value.data());
+    glUniformMatrix4fv(location, value.size(), false, (const GLfloat*)value.data());
     return true;
 }
 
@@ -213,7 +214,7 @@ bool ShaderProgram::link() {
     int status;
     glGetProgramiv(m_program_handle, GL_LINK_STATUS, &status);
 
-    if(status == int(GL_FALSE)) {
+    if(status == false) {
         GLint max_length = 0;
         glGetProgramiv(m_program_handle, GL_INFO_LOG_LENGTH, &max_length);
 

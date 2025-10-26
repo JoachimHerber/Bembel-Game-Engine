@@ -9,6 +9,8 @@ import bembel.graphics.geometry;
 namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
+using namespace gl;
+using enum gl::GLenum;
 
 GeometryRenderingStage::GeometryRenderingStage(RenderingPipeline& pipline)
   : RenderingPipeline::Stage(pipline) {}
@@ -51,12 +53,13 @@ void GeometryRenderingStage::execute(In<std::span<const RendererPtr>> renderer) 
 
     m_fbo->beginRenderToTexture();
 
-    gl::glEnable(gl::GL_CULL_FACE);
-    gl::glEnable(gl::GL_DEPTH_TEST);
-    gl::glDisable(gl::GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 
-    gl::glClearColor(0.0, 0.0, 0.0f, 0.0f);
-    gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.0, 0.0, 0.0f, 0.0f);
+    using enum ClearBufferMask;
+    glClear(ClearBufferMask(uint(GL_COLOR_BUFFER_BIT) | uint(GL_DEPTH_BUFFER_BIT)));
 
     auto cam = m_pipline.getCamera();
 

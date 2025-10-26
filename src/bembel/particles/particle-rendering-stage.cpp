@@ -10,6 +10,7 @@ namespace bembel::particles {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace gl;
+using enum gl::GLenum;
 
 ParticleRenderingStage::ParticleRenderingStage(RenderingPipeline& pipline)
   : RenderingPipeline::Stage(pipline) {}
@@ -61,15 +62,11 @@ void ParticleRenderingStage::init() {
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glVertexAttribPointer(
-        0, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleRenderData), (void*)(0)
-    ); // Position & Size
-    glVertexAttribPointer(
-        1, 4, GL_UNSIGNED_SHORT, GL_TRUE, sizeof(ParticleRenderData), (void*)(16)
-    ); // tex_coordse
-    glVertexAttribPointer(
-        2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ParticleRenderData), (void*)(24)
-    ); // color
+    // clang-format off
+    glVertexAttribPointer( 0, 4, GL_FLOAT,         false, sizeof(ParticleRenderData), (void*)(0)  ); // Position & Size
+    glVertexAttribPointer( 1, 4, GL_UNSIGNED_SHORT, true, sizeof(ParticleRenderData), (void*)(16) ); // tex_coordse
+    glVertexAttribPointer( 2, 4, GL_UNSIGNED_BYTE,  true, sizeof(ParticleRenderData), (void*)(24) ); // color
+    // clang-format on
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glVertexAttribDivisor(0, 1);
@@ -122,9 +119,9 @@ void ParticleRenderingStage::execute(In<std::span<const RendererPtr>> renderer) 
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-    gl::glEnable(gl::GL_CULL_FACE);
-    gl::glEnable(gl::GL_DEPTH_TEST);
-    gl::glEnable(gl::GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
 
     shader->use();
     glActiveTexture(GL_TEXTURE0);
@@ -135,9 +132,9 @@ void ParticleRenderingStage::execute(In<std::span<const RendererPtr>> renderer) 
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, m_data.size() * sizeof(ParticleRenderData), m_data.data());
 
-    glDepthMask(GL_FALSE);
+    glDepthMask(false);
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_data.size());
-    glDepthMask(GL_TRUE);
+    glDepthMask(true);
 
     m_fbo->endRenderToTexture();
 }

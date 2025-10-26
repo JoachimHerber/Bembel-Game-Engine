@@ -54,10 +54,10 @@ source_group(dependencies/imgui PREFIX "bembel" FILES
 )
 target_sources(Bembel
     PRIVATE
-		bembel/module-wrapper/glbinding.ixx
-		bembel/module-wrapper/glm.ixx
-		bembel/module-wrapper/glfw3.ixx
-		bembel/module-wrapper/json.ixx
+        bembel/module-wrapper/glbinding.ixx
+        bembel/module-wrapper/glm.ixx
+        bembel/module-wrapper/glfw3.ixx
+        bembel/module-wrapper/json.ixx
 )
 
 source_group(dependencies/module-wrapper PREFIX "bembel" FILES 

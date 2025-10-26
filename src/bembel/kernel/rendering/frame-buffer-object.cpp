@@ -10,6 +10,7 @@ import :FBO;
 namespace bembel::kernel {
 using namespace bembel::base;
 using namespace ::gl;
+using enum gl::GLenum;
 
 namespace gl {
     inline void setFramebufferTexture2D(
@@ -145,7 +146,7 @@ void FrameBufferObject::blitToBackBuffer(
         target_min.y,
         target_max.x,
         target_max.y,
-        GL_COLOR_BUFFER_BIT,
+        ClearBufferMask::GL_COLOR_BUFFER_BIT,
         GL_NEAREST
     );
     glBindFramebufferEXT(GL_READ_FRAMEBUFFER, 0);

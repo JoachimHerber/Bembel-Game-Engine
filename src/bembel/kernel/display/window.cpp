@@ -229,7 +229,7 @@ void Window::close() {
 bool Window::getShouldClose() const {
     if(!m_window_impl) return false;
 
-    return int(gl::GL_TRUE) == glfw::getWindowShouldClose(m_window_impl);
+    return glfw::getWindowShouldClose(m_window_impl);
 }
 
 bool Window::setShouldClose(bool should_close) {

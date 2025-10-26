@@ -9,6 +9,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 void setupVertexAttribute(
     GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei offset
@@ -25,14 +26,12 @@ void RenderBatch::init() {
     glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-    // Positions           4*sizeof(GL_FLOAT)          = 16 Byte
-    setupVertexAttribute(0, 4, GL_FLOAT, GL_FALSE, 0);
-    // TexCoords           4*sizeof(GL_UNSIGNED_SHORT) = 8 Byte
-    setupVertexAttribute(1, 4, GL_UNSIGNED_SHORT, GL_TRUE, 16);
-    //  color              4*sizeof(GL_UNSIGNED_SHORT) = 4 Byte
-    setupVertexAttribute(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, 16 + 8);
-    // additional data     4*sizeof(GL_UNSIGNED_SHORT) = 4 Byte
-    setupVertexAttribute(3, 4, GL_UNSIGNED_BYTE, GL_FALSE, 16 + 8 + 4);
+    // clang-format off
+    setupVertexAttribute(0, 4, GL_FLOAT,          false, 0         ); // Positions       16 Byte
+    setupVertexAttribute(1, 4, GL_UNSIGNED_SHORT, true,  16        ); // TexCoords        8 Byte
+    setupVertexAttribute(2, 4, GL_UNSIGNED_BYTE,  true,  16 + 8    ); // Color            4 Byte
+    setupVertexAttribute(3, 4, GL_UNSIGNED_BYTE,  false, 16 + 8 + 4); // additional data  4 Byte
+    // clang-format on
 }
 
 void RenderBatch::setPositionOffset(In<vec2> position_offset) {

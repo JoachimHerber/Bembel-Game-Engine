@@ -9,6 +9,7 @@ namespace bembel::gui {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 Renderer::Renderer(Widget& root_widget) : m_root_widget{root_widget} {}
 

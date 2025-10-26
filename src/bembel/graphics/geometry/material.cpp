@@ -9,6 +9,7 @@ namespace bembel::graphics {
 using namespace bembel::base;
 using namespace bembel::kernel;
 using namespace ::gl;
+using enum gl::GLenum;
 
 Material::Material() {
     glGenBuffers(1, &(m_uniform_buffer_object));
@@ -56,6 +57,17 @@ void Material::bindUniformBufferObject() {
 
 std::unique_ptr<Material> Material::createAsset(xml::Element const* properties) {
     auto mat = std::make_unique<Material>();
+
+    vec3  color;
+    float value;
+    // clang-format off
+    if(xml::getAttribute(properties, "emission",  color)) mat->setEmission(color);
+    if(xml::getAttribute(properties, "albedo",    color)) mat->setBaseColor(color);
+    if(xml::getAttribute(properties, "roughness", value)) mat->setRoughness(value);
+    if(xml::getAttribute(properties, "metallic",  value)) mat->setMetallic(value);
+    if(xml::getAttribute(properties, "f0",        value)) mat->setF0(value);
+    // clang-format on
+
     return mat;
 }
 
@@ -85,16 +97,33 @@ bool Material::verifyUniformBlockLayout(ShaderProgram* shader) {
         shader->getActiveUniform(uniform_index, &size, &type, &name);
 
         switch(offset) {
-            case 0:
-            case 16:
-                if(type != uint(GL_FLOAT_VEC4) || size != 1) return false;
+            case 0:  // emission  -> vec4
+            case 16: // base_color -> vec4
+                if((type != uint(GL_FLOAT_VEC4) && type != uint(GL_FLOAT_VEC3)) || size != 1) {
+                    logError(
+                        "Material property '{}' at offset {} doesn't match expected type",
+                        name,
+                        offset
+                    );
+                    return false;
+                }
                 break;
-            case 32:
-            case 36:
-            case 40:
-                if(type != uint(GL_FLOAT) || size != 1) return false;
+            case 32: // roughness
+            case 36: // metallic
+            case 40: // f0
+            case 44: // unused
+                if(type != uint(GL_FLOAT) || size != 1) {
+                    logError(
+                        "Material property '{}' at offset {} doesn't match expected type",
+                        name,
+                        offset
+                    );
+                    return false;
+                }
                 break;
-            default: return false;
+            default:
+                logError("Unexpected Material propertay '{}' at offset {}", name, offset);
+                return false;
         }
     }
     return true;
